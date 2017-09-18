@@ -4,12 +4,17 @@ import Vue from 'vue'
 import App from './App'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
+import Datepicker from 'vue-datepicker/vue-datepicker-es6.vue'
+import VueFire from 'vuefire'
+import Firebase from 'firebase'
 
-Vue.use(VueMaterial);
+Vue.use(VueMaterial, VueFire);
+Vue.component('datepicker', Datepicker);
+
 
 Vue.material.registerTheme('default', {
-	primary: 'blue',
-	accent: 'grey',
+	primary: 'grey',
+	accent: 'teal',
 	warn: 'red',
 	background: 'white'
   });
