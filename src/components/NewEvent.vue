@@ -8,14 +8,14 @@
 				<md-layout md-flex="50" md-flex-small="100">
 					<md-input-container>
 						<label>Title</label>
-						<md-input v-model="newEvent.title"></md-input>
+						<md-input v-model="newEvent.title" required></md-input>
 					</md-input-container>
 				</md-layout>
 
 				<md-layout md-flex="100">
 					<md-input-container>
 						<label>Description</label>
-						<md-textarea v-model="newEvent.description"></md-textarea>
+						<md-textarea v-model="newEvent.description" required></md-textarea>
 					</md-input-container>
 				</md-layout>
 
@@ -27,7 +27,8 @@
 				</md-layout>
 			</md-layout>
 
-			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Absenden</md-button>
+			<md-button type="submit" v-on:click="addEvent" class="md-raised">Absenden</md-button>
+			<span class="message" :class="this.success? 'success': 'error'">{{this.submitStatus}}</span>
 		</div>
 		</form>
   	</div>
@@ -67,7 +68,9 @@ export default {
 				week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 				format: 'YYYY-MM-DD HH:mm'
-			}
+			},
+			submitStatus: '',
+			success: false
 		}
 	},
 	methods: {
@@ -75,10 +78,22 @@ export default {
 			console.log(this.startTime.time);
 		},
 		addEvent: function () {
-			eventsRef.push(this.newEvent);
-			this.newEvent.title = '';
-			this.newEvent.description = '';
-			this.newEvent.date = '';
+			this.submitStatus = '';
+			var vm = this;
+			if(this.newEvent.title.length != 0 && this.newEvent.description != 0 && this.newEvent.startTime.time != 0) {
+				eventsRef.push(this.newEvent, function() {
+					console.log("done");
+					vm.submitStatus = "New Event was successfully created.";
+					vm.success = true;
+				});
+				this.newEvent.title = '';
+				this.newEvent.description = '';
+				this.newEvent.startTime.time = '';
+			}
+			else {
+				vm.submitStatus = "All fields have to be filled out!";
+				vm.success = false;
+			}
       },
 	}
 }
