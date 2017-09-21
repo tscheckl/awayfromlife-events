@@ -1,6 +1,6 @@
 @import "themeColors";
 
-#new_event {
+#new_location {
 	position: relative;
 	width: 800px;
 	max-width: 95%;
@@ -11,7 +11,12 @@
 	color: $primaryLighten4;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
-	.new-location-button {
+	h2 {
+		padding-left: 15px;
+		margin-bottom: 0;
+	}
+
+	.new-event-button {
 		position: absolute;
 		top: 2%;
 		right: 2%;
@@ -43,41 +48,6 @@
 	.md-input-focused {
 		input {
 			color: $primaryLighten4 !important;
-		}
-	}
-
-	textarea {
-		height: 135px !important;
-		color: $primaryLighten4;
-	}
-
-	.picker {
-		box-sizing: border-box;
-		margin-left: 15px;
-		display: block;
-		padding: 5px;
-		font-size: 16px;
-		line-height: 16px;
-		border-radius: 4px;
-
-		label {
-			font-size: 1.2em;
-			color: $primaryLighten4;
-		}
-
-		.datepickbox {
-			width: 100%;
-		}
-
-		input {
-			max-width: 100% !important;
-			border: none;
-			font-size: 1em;
-			color: $primaryLighten4;
-			margin-left: 10px;
-			border-bottom: 1px solid $accentLighten4;
-			background-color: transparent;
-			cursor: pointer;
 		}
 	}
 

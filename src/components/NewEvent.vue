@@ -1,6 +1,10 @@
 <template>
   	<div id="new_event">
-		<h1>Neues Event anlegen</h1>
+		<router-link to="/locations">
+			<md-button class="md-flat new-location-button">Create new Location -></md-button>
+		</router-link>
+
+		<h1>New event</h1>
 		
 		<form v-on:submit.prevent >
 			<div class="form-content">
@@ -27,30 +31,17 @@
 				</md-layout>
 			</md-layout>
 
-			<md-button type="submit" v-on:click="addEvent" class="md-raised">Absenden</md-button>
-			<span class="message" :class="this.success? 'success': 'error'">{{this.submitStatus}}</span>
+			<md-button type="submit" v-on:click="addEvent" class="md-raised">Send</md-button>
+			<span class="message" v-if="submitStatus.length >= 1" :class="this.success? 'success': 'error'">{{this.submitStatus}}</span>
 		</div>
 		</form>
   	</div>
 </template>
 
 <script>
-import Firebase from 'firebase'
-
-let config = {
-    apiKey: "AIzaSyDAE4ZdR9N8Ep5gY9qSGZvIsab_xaZ4M-c",
-    authDomain: "away-from-life-3bb5b.firebaseapp.com",
-    databaseURL: "https://away-from-life-3bb5b.firebaseio.com",
-    projectId: "away-from-life-3bb5b",
-    storageBucket: "",
-    messagingSenderId: "175709487980"
-  };
-  
-let app = Firebase.initializeApp(config)
-let db = app.database()
+import {db} from '@/firebase.js';
 
 let eventsRef = db.ref('Events');
-
 
 export default {
 	name: 'new-event',
