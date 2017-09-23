@@ -20,7 +20,7 @@
 					<h2>Adress</h2>
 				</md-layout>
 
-				<md-layout md-flex="30" md-flex-small="100">
+				<!-- <md-layout md-flex="30" md-flex-small="100">
 					<md-input-container>
 						<label>Street name + number</label>
 						<md-input v-model="newLocation.street" required></md-input>
@@ -38,6 +38,13 @@
 					<md-input-container>
 						<label>City</label>
 						<md-input v-model="newLocation.city" required></md-input>
+					</md-input-container>
+				</md-layout> -->
+
+				<md-layout md-flex="100" >
+					<md-input-container>
+						<label>Street Name + Number, Zip-code + City</label>
+						<md-input v-model="newLocation.address" required></md-input>
 					</md-input-container>
 				</md-layout>
 
@@ -79,9 +86,10 @@ export default {
 		return {
 			newLocation: {
 				name: '',
-				street: '',
-				zipCode: '',
-				city: '',
+				// street: '',
+				// zipCode: '',
+				// city: '',
+				address: '',
 				website: '',
 				facebookPage: ''
 
@@ -104,9 +112,7 @@ export default {
 					vm.success = true;
 					vm.loading = false;
 					vm.newLocation.name = '';
-					vm.newLocation.street = '';
-					vm.newLocation.zipCode = '';
-					vm.newLocation.city = '';
+					vm.newLocation.address = '';
 					vm.newLocation.website = '';
 					vm.newLocation.facebookPage = '';
 				});
