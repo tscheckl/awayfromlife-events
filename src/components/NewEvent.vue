@@ -31,7 +31,8 @@
 				</md-layout>
 			</md-layout>
 
-			<md-button type="submit" v-on:click="addEvent" class="md-raised">Send</md-button>
+			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Send</md-button>
+			<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 			<span class="message" v-if="submitStatus.length >= 1" :class="this.success? 'success': 'error'">{{this.submitStatus}}</span>
 		</div>
 		</form>
@@ -61,7 +62,8 @@ export default {
 				format: 'YYYY-MM-DD HH:mm'
 			},
 			submitStatus: '',
-			success: false
+			success: false,
+			loading: false
 		}
 	},
 	methods: {
@@ -69,6 +71,7 @@ export default {
 			console.log(this.startTime.time);
 		},
 		addEvent: function () {
+			this.loading = true;
 			this.submitStatus = '';
 			var vm = this;
 			if(this.newEvent.title.length != 0 && this.newEvent.description != 0 && this.newEvent.startTime.time != 0) {
@@ -76,14 +79,16 @@ export default {
 					console.log("done");
 					vm.submitStatus = "New Event was successfully created.";
 					vm.success = true;
+					vm.loading = false;
+					vm.newEvent.title = '';
+					vm.newEvent.description = '';
+					vm.newEvent.startTime.time = '';
 				});
-				this.newEvent.title = '';
-				this.newEvent.description = '';
-				this.newEvent.startTime.time = '';
 			}
 			else {
-				vm.submitStatus = "All fields have to be filled out!";
-				vm.success = false;
+				this.submitStatus = "All fields have to be filled out!";
+				this.success = false;
+				this.loading = false;
 			}
       },
 	}

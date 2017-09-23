@@ -1,7 +1,7 @@
 <template>
 	<div id="new_location">
 		<router-link to="/">
-			<md-button class="md-flat new-event-button">Create new Location -></md-button>
+			<md-button class="md-flat new-event-button">Create new event -></md-button>
 		</router-link>
 
 		<h1>New location</h1>
@@ -60,7 +60,8 @@
 				</md-layout>
 			</md-layout>
 
-			<md-button type="submit" v-on:click="addLocation" class="md-raised">Send</md-button>
+			<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Send</md-button>
+			<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 			<span class="message" v-if="submitStatus.length >= 1" :class="success? 'success': 'error'">{{submitStatus}}</span>
 		</div>
 		</form>
@@ -86,11 +87,13 @@ export default {
 
 			},
 			success: false,
-			submitStatus: ''
+			submitStatus: '',
+			loading: false
 		}
 	},
 	methods: {
 		addLocation() {
+			this.loading = true;
 			this.submitStatus = '';
 			var vm = this;
 			if(this.newLocation.name.length != 0 && this.newLocation.street != 0 && this.newLocation.zipCode != 0 && this.newLocation.city != 0) {
@@ -99,17 +102,19 @@ export default {
 					console.log("done");
 					vm.submitStatus = "New Location was successfully created.";
 					vm.success = true;
+					vm.loading = false;
+					vm.newLocation.name = '';
+					vm.newLocation.street = '';
+					vm.newLocation.zipCode = '';
+					vm.newLocation.city = '';
+					vm.newLocation.website = '';
+					vm.newLocation.facebookPage = '';
 				});
-				this.newLocation.name = '';
-				this.newLocation.street = '';
-				this.newLocation.zipCode = '';
-				this.newLocation.city = '';
-				this.newLocation.website = '';
-				this.newLocation.facebookPage = '';
 			}
 			else {
-				vm.submitStatus = "All fields have to be filled out!";
-				vm.success = false;
+				this.submitStatus = "All fields have to be filled out!";
+				this.success = false;
+				this.loading = false;
 			}
       },
 	}

@@ -7,8 +7,8 @@
 	margin: 0 auto;
 	margin-top: 50px;
 	padding: 40px;
-	background-color: $accentAccent1;
-	color: $primaryLighten4;
+	background-color: white;
+	color: $primaryDarken2;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
 	h2 {
@@ -20,7 +20,6 @@
 		position: absolute;
 		top: 2%;
 		right: 2%;
-		color: white;
 	}
 
 	.form-content {
@@ -30,24 +29,24 @@
 	.md-input-container {
 		box-sizing: border-box;
 		margin-left: 15px;
-		color: $primaryLighten4 !important;
+		color: $primaryDarken2 !important;
 
 		&:after {
-			background-color: $primaryLighten4;
+			background-color: $primaryDarken2;
 		}
 
 		label {
-			color: $primaryLighten4 !important;
+			color: $primaryDarken2 !important;
 		}
 	}
 
 	.md-input {
-		color: $primaryLighten4 !important;
+		color: $primaryDarken2 !important;
 	}
 
 	.md-input-focused {
 		input {
-			color: $primaryLighten4 !important;
+			color: $primaryDarken2 !important;
 		}
 	}
 
@@ -58,7 +57,9 @@
 
 	.message {
 		width: 40%;
-		margin-left: 30%;
+		min-width: 300px;
+		margin: 0 auto;
+		margin-top: 15px;
 		padding: 10px;
 		display: block;
 		text-align: center;
@@ -66,7 +67,7 @@
 		line-height: 1.3em;
 		border-radius: 5px;
 		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-		
+		color: white;
 	}
 
 	.success {

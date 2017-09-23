@@ -17,8 +17,8 @@ Vue.component('datepicker', Datepicker);
 
 
 Vue.material.registerTheme('default', {
-	primary: 'red',
-	accent: 'grey',
+	primary: 'grey',
+	accent: 'deep-orange',
 	warn: 'red',
 	background: 'white'
   });
