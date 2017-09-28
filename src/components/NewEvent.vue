@@ -4,7 +4,7 @@
 			<md-button class="md-flat new-location-button">Create new Location -></md-button>
 		</router-link>
 
-		<h1>New event</h1>
+		<h1 v-on:click="print">New event</h1>
 		
 		<form v-on:submit.prevent >
 			<div class="form-content">
@@ -13,6 +13,15 @@
 					<md-input-container>
 						<label>Title</label>
 						<md-input v-model="newEvent.title" required></md-input>
+					</md-input-container>
+				</md-layout>
+
+				<md-layout md-flex="50" md-flex-small="100">
+					<md-input-container>
+						<label>Select event location</label>
+						<md-select v-model="newEvent.location">
+							<md-option v-for="location in availableLocations" :key="location.name" :value="location['.key']">{{location.name }} - {{location.address}}</md-option>
+						</md-select>
 					</md-input-container>
 				</md-layout>
 
@@ -41,8 +50,9 @@
 
 <script>
 import {db} from '@/firebase.js';
-
 let eventsRef = db.ref('Events');
+let locationsRef = db.ref('Locations');
+console.log("locationsref", locationsRef);
 
 export default {
 	name: 'new-event',
@@ -54,6 +64,7 @@ export default {
 				startTime : {
 					time: ''
 				},
+				location: ''
 			},
 			timeoption: {
 				type: 'min',
@@ -63,12 +74,15 @@ export default {
 			},
 			submitStatus: '',
 			success: false,
-			loading: false
+			loading: false,
 		}
+	},
+	firebase: {
+		availableLocations: locationsRef
 	},
 	methods: {
 		print() {
-			console.log(this.startTime.time);
+			console.log(this.newEvent.location);
 		},
 		addEvent: function () {
 			this.loading = true;
@@ -91,6 +105,9 @@ export default {
 				this.loading = false;
 			}
       },
+	},
+	mounted() {
+		console.log(locationsRef);
 	}
 }
 </script>

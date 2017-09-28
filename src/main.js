@@ -12,7 +12,8 @@ import router from './routerConfig'
 
 
 Vue.use(VueRouter);
-Vue.use(VueMaterial, VueFire);
+Vue.use(VueMaterial);
+Vue.use(VueFire)
 Vue.component('datepicker', Datepicker);
 
 
