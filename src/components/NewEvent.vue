@@ -4,6 +4,10 @@
 			<md-button class="md-flat new-location-button">Create new Location -></md-button>
 		</router-link>
 
+		<router-link to="/calendar">
+			<md-button class="md-flat calendar-button">Event calendar -></md-button>
+		</router-link>
+
 		<h1 v-on:click="print">New event</h1>
 		
 		<form v-on:submit.prevent >
@@ -35,7 +39,7 @@
 				<md-layout md-flex="50" md-flex-small="100">
 					<div class="picker">
 						<label>Date</label>
-			 			<datepicker :option="timeoption" :date="newEvent.startTime"></datepicker>
+			 			<datepicker :option="timeoption" :date="startTime"></datepicker>
 					</div>
 				</md-layout>
 			</md-layout>
@@ -49,10 +53,10 @@
 </template>
 
 <script>
+import moment from 'moment';
 import {db} from '@/firebase.js';
 let eventsRef = db.ref('Events');
 let locationsRef = db.ref('Locations');
-console.log("locationsref", locationsRef);
 
 export default {
 	name: 'new-event',
@@ -61,16 +65,18 @@ export default {
 			newEvent: {
 				title: '',
 				description: '',
-				startTime : {
-					time: ''
-				},
+				date: '',
+				time: '',
 				location: ''
+			},
+			startTime: {
+				time: ''
 			},
 			timeoption: {
 				type: 'min',
 				week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				format: 'YYYY-MM-DD HH:mm'
+				format: 'YYYY/MM/DD HH:mm'
 			},
 			submitStatus: '',
 			success: false,
@@ -82,13 +88,20 @@ export default {
 	},
 	methods: {
 		print() {
-			console.log(this.newEvent.location);
+			console.log(this.startTime);
+			console.log("date:", moment(this.startTime.time).format('YYYY/MM/DD'));
+			console.log("time:", moment(this.startTime.time).format('HH:mm'));
 		},
 		addEvent: function () {
+			this.newEvent.date = moment(this.startTime.time).format('YYYY/MM/DD');
+			this.newEvent.time = moment(this.startTime.time).format('HH:mm');
+
+			console.log("event object", this.newEvent);
+
 			this.loading = true;
 			this.submitStatus = '';
 			var vm = this;
-			if(this.newEvent.title.length != 0 && this.newEvent.description != 0 && this.newEvent.startTime.time != 0) {
+			if(this.newEvent.title.length != 0 && this.newEvent.description != 0 && this.newEvent.date != 0) {
 				eventsRef.push(this.newEvent, function() {
 					console.log("done");
 					vm.submitStatus = "New Event was successfully created.";
@@ -96,7 +109,10 @@ export default {
 					vm.loading = false;
 					vm.newEvent.title = '';
 					vm.newEvent.description = '';
-					vm.newEvent.startTime.time = '';
+					vm.newEvent.time = '';
+					vm.newEvent.date = '';
+					vm.startTime = {};
+					vm.newEvent.location = '';
 				});
 			}
 			else {
@@ -105,9 +121,6 @@ export default {
 				this.loading = false;
 			}
       },
-	},
-	mounted() {
-		console.log(locationsRef);
 	}
 }
 </script>

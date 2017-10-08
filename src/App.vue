@@ -19,7 +19,7 @@ export default {
 
 <style lang="scss">
 body {
-	background-color: #ccc !important;
+	background-color: white !important;
 }
 
 body, html {
@@ -28,5 +28,11 @@ body, html {
 
 	width: 100%;
 	height: 100%;
+}
+
+@media screen and (max-width: 768px){
+	body {
+		background-color: white !important;
+	}
 }
 </style>

@@ -1,0 +1,82 @@
+@import "themecolors";
+
+#event_calendar {
+	.__vev_calendar-wrapper {
+		max-width: none;
+		width: 85%;
+		margin-left: 7.5%;
+		overflow: visible;
+		background-color: white;
+		padding: 40px 10px;
+		padding-right: 30px;
+		height: auto;
+		float: left;
+		
+		&:after {
+			clear: both;
+		}
+	}
+
+	.cal-wrapper {
+		width: 60%;
+		float: left;
+		margin-top: 10px;
+		padding: 0;
+
+		.cal-body {
+			background-color: white;
+	
+			p {
+				cursor: pointer;
+			}
+		}
+
+		.dates {
+			.item {
+				color: #ddd;
+			}
+
+			.event:not(.selected-day) {
+				p {
+					color: #444 !important;
+				}
+
+				.is-event {
+					border: none;
+				}
+			}
+
+			.today {
+				.is-today {
+					background-color: transparent !important;
+				}
+			}
+		}
+
+		.selected-day {
+			color: white !important;
+
+			span {
+				background-color: $accent !important;
+				border-color: $accent !important;
+			}
+		}
+	}
+
+	.events-wrapper {
+		width: 40%;
+		box-sizing: border-box;
+		padding: 30px 10px;
+		margin-top: 10px;
+		position: inherit;
+		left: auto;
+		float: left;
+		overflow: auto;
+		background-color: $accent !important;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+		h2 {
+			background-color: transparent;
+		}
+	}
+}
