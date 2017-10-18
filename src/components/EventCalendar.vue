@@ -1,5 +1,6 @@
 <template>
   	<div id="event_calendar">
+		  <h1>Event Calendar</h1>
 		<div class="calendar-component-wrapper">
 			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle"></calendar>
 			<div class="events">

@@ -24,7 +24,7 @@
 					<md-input-container>
 						<label>Select event location</label>
 						<md-select v-model="newEvent.location">
-							<md-option v-for="location in availableLocations" :key="location.name" :value="location['.key']">{{location.name }} - {{location.address}}</md-option>
+							<md-option v-for="location in locations" :key="location.name" :value="location['_id']">{{location.name }} - {{location.adress}}</md-option>
 						</md-select>
 					</md-input-container>
 				</md-layout>
@@ -65,11 +65,15 @@ export default {
 			newEvent: {
 				title: '',
 				description: '',
-				date: '',
-				time: '',
-				location: ''
+				location: '',
+				startDate: '',
+				endDate: '',
+				time: ''
 			},
 			startTime: {
+				time: ''
+			},
+			endTime: {
 				time: ''
 			},
 			timeoption: {
@@ -81,6 +85,7 @@ export default {
 			submitStatus: '',
 			success: false,
 			loading: false,
+			locations: []
 		}
 	},
 	firebase: {
@@ -88,12 +93,13 @@ export default {
 	},
 	methods: {
 		print() {
-			console.log(this.startTime);
+			console.log("wdaw", moment(this.startTime.time).format('MM'));
 			console.log("date:", moment(this.startTime.time).format('YYYY/MM/DD'));
 			console.log("time:", moment(this.startTime.time).format('HH:mm'));
+			console.log("Type:", typeof this.startTime.time);
 		},
 		addEvent: function () {
-			this.newEvent.date = moment(this.startTime.time).format('YYYY/MM/DD');
+			this.newEvent.startDate = moment(this.startTime.time).format('YYYY/MM/DD');
 			this.newEvent.time = moment(this.startTime.time).format('HH:mm');
 
 			console.log("event object", this.newEvent);
@@ -102,18 +108,41 @@ export default {
 			this.submitStatus = '';
 			var vm = this;
 			if(this.newEvent.title.length != 0 && this.newEvent.description != 0 && this.newEvent.date != 0) {
-				eventsRef.push(this.newEvent, function() {
-					console.log("done");
+				this.$http.post('http://localhost:3000/api/events', vm.newEvent)
+				.then(function (response) {
+					// Success
+					console.log(response.data);
+
 					vm.submitStatus = "New Event was successfully created.";
 					vm.success = true;
 					vm.loading = false;
 					vm.newEvent.title = '';
 					vm.newEvent.description = '';
 					vm.newEvent.time = '';
-					vm.newEvent.date = '';
+					vm.newEvent.startDate = '';
+					vm.newEvent.endDate = '';
 					vm.startTime = {};
 					vm.newEvent.location = '';
+				},function (response) {
+					// Error
+					console.log(response.data);
+					vm.loading = false;
 				});
+
+				// eventsRef.push(this.newEvent, function() {
+				// 	console.log("done");
+				// 	vm.submitStatus = "New Event was successfully created.";
+				// 	vm.success = true;
+				// 	vm.loading = false;
+				// 	vm.newEvent.title = '';
+				// 	vm.newEvent.description = '';
+				// 	vm.newEvent.time = '';
+				// 	vm.newEvent.startDate = '';
+				// 	vm.newEvent.endDate = '';
+				// 	vm.startTime = {};
+				// 	vm.newEvent.location = '';
+				// });
+
 			}
 			else {
 				this.submitStatus = "All fields have to be filled out!";
@@ -121,6 +150,17 @@ export default {
 				this.loading = false;
 			}
       },
+	},
+	mounted() {
+		let vm = this;
+		this.$http.get('http://localhost:3000/api/locations')
+			.then((response) => {
+				vm.locations = response.body;
+				console.log(response);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
 	}
 }
 </script>

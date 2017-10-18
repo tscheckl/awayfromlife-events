@@ -8,11 +8,16 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 
+	h1 {
+		color: white;
+		text-align: center;
+		font-size: 4em;
+	}
+
 	.calendar-component-wrapper {
 		width: 100%;
 		padding: 50px;
 		float: left;
-		background-color: white;
 
 		.vdp-datepicker {
 			width: 60%;
@@ -34,7 +39,7 @@
 
 			header {
 				margin-bottom: 15px;
-				background-color: $accent;
+				background-color: #C62828;
 				box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 				overflow: hidden;
 
@@ -47,10 +52,10 @@
 				span {
 					padding: 5px;
 					color: white;
-					background-color: $accent;
+					background-color: #C62828;
 
 					&:hover {
-						background-color: $accentDarken1;
+						background-color: #C62828Darken1;
 					}
 				}
 
@@ -88,12 +93,12 @@
 
 			.selected {
 				color: white;
-				background-color: $accent;
+				background-color: #C62828;
 				box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 				border-radius: 5px;
 
 				&:hover {
-					background-color: $accentDarken2;
+					background-color: #C62828Darken2;
 				}
 			}
 		}
@@ -105,7 +110,7 @@
 		box-sizing: border-box;
 		float: right;
 		color: white;
-		background-color: $accent;
+		background-color: #C62828;
 		border-radius: 5px;
 		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
