@@ -3,6 +3,7 @@ import NewEvent from '@/components/NewEvent'
 import NewLocation from '@/components/NewLocation'
 import EventCalendarOld from '@/components/EventCalendarOld'
 import EventCalendar from '@/components/EventCalendar'
+import EventMap from '@/components/EventMap'
 
 export default new Router({
   routes: [
@@ -21,6 +22,10 @@ export default new Router({
 	{
 		path: '/calendar',
 		component: EventCalendar
+	},
+	{
+		path: '/event-map',
+		component: EventMap
 	}
   ]
 })

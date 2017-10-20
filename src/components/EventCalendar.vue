@@ -1,7 +1,11 @@
 <template>
   	<div id="event_calendar">
-		  <h1>Event Calendar</h1>
-		<div class="calendar-component-wrapper">
+		<top-bar>
+		  <md-button class="md-flat new-event-btn"> <i class="material-icons ">add</i> Create new Event</md-button>
+		</top-bar>
+
+		<div class="event-calendar-content-wrapper">
+			<h1>Event Calendar</h1>
 			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle"></calendar>
 			<div class="events">
 				<h2>All Events</h2>
@@ -18,9 +22,13 @@
 
 <script>
 import moment from 'moment';
+import TopBar from './TopBar';
 
 export default {
 	name: 'event-calendar',
+	components: {
+		TopBar
+	},
 	data() {
 		return {
 			date: new Date(2016, 9,  16)

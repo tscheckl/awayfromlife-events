@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+	<div id="app">
+		<router-view></router-view>
+	</div>
 </template>
 
 <script>
@@ -18,22 +18,5 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-	background-color: #111 !important;
-	//Nicer ton #efadaa
-}
-
-body, html {
-	margin: 0;
-	padding: 0;
-
-	width: 100%;
-	height: 100%;
-}
-
-@media screen and (max-width: 768px){
-	body {
-		background-color: white !important;
-	}
-}
+	@import "src/scss/main.scss";
 </style>

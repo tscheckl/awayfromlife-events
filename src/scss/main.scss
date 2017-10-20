@@ -1,0 +1,13 @@
+@import "themeColors";
+
+body {
+	background-color: $primaryDarken4 !important;
+	//Nicer ton #efadaa
+}
+
+body, html {
+	margin: 0;
+	padding: 0;
+	min-height: none;
+}
+

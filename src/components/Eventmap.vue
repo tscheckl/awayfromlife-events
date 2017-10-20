@@ -1,5 +1,9 @@
 <template>
   <div class="map-container">
+	<top-bar>
+		<md-button class="md-flat new-event-btn"> <i class="material-icons ">add</i> Create new Location</md-button>
+	</top-bar>
+
     <v-map :zoom="zoom" :center="center">
       <v-tilelayer :url="url" :attribution="attribution" ></v-tilelayer>
       <v-marker v-for="marker in markers" :lat-lng="marker.coords" :icon="icon"></v-marker>
@@ -13,6 +17,7 @@
 <script type="text/javascript">
   import Vue2Leaflet from 'vue2-leaflet'
   import iconpng from './favicons.png'
+  import TopBar from './TopBar'
 
   export default {
     title: 'eventmap',
@@ -24,7 +29,8 @@
       'v-poly': Vue2Leaflet.Polyline,
       'v-group': Vue2Leaflet.LayerGroup,
       'v-tooltip': Vue2Leaflet.Tooltip,
-      'v-popup': Vue2Leaflet.Popup
+	  'v-popup': Vue2Leaflet.Popup,
+	  TopBar
     },
     data() {
       return {
