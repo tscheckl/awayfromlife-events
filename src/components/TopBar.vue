@@ -1,13 +1,13 @@
 <template>
   <div id="topbar">
 	  <md-toolbar>
-		  <a href="https://www.awayfromlife.com/" style="flex:1;"><i class="material-icons">keyboard_arrow_left</i> Back to AFL</a>
-		  <md-button-toggle md-single style="flex:1;">
+		  <a href="https://www.awayfromlife.com/"><i class="material-icons">keyboard_arrow_left</i> Back to AFL</a>
+		  <md-button-toggle md-single class="switch-button">
 			<router-link to="/event-map">
-				<md-button>Map</md-button>
+				<md-button :class="!isCalendar ? 'md-toggle': ''">Map</md-button>
 			</router-link>
 			<router-link to="/calendar">
-				<md-button class="md-toggle">Calendar</md-button>
+				<md-button :class="isCalendar ? 'md-toggle': ''">Calendar</md-button>
 			</router-link>
 		  </md-button-toggle>
 		  <slot></slot>
@@ -18,6 +18,16 @@
 <script>
 export default {
 	name: 'top-bar',
+	computed: {
+		isCalendar: function() {
+			if(this.$route.path.indexOf('calendar') !== -1) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
 }
 </script>
 

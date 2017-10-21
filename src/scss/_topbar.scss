@@ -2,9 +2,39 @@
 
 #topbar {
 	position: relative;
-	
 	.md-toolbar {
 		background-color: $primaryLighten4;
+		width: 100%;
+	}
+
+	.switch-button {
+		margin: 0 auto;
+		background-color: $primaryLighten2;
+		border-radius: 50px;
+		overflow: hidden;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.24);
+
+		.md-button {
+			margin: 0;
+			padding: 3px 15px;
+			font-weight: normal;
+			border-radius: 0;
+			color: $primaryDarken4;
+		}
+
+		a:first-child {
+			border-right: 1px solid $primaryDarken2;
+		}
+
+		.md-toggle {
+			background-color: $accentDarken3;
+			font-weight: bold;
+			color: $primaryLighten5;
+		
+			&:hover {
+				background-color: $accentDarken3;
+			}
+		}
 	}
 
 	a {

@@ -1,5 +1,10 @@
 @import "themecolors";
 
+@font-face {
+	font-family: "Big John";
+	src: url("~/static/BIGJOHN.otf") format("opentype"),
+}
+
 #event_calendar {
 	width: 100%;
 	margin: 0 auto;
@@ -10,13 +15,14 @@
 	h1 {
 		margin: 40px 0;
 		color: white;
-		text-align: center;
+		//text-align: center;
 		font-size: 3em;
+		font-family: "Big John";
 	}
 
 	.new-event-btn {
 		font-weight: bold;
-		float: right;
+		right: 10px;
 	}
 
 	.event-calendar-content-wrapper {
