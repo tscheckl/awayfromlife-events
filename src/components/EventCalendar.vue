@@ -1,7 +1,7 @@
 <template>
   	<div id="event_calendar">
 		<top-bar>
-		  <md-button class="md-flat new-event-btn"> <i class="material-icons ">add</i> Create new Event</md-button>
+		  <md-button id="newEvent" class="md-flat new-event-btn" v-on:click="openDialog('newEventDialog')"> <i class="material-icons ">add</i> Create new Event</md-button>
 		</top-bar>
 
 		<div class="event-calendar-content-wrapper">
@@ -17,17 +17,23 @@
 				</div>
 			</div>
 		</div>
+
+		<md-dialog ref="newEventDialog"  md-open-from="#newEvent" md-close-to="#newEvent">
+			<new-event></new-event>
+		</md-dialog>
   	</div>
 </template>
 
 <script>
 import moment from 'moment';
 import TopBar from './TopBar';
+import NewEvent from './NewEvent';
 
 export default {
 	name: 'event-calendar',
 	components: {
-		TopBar
+		TopBar,
+		NewEvent
 	},
 	data() {
 		return {
@@ -37,7 +43,13 @@ export default {
 	methods: {
 		handle(date) {
 			console.log(moment(date).format("YYYY/MM/DD"));
-		}
+		},
+		openDialog(ref) {
+			this.$refs[ref].open();
+		},
+		closeDialog(ref) {
+			this.$refs[ref].close();
+		},
 	}
 }
 </script>

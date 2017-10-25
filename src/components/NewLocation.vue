@@ -1,8 +1,5 @@
 <template>
 	<div id="new_location">
-		<router-link to="/">
-			<md-button class="md-flat new-event-button">Create new event -></md-button>
-		</router-link>
 
 		<h1>New location</h1>
 		

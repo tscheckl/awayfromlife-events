@@ -1,7 +1,7 @@
 <template>
   <div class="map-container">
 	<top-bar>
-		<md-button class="md-flat new-event-btn"> <i class="material-icons ">add</i> Create new Location</md-button>
+		<md-button id="newLocation" class="md-flat new-location-btn" v-on:click="openDialog('newLocationDialog')"> <i class="material-icons ">add</i> Create new Location</md-button>
 	</top-bar>
 
     <v-map :zoom="zoom" :center="center">
@@ -11,6 +11,10 @@
         <v-popup content="Circle"></v-popup>
       </v-circle>
     </v-map>
+
+	<md-dialog ref="newLocationDialog"  md-open-from="#newLocation" md-close-to="#newLocation">
+			<new-location></new-location>
+		</md-dialog>
   </div>
 </template>
 
@@ -18,6 +22,7 @@
   import Vue2Leaflet from 'vue2-leaflet'
   import iconpng from './favicons.png'
   import TopBar from './TopBar'
+  import NewLocation from './NewLocation'
 
   export default {
     title: 'eventmap',
@@ -30,7 +35,8 @@
       'v-group': Vue2Leaflet.LayerGroup,
       'v-tooltip': Vue2Leaflet.Tooltip,
 	  'v-popup': Vue2Leaflet.Popup,
-	  TopBar
+	  TopBar,
+	  NewLocation
     },
     data() {
       return {
@@ -63,12 +69,18 @@
       }
     },
     methods: {
-      showInfo(event) {
-        console.log("test");
-        alert(event.latLng);
-        console.log(this.icon);
-      }
-    }
+		showInfo(event) {
+			console.log("test");
+			alert(event.latLng);
+			console.log(this.icon);
+		},
+		openDialog(ref) {
+			this.$refs[ref].open();
+		},
+		closeDialog(ref) {
+			this.$refs[ref].close();
+		},
+	}
   }
 </script>
 
@@ -77,5 +89,13 @@
 
 .map-container {
   height: 500px;
+}
+
+.leaflet-container {
+	z-index: 0;
+}
+
+.new-location-btn {
+	font-weight: bold;
 }
 </style>

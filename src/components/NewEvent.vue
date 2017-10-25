@@ -1,13 +1,5 @@
 <template>
   	<div id="new_event">
-		<router-link to="/locations">
-			<md-button class="md-flat new-location-button">Create new Location -></md-button>
-		</router-link>
-
-		<router-link to="/calendar">
-			<md-button class="md-flat calendar-button">Event calendar -></md-button>
-		</router-link>
-
 		<h1 v-on:click="print">New event</h1>
 		
 		<form v-on:submit.prevent >

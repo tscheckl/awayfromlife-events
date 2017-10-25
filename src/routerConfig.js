@@ -9,7 +9,7 @@ export default new Router({
   routes: [
     {
       	path: '/',
-      	component: NewEvent
+      	component: EventCalendar
 	},
 	{
 		path: '/locations',

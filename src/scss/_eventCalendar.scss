@@ -1,10 +1,5 @@
 @import "themecolors";
 
-@font-face {
-	font-family: "Big John";
-	src: url("~/static/BIGJOHN.otf") format("opentype"),
-}
-
 #event_calendar {
 	width: 100%;
 	margin: 0 auto;
@@ -13,10 +8,10 @@
 	background-color: $primaryDarken4 !important;
 
 	h1 {
-		margin: 40px 0;
-		color: white;
+		margin: 35px 0;
+		color: $primaryLighten4;
 		//text-align: center;
-		font-size: 3em;
+		font-size: 2.8em;
 		font-family: "Big John";
 	}
 
