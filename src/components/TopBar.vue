@@ -20,11 +20,11 @@ export default {
 	name: 'top-bar',
 	computed: {
 		isCalendar: function() {
-			if(this.$route.path.indexOf('calendar') !== -1) {
-				return true;
+			if(this.$route.path.indexOf('event-map') !== -1) {
+				return false;
 			}
 			else {
-				return false;
+				return true;
 			}
 		}
 	}
