@@ -6,7 +6,7 @@
 
     <v-map :zoom="zoom" :center="center">
       <v-tilelayer :url="url" :attribution="attribution" ></v-tilelayer>
-      <v-marker v-for="marker in markers" :lat-lng="marker.coords" :icon="icon"></v-marker>
+      <v-marker v-for="marker in markers" :lat-lng="marker.coords" :icon="icon" :key="marker.coords"></v-marker>
       <v-circle :radius="500" :lat-lng="center" v-on:l-click="showInfo" :icon="this.icon">
         <v-popup content="Circle"></v-popup>
       </v-circle>
