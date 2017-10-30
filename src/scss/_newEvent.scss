@@ -88,6 +88,23 @@
 			background-color: transparent;
 			cursor: pointer;
 		}
+
+		.cov-date-body {
+			background-color: $accentDarken3 !important;
+			font-family: inherit;
+			.watch-box {
+				.active {
+					background-color: $accentDarken1;
+				}
+			}
+		}
+
+		.cov-date-caption {
+			span:first-of-type {
+				display: inline-block;
+				margin: 10px 0;
+			}
+		}
 	}
 
 	.md-button {

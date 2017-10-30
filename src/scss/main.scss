@@ -25,16 +25,16 @@
 
 body {
 	background-color: $primaryDarken4 !important;
-	font-family: "OpenSans";
+	font-family: "OpenSans", sans-serif;
 	//Nicer ton #efadaa
 }
 
 h1 {
-	font-family: "Big John";
+	font-family: "Big John", sans-serif;
 }
 
 h2, h3, h4, h5 {
-	font-family: "OpenSansBold";
+	font-family: "OpenSansBold", sans-serif;
 }
 
 body, html {

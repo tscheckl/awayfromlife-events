@@ -8,7 +8,7 @@
 			<h1>Event Calendar</h1>
 			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle" v-on:changedMonth="handleChangedMonth"></calendar>
 			<div class="events">
-				<h2>All Events</h2>
+				<h2>All Events for {{formattedDate}}</h2>
 				<h5 style="text-align:center;" v-if="noEvents">Keine Events für das augewählte Datum gefunden! Das nächste verfügbare Event ist:</h5>
 				<div v-for="event in foundEvents" :key="event['_id']">
 					<single-event :data="event"></single-event>
@@ -38,6 +38,7 @@ export default {
 	data() {
 		return {
 			date: moment().format(),
+			formattedDate: '',
 			events: {},
 			foundEvents: [],
 			noEvents: false
@@ -46,6 +47,7 @@ export default {
 	methods: {
 		handle(date) {
 			date = moment(date).format('YYYY-MM-DD');
+			this.formattedDate = moment(date).format('LL');
 
 			if(this.events[date]) {
 				this.foundEvents = this.events[date];
@@ -96,6 +98,7 @@ export default {
 			console.log(newDate);
 			this.date = moment(newDate).format();
 			this.getEvents();
+			this.handle(this.date);
 		},
 		openDialog(ref) {
 			this.$refs[ref].open();

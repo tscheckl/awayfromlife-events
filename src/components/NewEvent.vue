@@ -85,13 +85,10 @@ export default {
 	},
 	methods: {
 		print() {
-			console.log("wdaw", moment(this.startTime.time).format('MM'));
-			console.log("date:", moment(this.startTime.time).format('YYYY/MM/DD'));
-			console.log("time:", moment(this.startTime.time).format('HH:mm'));
-			console.log("Type:", typeof this.startTime.time);
+			console.log(this.newEvent);
 		},
-		addEvent: function () {
-			this.newEvent.startDate = moment(this.startTime.time).format('YYYY/MM/DD');
+		addEvent() {
+			this.newEvent.startDate = moment(this.startTime.time).format('YYYY-MM-DD');
 			this.newEvent.time = moment(this.startTime.time).format('HH:mm');
 
 			console.log("event object", this.newEvent);
