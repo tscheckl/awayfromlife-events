@@ -9,7 +9,9 @@
 			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle" v-on:changedMonth="handleChangedMonth"></calendar>
 			<div class="events">
 				<h2>All Events for {{formattedDate}}</h2>
-				<h5 style="text-align:center;" v-if="noEvents">Keine Events für das augewählte Datum gefunden! Das nächste verfügbare Event ist:</h5>
+				<h5 class="no-events" v-if="noEvents && foundEvents"> <i class="material-icons">warning</i> Keine Events für das augewählte Datum gefunden!</h5>
+				<h5 class="next-events" v-if="noEvents && foundEvents">Die nächsten verfügbaren Events: </h5>
+				<h5 class="no-events" v-if="noEvents && !foundEvents"> <i class="material-icons">warning</i> Keine weiteren Events für diesen Monat gefunden!</h5>
 				<div v-for="event in foundEvents" :key="event['_id']">
 					<single-event :data="event"></single-event>
 				</div>
@@ -48,6 +50,7 @@ export default {
 		handle(date) {
 			date = moment(date).format('YYYY-MM-DD');
 			this.formattedDate = moment(date).format('LL');
+			this.foundEvents = [];
 
 			if(this.events[date]) {
 				this.foundEvents = this.events[date];
@@ -55,10 +58,9 @@ export default {
 			}
 			else {
 				this.noEvents = true;
-				this.foundEvents = [];
 				let smallestDate = null;
 
-				for(event in this.events) {
+				for(let event in this.events) {
 					if(moment(event).format('DD') > moment(date).format('DD')) {
 						if(!smallestDate) {
 							smallestDate = event;
@@ -69,12 +71,14 @@ export default {
 					}
 				}
 				this.foundEvents = this.events[smallestDate];
+				console.log("foundEvents", this.foundEvents);
 			}
 		},
 		getEvents() {
 			this.$http.get('http://localhost:3000/api/events/date/' + moment(this.date).format('YYYY-MM'))
 			.then((response) => {
 				this.events = {};
+				console.log(response);
 				//Iterate through all respnse events and make their date the key in the events object
 				//The events of one day are saved into an array of events
 				for(let i=0; i < response.body.length; i++) {

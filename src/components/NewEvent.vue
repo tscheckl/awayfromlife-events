@@ -13,12 +13,17 @@
 				</md-layout>
 
 				<md-layout md-flex="50" md-flex-small="100">
-					<md-input-container>
-						<label>Select event location</label>
-						<md-select v-model="newEvent.location">
+						<list-select :list="locations"
+											option-value="_id"
+											option-text="name"
+											:custom-text="nameAndAddress"
+											:selected-item="selectedLocation"
+											placeholder="Select event location*"
+											@select="onSelect">
+							</list-select>
+						<!-- <md-select v-model="newEvent.location">
 							<md-option v-for="location in locations" :key="location.name" :value="location['_id']">{{location.name }} - {{location.adress}}</md-option>
-						</md-select>
-					</md-input-container>
+						</md-select> -->
 				</md-layout>
 
 				<md-layout md-flex="100">
@@ -45,13 +50,14 @@
 </template>
 
 <script>
+import { ListSelect  } from 'vue-search-select';
 import moment from 'moment';
-import {db} from '@/firebase.js';
-let eventsRef = db.ref('Events');
-let locationsRef = db.ref('Locations');
 
 export default {
 	name: 'new-event',
+	components: {
+		ListSelect 
+	},
 	data() {
 		return {
 			newEvent: {
@@ -77,15 +83,22 @@ export default {
 			submitStatus: '',
 			success: false,
 			loading: false,
-			locations: []
+			locations: [],
+			selectedLocation: {}
 		}
-	},
-	firebase: {
-		availableLocations: locationsRef
 	},
 	methods: {
 		print() {
 			console.log(this.newEvent);
+		},
+		nameAndAddress(selectedLocation) {
+			return `${selectedLocation.name} - ${selectedLocation.address}`;
+		},
+		onSelect(selected) {
+			console.log(selected);
+			this.selectedLocation = selected;
+			this.newEvent.location = selected['_id'];
+			console.log(this.newEvent.location);
 		},
 		addEvent() {
 			this.newEvent.startDate = moment(this.startTime.time).format('YYYY-MM-DD');
@@ -117,21 +130,6 @@ export default {
 					console.log(response.data);
 					vm.loading = false;
 				});
-
-				// eventsRef.push(this.newEvent, function() {
-				// 	console.log("done");
-				// 	vm.submitStatus = "New Event was successfully created.";
-				// 	vm.success = true;
-				// 	vm.loading = false;
-				// 	vm.newEvent.title = '';
-				// 	vm.newEvent.description = '';
-				// 	vm.newEvent.time = '';
-				// 	vm.newEvent.startDate = '';
-				// 	vm.newEvent.endDate = '';
-				// 	vm.startTime = {};
-				// 	vm.newEvent.location = '';
-				// });
-
 			}
 			else {
 				this.submitStatus = "All fields have to be filled out!";

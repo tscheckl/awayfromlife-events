@@ -8,6 +8,8 @@
 	background-color: $primaryLighten4;
 	color: $primaryDarken3;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	overflow: auto;
+	max-width: 100%;
 
 	h1 {
 		margin-top: 15px;
@@ -29,6 +31,39 @@
 
 	.form-content {
 		margin-top: 50px;
+	}
+
+	.ui.fluid.search.selection.dropdown {
+		height: 38px;
+		margin-top: 14px;
+		margin-left: 15px;
+		padding-left: 0;
+		padding-bottom: 0;
+		background-color: transparent;
+		border: none;
+		border-bottom: 1px solid $primaryDarken2;
+		border-radius: 0;
+
+		input {
+			padding-left: 0;
+			padding-bottom: 0;
+			
+			vertical-align: baseline;
+		}
+
+		.text.default {
+			margin-top: 5px;
+			color: $primaryDarken3;
+			font-size: 16px;
+		}
+
+		.menu.visible {
+			border: none;
+		}
+	}
+	
+	.ui.fluid.search.selection.dropdown.active {
+		box-shadow: none;
 	}
 
 	.md-input-container {
