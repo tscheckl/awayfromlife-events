@@ -21,7 +21,9 @@
 	}
 
 	.event-calendar-content-wrapper {
-		padding: 0 10%;
+		width: 95%;
+		max-width: 1300px;
+		margin: 0 auto;
 	}
 
 	.vdp-datepicker {
@@ -150,6 +152,7 @@
 }
 
 @media screen and (max-width: 768px){
+
 	#event_calendar {
 		width: 97%;
 		margin: 0 auto;
@@ -157,9 +160,16 @@
 		top: auto;
 		left: auto;
 		transform: none;
-		.calendar-component-wrapper {
-			padding: 5px;
-			
+
+		.event-calendar-content-wrapper{
+			width: 98%;
+
+			h1 {
+				margin: 10px 0;
+				font-size: 1.8em;
+				line-height: 1.05em;
+			}
+				
 			.vdp-datepicker {
 				width: 100%;
 				
@@ -170,14 +180,14 @@
 				}
 
 				.day {
-					padding: 0;
+					padding: 5px;
 				}
 			}
-		}
-
-		.events {
-			width: 100%;
-			margin-top: 20px;
+	
+			.events {
+				width: 100%;
+				margin-top: 20px;
+			}
 		}
 	}
 }
