@@ -13,6 +13,7 @@ import router from './routerConfig'
 import 'vue-event-calendar/dist/style.css' //^1.1.10, CSS has been extracted as one file, so you can easily update it.
 import vueEventCalendar from 'vue-event-calendar'
 import Calendar from 'vuejs-datepicker';
+import vMediaQuery from 'v-media-query';
 
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
@@ -21,6 +22,7 @@ Vue.component('calendar', Calendar);
 Vue.component('datepicker', Datepicker);
 Vue.use(vueEventCalendar, {locale: 'en'});
 Vue.use(VueResource);
+Vue.use(vMediaQuery);
 
 
 Vue.material.registerTheme('default', {

@@ -3,23 +3,39 @@
 		
 		<div id="topbar">
 			<md-toolbar>
-				<md-button class="md-icon-button" @click="toggleSidenav">
+				<md-button v-if="$mq.resize && $mq.below('600px')" class="md-icon-button" @click="toggleSidenav">
 					<md-icon>menu</md-icon>
 				</md-button>
-				<a href="https://www.awayfromlife.com/"><md-icon>arrow_back</md-icon> Back to AFL</a>
+
+				<md-button href="https://www.awayfromlife.com/" class="topbar-btn" v-if="$mq.resize && $mq.above('600px')">
+					<md-icon>arrow_back</md-icon><span>Back to AFL</span> 
+				</md-button>
+				
 				<md-button-toggle md-single class="switch-button">
-				<router-link to="/event-map">
-					<md-button :class="!isCalendar ? 'md-toggle': ''">Map</md-button>
-				</router-link>
-				<router-link to="/calendar">
-					<md-button :class="isCalendar ? 'md-toggle': ''">Calendar</md-button>
-				</router-link>
+					<router-link to="/event-map">
+						<md-button :class="!isCalendar ? 'md-toggle': ''">Map</md-button>
+					</router-link>
+					<router-link to="/calendar">
+						<md-button :class="isCalendar ? 'md-toggle': ''">Calendar</md-button>
+					</router-link>
 				</md-button-toggle>
-				<slot></slot>
+				
+				<slot v-if="$mq.resize && $mq.above('600px')"></slot>
 			</md-toolbar>
 		</div>
 
-		<md-sidenav class="md-left" ref="sidenav">
+		<md-sidenav v-if="$mq.resize && $mq.below('600px')" class="md-left" ref="sidenav">
+			<md-list>
+				<md-list-item>
+					<md-button href="https://www.awayfromlife.com/">
+						<md-icon>arrow_back</md-icon><span>Back to AFL</span> 
+					</md-button>
+				</md-list-item>
+
+				<md-list-item>
+					<slot></slot>
+				</md-list-item>
+			</md-list>
 		</md-sidenav>
 	</div>
 </template>

@@ -1,7 +1,9 @@
 <template>
   	<div id="event_calendar">
 		<top-bar>
-		  <md-button id="newEvent" class="md-flat new-event-btn" v-on:click="openDialog('newEventDialog')"> <i class="material-icons ">add</i> Create new Event</md-button>
+		  	<md-button id="newEvent" class="new-event-btn topbar-btn" v-on:click="openDialog('newEventDialog')">
+				<md-icon>add</md-icon> <span>Create new Event</span> 
+			</md-button>
 		</top-bar>
 
 		<div class="event-calendar-content-wrapper">
@@ -112,6 +114,7 @@ export default {
 		},
 	},
 	mounted() {
+		this.handle();
 		this.getEvents();
 	}
 }
