@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "jsonwebtoken": "^8.1.0",
     "leaflet": "^1.2.0",
     "moment": "^2.18.1",
     "v-media-query": "^1.0.3",
