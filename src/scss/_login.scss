@@ -1,0 +1,31 @@
+@import "themeColors";
+
+#login {
+	max-width: 500px;
+	min-height: 500px;
+	padding: 20px 60px;
+	margin: 0 auto;  
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background-color: $primaryLighten5;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+
+	h2 {
+		margin-top: 0;
+		font-family: 'Big John';
+		color: $primaryDarken3;
+		font-size: 2.5em;
+	}
+
+	.md-button {
+		margin: 0 auto;
+	}
+
+	.error-msg {
+		color: $accent;
+		font-weight: bold;
+	}
+}

@@ -1,8 +1,15 @@
 <template>
   	<div id="event_calendar">
 		<top-bar>
+			<router-link to="/login">
+				<md-button class="md-flat admin-login-btn topbar-btn">
+					<md-icon>supervisor_account</md-icon>
+					<md-tooltip md-direction="bottom">Admin-Login</md-tooltip>
+				</md-button>
+			</router-link>
 		  	<md-button id="newEvent" class="new-event-btn topbar-btn" v-on:click="openDialog('newEventDialog')">
-				<md-icon>add</md-icon> <span>Create new Event</span> 
+				<md-icon>add</md-icon>
+				<md-tooltip md-direction="bottom">Create new Event</md-tooltip>
 			</md-button>
 		</top-bar>
 

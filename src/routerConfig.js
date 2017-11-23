@@ -4,6 +4,8 @@ import NewLocation from '@/components/NewLocation'
 import EventCalendar from '@/components/EventCalendar'
 import Eventmap from '@/components/Eventmap'
 import LoginTest from '@/components/LoginTest'
+import Login from '@/components/Login'
+import Admin from '@/components/Admin'
 
 export default new Router({
   routes: [
@@ -25,7 +27,15 @@ export default new Router({
 	},
 	{
 		path: '/login',
+		component: Login
+	},
+	{
+		path: '/login-test',
 		component: LoginTest
+	},
+	{
+		path: '/admin',
+		component: Admin,
 	}
   ]
 })

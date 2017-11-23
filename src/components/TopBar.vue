@@ -8,7 +8,8 @@
 				</md-button>
 
 				<md-button href="https://www.awayfromlife.com/" class="topbar-btn" v-if="$mq.resize && $mq.above('600px')">
-					<md-icon>arrow_back</md-icon><span>Back to AFL</span> 
+					<md-icon>arrow_back</md-icon>
+					<md-tooltip md-direction="bottom">Back to AFL</md-tooltip> 
 				</md-button>
 				
 				<md-button-toggle md-single class="switch-button">

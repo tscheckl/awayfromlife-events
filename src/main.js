@@ -43,3 +43,19 @@ new Vue({
   components: { App },
   render: h => h(App), 
 })
+
+
+router.beforeEach((to, from, next) => {
+	if(to.path == "/admin") {
+		Vue.http.get('http://localhost:3000/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		.then((response) => {
+			next();
+		})
+		.catch((err) => {
+			next('/login');
+		})
+	}
+	else {
+		next();
+	}
+})

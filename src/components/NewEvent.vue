@@ -1,6 +1,6 @@
 <template>
   	<div id="new_event">
-		<h1 v-on:click="print">New event</h1>
+		<h1>New event</h1>
 		
 		<form v-on:submit.prevent >
 			<div class="form-content">
@@ -20,10 +20,7 @@
 											:selected-item="selectedLocation"
 											placeholder="Select event location*"
 											@select="onSelect">
-							</list-select>
-						<!-- <md-select v-model="newEvent.location">
-							<md-option v-for="location in locations" :key="location.name" :value="location['_id']">{{location.name }} - {{location.adress}}</md-option>
-						</md-select> -->
+						</list-select>
 				</md-layout>
 
 				<md-layout md-flex="100">
@@ -68,56 +65,56 @@ export default {
 				endDate: '',
 				time: ''
 			},
+			//Value that will be modelled by the datepicker
 			startTime: {
 				time: ''
 			},
-			endTime: {
-				time: ''
-			},
+			//Time options for the datepicker
 			timeoption: {
 				type: 'min',
 				week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 				format: 'YYYY/MM/DD HH:mm'
 			},
+			//Message that will display a status afer sending the new event
 			submitStatus: '',
 			success: false,
 			loading: false,
 			locations: [],
+			//Variable for the search-select that contains the currently selected item/location
 			selectedLocation: {}
 		}
 	},
 	methods: {
-		print() {
-			console.log(this.newEvent);
-		},
-		nameAndAddress(selectedLocation) {
+		nameAndAddress(selectedLocation) { //Function to format the value that is displayed in the search-select
 			return `${selectedLocation.name} - ${selectedLocation.address}`;
 		},
 		onSelect(selected) {
-			console.log(selected);
+			//Set the value for the item that will be displayed in the search select input
 			this.selectedLocation = selected;
+			//Set the new Event's location attribute to the ID of the selected location
 			this.newEvent.location = selected['_id'];
-			console.log(this.newEvent.location);
 		},
 		addEvent() {
+			//Format and set the new Event's date and time attributes from the startTime variable created by the Datepicker
 			this.newEvent.startDate = moment(this.startTime.time).format('YYYY-MM-DD');
 			this.newEvent.time = moment(this.startTime.time).format('HH:mm');
 
-			console.log("event object", this.newEvent);
-
 			this.loading = true;
+
+			//Reset the error messages
 			this.submitStatus = '';
 			var vm = this;
+			//Only go on if all required fields are filled out
 			if(this.newEvent.title.length != 0 && this.newEvent.description != 0 && this.newEvent.date != 0) {
 				this.$http.post('http://localhost:3000/api/events', vm.newEvent)
-				.then(function (response) {
+				.then(response => {
 					// Success
-					console.log(response.data);
-
 					vm.submitStatus = "New Event was successfully created.";
 					vm.success = true;
 					vm.loading = false;
+
+					//Reset all fields
 					vm.newEvent.title = '';
 					vm.newEvent.description = '';
 					vm.newEvent.time = '';
@@ -125,13 +122,13 @@ export default {
 					vm.newEvent.endDate = '';
 					vm.startTime = {};
 					vm.newEvent.location = '';
-				},function (response) {
+				}).catch(err => {
 					// Error
-					console.log(response.data);
+					console.log(err);
 					vm.loading = false;
 				});
 			}
-			else {
+			else { // else show error message
 				this.submitStatus = "All fields have to be filled out!";
 				this.success = false;
 				this.loading = false;
@@ -140,6 +137,7 @@ export default {
 	},
 	mounted() {
 		let vm = this;
+		//Get all locations from the backend to display them as select options
 		this.$http.get('http://localhost:3000/api/locations')
 			.then((response) => {
 				vm.locations = response.body;
