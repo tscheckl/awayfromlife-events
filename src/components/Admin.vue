@@ -1,8 +1,16 @@
 <template>
 	<div id="admin">
 		<md-toolbar>
-			<h1>Admin Console</h1>
-			<md-button>
+			<router-link to="/">
+				<md-button>
+					<md-icon>arrow_back</md-icon>
+					<md-tooltip md-direction="bottom">Zurück zum Kalender (du bleibst eingeloggt)</md-tooltip>
+				</md-button>
+			</router-link>
+
+			<h1>Admin Bereich</h1>
+
+			<md-button v-on:click="logout">
 				<md-icon>exit_to_app</md-icon>
 				<md-tooltip md-direction="bottom">Logout</md-tooltip>
 			</md-button>
@@ -36,7 +44,7 @@
 					<md-layout md-gutter>
 						<md-layout md-flex="50" md-flex-small="100">
 							<md-input-container>
-								<label>Title</label>
+								<label>Titel</label>
 								<md-input v-model="verifyEvent.title"  required></md-input>
 							</md-input-container>
 						</md-layout>
@@ -47,21 +55,21 @@
 											option-text="name"
 											:custom-text="nameAndAddress"
 											:selected-item="verifyEvent.location"
-											placeholder="Select event location*"
+											placeholder="Veranstaltungsort wählen*"
 											@select="onSelect">
 								</list-select>
 						</md-layout>
 
 						<md-layout md-flex="100">
 							<md-input-container>
-								<label>Description</label>
+								<label>Beschreibung</label>
 								<md-textarea v-model="verifyEvent.description" required></md-textarea>
 							</md-input-container>
 						</md-layout>
 
 						<md-layout md-flex="50" md-flex-small="100">
 							<div class="picker">
-								<label>Date</label>
+								<label>Datum</label>
 								<datepicker :option="timeoption" :date="startTime"></datepicker>
 							</div>
 						</md-layout>
@@ -134,6 +142,10 @@ export default {
 		},
 		onSelect(selected) {
 			this.verifyEvent.location = selected;
+		},
+		logout() {
+			sessionStorage.removeItem('aflAuthToken');
+			this.$router.push('/');
 		}
 	},
 	mounted() {

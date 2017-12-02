@@ -1,7 +1,7 @@
 <template>
   	<div id="event_calendar">
 		<top-bar>
-			<router-link to="/login">
+			<router-link :to="isAuthenticated? '/admin': '/login'">
 				<md-button class="md-flat admin-login-btn topbar-btn">
 					<md-icon>supervisor_account</md-icon>
 					<md-tooltip md-direction="bottom">Admin-Login</md-tooltip>
@@ -119,6 +119,15 @@ export default {
 		closeDialog(ref) {
 			this.$refs[ref].close();
 		},
+		isAuthenticated() {
+			Vue.http.get('http://localhost:3000/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				.then(response => {
+					return true;
+				})
+				.catch(err => {
+					return false;
+				})
+		}
 	},
 	mounted() {
 		this.handle();
