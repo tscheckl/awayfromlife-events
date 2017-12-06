@@ -27,6 +27,7 @@
 
 <script>
 import jwt from 'jsonwebtoken';
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'login',
@@ -45,12 +46,12 @@ export default {
 		handleLogin() {
 			this.error = false;
 			this.loading = true;
-
+			console.log(backendUrl + " " + frontEndSecret);
 			let token = jwt.sign({
 				email: this.login.email,
 				password: this.login.pwd
-			}, 'currentFrontendSecret', (err, token) => {
-				this.$http.post('http://localhost:3000/api/users/login', {token: token})
+			}, frontEndSecret, (err, token) => {
+				this.$http.post(backendUrl + '/api/users/login', {token: token})
 				.then((response) => {
 					console.log(response);
 					this.token = response.body.token;

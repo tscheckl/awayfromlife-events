@@ -1,16 +1,6 @@
 <template>
   	<div id="event_calendar">
 		<top-bar>
-			<router-link :to="isAuthenticated? '/admin': '/login'">
-				<md-button class="md-flat admin-login-btn topbar-btn">
-					<md-icon>supervisor_account</md-icon>
-					<md-tooltip md-direction="bottom">Admin-Login</md-tooltip>
-				</md-button>
-			</router-link>
-		  	<md-button id="newEvent" class="new-event-btn topbar-btn" v-on:click="openDialog('newEventDialog')">
-				<md-icon>add</md-icon>
-				<md-tooltip md-direction="bottom">Create new Event</md-tooltip>
-			</md-button>
 		</top-bar>
 
 		<div class="event-calendar-content-wrapper">
@@ -26,24 +16,20 @@
 				</div>
 			</div>
 		</div>
-
-		<md-dialog ref="newEventDialog"  md-open-from="#newEvent" md-close-to="#newEvent">
-			<new-event></new-event>
-		</md-dialog>
   	</div>
 </template>
 
 <script>
 import moment from 'moment';
 import TopBar from './TopBar';
-import NewEvent from './NewEvent';
 import SingleEvent from './SingleEvent';
+
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'event-calendar',
 	components: {
 		TopBar,
-		NewEvent,
 		SingleEvent
 	},
 	data() {
@@ -84,7 +70,7 @@ export default {
 			}
 		},
 		getEvents() {
-			this.$http.get('http://localhost:3000/api/events/date/' + moment(this.date).format('YYYY-MM'))
+			this.$http.get(backendUrl + '/api/events/date/' + moment(this.date).format('YYYY-MM'))
 			.then((response) => {
 				this.events = {};
 				console.log(response);
@@ -113,21 +99,6 @@ export default {
 			this.getEvents();
 			this.handle(this.date);
 		},
-		openDialog(ref) {
-			this.$refs[ref].open();
-		},
-		closeDialog(ref) {
-			this.$refs[ref].close();
-		},
-		isAuthenticated() {
-			Vue.http.get('http://localhost:3000/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-				.then(response => {
-					return true;
-				})
-				.catch(err => {
-					return false;
-				})
-		}
 	},
 	mounted() {
 		this.handle();

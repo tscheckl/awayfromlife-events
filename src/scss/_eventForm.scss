@@ -1,0 +1,117 @@
+@import "_themeColors";
+
+#event_form {
+	.calendar-button {
+		position: absolute;
+		right: 2%;
+		top: 7%;
+	}
+
+	.form-content {
+		margin-top: 50px;
+	}
+
+	.ui.fluid.search.selection.dropdown {
+		height: 32px;
+		line-height: 32px;
+		margin-top: 14px;
+		margin-left: 15px;
+		padding: 0;
+		padding-top: 5px;
+		background-color: transparent;
+		border: none;
+		border-bottom: 1px solid $primaryLighten2;
+		border-radius: 0;
+
+		input {
+			padding-left: 0;
+			padding-bottom: 0;
+			
+			vertical-align: baseline;
+		}
+
+		.text.default {
+			margin-top: 5px;
+			color: rgba(0, 0, 0, 0.54);
+			font-size: 16px;
+		}
+
+		.menu.visible {
+			border: none;
+		}
+
+		.dropdown.icon {
+			padding-bottom: 0; 
+		}
+
+		.item {
+			font-size: 1.05em;
+			line-height: 1.3em;
+		}
+
+		.text {
+			font-size: 16px;
+			line-height: 32px;
+		}
+	}
+	
+	.ui.fluid.search.selection.dropdown.active {
+		box-shadow: none;
+	}
+
+	.md-input-container {
+		box-sizing: border-box;
+		margin-left: 15px;
+	}
+
+	textarea {
+		height: 135px !important;
+	}
+
+	.picker {
+		box-sizing: border-box;
+		margin-left: 15px;
+		display: block;
+		padding: 3px 5px;
+		font-size: 16px;
+		line-height: 16px;
+		border-radius: 4px;
+
+		label {
+			font-size: 1em;
+			color: rgba(0, 0, 0, 0.54);
+		}
+
+		.datepickbox {
+			width: 100%;
+		}
+
+		input {
+			max-width: 100% !important;
+			border: none;
+			font-size: 1em;
+			color: rgba(0, 0, 0, 0.54);
+			margin-left: 10px;
+			background-color: transparent;
+			cursor: pointer;
+			border-bottom: 1px solid $primaryLighten2;
+		}
+
+		.cov-date-body {
+			background-color: $accentDarken3 !important;
+			font-family: inherit;
+			.watch-box {
+				.active {
+					background-color: $accentDarken1;
+				}
+			}
+		}
+
+		.cov-date-caption {
+			span:first-of-type {
+				display: inline-block;
+				margin: 10px 0;
+			}
+		}
+	}
+}

@@ -20,19 +20,20 @@
 			<div class="verify-list">
 				<md-input-container>
 					<md-select name="content-type" v-model="isEvent">
-						<md-option :value="true">Events</md-option>
-						<md-option :value="false">Locations</md-option>
+						<md-option :value="true" v-on:click="showEventInfo(this.unverifiedEvents[0])">Events</md-option>
+						<md-option :value="false" v-on:click="showLocationInfo(this.unverifiedLocations[0])">Locations</md-option>
 					</md-select>
 				</md-input-container>
+				
 				<md-list v-if="isEvent">
-					<md-list-item v-for="event in events" :key="event._id" @click="showEventInfo(event)">
+					<md-list-item v-for="event in unverifiedEvents" :key="event._id" @click="showEventInfo(event)">
 						<h4>{{event.title}}</h4>
 						<span>Event</span>
 					</md-list-item>
 				</md-list>
 
 				<md-list v-else>
-					<md-list-item v-for="location in locations" :key="location._id" @click="showLocationInfo(location)">
+					<md-list-item v-for="location in unverifiedLocations" :key="location._id" @click="showLocationInfo(location)">
 						<h4>{{location.name}}</h4>
 						<span>Location</span>
 					</md-list-item>
@@ -40,62 +41,36 @@
 			</div>
 			<div class="verify-info">
 				<h1>Angegebene Daten</h1>
-				<form v-on:submit.prevent v-if="isEvent">
-					<md-layout md-gutter>
-						<md-layout md-flex="50" md-flex-small="100">
-							<md-input-container>
-								<label>Titel</label>
-								<md-input v-model="verifyEvent.title"  required></md-input>
-							</md-input-container>
-						</md-layout>
 
-						<md-layout md-flex="50" md-flex-small="100">
-								<list-select :list="locations"
-											option-value="_id"
-											option-text="name"
-											:custom-text="nameAndAddress"
-											:selected-item="verifyEvent.location"
-											placeholder="Veranstaltungsort wählen*"
-											@select="onSelect">
-								</list-select>
-						</md-layout>
+				<event-form v-if="isEvent" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
 
-						<md-layout md-flex="100">
-							<md-input-container>
-								<label>Beschreibung</label>
-								<md-textarea v-model="verifyEvent.description" required></md-textarea>
-							</md-input-container>
-						</md-layout>
-
-						<md-layout md-flex="50" md-flex-small="100">
-							<div class="picker">
-								<label>Datum</label>
-								<datepicker :option="timeoption" :date="startTime"></datepicker>
-							</div>
-						</md-layout>
-					</md-layout>
-					<p class="error-msg" v-if="error"><md-icon>warning</md-icon> {{errorMsg}}</p>
-
-					<md-button type="submit" v-on:click="handleVerify" class="md-accent verify-btn">
-						<md-icon>check</md-icon>
-					</md-button>
-					<md-button type="submit" v-on:click="handleVerify" class="md-accent delete-btn">
-						<md-icon>clear</md-icon>
-					</md-button>
-					<md-spinner v-if="loading" md-indeterminate></md-spinner>
-				</form>
+				<location-form v-else :data="verifyLocation"></location-form>
+				
+				<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
+					<md-icon>check</md-icon>
+				</md-button>
+				<md-button type="submit" v-on:click="handleVerify(false)" class="md-accent delete-btn">
+					<md-icon>clear</md-icon>
+				</md-button>
+				<md-spinner v-if="loading" md-indeterminate></md-spinner>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { ListSelect  } from 'vue-search-select';
+import moment from 'moment';
+
+import EventForm from './EventForm';
+import LocationForm from './LocationForm';
+
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'admin',
 	components: {
-		ListSelect 
+		EventForm,
+		LocationForm 
 	},
 	data() {
 		return {
@@ -103,45 +78,86 @@ export default {
 			errorMsg: '',
 			loading: false,
 			isEvent: true,
-			events: [],
+			unverifiedEvents: [],
 			locations: [],
 			verifyEvent: {},
-			//Value that will be modelled by the datepicker
-			startTime: {
-				time: ''
-			},
-			//Time options for the datepicker
-			timeoption: {
-				type: 'min',
-				week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				format: 'YYYY-MM-DD HH:mm'
-			},
+			selectedLocation: {},
+			unverifiedLocations: [],
+			verifyLocation: {}
 		}
 	},
 	methods: {
-		handleVerify() {
-			//IMPORTANT: Before sending out the updated event, the location needs to be changed to the location's id instead of the whole object
-			//ALSO IMPORTANT: Before sending out the updated event, the time and startDate need to be formatted from the startTime Variable.
-			console.log(this.startTime);
+		handleVerify(keepData) {
+			if(this.isEvent) {
+				//Format and set the Event's date and time attributes from the startTime variable created by the Datepicker
+				this.verifyEvent.time = moment(this.verifyEvent.startDate.time).format('HH:mm');
+				this.verifyEvent.startDate = moment(this.verifyEvent.startDate.time).format('YYYY-MM-DD');
+
+				this.$http.delete(backendUrl + '/api/unvalidated-events/' + this.verifyEvent._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+					.then(response => {
+						// https://www.facebook.com/Atari-Leipzig-259756324046400/
+						if(keepData) {
+							this.$http.post(backendUrl + '/api/events',  this.verifyEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+								.then(response => {
+									console.log(response);
+								})
+								.catch(err => {
+									console.log(err);
+								});
+						}
+						
+						this.unverifiedEvents.shift();
+						this.verifyEvent = {};
+					})
+					.catch(err => {
+						console.log(err);
+					});
+			}
+			else {
+				this.$http.delete(backendUrl + '/api/unvalidated-locations/' + this.verifyLocation._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+					.then(response => {
+						// https://www.facebook.com/Atari-Leipzig-259756324046400/
+						if(keepData) {
+							this.$http.post(backendUrl + '/api/locations',  this.verifyLocation, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+								.then(response => {
+									console.log(response);
+								})
+								.catch(err => {
+									console.log(err);
+								});
+						}
+
+						this.unverifiedLocations.shift();
+						this.verifyLocation = {};
+					})
+					.catch(err => {
+						console.log(err);
+					});
+			}
 		},
 		showEventInfo(event) {
-			this.verifyEvent = event;
-			this.startTime.time = this.verifyEvent.startDate + " " + this.verifyEvent.time;
-
-			this.$http.get("http://localhost:3000/api/locations/" + event.location)
+			this.$http.get(backendUrl + "/api/locations/" + event.location)
 				.then(response => {
-					this.verifyEvent.location = response.body;
+					this.verifyEvent = {
+						_id: event._id,
+						title: event.title,
+						description: event.description,
+						startDate: {
+							time: event.startDate + " " + event.time
+						},
+						time: event.time,
+						location: response.body._id,
+						endDate: ''
+					};
+					this.selectedLocation = response.body;
 				})
 				.catch(err => {
 					console.log(err);
 				})
 		},
-		nameAndAddress(selectedLocation) {
-			return `${selectedLocation.name} - ${selectedLocation.address}`;
-		},
-		onSelect(selected) {
-			this.verifyEvent.location = selected;
+		showLocationInfo(location) {
+			console.log(location);
+			this.verifyLocation = location;
 		},
 		logout() {
 			sessionStorage.removeItem('aflAuthToken');
@@ -149,13 +165,14 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get("http://localhost:3000/api/events")
+		this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 			.then(response => {
-				this.events = response.body;
-				this.$http.get("http://localhost:3000/api/locations")
+				this.unverifiedEvents = response.body;
+				console.log("events", this.unverifiedEvents);
+				this.$http.get(backendUrl + "/api/locations")
 					.then(response => {
 						this.locations = response.body;
-						this.showEventInfo(this.events[0]);
+						this.showEventInfo(this.unverifiedEvents[0]);
 					})
 					.catch(err => {
 						console.log(err);
@@ -164,6 +181,15 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
+
+		this.$http.get(backendUrl + '/api/unvalidated-locations', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			.then(response => {
+				this.unverifiedLocations = response.body;
+				console.log("locations",this.unverifiedLocations);
+			})
+			.catch(err => {
+				console.log(err);
+			})
 	}
 }
 </script>

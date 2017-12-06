@@ -55,6 +55,7 @@
 
 <script>
 import jwt from 'jsonwebtoken';
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'login-test',
@@ -77,8 +78,8 @@ export default {
 			let token = jwt.sign({
 				email: this.login.email,
 				password: this.login.pwd
-			}, 'currentFrontendSecret', (err, token) => {
-				this.$http.post('http://localhost:3000/api/users/login', {token: token})
+			}, frontEndSecret, (err, token) => {
+				this.$http.post(backendUrl + '/api/users/login', {token: token})
 				.then((response) => {
 					console.log(response);
 					this.token = response.body.token;
@@ -95,9 +96,9 @@ export default {
 				email: this.register.email,
 				name: this.register.name,
 				password: this.register.pwd
-			}, 'currentFrontendSecret', (err, token) => {
+			}, frontEndSecret, (err, token) => {
 				console.log("token afterwards", token);
-				this.$http.post('http://localhost:3000/api/users/register', {token: token})
+				this.$http.post(backendUrl + '/api/users/register', {token: token})
 				.then((response) => {
 					console.log(response);
 				})
@@ -108,7 +109,7 @@ export default {
 		},
 		handleAuth() {
 			console.log(this.token);
-			this.$http.get('http://localhost:3000/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 			.then((response) => {
 				console.log(response);
 			})

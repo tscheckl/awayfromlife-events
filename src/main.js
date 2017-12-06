@@ -14,6 +14,7 @@ import 'vue-event-calendar/dist/style.css' //^1.1.10, CSS has been extracted as 
 import vueEventCalendar from 'vue-event-calendar'
 import Calendar from 'vuejs-datepicker';
 import vMediaQuery from 'v-media-query';
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
@@ -47,7 +48,7 @@ new Vue({
 
 router.beforeEach((to, from, next) => {
 	if(to.path == "/admin") {
-		Vue.http.get('http://localhost:3000/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 		.then((response) => {
 			next();
 		})

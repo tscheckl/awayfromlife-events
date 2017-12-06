@@ -1,49 +1,60 @@
 <template>
-  <div>
-		
-		<div id="topbar">
-			<md-toolbar>
-				<md-button v-if="$mq.resize && $mq.below('600px')" class="md-icon-button" @click="toggleSidenav">
-					<md-icon>menu</md-icon>
+	<div id="topbar">
+		<md-toolbar>
+			<md-button href="https://www.awayfromlife.com/" class="topbar-btn" >
+				<md-icon>arrow_back</md-icon>
+				<md-tooltip md-direction="bottom">Back to AFL</md-tooltip> 
+			</md-button>
+
+			<div style="flex:1;"></div>
+			
+			<!-- <md-button-toggle md-single class="switch-button">
+				<router-link to="/event-map">
+					<md-button :class="!isCalendar ? 'md-toggle': ''">Map</md-button>
+				</router-link>
+				<router-link to="/calendar">
+					<md-button :class="isCalendar ? 'md-toggle': ''">Calendar</md-button>
+				</router-link>
+			</md-button-toggle> -->
+			
+			<md-button id="newEvent" class="new-event-btn topbar-btn" v-on:click="openDialog('newEventDialog')">
+				<md-icon>event</md-icon>
+				<md-tooltip md-direction="bottom">Create new Event</md-tooltip>
+			</md-button>
+
+			<md-button id="newLocation" class="new-location-btn topbar-btn" v-on:click="openDialog('newLocationDialog')">
+				<md-icon>location_on</md-icon>
+				<md-tooltip md-direction="bottom">Create new Location</md-tooltip>
+			</md-button>
+
+			<router-link :to="isAuthenticated? '/admin': '/login'">
+				<md-button class="md-flat admin-login-btn topbar-btn">
+					<md-icon>supervisor_account</md-icon>
+					<md-tooltip md-direction="bottom">Admin-Login</md-tooltip>
 				</md-button>
+			</router-link>
+		</md-toolbar>
 
-				<md-button href="https://www.awayfromlife.com/" class="topbar-btn" v-if="$mq.resize && $mq.above('600px')">
-					<md-icon>arrow_back</md-icon>
-					<md-tooltip md-direction="bottom">Back to AFL</md-tooltip> 
-				</md-button>
-				
-				<md-button-toggle md-single class="switch-button">
-					<router-link to="/event-map">
-						<md-button :class="!isCalendar ? 'md-toggle': ''">Map</md-button>
-					</router-link>
-					<router-link to="/calendar">
-						<md-button :class="isCalendar ? 'md-toggle': ''">Calendar</md-button>
-					</router-link>
-				</md-button-toggle>
-				
-				<slot v-if="$mq.resize && $mq.above('600px')"></slot>
-			</md-toolbar>
-		</div>
+		<md-dialog ref="newEventDialog"  md-open-from="#newEvent" md-close-to="#newEvent">
+			<new-event></new-event>
+		</md-dialog>
 
-		<md-sidenav v-if="$mq.resize && $mq.below('600px')" class="md-left" ref="sidenav">
-			<md-list>
-				<md-list-item>
-					<md-button href="https://www.awayfromlife.com/">
-						<md-icon>arrow_back</md-icon><span>Back to AFL</span> 
-					</md-button>
-				</md-list-item>
-
-				<md-list-item>
-					<slot></slot>
-				</md-list-item>
-			</md-list>
-		</md-sidenav>
+		<md-dialog ref="newLocationDialog"  md-open-from="#newLocation" md-close-to="#newLocation">
+			<new-location></new-location>
+		</md-dialog>
 	</div>
 </template>
 
 <script>
+import NewLocation from './NewLocation';
+import NewEvent from './NewEvent';
+
 export default {
 	name: 'top-bar',
+	components: {
+		NewLocation,
+		NewEvent,
+	},
 	computed: {
 		isCalendar: function() {
 			if(this.$route.path.indexOf('event-map') !== -1) {
@@ -57,6 +68,21 @@ export default {
 	methods: {
 		toggleSidenav() {
 			this.$refs.sidenav.toggle();
+		},
+		openDialog(ref) {
+			this.$refs[ref].open();
+		},
+		closeDialog(ref) {
+			this.$refs[ref].close();
+		},
+		isAuthenticated() {
+			Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				.then(response => {
+					return true;
+				})
+				.catch(err => {
+					return false;
+				})
 		}
 	}
 }

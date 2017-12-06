@@ -1,104 +1,57 @@
 <template>
   	<div id="new_event">
-		<h1>New event</h1>
-		
-		<form v-on:submit.prevent >
-			<div class="form-content">
-			<md-layout md-gutter>
-				<md-layout md-flex="50" md-flex-small="100">
-					<md-input-container>
-						<label>Title</label>
-						<md-input v-model="newEvent.title" required></md-input>
-					</md-input-container>
-				</md-layout>
+		<h1 v-on:click="show">New event</h1>
 
-				<md-layout md-flex="50" md-flex-small="100">
-						<list-select :list="locations"
-											option-value="_id"
-											option-text="name"
-											:custom-text="nameAndAddress"
-											:selected-item="selectedLocation"
-											placeholder="Select event location*"
-											@select="onSelect">
-						</list-select>
-				</md-layout>
+		<event-form :data="newEvent"></event-form>
 
-				<md-layout md-flex="100">
-					<md-input-container>
-						<label>Description</label>
-						<md-textarea v-model="newEvent.description" required></md-textarea>
-					</md-input-container>
-				</md-layout>
-
-				<md-layout md-flex="50" md-flex-small="100">
-					<div class="picker">
-						<label>Date</label>
-			 			<datepicker :option="timeoption" :date="startTime"></datepicker>
-					</div>
-				</md-layout>
-			</md-layout>
-
-			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Send</md-button>
-			<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-			<span class="message" v-if="submitStatus.length >= 1" :class="this.success? 'success': 'error'">{{this.submitStatus}}</span>
-		</div>
-		</form>
+		<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Send</md-button>
+		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
+		<span class="message" v-if="submitStatus.length >= 1" :class="this.success? 'success': 'error'">{{this.submitStatus}}</span>
   	</div>
 </template>
 
 <script>
-import { ListSelect  } from 'vue-search-select';
 import moment from 'moment';
+
+import EventForm from './EventForm';
+
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'new-event',
 	components: {
-		ListSelect 
+		EventForm
 	},
 	data() {
 		return {
 			newEvent: {
 				title: '',
 				description: '',
-				location: '',
-				startDate: '',
+				location: {},
+				startDate: {
+					time: ''
+				},
 				endDate: '',
 				time: ''
-			},
-			//Value that will be modelled by the datepicker
-			startTime: {
-				time: ''
-			},
-			//Time options for the datepicker
-			timeoption: {
-				type: 'min',
-				week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				format: 'YYYY/MM/DD HH:mm'
 			},
 			//Message that will display a status afer sending the new event
 			submitStatus: '',
 			success: false,
 			loading: false,
-			locations: [],
-			//Variable for the search-select that contains the currently selected item/location
-			selectedLocation: {}
+			//Variable for the api route according to if the user is authenticated or not
+			apiRoute: '/api/unvalidated-events'
 		}
 	},
 	methods: {
-		nameAndAddress(selectedLocation) { //Function to format the value that is displayed in the search-select
-			return `${selectedLocation.name} - ${selectedLocation.address}`;
-		},
-		onSelect(selected) {
-			//Set the value for the item that will be displayed in the search select input
-			this.selectedLocation = selected;
-			//Set the new Event's location attribute to the ID of the selected location
-			this.newEvent.location = selected['_id'];
+		show() {
+			console.log(this.newEvent);
 		},
 		addEvent() {
 			//Format and set the new Event's date and time attributes from the startTime variable created by the Datepicker
-			this.newEvent.startDate = moment(this.startTime.time).format('YYYY-MM-DD');
-			this.newEvent.time = moment(this.startTime.time).format('HH:mm');
+			this.newEvent.startDate = moment(this.newEvent.startDate.time).format('YYYY-MM-DD');
+			this.newEvent.time = moment(this.newEvent.startDate.time).format('HH:mm');
+			this.newEvent.location = this.newEvent.location._id;
+			console.log(this.newEvent);
 
 			this.loading = true;
 
@@ -106,8 +59,8 @@ export default {
 			this.submitStatus = '';
 			var vm = this;
 			//Only go on if all required fields are filled out
-			if(this.newEvent.title.length != 0 && this.newEvent.description != 0 && this.newEvent.date != 0) {
-				this.$http.post('http://localhost:3000/api/events', vm.newEvent)
+			if(this.newEvent.title && this.newEvent.description && this.newEvent.startDate) {
+				this.$http.post(backendUrl + this.apiRoute, vm.newEvent)
 				.then(response => {
 					// Success
 					vm.submitStatus = "New Event was successfully created.";
@@ -118,7 +71,9 @@ export default {
 					vm.newEvent.title = '';
 					vm.newEvent.description = '';
 					vm.newEvent.time = '';
-					vm.newEvent.startDate = '';
+					vm.newEvent.startDate = {
+						time: ''
+					};
 					vm.newEvent.endDate = '';
 					vm.startTime = {};
 					vm.newEvent.location = '';
@@ -132,20 +87,22 @@ export default {
 				this.submitStatus = "All fields have to be filled out!";
 				this.success = false;
 				this.loading = false;
+				this.newEvent.startDate = {
+						time: ''
+				};
 			}
       },
 	},
 	mounted() {
 		let vm = this;
-		//Get all locations from the backend to display them as select options
-		this.$http.get('http://localhost:3000/api/locations')
-			.then((response) => {
-				vm.locations = response.body;
-				console.log(response);
+		
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			.then(response => {
+				vm.apiRoute = '/api/events';
 			})
-			.catch((err) => {
+			.catch(err => {
 				console.log(err);
-			})
+			});
 	}
 }
 </script>
