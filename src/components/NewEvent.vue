@@ -50,7 +50,7 @@ export default {
 			//Format and set the new Event's date and time attributes from the startTime variable created by the Datepicker
 			this.newEvent.startDate = moment(this.newEvent.startDate.time).format('YYYY-MM-DD');
 			this.newEvent.time = moment(this.newEvent.startDate.time).format('HH:mm');
-			this.newEvent.location = this.newEvent.location._id;
+			//this.newEvent.location = this.newEvent.location._id;
 			console.log(this.newEvent);
 
 			this.loading = true;
@@ -60,9 +60,10 @@ export default {
 			var vm = this;
 			//Only go on if all required fields are filled out
 			if(this.newEvent.title && this.newEvent.description && this.newEvent.startDate) {
-				this.$http.post(backendUrl + this.apiRoute, vm.newEvent)
+				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 				.then(response => {
 					// Success
+					console.log("new event response: ", response);
 					vm.submitStatus = "New Event was successfully created.";
 					vm.success = true;
 					vm.loading = false;

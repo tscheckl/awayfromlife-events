@@ -56,6 +56,12 @@ a {
 	height: 100%;
 }
 
+.center-ver-hor {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
 @media screen and (max-width: 768px){
 	.md-dialog {
 		max-height: 90%;

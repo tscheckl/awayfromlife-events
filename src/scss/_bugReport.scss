@@ -1,0 +1,68 @@
+@import "themeColors";
+
+#bug_report {
+	max-width: 800px;
+	margin: 0 auto;
+	overflow: hidden;
+	border-radius: 5px;
+	background-color: $primaryLighten5;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+	
+	.router-link-active {
+		height: 46px;
+	}
+
+	.md-icon {
+		font-size: 30px;
+		min-width: 0;
+		min-height: 0;
+		height: auto;
+		width: auto;
+	}
+
+	.md-toolbar {
+		background-color: $accentDarken2;
+
+		h1 {
+			margin-left: 5px;
+			color: $primaryLighten2;
+		}
+
+		.md-button {
+			margin: 5px 0;
+			padding: 5px 10px;
+			min-width: 0;
+			color: $primaryLighten3;
+
+			&:hover {
+				color: $primaryLighten2;
+			}
+		}
+	}
+
+	form {
+		padding: 10px 40px;
+	}
+
+	.function-ta {
+		height: 100px !important;
+	}
+
+	.description-ta {
+		height: 200px !important;
+	}
+
+	h4 {
+		margin-top: 40px;
+		margin-bottom: 0;
+	}
+
+	.md-button {
+		margin-top: 20px;
+	}
+
+	.md-spinner {
+		margin-top: 10px;
+	}
+}

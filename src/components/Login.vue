@@ -1,5 +1,5 @@
 <template>
-	<div id="login">
+	<div id="login" class="center-ver-hor">
 		<h2>Login</h2>
 		<form v-on:submit.prevent>
 			<md-layout md-gutter>

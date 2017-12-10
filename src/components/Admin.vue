@@ -1,5 +1,5 @@
 <template>
-	<div id="admin">
+	<div id="admin" class="center-ver-hor">
 		<md-toolbar>
 			<router-link to="/">
 				<md-button>
@@ -9,6 +9,11 @@
 			</router-link>
 
 			<h1>Admin Bereich</h1>
+
+			<md-button v-on:click="openDialog('changePwdDialog')">
+				<md-icon>lock_outline</md-icon>
+				<md-tooltip md-direction="bottom">Passwort ändern</md-tooltip>
+			</md-button>
 
 			<md-button v-on:click="logout">
 				<md-icon>exit_to_app</md-icon>
@@ -55,6 +60,10 @@
 				<md-spinner v-if="loading" md-indeterminate></md-spinner>
 			</div>
 		</div>
+
+		<md-dialog ref="changePwdDialog">
+			<change-password-form></change-password-form>
+		</md-dialog>
 	</div>
 </template>
 
@@ -63,6 +72,7 @@ import moment from 'moment';
 
 import EventForm from './EventForm';
 import LocationForm from './LocationForm';
+import ChangePasswordForm from './ChangePasswordForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
@@ -70,7 +80,8 @@ export default {
 	name: 'admin',
 	components: {
 		EventForm,
-		LocationForm 
+		LocationForm,
+		ChangePasswordForm
 	},
 	data() {
 		return {
@@ -162,7 +173,13 @@ export default {
 		logout() {
 			sessionStorage.removeItem('aflAuthToken');
 			this.$router.push('/');
-		}
+		},
+		openDialog(ref) {
+			this.$refs[ref].open();
+		},
+		closeDialog(ref) {
+			this.$refs[ref].close();
+		},
 	},
 	mounted() {
 		this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})

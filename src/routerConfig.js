@@ -6,6 +6,7 @@ import Eventmap from '@/components/Eventmap'
 import LoginTest from '@/components/LoginTest'
 import Login from '@/components/Login'
 import Admin from '@/components/Admin'
+import BugReport from '@/components/BugReport'
 
 export default new Router({
   routes: [
@@ -36,6 +37,10 @@ export default new Router({
 	{
 		path: '/admin',
 		component: Admin,
-	}
+  },
+  {
+    path: '/bug-report',
+    component: BugReport
+  }
   ]
 })
