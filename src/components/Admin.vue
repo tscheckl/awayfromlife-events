@@ -62,7 +62,7 @@
 		</div>
 
 		<md-dialog ref="changePwdDialog">
-			<change-password-form></change-password-form>
+			<change-password-form v-on:pwdChanged="closeDialog('changePwdDialog')"></change-password-form>
 		</md-dialog>
 	</div>
 </template>

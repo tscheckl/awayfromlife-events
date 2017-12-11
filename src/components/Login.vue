@@ -19,7 +19,7 @@
 			</md-layout>
 			<p class="error-msg" v-if="error"><md-icon>warning</md-icon> {{errorMsg}}</p>
 
-			<md-button type="submit" v-on:click="handleLogin" class="md-raised md-accent">Send</md-button>
+			<md-button type="submit" v-on:click="handleLogin" class="md-raised md-accent">Login</md-button>
 			<md-spinner v-if="loading" md-indeterminate></md-spinner>
 		</form>
 	</div>
