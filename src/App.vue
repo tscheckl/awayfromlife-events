@@ -7,7 +7,6 @@
 <script>
 import Eventmap from './components/Eventmap'
 import NewEvent from './components/NewEvent'
-import Firebase from 'firebase'
 
 export default {
   components: {

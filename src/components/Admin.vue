@@ -147,6 +147,7 @@ export default {
 			}
 		},
 		showEventInfo(event) {
+			console.log("ShowEvent Bands: ", event.bands);
 			this.$http.get(backendUrl + "/api/locations/" + event.location)
 				.then(response => {
 					this.verifyEvent = {
@@ -158,6 +159,7 @@ export default {
 						},
 						time: event.time,
 						location: response.body._id,
+						bands: event.bands,
 						endDate: ''
 					};
 					this.selectedLocation = response.body;
@@ -185,7 +187,6 @@ export default {
 		this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 			.then(response => {
 				this.unverifiedEvents = response.body;
-				console.log("events", this.unverifiedEvents);
 				this.$http.get(backendUrl + "/api/locations")
 					.then(response => {
 						this.locations = response.body;
@@ -202,7 +203,6 @@ export default {
 		this.$http.get(backendUrl + '/api/unvalidated-locations', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 			.then(response => {
 				this.unverifiedLocations = response.body;
-				console.log("locations",this.unverifiedLocations);
 			})
 			.catch(err => {
 				console.log(err);

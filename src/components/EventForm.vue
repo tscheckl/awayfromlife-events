@@ -22,6 +22,22 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
+						<div class="single-band" v-for="(band, index) in bands" :key="index">
+							<md-input-container>
+								<label>Bandname</label>
+								<md-input v-on:blur="updateBands" v-model="band.name"></md-input>
+							</md-input-container>
+							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
+								<md-icon>remove</md-icon>
+							</md-button>
+						</div>
+
+						<md-button v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
+							<md-icon>add</md-icon>
+						</md-button>
+					</md-layout>
+
+					<md-layout md-flex="100">
 						<md-input-container>
 							<label>Description</label>
 							<md-textarea v-model="data.description" required></md-textarea>
@@ -50,6 +66,22 @@ export default {
 	components: {
 		ListSelect
 	},
+	watch: {
+		data() {
+			if(this.data.bands) {
+				for(let i = 0; i < this.data.bands.length; i++) {
+					this.bands[i] = {
+						name: this.data.bands[i]
+					};
+				}
+			}
+			else {
+				return {
+					name: ''
+				}
+			}
+		}
+	},
 	props: {
 		data: Object,
 		selectedLocation: {}
@@ -66,6 +98,7 @@ export default {
 				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 				format: 'YYYY/MM/DD HH:mm'
 			},
+			bands: []
 		}
 	},
 	methods: {
@@ -78,6 +111,30 @@ export default {
 			//Set the new Event's location attribute to the ID of the selected location
 			this.data.location = selected['_id'];
 		},
+		addBand() {
+			this.bands.push({
+				name: ''
+			});
+			
+			this.updateBands();
+		},
+		removeBand(index) {
+			this.bands.splice(index, 1);
+			
+			if(this.bands.length == 0) {
+				this.bands[0] = {
+					name: ''
+				};
+			}
+
+			this.updateBands();
+		},
+		updateBands() {
+			this.data.bands = [''];
+			for(let i = 0; i < this.bands.length; i++) {
+				this.data.bands[i] = this.bands[i].name;
+			}
+		}
 	},
 	mounted() {
 		this.$http.get(backendUrl + "/api/locations")
@@ -86,7 +143,8 @@ export default {
 			})
 			.catch(err => {
 				console.log(err);
-			})
+			});
+		console.log("Eventform data: ", this.data);
 	}
 }
 </script>

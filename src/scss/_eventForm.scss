@@ -64,6 +64,23 @@
 		margin-left: 15px;
 	}
 
+	.single-band {
+		width: 100%;
+
+		.md-input-container {
+			float: left;
+			width: 87%;
+		}
+
+		.md-button {
+			float: left;
+		}
+	}
+
+	.add-band-btn {
+		margin-top: 0;
+	}
+
 	textarea {
 		height: 135px !important;
 	}

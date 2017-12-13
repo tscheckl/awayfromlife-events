@@ -28,6 +28,7 @@ export default {
 				title: '',
 				description: '',
 				location: {},
+				bands: [''],
 				startDate: {
 					time: ''
 				},
@@ -51,7 +52,7 @@ export default {
 			this.newEvent.startDate = moment(this.newEvent.startDate.time).format('YYYY-MM-DD');
 			this.newEvent.time = moment(this.newEvent.startDate.time).format('HH:mm');
 			//this.newEvent.location = this.newEvent.location._id;
-			console.log(this.newEvent);
+			console.log("event: ", this.newEvent.bands);
 
 			this.loading = true;
 

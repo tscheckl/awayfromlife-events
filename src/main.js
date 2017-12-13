@@ -6,22 +6,16 @@ import App from './App'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import Datepicker from 'vue-datepicker/vue-datepicker-es6.vue'
-import VueFire from 'vuefire'
-import Firebase from 'firebase'
 import VueRouter from 'vue-router'
 import router from './routerConfig'
-import 'vue-event-calendar/dist/style.css' //^1.1.10, CSS has been extracted as one file, so you can easily update it.
-import vueEventCalendar from 'vue-event-calendar'
 import Calendar from 'vuejs-datepicker';
 import vMediaQuery from 'v-media-query';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
-Vue.use(VueFire);
 Vue.component('calendar', Calendar);
 Vue.component('datepicker', Datepicker);
-Vue.use(vueEventCalendar, {locale: 'en'});
 Vue.use(VueResource);
 Vue.use(vMediaQuery);
 
