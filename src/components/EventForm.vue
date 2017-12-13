@@ -68,7 +68,7 @@ export default {
 	},
 	watch: {
 		data() {
-			if(this.data.bands) {
+			if(this.data.bands.length > 0) {
 				for(let i = 0; i < this.data.bands.length; i++) {
 					this.bands[i] = {
 						name: this.data.bands[i]
@@ -76,7 +76,7 @@ export default {
 				}
 			}
 			else {
-				return {
+				this.bands[0] = {
 					name: ''
 				}
 			}
@@ -144,7 +144,12 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
-		console.log("Eventform data: ", this.data);
+
+		for(let i = 0; i < this.data.bands.length; i++) {
+			this.bands[i] = {
+				name: this.data.bands[i]
+			};
+		}
 	}
 }
 </script>

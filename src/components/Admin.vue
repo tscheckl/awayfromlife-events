@@ -31,14 +31,14 @@
 				</md-input-container>
 				
 				<md-list v-if="isEvent">
-					<md-list-item v-for="event in unverifiedEvents" :key="event._id" @click="showEventInfo(event)">
+					<md-list-item v-for="(event, index) in unverifiedEvents" :key="event._id" @click="showEventInfo(event, index)">
 						<h4>{{event.title}}</h4>
 						<span>Event</span>
 					</md-list-item>
 				</md-list>
 
 				<md-list v-else>
-					<md-list-item v-for="location in unverifiedLocations" :key="location._id" @click="showLocationInfo(location)">
+					<md-list-item v-for="(location, index) in unverifiedLocations" :key="location._id" @click="showLocationInfo(location, index)">
 						<h4>{{location.name}}</h4>
 						<span>Location</span>
 					</md-list-item>
@@ -94,7 +94,8 @@ export default {
 			verifyEvent: {},
 			selectedLocation: {},
 			unverifiedLocations: [],
-			verifyLocation: {}
+			verifyLocation: {},
+			verifyIndex: Number
 		}
 	},
 	methods: {
@@ -117,7 +118,7 @@ export default {
 								});
 						}
 						
-						this.unverifiedEvents.shift();
+						this.unverifiedEvents.splice(this.verifyIndex, 1);
 						this.verifyEvent = {};
 					})
 					.catch(err => {
@@ -138,7 +139,7 @@ export default {
 								});
 						}
 
-						this.unverifiedLocations.shift();
+						this.unverifiedLocations.splice(this.verifyIndex, 1);
 						this.verifyLocation = {};
 					})
 					.catch(err => {
@@ -146,7 +147,7 @@ export default {
 					});
 			}
 		},
-		showEventInfo(event) {
+		showEventInfo(event, index) {
 			console.log("ShowEvent Bands: ", event.bands);
 			this.$http.get(backendUrl + "/api/locations/" + event.location)
 				.then(response => {
@@ -167,10 +168,12 @@ export default {
 				.catch(err => {
 					console.log(err);
 				})
+			this.verifyIndex = index;
 		},
-		showLocationInfo(location) {
+		showLocationInfo(location, index) {
 			console.log(location);
 			this.verifyLocation = location;
+			this.verifyIndex = index;
 		},
 		logout() {
 			sessionStorage.removeItem('aflAuthToken');
