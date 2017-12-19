@@ -35,11 +35,11 @@
 			</router-link>
 		</md-toolbar>
 
-		<md-dialog ref="newEventDialog"  md-open-from="#newEvent" md-close-to="#newEvent">
+		<md-dialog ref="newEventDialog" class="new-content-dialog" md-open-from="#newEvent" md-close-to="#newEvent">
 			<new-event></new-event>
 		</md-dialog>
 
-		<md-dialog ref="newLocationDialog"  md-open-from="#newLocation" md-close-to="#newLocation">
+		<md-dialog ref="newLocationDialog" class="new-content-dialog"  md-open-from="#newLocation" md-close-to="#newLocation">
 			<new-location></new-location>
 		</md-dialog>
 	</div>

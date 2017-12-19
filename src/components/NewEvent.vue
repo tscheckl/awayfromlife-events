@@ -29,9 +29,7 @@ export default {
 				description: '',
 				location: {},
 				bands: [''],
-				startDate: {
-					time: ''
-				},
+				startDate: '',
 				endDate: '',
 				time: ''
 			},
@@ -49,10 +47,10 @@ export default {
 		},
 		addEvent() {
 			//Format and set the new Event's date and time attributes from the startTime variable created by the Datepicker
-			this.newEvent.startDate = moment(this.newEvent.startDate.time).format('YYYY-MM-DD');
-			this.newEvent.time = moment(this.newEvent.startDate.time).format('HH:mm');
+			// this.newEvent.startDate = moment(this.newEvent.startDate.time).format('YYYY-MM-DD');
+			// this.newEvent.time = moment(this.newEvent.startDate.time).format('HH:mm');
 			//this.newEvent.location = this.newEvent.location._id;
-			console.log("event: ", this.newEvent.bands);
+			console.log("event: ", this.newEvent);
 
 			this.loading = true;
 
@@ -73,9 +71,7 @@ export default {
 					vm.newEvent.title = '';
 					vm.newEvent.description = '';
 					vm.newEvent.time = '';
-					vm.newEvent.startDate = {
-						time: ''
-					};
+					vm.newEvent.startDate = '';
 					vm.newEvent.endDate = '';
 					vm.startTime = {};
 					vm.newEvent.location = '';
@@ -89,9 +85,7 @@ export default {
 				this.submitStatus = "All fields have to be filled out!";
 				this.success = false;
 				this.loading = false;
-				this.newEvent.startDate = {
-						time: ''
-				};
+				this.newEvent.startDate = '';
 			}
       },
 	},

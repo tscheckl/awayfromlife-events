@@ -1,5 +1,5 @@
 <template>
-	<div id="admin" class="center-ver-hor">
+	<div id="admin" >
 		<md-toolbar>
 			<router-link to="/">
 				<md-button>
@@ -24,40 +24,55 @@
 		<div class="admin-content">
 			<div class="verify-list">
 				<md-input-container>
-					<md-select name="content-type" v-model="isEvent">
-						<md-option :value="true" v-on:click="showEventInfo(this.unverifiedEvents[0])">Events</md-option>
-						<md-option :value="false" v-on:click="showLocationInfo(this.unverifiedLocations[0])">Locations</md-option>
+					<md-select name="content-type" v-model="isEvent" v-on:selected="categoryChange">
+						<md-option :value="true" >Events</md-option>
+						<md-option :value="false">Locations</md-option>
 					</md-select>
 				</md-input-container>
 				
 				<md-list v-if="isEvent">
-					<md-list-item v-for="(event, index) in unverifiedEvents" :key="event._id" @click="showEventInfo(event, index)">
-						<h4>{{event.title}}</h4>
-						<span>Event</span>
-					</md-list-item>
+					<div v-if="unverifiedEvents.length > 0">
+						<md-list-item v-for="(event, index) in unverifiedEvents" :key="event._id" @click="showEventInfo(event, index)">
+							<h4>{{event.title}}</h4>
+							<span>Event</span>
+						</md-list-item>		
+					</div>
+					<h4 class="nothing-found-msg" v-else>Keine unverifizierten Events verfügbar!</h4>
+					
+					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
 
 				<md-list v-else>
-					<md-list-item v-for="(location, index) in unverifiedLocations" :key="location._id" @click="showLocationInfo(location, index)">
-						<h4>{{location.name}}</h4>
-						<span>Location</span>
-					</md-list-item>
+					<div v-if="unverifiedLocations.length > 0">
+						<md-list-item v-for="(location, index) in unverifiedLocations" :key="location._id" @click="showLocationInfo(location, index)">
+							<h4>{{location.name}}</h4>
+							<span>Location</span>
+						</md-list-item>
+					</div>
+					<h4 class="nothing-found-msg" v-else>Keine unverifizierten Locations verfügbar!</h4>
+					
+					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
 			</div>
+
 			<div class="verify-info">
 				<h1>Angegebene Daten</h1>
 
-				<event-form v-if="isEvent" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
+				<event-form v-if="isEvent && unverifiedEvents.length > 0" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
 
-				<location-form v-else :data="verifyLocation"></location-form>
+				<location-form v-if="!isEvent && unverifiedLocations.length > 0" :data="verifyLocation"></location-form>
 				
-				<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
-					<md-icon>check</md-icon>
-				</md-button>
-				<md-button type="submit" v-on:click="handleVerify(false)" class="md-accent delete-btn">
-					<md-icon>clear</md-icon>
-				</md-button>
-				<md-spinner v-if="loading" md-indeterminate></md-spinner>
+				<div v-if="isEvent && unverifiedEvents.length > 0 || !isEvent && unverifiedLocations.length > 0" >
+					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
+						<md-icon>check</md-icon>
+						<md-tooltip md-direction="top">Eintrag annehmen und freischalten</md-tooltip>
+					</md-button>
+
+					<md-button type="submit" v-on:click="handleVerify(false)" class="md-accent delete-btn">
+						<md-icon>clear</md-icon>
+						<md-tooltip md-direction="top">Eintrag ablehnen und löschen</md-tooltip>
+					</md-button>
+				</div>
 			</div>
 		</div>
 
@@ -91,7 +106,16 @@ export default {
 			isEvent: true,
 			unverifiedEvents: [],
 			locations: [],
-			verifyEvent: {},
+			verifyEvent: {
+				_id: '',
+				title: '',
+				description: '',
+				startDate: '',
+				time: '',
+				location: '',
+				bands: [],
+				endDate: ''
+			},
 			selectedLocation: {},
 			unverifiedLocations: [],
 			verifyLocation: {},
@@ -102,12 +126,11 @@ export default {
 		handleVerify(keepData) {
 			if(this.isEvent) {
 				//Format and set the Event's date and time attributes from the startTime variable created by the Datepicker
-				this.verifyEvent.time = moment(this.verifyEvent.startDate.time).format('HH:mm');
-				this.verifyEvent.startDate = moment(this.verifyEvent.startDate.time).format('YYYY-MM-DD');
+				// this.verifyEvent.time = moment(this.verifyEvent.startDate.time).format('HH:mm');
+				// this.verifyEvent.startDate = moment(this.verifyEvent.startDate.time).format('YYYY-MM-DD');
 
 				this.$http.delete(backendUrl + '/api/unvalidated-events/' + this.verifyEvent._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 					.then(response => {
-						// https://www.facebook.com/Atari-Leipzig-259756324046400/
 						if(keepData) {
 							this.$http.post(backendUrl + '/api/events',  this.verifyEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 								.then(response => {
@@ -148,16 +171,13 @@ export default {
 			}
 		},
 		showEventInfo(event, index) {
-			console.log("ShowEvent Bands: ", event.bands);
 			this.$http.get(backendUrl + "/api/locations/" + event.location)
 				.then(response => {
 					this.verifyEvent = {
 						_id: event._id,
 						title: event.title,
 						description: event.description,
-						startDate: {
-							time: event.startDate + " " + event.time
-						},
+						startDate: event.startDate,
 						time: event.time,
 						location: response.body._id,
 						bands: event.bands,
@@ -185,31 +205,68 @@ export default {
 		closeDialog(ref) {
 			this.$refs[ref].close();
 		},
+		categoryChange() {
+			if(this.isEvent) {
+				this.getUnvalidatedEvents();
+			}
+			else {
+				this.getUnvalidatedLocations();
+			}
+		},
+		getUnvalidatedEvents() {
+			this.loading = true;
+
+			this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				.then(response => {
+					if(!response.body.message) {
+						this.unverifiedEvents = response.body;
+
+						this.$http.get(backendUrl + "/api/locations")
+							.then(response => {
+								this.locations = response.body;
+								this.loading = false;
+								console.log("to be shown now: ", this.unverifiedEvents[0]);
+								this.showEventInfo(this.unverifiedEvents[0]);
+							})
+							.catch(err => {
+								console.log(err);
+								this.loading = false;
+							})
+					}
+					else {
+						this.unverifiedEvents = [];
+						this.loading = false;
+					}
+				})
+				.catch(err => {
+					console.log(err);
+					this.loading = false;
+				});
+		},
+		getUnvalidatedLocations() {
+			this.loading = true;
+
+			this.$http.get(backendUrl + '/api/unvalidated-locations', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				.then(response => {
+					if(!response.body.message) {
+						this.unverifiedLocations = response.body;
+						this.showLocationInfo(this.unverifiedLocations[0]);
+					}
+					else {
+						this.unverifiedLocations = [];
+					}
+					this.loading = false;
+					console.log("meddl on", this.unverifiedLocations);
+					console.log(this.unverifiedLocations.length);
+				})
+				.catch(err => {
+					console.log(err);
+					this.loading = false;
+				});
+		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-			.then(response => {
-				this.unverifiedEvents = response.body;
-				this.$http.get(backendUrl + "/api/locations")
-					.then(response => {
-						this.locations = response.body;
-						this.showEventInfo(this.unverifiedEvents[0]);
-					})
-					.catch(err => {
-						console.log(err);
-					})
-			})
-			.catch(err => {
-				console.log(err);
-			});
-
-		this.$http.get(backendUrl + '/api/unvalidated-locations', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-			.then(response => {
-				this.unverifiedLocations = response.body;
-			})
-			.catch(err => {
-				console.log(err);
-			})
+		this.categoryChange();
 	}
 }
 </script>

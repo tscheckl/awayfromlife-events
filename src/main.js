@@ -5,7 +5,7 @@ import VueResource from 'vue-resource';
 import App from './App'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
-import Datepicker from 'vue-datepicker/vue-datepicker-es6.vue'
+import Datetime from 'vue-datetime'
 import VueRouter from 'vue-router'
 import router from './routerConfig'
 import Calendar from 'vuejs-datepicker';
@@ -15,9 +15,9 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
 Vue.component('calendar', Calendar);
-Vue.component('datepicker', Datepicker);
 Vue.use(VueResource);
 Vue.use(vMediaQuery);
+Vue.use(Datetime);
 
 
 Vue.material.registerTheme('default', {

@@ -5,12 +5,10 @@
 </template>
 
 <script>
-import Eventmap from './components/Eventmap'
 import NewEvent from './components/NewEvent'
 
 export default {
   components: {
-    Eventmap,
     NewEvent
   }
 }

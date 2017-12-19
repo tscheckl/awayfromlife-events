@@ -21,6 +21,8 @@
 							</list-select>
 					</md-layout>
 
+					<h3>Bands die bei diesem Event auftreten</h3>
+
 					<md-layout md-flex="100">
 						<div class="single-band" v-for="(band, index) in bands" :key="index">
 							<md-input-container>
@@ -28,26 +30,27 @@
 								<md-input v-on:blur="updateBands" v-model="band.name"></md-input>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
-								<md-icon>remove</md-icon>
+								<md-icon>clear</md-icon>
+								<md-tooltip>Diese Band entfernen</md-tooltip>
 							</md-button>
 						</div>
 
-						<md-button v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
+						<md-button v-if="bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
 							<md-icon>add</md-icon>
+							<md-tooltip md-direction="right">Weitere Band hinzufügen</md-tooltip>
 						</md-button>
 					</md-layout>
 
 					<md-layout md-flex="100">
 						<md-input-container>
 							<label>Description</label>
-							<md-textarea v-model="data.description" required></md-textarea>
+							<md-textarea v-model="data.description"></md-textarea>
 						</md-input-container>
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
-							<label>Date</label>
-							<datepicker :option="timeoption" :date="data.startDate"></datepicker>
+							<datetime v-model="data.startDate" placeholder="Datum wählen" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
 						</div>
 					</md-layout>
 				</md-layout>
@@ -91,13 +94,6 @@ export default {
 			locations: [],
 			//Variable for the search-select that contains the currently selected item/location
 			//selectedLocation: {},
-			//Time options for the datepicker
-			timeoption: {
-				type: 'min',
-				week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-				month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				format: 'YYYY/MM/DD HH:mm'
-			},
 			bands: []
 		}
 	},
@@ -155,5 +151,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "../scss/_eventForm.scss";
+	@import "src/scss/_eventForm.scss";
 </style>

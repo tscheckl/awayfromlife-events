@@ -11,6 +11,10 @@
 		margin-top: 50px;
 	}
 
+	h3 {
+		margin-left: 10px;
+	}
+
 	.ui.fluid.search.selection.dropdown {
 		height: 32px;
 		line-height: 32px;
@@ -74,11 +78,14 @@
 
 		.md-button {
 			float: left;
+			margin-top: 12px;
 		}
 	}
 
 	.add-band-btn {
-		margin-top: 0;
+		margin-top: -5px;
+		margin-bottom: 10px;
+		margin-left: 10px;
 	}
 
 	textarea {
