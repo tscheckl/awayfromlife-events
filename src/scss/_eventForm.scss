@@ -11,8 +11,10 @@
 		margin-top: 50px;
 	}
 
-	h3 {
-		margin-left: 10px;
+	h2 {
+		margin-top: 20px;
+		margin-left: 15px;
+		color: $primaryDarken2;
 	}
 
 	.ui.fluid.search.selection.dropdown {
@@ -73,11 +75,12 @@
 
 		.md-input-container {
 			float: left;
-			width: 87%;
+			width: calc(100% - 65px);
 		}
 
 		.md-button {
 			float: left;
+			margin-left: 0;
 			margin-top: 12px;
 		}
 	}
@@ -94,25 +97,41 @@
 
 	.picker {
 		box-sizing: border-box;
-		margin-left: 15px;
-		display: block;
+		display: inline;
 		padding: 3px 5px;
 		font-size: 16px;
 		line-height: 16px;
 		border-radius: 4px;
 
-		label {
-			font-size: 1em;
-			color: rgba(0, 0, 0, 0.54);
-		}
+		.vdatetime {
+			display: inline;
 
-		.datepickbox {
-			width: 100%;
+			.vdatetime-popup__header {
+				background-color: $accentDarken2;
+			}
+
+			.vdatetime-popup__date-picker__item--selected {
+				span {
+					span {
+						background-color: $accentDarken2;
+					}
+				}
+			}
+
+			.vdatetime-popup__actions__button {
+				color: $accentDarken2;
+				font-weight: 500;
+			}
+
+			.vdatetime-popup__list-picker__item--selected {
+				color: $accentDarken2;
+			}
 		}
 
 		input {
 			max-width: 100% !important;
 			border: none;
+			font-family: 'OpenSans';
 			font-size: 1em;
 			color: rgba(0, 0, 0, 0.54);
 			margin-left: 10px;
@@ -120,21 +139,18 @@
 			cursor: pointer;
 			border-bottom: 1px solid $primaryLighten2;
 		}
+	}
+}
 
-		.cov-date-body {
-			background-color: $accentDarken3 !important;
-			font-family: inherit;
-			.watch-box {
-				.active {
-					background-color: $accentDarken1;
-				}
-			}
+@media screen and (max-width: 768px) {
+	#event_form {
+		h2 {
+			margin-top: 40px;
 		}
 
-		.cov-date-caption {
-			span:first-of-type {
-				display: inline-block;
-				margin: 10px 0;
+		.single-band {
+			.md-input-container {
+				// width: 65%;
 			}
 		}
 	}

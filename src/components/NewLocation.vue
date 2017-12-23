@@ -1,13 +1,19 @@
 <template>
 	<div id="new_location">
-
-		<h1>New location</h1>
+		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
+  			<md-icon>clear</md-icon>
+		</md-button>
+		
+		<h1>Neue Location</h1>
 		
 		<location-form :data="newLocation"></location-form>
 
 		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Send</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-		<span class="message" v-if="submitStatus.length >= 1" :class="success? 'success': 'error'">{{submitStatus}}</span>
+		<md-snackbar ref="snackbar">
+			<span >{{this.submitStatus}}</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
 	</div>
 </template>
 
@@ -32,7 +38,6 @@ export default {
 				website: '',
 				facebook_page_url: ''
 			},
-			success: false,
 			submitStatus: '',
 			loading: false,
 			apiRoute: '/api/unvalidated-locations'
@@ -49,8 +54,9 @@ export default {
 				console.log(this.newLocation);
 				this.$http.post(backendUrl + this.apiRoute, vm.newLocation)
 					.then(response => {	
-						vm.submitStatus = "New Location was successfully created.";
-						vm.success = true;
+						vm.submitStatus = 'Neue Location erfolgreich angelegt!';
+						this.$refs.snackbar.open();
+						this.emitClose();
 						vm.loading = false;
 
 						vm.newLocation.name = '';
@@ -64,14 +70,17 @@ export default {
 					});
 			}
 			else {
-				this.submitStatus = "All fields have to be filled out!";
-				this.success = false;
+				this.submitStatus = 'Alle erforderlichen Felder müssen ausgefüllt sein!';
+				this.$refs.snackbar.open();
 				this.loading = false;
 			}
       },
+	  emitClose() {
+		  this.$emit('close');
+	  }
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 			.then(response => {
 				this.apiRoute = '/api/locations';
 			})

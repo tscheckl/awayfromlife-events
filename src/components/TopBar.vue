@@ -28,7 +28,7 @@
 			</md-button>
 
 			<router-link :to="isAuthenticated? '/admin': '/login'">
-				<md-button class="md-flat admin-login-btn topbar-btn">
+				<md-button class="admin-login-btn topbar-btn">
 					<md-icon>supervisor_account</md-icon>
 					<md-tooltip md-direction="bottom">Admin-Login</md-tooltip>
 				</md-button>
@@ -36,11 +36,11 @@
 		</md-toolbar>
 
 		<md-dialog ref="newEventDialog" class="new-content-dialog" md-open-from="#newEvent" md-close-to="#newEvent">
-			<new-event></new-event>
+			<new-event v-on:close="closeDialog('newEventDialog')"></new-event>
 		</md-dialog>
 
 		<md-dialog ref="newLocationDialog" class="new-content-dialog"  md-open-from="#newLocation" md-close-to="#newLocation">
-			<new-location></new-location>
+			<new-location v-on:close="closeDialog('newLocationDialog')"></new-location>
 		</md-dialog>
 	</div>
 </template>

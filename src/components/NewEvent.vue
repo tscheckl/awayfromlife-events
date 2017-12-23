@@ -1,12 +1,19 @@
 <template>
   	<div id="new_event">
-		<h1 v-on:click="show">New event</h1>
+		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
+			<md-icon>clear</md-icon>
+		</md-button>
+
+		<h1 v-on:click="show">Neues Event</h1>
 
 		<event-form :data="newEvent"></event-form>
 
 		<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Send</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-		<span class="message" v-if="submitStatus.length >= 1" :class="this.success? 'success': 'error'">{{this.submitStatus}}</span>
+		<md-snackbar ref="snackbar">
+			<span >{{this.submitStatus}}</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
   	</div>
 </template>
 
@@ -46,11 +53,6 @@ export default {
 			console.log(this.newEvent);
 		},
 		addEvent() {
-			//Format and set the new Event's date and time attributes from the startTime variable created by the Datepicker
-			// this.newEvent.startDate = moment(this.newEvent.startDate.time).format('YYYY-MM-DD');
-			// this.newEvent.time = moment(this.newEvent.startDate.time).format('HH:mm');
-			//this.newEvent.location = this.newEvent.location._id;
-			console.log("event: ", this.newEvent);
 
 			this.loading = true;
 
@@ -63,8 +65,9 @@ export default {
 				.then(response => {
 					// Success
 					console.log("new event response: ", response);
-					vm.submitStatus = "New Event was successfully created.";
-					vm.success = true;
+					vm.submitStatus = 'Neues Event erfolgreich angelegt';
+					this.$refs.snackbar.open();
+					this.emitClose();
 					vm.loading = false;
 
 					//Reset all fields
@@ -82,12 +85,15 @@ export default {
 				});
 			}
 			else { // else show error message
-				this.submitStatus = "All fields have to be filled out!";
-				this.success = false;
+				this.submitStatus = 'Alle erforderlichen Felder müssen ausgefüllt sein!';
+				this.$refs.snackbar.open();
 				this.loading = false;
 				this.newEvent.startDate = '';
 			}
       },
+	  emitClose() {
+		  this.$emit('close');
+	  }
 	},
 	mounted() {
 		let vm = this;

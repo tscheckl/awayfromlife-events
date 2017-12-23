@@ -11,6 +11,21 @@
 	overflow: auto;
 	max-width: 100%;
 
+	.close-btn {
+		position: absolute;
+		top: 2%;
+		right: 2%;
+		margin: 0 !important;
+		width: auto;
+		height: auto;
+
+		i {
+			font-size: 36px;
+			width: auto;
+			height: auto;
+		}
+	}
+
 	h1 {
 		margin-top: 15px;
 		margin-left: 15px;
@@ -28,25 +43,15 @@
 		margin-left: 15px;
 	}
 
-	.message {
-		margin: 0 auto;
-		margin-top: 15px;
-		padding: 10px;
-		display: block;
-		text-align: center;
-		font-size: 1.4em;
-		line-height: 1.3em;
-		border-radius: 5px;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-		color: white;
-	}
+}
 
-	.success {
-		background-color: green;
-	}
+@media screen and (max-width: 768px){
+	#new_location {
+		padding: 20px;
+		height: 100%;
 
-	.error {
-		background-color: red;
+		h1 {
+			font-size: 1.5em;
+		}
 	}
-
 }

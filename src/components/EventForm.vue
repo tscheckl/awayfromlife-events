@@ -21,7 +21,9 @@
 							</list-select>
 					</md-layout>
 
-					<h3>Bands die bei diesem Event auftreten</h3>
+					<md-layout md-flex="100">
+						<h2>Bands die bei diesem Event auftreten</h2>
+					</md-layout>
 
 					<md-layout md-flex="100">
 						<div class="single-band" v-for="(band, index) in bands" :key="index">
@@ -50,6 +52,7 @@
 
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
+							<md-icon>date_range</md-icon>
 							<datetime v-model="data.startDate" placeholder="Datum wählen" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
 						</div>
 					</md-layout>
