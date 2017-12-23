@@ -32,3 +32,19 @@
 		}
 	}
 }
+
+@media screen and (max-width: 768px) {
+	#topbar {
+		.topbar-btn {
+			padding: 3px 5px;
+			min-width: 55px;
+			.md-icon {
+				// font-size: 3px;
+			}
+		}
+
+		.spacer {
+			// display: none;
+		}
+	}
+}

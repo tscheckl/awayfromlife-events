@@ -6,7 +6,7 @@
 				<md-tooltip md-direction="bottom">Back to AFL</md-tooltip> 
 			</md-button>
 
-			<div style="flex:1;"></div>
+			<div class="spacer" style="flex:1;"></div>
 			
 			<!-- <md-button-toggle md-single class="switch-button">
 				<router-link to="/event-map">
