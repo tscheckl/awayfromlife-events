@@ -1,0 +1,83 @@
+@import "../themeColors";
+
+#event_page {
+	overflow-y: auto;
+	max-width: 100%;
+
+	.event-page-container {
+		// padding: 30px 60px;
+		width: 750px;
+		display: flex;
+		flex-grow: 1;
+		max-width: 100%;
+	
+		.color-block {
+			background-color: $accentDarken2;
+			width: 20%;
+			overflow: visible;
+		}
+	
+		h2 {
+			margin-bottom: 10px;
+		}
+	
+		.date {
+			color: $primaryDarken1;
+			font-size: 1em;
+		}
+	
+		.content {
+			flex: 1;
+			padding: 30px;
+			padding-left: 60px;
+	
+			
+			h2, .date {
+				margin-top: 0;
+				margin-left: -22%;
+				color: $primaryDarken4;
+			}
+	
+			h2 {
+				font-family: 'Big John';
+				font-size: 2.5em;
+				line-height: 1em;
+			}
+	
+			h3 {
+				margin-top: 30px;
+				margin-bottom: 5px;
+				color: $primaryDarken3;
+			}
+
+			.start-time {
+				width: auto;
+				margin-right: 10px;
+				display: inline-block;
+			}
+
+			.start-time + span {
+				font-size: 1.1em;
+			}
+		}
+	
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#event_page {
+		.event-page-container {
+			.content {
+				padding: 10px;
+
+				h2 {
+					font-size: 2em;
+				}
+
+				.date {
+					font-size: 1.2em;
+				}
+			}
+		}
+	}
+}

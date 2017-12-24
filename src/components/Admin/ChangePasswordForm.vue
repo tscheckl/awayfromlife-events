@@ -88,5 +88,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_changePasswordForm.scss";
+	@import "src/scss/Admin/_changePasswordForm.scss";
 </style>

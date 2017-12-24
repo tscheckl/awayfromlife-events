@@ -71,5 +71,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_login.scss";
+	@import "src/scss/Admin/_login.scss";
 </style>

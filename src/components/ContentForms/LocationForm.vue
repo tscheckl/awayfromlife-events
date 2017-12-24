@@ -75,5 +75,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "../scss/_locationForm.scss";
+	@import "src/scss/ContentForms/_locationForm.scss";
 </style>

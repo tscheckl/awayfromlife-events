@@ -35,19 +35,19 @@
 			</router-link>
 		</md-toolbar>
 
-		<md-dialog ref="newEventDialog" class="new-content-dialog" md-open-from="#newEvent" md-close-to="#newEvent">
+		<md-dialog ref="newEventDialog" class="content-dialog" md-open-from="#newEvent" md-close-to="#newEvent">
 			<new-event v-on:close="closeDialog('newEventDialog')"></new-event>
 		</md-dialog>
 
-		<md-dialog ref="newLocationDialog" class="new-content-dialog"  md-open-from="#newLocation" md-close-to="#newLocation">
+		<md-dialog ref="newLocationDialog" class="content-dialog"  md-open-from="#newLocation" md-close-to="#newLocation">
 			<new-location v-on:close="closeDialog('newLocationDialog')"></new-location>
 		</md-dialog>
 	</div>
 </template>
 
 <script>
-import NewLocation from './NewLocation';
-import NewEvent from './NewEvent';
+import NewLocation from './NewContent/NewLocation';
+import NewEvent from './NewContent/NewEvent';
 
 export default {
 	name: 'top-bar',

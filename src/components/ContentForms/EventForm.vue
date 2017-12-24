@@ -154,5 +154,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_eventForm.scss";
+	@import "src/scss/ContentForms/_eventForm.scss";
 </style>

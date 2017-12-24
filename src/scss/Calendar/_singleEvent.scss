@@ -1,4 +1,4 @@
-@import "themeColors";
+@import "../themeColors";
 
 #single_event{
 	margin: 15px;
@@ -9,6 +9,7 @@
 	color: #222;
 	border-radius: 5px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	cursor: pointer;
 
 	.event-title {
 		width: 68%;

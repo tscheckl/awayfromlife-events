@@ -85,8 +85,8 @@
 <script>
 import moment from 'moment';
 
-import EventForm from './EventForm';
-import LocationForm from './LocationForm';
+import EventForm from '@/Components/ContentForms/EventForm';
+import LocationForm from '@/Components/ContentForms/LocationForm';
 import ChangePasswordForm from './ChangePasswordForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
@@ -272,5 +272,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_admin.scss";
+	@import "src/scss/Admin/_admin.scss";
 </style>

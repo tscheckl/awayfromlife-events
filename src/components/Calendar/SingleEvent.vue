@@ -23,5 +23,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_singleEvent";
+	@import "src/scss/Calendar/_singleEvent";
 </style>

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import LocationForm from './LocationForm';
+import LocationForm from '@/Components/ContentForms/LocationForm';
 
 import {backendUrl} from '@/secrets.js';
 
@@ -92,5 +92,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_newLocation";
+	@import "src/scss/NewContent/_newLocation";
 </style>

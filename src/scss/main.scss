@@ -63,6 +63,25 @@ a {
 	transform: translateY(-50%);
 }
 
+.close-btn {
+	position: absolute;
+	top: 2%;
+	right: 2%;
+	margin: 0 !important;
+	width: auto;
+	height: auto;
+
+	i {
+		font-size: 36px;
+		width: auto;
+		height: auto;
+	}
+}
+
+.content-dialog .md-dialog {
+	overflow: visible;
+}
+
 @media screen and (max-width: 768px){
 	.md-dialog {
 		max-height: 100% !important;
@@ -70,14 +89,10 @@ a {
 		// height: 100%;
 	}
 
-	.new-content-dialog {
+	.content-dialog {
 		.md-dialog {
 			height: 100%;
 		}
 	}
-}
-
-.new-content-dialog .md-dialog {
-	overflow: visible;
 }
 

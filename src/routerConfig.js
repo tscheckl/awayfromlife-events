@@ -1,11 +1,8 @@
 import Router from 'vue-router'
-import NewEvent from '@/components/NewEvent'
-import NewLocation from '@/components/NewLocation'
-import EventCalendar from '@/components/EventCalendar'
+import EventCalendar from '@/components/Calendar/EventCalendar'
 import Eventmap from '@/components/Eventmap'
-import LoginTest from '@/components/LoginTest'
-import Login from '@/components/Login'
-import Admin from '@/components/Admin'
+import Login from '@/components/Admin/Login'
+import Admin from '@/components/Admin/Admin'
 import BugReport from '@/components/BugReport'
 
 export default new Router({
@@ -13,10 +10,6 @@ export default new Router({
     {
       	path: '/',
       	component: EventCalendar
-	},
-	{
-		path: '/locations',
-		component: NewLocation
 	},
 	{
 		path: '/calendar',
@@ -29,10 +22,6 @@ export default new Router({
 	{
 		path: '/login',
 		component: Login
-	},
-	{
-		path: '/login-test',
-		component: LoginTest
 	},
 	{
 		path: '/admin',

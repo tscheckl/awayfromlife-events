@@ -20,7 +20,7 @@
 <script>
 import moment from 'moment';
 
-import EventForm from './EventForm';
+import EventForm from '@/Components/ContentForms/EventForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
@@ -110,5 +110,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "../scss/_newEvent";
+	@import "src/scss/NewContent/_newEvent";
 </style>

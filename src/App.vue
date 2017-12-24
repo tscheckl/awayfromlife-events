@@ -5,12 +5,8 @@
 </template>
 
 <script>
-import NewEvent from './components/NewEvent'
 
 export default {
-  components: {
-    NewEvent
-  }
 }
 </script>
 

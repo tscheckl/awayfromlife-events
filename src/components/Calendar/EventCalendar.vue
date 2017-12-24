@@ -11,18 +11,23 @@
 				<h5 class="no-events" v-if="noEvents && foundEvents"> <i class="material-icons">warning</i> Keine Events für das augewählte Datum gefunden!</h5>
 				<h5 class="next-events" v-if="noEvents && foundEvents">Die nächsten verfügbaren Events: </h5>
 				<h5 class="no-events" v-if="noEvents && !foundEvents"> <i class="material-icons">warning</i> Keine weiteren Events für diesen Monat gefunden!</h5>
-				<div v-for="event in foundEvents" :key="event['_id']">
+				<div v-for="event in foundEvents" :key="event['_id']" v-on:click="showEvent(event)">
 					<single-event :data="event"></single-event>
 				</div>
 			</div>
 		</div>
+
+		<md-dialog ref="singleEventDialog" class="content-dialog">
+			<event-page :data="showEventData" v-on:close="$refs.singleEventDialog.close()"></event-page>
+		</md-dialog>
   	</div>
 </template>
 
 <script>
 import moment from 'moment';
-import TopBar from './TopBar';
+import TopBar from '@/Components/TopBar';
 import SingleEvent from './SingleEvent';
+import EventPage from '@/Components/SingleContentPages/EventPage';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
@@ -30,7 +35,8 @@ export default {
 	name: 'event-calendar',
 	components: {
 		TopBar,
-		SingleEvent
+		SingleEvent,
+		EventPage
 	},
 	data() {
 		return {
@@ -38,7 +44,8 @@ export default {
 			formattedDate: '',
 			events: {},
 			foundEvents: [],
-			noEvents: false
+			noEvents: false,
+			showEventData: Object
 		}
 	},
 	methods: {
@@ -68,7 +75,7 @@ export default {
 				this.foundEvents = this.events[smallestDate];
 			}
 
-			if(window.matchMedia("(max-width:768px)").matches) {
+			if(window.matchMedia("(max-width:1024px)").matches) {
 				document.getElementById('all_events').scrollIntoView();
 			}
 		},
@@ -98,6 +105,10 @@ export default {
 			this.getEvents();
 			this.handle(this.date);
 		},
+		showEvent(event) {
+			this.showEventData = event;
+			this.$refs.singleEventDialog.open();
+		}
 	},
 	mounted() {
 		this.handle();
@@ -107,5 +118,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_eventCalendar.scss";
+	@import "src/scss/Calendar/_eventCalendar.scss";
 </style>
