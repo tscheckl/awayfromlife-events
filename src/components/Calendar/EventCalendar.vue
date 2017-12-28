@@ -4,10 +4,10 @@
 		</top-bar>
 
 		<div class="event-calendar-content-wrapper">
-			<h1>Event Kalender</h1>
+			<h1>EVENT KALENDER</h1>
 			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle" v-on:changedMonth="handleChangedMonth"></calendar>
 			<div class="events" id="all_events">
-				<h2>Alle events für {{formattedDate}}</h2>
+				<h2>Alle Events für {{formattedDate}}</h2>
 				<h5 class="no-events" v-if="noEvents && foundEvents"> <i class="material-icons">warning</i> Keine Events für das augewählte Datum gefunden!</h5>
 				<h5 class="next-events" v-if="noEvents && foundEvents">Die nächsten verfügbaren Events: </h5>
 				<h5 class="no-events" v-if="noEvents && !foundEvents"> <i class="material-icons">warning</i> Keine weiteren Events für diesen Monat gefunden!</h5>

@@ -1,6 +1,6 @@
 <template>
 	<div id="login" class="center-ver-hor">
-		<h2>Login</h2>
+		<h2>LOGIN</h2>
 		<form v-on:submit.prevent>
 			<md-layout md-gutter>
 				<md-layout md-flex="100">

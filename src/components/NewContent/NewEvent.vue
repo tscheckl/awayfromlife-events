@@ -4,7 +4,7 @@
 			<md-icon>clear</md-icon>
 		</md-button>
 
-		<h1 v-on:click="show">Neues Event</h1>
+		<h1 v-on:click="show">NEUES EVENT</h1>
 
 		<event-form :data="newEvent"></event-form>
 

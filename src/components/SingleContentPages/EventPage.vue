@@ -10,21 +10,32 @@
 
 			<div class="content">
 				
-				<h2>{{data.title}}</h2>
-				<h4 class="date">{{formattedDate}}</h4>
+				<div class="content-header">
+					<h2>{{data.title.toUpperCase()}}</h2>
+					<h4 class="date">{{formattedDate}}</h4>
+				</div>
 
-				<h3>Location</h3>
-				<p>{{eventLocation.name}}</p>
-				<p>{{eventLocation.adress}}</p>
+				<div class="content-body">
+					<h3><md-icon>location_on</md-icon>Location</h3>
+					<p>{{eventLocation.name}}</p>
+					<p>{{eventLocation.adress}}</p>
 
-				<h3 class="start-time">Beginn:</h3><span>{{formattedTime}} Uhr</span>
+					<hr>
 
-				<h3>Lineup </h3>
-				<ul>
-					<li v-for="band in data.bands" :key="band">{{band}}</li>
-				</ul>
-				<h3>Beschreibung des Events </h3>
-				<p>{{data.description}}</p>
+					<h3 class="start-time"><md-icon>alarm</md-icon>Beginn:</h3><span>{{formattedTime}} Uhr</span>
+
+					<hr>
+
+					<h3><md-icon>queue_music</md-icon>Lineup </h3>
+					<ul>
+						<li v-for="band in data.bands" :key="band">{{band}}</li>
+					</ul>
+					
+					<hr>
+
+					<h3><md-icon>format_quote</md-icon>Beschreibung des Events </h3>
+					<p>{{data.description}}</p>
+				</div>
 			</div>
 		</div>
 	</div>

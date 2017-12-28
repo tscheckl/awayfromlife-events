@@ -19,8 +19,9 @@
 }
 
 @font-face {
-	font-family: "Big John";
-	src: url("~/static/fonts/BIGJOHN.otf") format("opentype"),
+	font-family: "OpenSansBlack";
+	src: url("/static/fonts/Open_Sans/OpenSans-ExtraBold.ttf") format("truetype");
+	font-weight: 900;
 }
 
 body {
@@ -30,7 +31,8 @@ body {
 }
 
 h1 {
-	font-family: "Big John", sans-serif;
+	font-family: "Montserrat", sans-serif;
+	letter-spacing: 1px;
 }
 
 h2, h3, h4, h5 {
@@ -54,6 +56,10 @@ a {
 	position: absolute;
 	width: 100%;
 	height: 100%;
+}
+
+.md-dialog {
+	max-height: 90%;
 }
 
 .center-ver-hor {

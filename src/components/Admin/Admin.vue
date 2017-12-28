@@ -8,7 +8,7 @@
 				</md-button>
 			</router-link>
 
-			<h1>Admin Bereich</h1>
+			<h1>ADMIN BEREICH</h1>
 
 			<md-button v-on:click="openDialog('changePwdDialog')">
 				<md-icon>lock_outline</md-icon>

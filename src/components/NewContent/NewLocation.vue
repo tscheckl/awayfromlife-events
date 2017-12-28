@@ -4,7 +4,7 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<h1>Neue Location</h1>
+		<h1>NEUE LOCATION</h1>
 		
 		<location-form :data="newLocation"></location-form>
 
