@@ -18,7 +18,7 @@
 				<div class="content-body">
 					<h3><md-icon>location_on</md-icon>Location</h3>
 					<p>{{eventLocation.name}}</p>
-					<p>{{eventLocation.adress}}</p>
+					<p>{{eventLocation.address}}</p>
 
 					<hr>
 

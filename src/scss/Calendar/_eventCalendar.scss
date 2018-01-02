@@ -83,6 +83,12 @@
 		.day {
 			height: auto;
 			padding: 15px 0px;
+			-webkit-touch-callout: none; /* iOS Safari */
+			-webkit-user-select: none; /* Safari */
+			 -khtml-user-select: none; /* Konqueror HTML */
+			   -moz-user-select: none; /* Firefox */
+				-ms-user-select: none; /* Internet Explorer/Edge */
+					user-select: none;
 
 			&:hover {
 				border: none;

@@ -4,23 +4,40 @@
 	position: relative;
 	width: 800px;
 	margin: 0 auto;
-	padding: 40px;
+	padding-top: 0;
 	background-color: $primaryLighten4;
 	color: $primaryDarken3;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	overflow: auto;
 	max-width: 100%;
 
-	h1 {
-		margin-top: 15px;
-		margin-left: 15px;
-		font-size: 3em;
+	.close-btn {
+		position: fixed !important;
+		top: 5px;
+		z-index: 2;
 	}
 
-	.new-location-button {
-		position: absolute;
-		right: 2%;
-		top: 2%;
+	.event-type-switch {
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		z-index: -1;
+
+		.md-button {
+			width: 50%;
+			margin: 0;
+			line-height: 3.5em;
+			background-color: $primaryLighten2;
+		}
+
+		.active {
+			background-color: $accentDarken2;
+			color: $primaryLighten4;
+		}
+	}
+
+	h1 {
+		margin-top: 25px;
+		margin-left: 15px;
+		font-size: 3em;
 	}
 
 	.md-button {
@@ -28,12 +45,20 @@
 		margin-left: 15px;
 	}
 
+	.content {
+		padding: 40px;
+		padding-top: 20px;
+	}
+
 }
 
 @media screen and (max-width: 768px){
 	#new_event {
-		padding: 20px;
 		height: 100%;
+
+		.content {
+			padding: 20px;
+		}
 
 		h1 {
 			font-size: 2em;

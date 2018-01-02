@@ -4,11 +4,29 @@
 			<md-icon>clear</md-icon>
 		</md-button>
 
-		<h1 v-on:click="show">NEUES EVENT</h1>
+		<md-button-toggle class="event-type-switch" md-single>
+			<md-button v-on:click="createEvent=true" :class="createEvent? 'active' : ''">
+				Einzelnes Event
+			</md-button>
+			<md-button v-on:click="createEvent=false" :class="!createEvent? 'active' : ''">
+				Tour
+			</md-button>
+		</md-button-toggle>
 
-		<event-form :data="newEvent"></event-form>
+		<div v-if="createEvent" class="content">
+			<h1 v-on:click="show">NEUES EVENT</h1>
+			<event-form :data="newEvent"></event-form>
+			
+			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Event hinzufügen</md-button>
+		</div>
+		
+		<div v-else class="content">
+			<h1>NEUE TOUR</h1>
+			<tour-form :data="newTour"></tour-form>
 
-		<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Send</md-button>
+			<md-button type="submit" v-on:click="addTour" class="md-raised md-accent">Tour hinzufügen</md-button>
+		</div>
+
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		<md-snackbar ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -21,13 +39,15 @@
 import moment from 'moment';
 
 import EventForm from '@/Components/ContentForms/EventForm';
+import TourForm from '@/Components/ContentForms/TourForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'new-event',
 	components: {
-		EventForm
+		EventForm,
+		TourForm
 	},
 	data() {
 		return {
@@ -40,12 +60,22 @@ export default {
 				endDate: '',
 				time: ''
 			},
+			newTour: {
+				title: '',
+				description: '',
+				locations: [],
+				bands: [''],
+				dates: [''],
+				endDate: '',
+				time: ''
+			},
 			//Message that will display a status afer sending the new event
 			submitStatus: '',
 			success: false,
 			loading: false,
 			//Variable for the api route according to if the user is authenticated or not
-			apiRoute: '/api/unvalidated-events'
+			apiRoute: '/api/unvalidated-events',
+			createEvent: true
 		}
 	},
 	methods: {
@@ -90,7 +120,10 @@ export default {
 				this.loading = false;
 				this.newEvent.startDate = '';
 			}
-      },
+	  },
+	  addTour() {
+
+	  },
 	  emitClose() {
 		  this.$emit('close');
 	  }
@@ -110,5 +143,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/NewContent/_newEvent";
+	@import "src/scss/NewContent/_newEvent.scss";
 </style>
