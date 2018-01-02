@@ -63,11 +63,11 @@ export default {
 			newTour: {
 				title: '',
 				description: '',
-				locations: [],
 				bands: [''],
-				dates: [''],
-				endDate: '',
-				time: ''
+				tourStops: [{
+					location: '',
+					startDate: ''
+				}],
 			},
 			//Message that will display a status afer sending the new event
 			submitStatus: '',
@@ -122,7 +122,7 @@ export default {
 			}
 	  },
 	  addTour() {
-
+		  console.log(this.newTour);
 	  },
 	  emitClose() {
 		  this.$emit('close');

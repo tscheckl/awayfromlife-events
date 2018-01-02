@@ -26,10 +26,10 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="single-band" v-for="(band, index) in bands" :key="index">
+						<div class="single-band" v-for="(band, index) in data.bands" :key="index">
 							<md-input-container>
 								<label>Bandname</label>
-								<md-input v-on:blur="updateBands" v-model="band.name"></md-input>
+								<md-input v-model="data.bands[index]"></md-input>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -37,7 +37,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
+						<md-button v-if="data.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Weitere Band hinzufügen</md-tooltip>
 						</md-button>
@@ -111,29 +111,15 @@ export default {
 			this.data.location = selected['_id'];
 		},
 		addBand() {
-			this.bands.push({
-				name: ''
-			});
-			
-			this.updateBands();
+			this.data.bands.push('');
 		},
 		removeBand(index) {
-			this.bands.splice(index, 1);
+			this.data.bands.splice(index, 1);
 			
-			if(this.bands.length == 0) {
-				this.bands[0] = {
-					name: ''
-				};
+			if(this.data.bands.length == 0) {
+				this.data.bands[0] = '';
 			}
-
-			this.updateBands();
 		},
-		updateBands() {
-			this.data.bands = [''];
-			for(let i = 0; i < this.bands.length; i++) {
-				this.data.bands[i] = this.bands[i].name;
-			}
-		}
 	},
 	mounted() {
 		this.$http.get(backendUrl + "/api/locations")
@@ -143,13 +129,7 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
-
-		for(let i = 0; i < this.data.bands.length; i++) {
-			this.bands[i] = {
-				name: this.data.bands[i]
-			};
-		}
-	}
+	},
 }
 </script>
 

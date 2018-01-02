@@ -10,26 +10,15 @@
 						</md-input-container>
 					</md-layout>
 
-					<md-layout md-flex="50" md-flex-small="100">
-							<list-select :list="locations"
-												option-value="_id"
-												option-text="name"
-												:custom-text="nameAndAddress"
-												:selected-item="selectedLocation"
-												placeholder="Select event location*"
-												@select="onSelect">
-							</list-select>
-					</md-layout>
-
 					<md-layout md-flex="100">
 						<h2>Bands die bei diesem Event auftreten</h2>
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="single-band" v-for="(band, index) in bands" :key="index">
+						<div class="single-band" v-for="(band, index) in data.bands" :key="index">
 							<md-input-container>
 								<label>Bandname</label>
-								<md-input v-on:blur="updateBands" v-model="band.name"></md-input>
+								<md-input v-model="data.bands[index]"></md-input>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -37,9 +26,35 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
+						<md-button v-if="data.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Weitere Band hinzufügen</md-tooltip>
+						</md-button>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<h2>Tourstopps</h2>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<div class="tourstop" v-for="(tourstop, index) in data.tourStops" :key="index">
+							<list-select :list="locations"
+												option-value="_id"
+												option-text="name"
+												:custom-text="nameAndAddress"
+												:selected-item="selectedLocationsss[index]"
+												placeholder="Select event location*"
+												@select="selected => selectionHandler(selected, index)">
+							</list-select>
+							<div class="picker">
+								<md-icon>date_range</md-icon>
+								<datetime v-model="tourstop.startDate" placeholder="Datum wählen" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
+							</div>
+						</div>
+
+						<md-button v-if="locations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-band-btn">
+							<md-icon>add</md-icon>
+							<md-tooltip md-direction="right">Weiteren Tourstop hinzufügen</md-tooltip>
 						</md-button>
 					</md-layout>
 
@@ -48,13 +63,6 @@
 							<label>Beschreibung</label>
 							<md-textarea v-model="data.description"></md-textarea>
 						</md-input-container>
-					</md-layout>
-
-					<md-layout md-flex="50" md-flex-small="100">
-						<div class="picker">
-							<md-icon>date_range</md-icon>
-							<datetime v-model="data.startDate" placeholder="Datum wählen" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
-						</div>
 					</md-layout>
 				</md-layout>
 			</div>
@@ -72,68 +80,52 @@ export default {
 	components: {
 		ListSelect
 	},
-	watch: {
-		data() {
-			if(this.data.bands.length > 0) {
-				for(let i = 0; i < this.data.bands.length; i++) {
-					this.bands[i] = {
-						name: this.data.bands[i]
-					};
-				}
-			}
-			else {
-				this.bands[0] = {
-					name: ''
-				}
-			}
-		}
-	},
 	props: {
 		data: Object,
-		selectedLocation: {}
+		selectedLocations: [{name: 'fisch'}]
 	},
 	data() {
 		return {
 			locations: [],
-			//Variable for the search-select that contains the currently selected item/location
-			//selectedLocation: {},
-			bands: []
+			selectedLocationsss: [{}]
 		}
 	},
 	methods: {
 		nameAndAddress(selectedLocation) { //Function to format the value that is displayed in the search-select
 			return `${selectedLocation.name} - ${selectedLocation.address}`;
 		},
-		onSelect(selected) {
+		selectionHandler(selected, index) {
 			//Set the value for the item that will be displayed in the search select input
-			this.selectedLocation = selected;
+			this.selectedLocationsss[index] = selected;
 			//Set the new Event's location attribute to the ID of the selected location
-			this.data.location = selected['_id'];
+			this.data.tourStops[index].location = selected['_id'];
 		},
 		addBand() {
-			this.bands.push({
-				name: ''
-			});
-			
-			this.updateBands();
+			this.data.bands.push('');
 		},
 		removeBand(index) {
-			this.bands.splice(index, 1);
+			this.data.bands.splice(index, 1);
 			
-			if(this.bands.length == 0) {
-				this.bands[0] = {
-					name: ''
-				};
+			if(this.data.bands.length == 0) {
+				this.data.bands[0] = '';
 			}
-
-			this.updateBands();
 		},
-		updateBands() {
-			this.data.bands = [''];
-			for(let i = 0; i < this.bands.length; i++) {
-				this.data.bands[i] = this.bands[i].name;
+		addTourStop() {
+			this.data.tourStops.push({
+				location: '',
+				startDate: ''
+			})
+		},
+		removeTourStop(index) {
+			this.data.tourStops.splice(index, 1);
+
+			if(this.data.tourStops.length == 0) {
+				this.data.tourStops[0] = {
+					location: '',
+					startDate: ''
+				}
 			}
-		}
+		},
 	},
 	mounted() {
 		this.$http.get(backendUrl + "/api/locations")
@@ -143,13 +135,7 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
-
-		for(let i = 0; i < this.data.bands.length; i++) {
-			this.bands[i] = {
-				name: this.data.bands[i]
-			};
-		}
-	}
+	},
 }
 </script>
 
