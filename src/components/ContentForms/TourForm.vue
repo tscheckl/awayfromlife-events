@@ -82,7 +82,7 @@ export default {
 	},
 	props: {
 		data: Object,
-		selectedLocations: [{name: 'fisch'}]
+		selectedLocations: Array
 	},
 	data() {
 		return {
@@ -97,8 +97,13 @@ export default {
 		selectionHandler(selected, index) {
 			//Set the value for the item that will be displayed in the search select input
 			this.selectedLocationsss[index] = selected;
+			console.log("selectedLocationsss: ", this.selectedLocationsss);
 			//Set the new Event's location attribute to the ID of the selected location
 			this.data.tourStops[index].location = selected['_id'];
+		},
+		getLocation(index) {
+			console.log("meddl");
+			return this.selectedLocationsss[index];
 		},
 		addBand() {
 			this.data.bands.push('');
@@ -135,6 +140,8 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
+		
+		console.log(this.selectedLocations );
 	},
 }
 </script>

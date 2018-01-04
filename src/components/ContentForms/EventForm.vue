@@ -72,22 +72,6 @@ export default {
 	components: {
 		ListSelect
 	},
-	watch: {
-		data() {
-			if(this.data.bands.length > 0) {
-				for(let i = 0; i < this.data.bands.length; i++) {
-					this.bands[i] = {
-						name: this.data.bands[i]
-					};
-				}
-			}
-			else {
-				this.bands[0] = {
-					name: ''
-				}
-			}
-		}
-	},
 	props: {
 		data: Object,
 		selectedLocation: {}
