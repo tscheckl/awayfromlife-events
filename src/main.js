@@ -9,15 +9,16 @@ import Datetime from 'vue-datetime'
 import VueRouter from 'vue-router'
 import router from './routerConfig'
 import Calendar from 'vuejs-datepicker';
-import vMediaQuery from 'v-media-query';
+import vSelect from 'vue-select';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
-Vue.component('calendar', Calendar);
 Vue.use(VueResource);
-Vue.use(vMediaQuery);
 Vue.use(Datetime);
+
+Vue.component('calendar', Calendar);
+Vue.component('v-select', vSelect)
 
 
 Vue.material.registerTheme('default', {

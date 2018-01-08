@@ -1,5 +1,5 @@
 <template>
-  <div id="event_form">
+  <div id="tour_form">
 	  <form v-on:submit.prevent>
 			<div class="form-content">
 				<md-layout md-gutter>
@@ -38,18 +38,21 @@
 
 					<md-layout md-flex="100">
 						<div class="tourstop" v-for="(tourstop, index) in data.tourStops" :key="index">
-							<list-select :list="locations"
-												option-value="_id"
-												option-text="name"
-												:custom-text="nameAndAddress"
-												:selected-item="selectedLocationsss[index]"
-												placeholder="Select event location*"
-												@select="selected => selectionHandler(selected, index)">
-							</list-select>
+							<md-input-container>
+								<v-select :options="locations"
+											:on-change="(selected) => selectionHandler(selected, index)"
+											v-model="selectedLocations[index]"
+											placeholder="Select event location*">
+								</v-select>
+							</md-input-container>
 							<div class="picker">
 								<md-icon>date_range</md-icon>
 								<datetime v-model="tourstop.startDate" placeholder="Datum wählen" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
 							</div>
+							<md-button v-on:click="removeTourStop(index)" class="md-icon-button md-raised">
+								<md-icon>clear</md-icon>
+								<md-tooltip>Diesen Tourstop entfernen</md-tooltip>
+							</md-button>
 						</div>
 
 						<md-button v-if="locations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-band-btn">
@@ -72,6 +75,7 @@
 
 <script>
 import { ListSelect  } from 'vue-search-select';
+import LocationSelectionListItem from './LocationSelectionListItem';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
@@ -87,23 +91,17 @@ export default {
 	data() {
 		return {
 			locations: [],
-			selectedLocationsss: [{}]
+			template: LocationSelectionListItem,
+			items: []
 		}
 	},
 	methods: {
-		nameAndAddress(selectedLocation) { //Function to format the value that is displayed in the search-select
-			return `${selectedLocation.name} - ${selectedLocation.address}`;
-		},
 		selectionHandler(selected, index) {
 			//Set the value for the item that will be displayed in the search select input
-			this.selectedLocationsss[index] = selected;
-			console.log("selectedLocationsss: ", this.selectedLocationsss);
+			this.selectedLocations[index] = selected;
 			//Set the new Event's location attribute to the ID of the selected location
 			this.data.tourStops[index].location = selected['_id'];
-		},
-		getLocation(index) {
-			console.log("meddl");
-			return this.selectedLocationsss[index];
+			this.items = this.locations;
 		},
 		addBand() {
 			this.data.bands.push('');
@@ -119,7 +117,7 @@ export default {
 			this.data.tourStops.push({
 				location: '',
 				startDate: ''
-			})
+			});
 		},
 		removeTourStop(index) {
 			this.data.tourStops.splice(index, 1);
@@ -136,16 +134,18 @@ export default {
 		this.$http.get(backendUrl + "/api/locations")
 			.then(response => {
 				this.locations = response.body;
+				console.log(this.locations);
+				for(let location of this.locations) {
+					location.label = location.name + ' - ' + location.address;
+				}
 			})
 			.catch(err => {
 				console.log(err);
 			});
-		
-		console.log(this.selectedLocations );
 	},
 }
 </script>
 
 <style lang="scss">
-	@import "src/scss/ContentForms/_eventForm.scss";
+	@import "src/scss/ContentForms/_tourForm.scss";
 </style>

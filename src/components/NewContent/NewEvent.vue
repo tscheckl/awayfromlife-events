@@ -22,7 +22,7 @@
 		
 		<div v-else class="content">
 			<h1>NEUE TOUR</h1>
-			<tour-form :data="newTour" :selectedLocations="[{}]"></tour-form>
+			<tour-form :data="newTour" :selectedLocations="[]"></tour-form>
 
 			<md-button type="submit" v-on:click="addTour" class="md-raised md-accent">Tour hinzufügen</md-button>
 		</div>
