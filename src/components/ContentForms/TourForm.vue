@@ -47,7 +47,7 @@
 							</md-input-container>
 							<div class="picker">
 								<md-icon>date_range</md-icon>
-								<datetime v-model="tourstop.startDate" placeholder="Datum wählen" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
+								<datetime v-model="tourstop.startDate" placeholder="Datum wählen*" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
 							</div>
 							<md-button v-on:click="removeTourStop(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -74,16 +74,10 @@
 </template>
 
 <script>
-import { ListSelect  } from 'vue-search-select';
-import LocationSelectionListItem from './LocationSelectionListItem';
-
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'event-form',
-	components: {
-		ListSelect
-	},
 	props: {
 		data: Object,
 		selectedLocations: Array

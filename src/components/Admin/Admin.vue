@@ -151,7 +151,6 @@ export default {
 			else {
 				this.$http.delete(backendUrl + '/api/unvalidated-locations/' + this.verifyLocation._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 					.then(response => {
-						// https://www.facebook.com/Atari-Leipzig-259756324046400/
 						if(keepData) {
 							this.$http.post(backendUrl + '/api/locations',  this.verifyLocation, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 								.then(response => {
@@ -184,6 +183,7 @@ export default {
 						endDate: ''
 					};
 					this.selectedLocation = response.body;
+					this.selectedLocation.label = this.selectedLocation.name + ' - ' + this.selectedLocation.address;
 				})
 				.catch(err => {
 					console.log(err);
@@ -225,7 +225,6 @@ export default {
 							.then(response => {
 								this.locations = response.body;
 								this.loading = false;
-								console.log("to be shown now: ", this.unverifiedEvents[0]);
 								this.showEventInfo(this.unverifiedEvents[0]);
 							})
 							.catch(err => {

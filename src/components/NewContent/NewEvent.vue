@@ -90,24 +90,16 @@ export default {
 			this.submitStatus = '';
 			var vm = this;
 			//Only go on if all required fields are filled out
-			if(this.newEvent.title && this.newEvent.description && this.newEvent.startDate) {
+			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
 				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 				.then(response => {
-					// Success
-					console.log("new event response: ", response);
 					vm.submitStatus = 'Neues Event erfolgreich angelegt';
 					this.$refs.snackbar.open();
 					this.emitClose();
 					vm.loading = false;
 
 					//Reset all fields
-					vm.newEvent.title = '';
-					vm.newEvent.description = '';
-					vm.newEvent.time = '';
-					vm.newEvent.startDate = '';
-					vm.newEvent.endDate = '';
-					vm.startTime = {};
-					vm.newEvent.location = '';
+					this.resetEventFields();
 				}).catch(err => {
 					// Error
 					console.log(err);
@@ -120,13 +112,72 @@ export default {
 				this.loading = false;
 				this.newEvent.startDate = '';
 			}
-	  },
-	  addTour() {
-		  console.log(this.newTour);
-	  },
-	  emitClose() {
-		  this.$emit('close');
-	  }
+	 	},
+	  	addTour() {
+		  	this.loading = true;
+
+			this.submitStatus = '';
+
+			if(this.newTour.title && this.newTour.tourStops[0].location && this.newTour.tourStops[0].startDate) {
+				for(let tourstop in this.newTour.tourStops) {
+					let singleTourStopEvent = {
+						title: this.newTour.title,
+						description: this.newTour.description,
+						location: this.newTour.tourStops[tourstop].location,
+						bands: this.newTour.bands,
+						startDate: this.newTour.tourStops[tourstop].startDate
+					}
+
+					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+						.then(response => {
+							console.log(response);
+						}).catch(err => {
+							// Error
+							console.log(err);
+							vm.loading = false;
+						});
+				}
+				
+				this.submitStatus = 'Neue Tour erfolgreich angelegt';
+				this.$refs.snackbar.open();
+				this.emitClose();
+				this.loading = false;
+
+				//Reset all fields
+				this.resetEventFields();
+			}
+			else { // else show error message
+				this.submitStatus = 'Alle erforderlichen Felder müssen ausgefüllt sein!';
+				this.$refs.snackbar.open();
+				this.loading = false;
+				this.newEvent.startDate = '';
+			}
+	 	},
+		emitClose() {
+			this.$emit('close');
+		},
+	 	resetEventFields() {
+			this.newEvent = {
+				title: '',
+				description: '',
+				location: '',
+				bands: [''],
+				startDate: '',
+				endDate: '',
+				time: ''
+			}
+	  	},
+		resetTourFields() {
+			this.newTour = {
+				title: '',
+				description: '',
+				bands: [''],
+				tourStops: [{
+					location: '',
+					startDate: ''
+				}],
+			}
+		}
 	},
 	mounted() {
 		let vm = this;

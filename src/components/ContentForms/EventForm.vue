@@ -11,14 +11,13 @@
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100">
-							<list-select :list="locations"
-												option-value="_id"
-												option-text="name"
-												:custom-text="nameAndAddress"
-												:selected-item="selectedLocation"
-												placeholder="Select event location*"
-												@select="onSelect">
-							</list-select>
+						<md-input-container>
+							<v-select :options="locations"
+									:on-change="onSelect"
+									v-model="selectedLocation"
+									placeholder="Select event location*">
+							</v-select>
+						</md-input-container>
 					</md-layout>
 
 					<md-layout md-flex="100">
@@ -53,7 +52,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
 							<md-icon>date_range</md-icon>
-							<datetime v-model="data.startDate" placeholder="Datum wählen" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
+							<datetime v-model="data.startDate" placeholder="Datum wählen*" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
 						</div>
 					</md-layout>
 				</md-layout>
@@ -63,15 +62,10 @@
 </template>
 
 <script>
-import { ListSelect  } from 'vue-search-select';
-
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'event-form',
-	components: {
-		ListSelect
-	},
 	props: {
 		data: Object,
 		selectedLocation: {}
@@ -109,10 +103,14 @@ export default {
 		this.$http.get(backendUrl + "/api/locations")
 			.then(response => {
 				this.locations = response.body;
+				for(let location of this.locations) {
+					location.label = location.name + ' - ' + location.address;
+				}
 			})
 			.catch(err => {
 				console.log(err);
 			});
+
 	},
 }
 </script>

@@ -17,58 +17,52 @@
 		color: $primaryDarken2;
 	}
 
-	.ui.fluid.search.selection.dropdown {
-		height: 32px;
-		line-height: 32px;
-		margin-top: 14px;
-		margin-left: 15px;
-		padding: 0;
-		padding-top: 5px;
-		padding-right: 25px;
-		background-color: transparent;
-		border: none;
-		border-bottom: 1px solid $primaryLighten2;
-		border-radius: 0;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-
-		input {
-			padding-left: 0;
-			padding-bottom: 0;
-			
-			vertical-align: baseline;
-		}
-
-		.text.default {
-			margin-top: 5px;
-			color: rgba(0, 0, 0, 0.54);
-			font-size: 16px;
-		}
-
-		.menu.visible {
+	.v-select {
+		width: 100%;
+		
+		.dropdown-toggle {
 			border: none;
 		}
 
-		.dropdown.icon {
-			padding-bottom: 0; 
-		}
-
-		.item {
-			font-size: 1.05em;
-			line-height: 1.3em;
-		}
-
-		.text {
+		.selected-tag {
+			position: absolute;
+			left: 0;
 			width: 100%;
+			padding-right: 20px;
 			overflow: hidden;
-			font-size: 16px;
-			line-height: 32px;
+			white-space: nowrap;
 			text-overflow: ellipsis;
 		}
-	}
-	
-	.ui.fluid.search.selection.dropdown.active {
-		box-shadow: none;
+
+		input {
+			display: block;
+			width: 100% !important;
+		}
+
+		.dropdown-menu {
+			max-height: 250px !important;
+			li {
+				a {
+					padding: 10px;
+					color: $primaryDarken4;
+				}
+
+				&:hover {
+					background-color: $primaryLighten3;
+				}
+			}
+
+			.highlight{
+				a {
+					background-color: $accentDarken2 ;
+					color: $primaryLighten5;
+				}
+			}
+
+			.active {
+				background-color: $primaryLighten3;
+			}
+		}
 	}
 
 	.md-input-container {
