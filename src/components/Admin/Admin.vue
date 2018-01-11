@@ -4,7 +4,7 @@
 			<router-link to="/">
 				<md-button>
 					<md-icon>arrow_back</md-icon>
-					<md-tooltip md-direction="bottom">Zurück zum Kalender (du bleibst eingeloggt)</md-tooltip>
+					<md-tooltip md-direction="right">Zurück zum Kalender (du bleibst eingeloggt)</md-tooltip>
 				</md-button>
 			</router-link>
 
@@ -56,6 +56,10 @@
 			</div>
 
 			<div class="verify-info">
+				<md-button class="md-icon-button md-accent close-btn" v-on:click="closeInfo">
+					<md-icon>clear</md-icon>
+				</md-button>
+
 				<h1>Angegebene Daten</h1>
 
 				<event-form v-if="isEvent && unverifiedEvents.length > 0" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
@@ -143,6 +147,7 @@ export default {
 						
 						this.unverifiedEvents.splice(this.verifyIndex, 1);
 						this.verifyEvent = {};
+						this.showEventInfo(this.unverifiedEvents[0]);
 					})
 					.catch(err => {
 						console.log(err);
@@ -170,6 +175,7 @@ export default {
 			}
 		},
 		showEventInfo(event, index) {
+			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
 			this.$http.get(backendUrl + "/api/locations/" + event.location)
 				.then(response => {
 					this.verifyEvent = {
@@ -262,6 +268,9 @@ export default {
 					console.log(err);
 					this.loading = false;
 				});
+		},
+		closeInfo() {
+			document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
 		}
 	},
 	mounted() {
