@@ -84,9 +84,7 @@ export default {
 	},
 	data() {
 		return {
-			locations: [],
-			template: LocationSelectionListItem,
-			items: []
+			locations: []
 		}
 	},
 	methods: {
@@ -95,7 +93,6 @@ export default {
 			this.selectedLocations[index] = selected;
 			//Set the new Event's location attribute to the ID of the selected location
 			this.data.tourStops[index].location = selected['_id'];
-			this.items = this.locations;
 		},
 		addBand() {
 			this.data.bands.push('');

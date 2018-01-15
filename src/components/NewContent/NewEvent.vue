@@ -144,7 +144,7 @@ export default {
 				this.loading = false;
 
 				//Reset all fields
-				this.resetEventFields();
+				this.resetTourFields();
 			}
 			else { // else show error message
 				this.submitStatus = 'Alle erforderlichen Felder müssen ausgefüllt sein!';

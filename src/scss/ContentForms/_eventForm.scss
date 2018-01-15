@@ -43,6 +43,8 @@
 			max-height: 250px !important;
 			li {
 				a {
+					width: 100%;
+					overflow: hidden;
 					padding: 10px;
 					color: $primaryDarken4;
 				}
@@ -125,6 +127,22 @@
 
 			.vdatetime-popup__list-picker__item--selected {
 				color: $accentDarken2;
+			}
+
+			.vdatetime-popup__month-selector__next {
+				&:before {
+					display: block;
+					content: "<";
+					font-weight: bold;
+				}
+			}
+
+			.vdatetime-popup__month-selector__previous {
+				&:before {
+					display: block;
+					content: "<";
+					font-weight: bold;
+				}
 			}
 		}
 

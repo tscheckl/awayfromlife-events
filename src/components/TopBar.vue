@@ -8,23 +8,14 @@
 
 			<div class="spacer" style="flex:1;"></div>
 			
-			<!-- <md-button-toggle md-single class="switch-button">
-				<router-link to="/event-map">
-					<md-button :class="!isCalendar ? 'md-toggle': ''">Map</md-button>
-				</router-link>
-				<router-link to="/calendar">
-					<md-button :class="isCalendar ? 'md-toggle': ''">Calendar</md-button>
-				</router-link>
-			</md-button-toggle> -->
-			
 			<md-button id="newEvent" class="new-event-btn topbar-btn" v-on:click="openDialog('newEventDialog')">
 				<md-icon>event</md-icon>
-				<md-tooltip md-direction="bottom">Create new Event</md-tooltip>
+				<md-tooltip md-direction="bottom">Neues Event anlegen</md-tooltip>
 			</md-button>
 
 			<md-button id="newLocation" class="new-location-btn topbar-btn" v-on:click="openDialog('newLocationDialog')">
 				<md-icon>location_on</md-icon>
-				<md-tooltip md-direction="bottom">Create new Location</md-tooltip>
+				<md-tooltip md-direction="bottom">Neue Location anlegen</md-tooltip>
 			</md-button>
 
 			<router-link :to="isAuthenticated? '/admin': '/login'">

@@ -134,6 +134,11 @@
 
 @media screen and (max-width: 767px) {
 	#admin {
+
+		h1 {
+			font-size: 1.5em;
+		}
+
 		.admin-content {
 			.verify-list {
 				width: 100%;

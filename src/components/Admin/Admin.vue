@@ -129,10 +129,6 @@ export default {
 	methods: {
 		handleVerify(keepData) {
 			if(this.isEvent) {
-				//Format and set the Event's date and time attributes from the startTime variable created by the Datepicker
-				// this.verifyEvent.time = moment(this.verifyEvent.startDate.time).format('HH:mm');
-				// this.verifyEvent.startDate = moment(this.verifyEvent.startDate.time).format('YYYY-MM-DD');
-
 				this.$http.delete(backendUrl + '/api/unvalidated-events/' + this.verifyEvent._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 					.then(response => {
 						if(keepData) {
@@ -147,7 +143,10 @@ export default {
 						
 						this.unverifiedEvents.splice(this.verifyIndex, 1);
 						this.verifyEvent = {};
-						this.showEventInfo(this.unverifiedEvents[0]);
+						document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
+						if(this.unverifiedEvents[0]) {
+							this.showEventInfo(this.unverifiedEvents[0]);
+						}
 					})
 					.catch(err => {
 						console.log(err);
@@ -168,6 +167,10 @@ export default {
 
 						this.unverifiedLocations.splice(this.verifyIndex, 1);
 						this.verifyLocation = {};
+						document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
+						if(this.unverifiedLocations[0]) {
+							this.showLocationInfo(this.unverifiedLocations[0]);
+						}
 					})
 					.catch(err => {
 						console.log(err);

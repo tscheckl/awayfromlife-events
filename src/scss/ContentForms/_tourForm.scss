@@ -50,9 +50,10 @@
 			}
 
 			.dropdown-menu {
-				max-height: 250px !important;
 				li {
 					a {
+						width: 100%;
+						overflow: hidden;
 						padding: 10px;
 						color: $primaryDarken4;
 					}
@@ -174,9 +175,36 @@
 }
 
 @media screen and (max-width: 768px) {
-	#event_form {
+	#tour_form {
 		h2 {
 			margin-top: 40px;
+		}
+
+		.tourstop {
+			position: relative;
+			margin-bottom: 30px;
+
+			.md-input-container, .picker {
+				width: 75%;
+				margin-top: 0;
+				min-height: 0;
+				padding-top: 0;
+				float: left;
+			}
+
+			.md-input-container {
+				margin-bottom: 10px;
+			}
+
+			.picker {
+				padding-right: 0;
+			}
+
+			.md-button {
+				position: absolute;
+				right: 0;
+				top: 25px;
+			}
 		}
 	}
 }
