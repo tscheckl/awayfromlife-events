@@ -1,0 +1,81 @@
+@import "./themeColors";
+
+#sidenav {
+	position: sticky;
+	left: 0;
+	top: 64px;
+	width: 80px;
+	height: calc(100vh - 64px);
+	padding: 10px 20px;
+	background-color: $accentDarken2;
+	z-index: 1;
+	transition: width .3s ease-out;
+	float: left;
+
+	.menu-item {
+		width: 100%;
+		margin-bottom: 40px;
+		height: 40px;
+		overflow: hidden;
+
+		.md-icon {
+			width: 40px;
+			height: 40px;
+			font-size: 40px;
+			color: $primaryDarken4;
+			text-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.24);
+		}
+
+		span {
+			opacity: 0;
+			margin-left: 15px;
+			font-size: 1.15em;
+			color: $primaryDarken4;
+			font-weight: bold;
+			transition: opacity .3s ease-out;
+		}
+
+		&:hover {
+			.md-icon {
+				color: $primaryDarken3;
+			}
+		}
+	}
+
+}
+
+.expanded {
+	width: 250px !important;
+
+	.menu-item {
+		span {
+			opacity: 1 !important;
+		}
+	}
+}
+
+@media screen and (max-width: 768px){
+	#sidenav {
+		background-color: transparent;
+
+		.toggle-menu-btn {
+			position: fixed;
+			bottom: 0px;
+			left: 10px;
+			background-color: $accentDarken1;
+			border-radius: 50%;
+			width: 50px;
+			height: 50px;
+			padding: 5px;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+			.md-icon {
+				
+			}
+		}
+
+		.menu-items-list {
+			display: none;
+		}
+	}
+}
