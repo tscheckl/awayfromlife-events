@@ -4,36 +4,36 @@
 			<router-link to="/">
 				<md-button>
 					<md-icon>arrow_back</md-icon>
-					<md-tooltip md-direction="bottom">Zurück zum Kalender (du bleibst eingeloggt)</md-tooltip>
+					<md-tooltip md-direction="bottom">Back to Calendar (You stay logged in)</md-tooltip>
 				</md-button>
 			</router-link>
 
-			<h1>Einen Bug melden</h1>
+			<h1>Report a Bug</h1>
 		</md-toolbar>
 
 		<form v-on:submit.prevent >
 			<md-input-container>
-				<label>In welchem Teil der Website ist der Fehler aufgetreten?</label>
+				<label>In which part of the website did the error occur?</label>
 				<md-select v-model="bug.component">
 					<md-option :value="option" v-for="option in componentOptions" :key="option">{{option}}</md-option>
 				</md-select>
 			</md-input-container>
 			
 			<md-input-container>
-				<label>Was genau funktioniert nicht?</label>
+				<label>What exactly doesn't work?</label>
 				<md-textarea class="function-ta" v-model="bug.function"></md-textarea>
 			</md-input-container>
 
 			<md-input-container>
-				<label>Wie genau hast du den Fehler herbeigeführt?</label>
+				<label>How did you cause the error to occur?</label>
 				<md-textarea class="description-ta" v-model="bug.description"></md-textarea>
 			</md-input-container>
 
-			<h4>Warst du eingeloggt während der Fehler aufgetreten ist?</h4>
+			<h4>Were you logged in while the error occured?</h4>
 			<div>
-				<md-radio v-model="bug.loggedIn" md-value="1">Ja</md-radio>
-				<md-radio v-model="bug.loggedIn" md-value="0">Nein</md-radio>
-				<md-radio v-model="bug.loggedIn" md-value="2">Nicht sicher</md-radio>
+				<md-radio v-model="bug.loggedIn" md-value="1">Yes</md-radio>
+				<md-radio v-model="bug.loggedIn" md-value="0">No</md-radio>
+				<md-radio v-model="bug.loggedIn" md-value="2">Not sure</md-radio>
 			</div>
 
 			<md-button type="submit" class="md-raised md-accent" v-on:click="sendBugReport">Bug melden</md-button>
@@ -58,10 +58,10 @@ export default {
 			},
 			loading: false,
 			componentOptions: [
-				"Neues Event anlegen",
-				"Neue Location anlegen",
-				"Show Kalender",
-				"Admin Bereich"
+				"Create new Event",
+				"Create new Location",
+				"Show Calender",
+				"Admin Console"
 			]
 		}
 	},
@@ -71,7 +71,7 @@ export default {
 
 			this.$http.post(backendUrl + '/api/bugs', this.bug)
 				.then(response => {
-					console.log("Bug erfolgreich gemeldet!");
+					console.log("Bug was successfully reported!");
 					console.log(response);
 					this.bug.function = '';
 					this.bug.description = '';
@@ -80,7 +80,7 @@ export default {
 					this.loading = false;
 				})
 				.catch(err => {
-					console.log("Es ist ein Fehler aufgetreten, bitte versuche es erneut!");
+					console.log("An error occurred, please try again!");
 					this.loading = false;
 				});
 		}

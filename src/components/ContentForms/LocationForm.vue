@@ -11,7 +11,7 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<h2>Adresse</h2>
+						<h2>Adress</h2>
 					</md-layout>
 
 					<!-- <md-layout md-flex="30" md-flex-small="100">
@@ -43,7 +43,7 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<h2>Zusatzinformationen</h2>
+						<h2>Additional information</h2>
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100">

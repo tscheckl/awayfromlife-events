@@ -10,12 +10,12 @@
 			
 			<md-button id="newEvent" class="new-event-btn topbar-btn" v-on:click="openDialog('newEventDialog')">
 				<md-icon>event</md-icon>
-				<md-tooltip md-direction="bottom">Neues Event anlegen</md-tooltip>
+				<md-tooltip md-direction="bottom">Create new Event</md-tooltip>
 			</md-button>
 
 			<md-button id="newLocation" class="new-location-btn topbar-btn" v-on:click="openDialog('newLocationDialog')">
 				<md-icon>location_on</md-icon>
-				<md-tooltip md-direction="bottom">Neue Location anlegen</md-tooltip>
+				<md-tooltip md-direction="bottom">Create new Location</md-tooltip>
 			</md-button>
 
 			<router-link :to="isAuthenticated? '/admin': '/login'">
@@ -27,7 +27,7 @@
 		</md-toolbar>
 
 		<md-dialog ref="newEventDialog" class="content-dialog" md-open-from="#newEvent" md-close-to="#newEvent">
-			<new-event v-on:close="closeDialog('newEventDialog')"></new-event>
+			<new-event v-on:close="emitEventDialogClose"></new-event>
 		</md-dialog>
 
 		<md-dialog ref="newLocationDialog" class="content-dialog"  md-open-from="#newLocation" md-close-to="#newLocation">
@@ -74,6 +74,10 @@ export default {
 				.catch(err => {
 					return false;
 				})
+		},
+		emitEventDialogClose() {
+			this.closeDialog('newEventDialog');
+			this.$emit('newEvent');
 		}
 	}
 }

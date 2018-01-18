@@ -1,18 +1,18 @@
 <template>
   	<div id="event_calendar">
-		<top-bar>
+		<top-bar v-on:newEvent="getEvents">
 		</top-bar>
 
 		<sidenav></sidenav>
 
 		<div class="event-calendar-content-wrapper">
-			<h1>EVENT KALENDER</h1>
+			<h1>EVENT CALENDER</h1>
 			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle" v-on:changedMonth="handleChangedMonth"></calendar>
 			<div class="events" id="all_events">
-				<h2>Alle Events für {{formattedDate}}</h2>
-				<h5 class="no-events" v-if="noEvents && foundEvents"> <i class="material-icons">warning</i> Keine Events für das augewählte Datum gefunden!</h5>
-				<h5 class="next-events" v-if="noEvents && foundEvents">Die nächsten verfügbaren Events: </h5>
-				<h5 class="no-events" v-if="noEvents && !foundEvents"> <i class="material-icons">warning</i> Keine weiteren Events für diesen Monat gefunden!</h5>
+				<h2>All Events for {{formattedDate}}</h2>
+				<h5 class="no-events" v-if="noEvents && foundEvents"> <i class="material-icons">warning</i> No events available for the selected date!</h5>
+				<h5 class="next-events" v-if="noEvents && foundEvents">Next available events: </h5>
+				<h5 class="no-events" v-if="noEvents && !foundEvents"> <i class="material-icons">warning</i> No more events found for this month!</h5>
 				<div v-for="event in foundEvents" :key="event['_id']" v-on:click="showEvent(event)">
 					<single-event :data="event"></single-event>
 				</div>

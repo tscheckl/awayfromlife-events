@@ -46,22 +46,26 @@ export default {
 		handleLogin() {
 			this.error = false;
 			this.loading = true;
-			console.log(backendUrl + " " + frontEndSecret);
+
 			let token = jwt.sign({
 				email: this.login.email,
 				password: this.login.pwd
 			}, frontEndSecret, (err, token) => {
 				this.$http.post(backendUrl + '/api/users/login', {token: token})
 				.then((response) => {
-					console.log(response);
 					this.token = response.body.token;
 					sessionStorage.setItem("aflAuthToken", this.token);
-					console.log(sessionStorage);
 					this.$router.push('/admin');
 				})
 				.catch((err) => {
+					console.log(err);
 					this.error = true;
-					this.errorMsg = "Email oder Passwort ungültig";
+					if(err.status == 401) {
+						this.errorMsg = "Invalid email or password!";
+					}
+					else {
+						this.errorMsg = "An error occurred. Please try again!";
+					}
 					this.loading = false;
 				})
 			});

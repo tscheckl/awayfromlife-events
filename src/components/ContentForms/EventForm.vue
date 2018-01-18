@@ -5,7 +5,7 @@
 				<md-layout md-gutter>
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
-							<label>Titel</label>
+							<label>Title</label>
 							<md-input v-model="data.title" required></md-input>
 						</md-input-container>
 					</md-layout>
@@ -21,7 +21,7 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<h2>Bands die bei diesem Event auftreten</h2>
+						<h2>Lineup for this event</h2>
 					</md-layout>
 
 					<md-layout md-flex="100">
@@ -32,19 +32,19 @@
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
-								<md-tooltip>Diese Band entfernen</md-tooltip>
+								<md-tooltip>Remove band</md-tooltip>
 							</md-button>
 						</div>
 
 						<md-button v-if="data.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
 							<md-icon>add</md-icon>
-							<md-tooltip md-direction="right">Weitere Band hinzufügen</md-tooltip>
+							<md-tooltip md-direction="right">Add another band</md-tooltip>
 						</md-button>
 					</md-layout>
 
 					<md-layout md-flex="100">
 						<md-input-container>
-							<label>Beschreibung</label>
+							<label>Description</label>
 							<md-textarea v-model="data.description"></md-textarea>
 						</md-input-container>
 					</md-layout>
@@ -52,7 +52,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
 							<md-icon>date_range</md-icon>
-							<datetime v-model="data.startDate" placeholder="Datum wählen*" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
+							<datetime v-model="data.startDate" placeholder="Select date*" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
 						</div>
 					</md-layout>
 				</md-layout>

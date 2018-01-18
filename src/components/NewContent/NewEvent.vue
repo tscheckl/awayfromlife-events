@@ -6,7 +6,7 @@
 
 		<md-button-toggle class="event-type-switch" md-single>
 			<md-button v-on:click="createEvent=true" :class="createEvent? 'active' : ''">
-				Einzelnes Event
+				Single Event
 			</md-button>
 			<md-button v-on:click="createEvent=false" :class="!createEvent? 'active' : ''">
 				Tour
@@ -14,17 +14,17 @@
 		</md-button-toggle>
 
 		<div v-if="createEvent" class="content">
-			<h1 v-on:click="show">NEUES EVENT</h1>
+			<h1 v-on:click="show">NEW EVENT</h1>
 			<event-form :data="newEvent"></event-form>
 			
-			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Event hinzufügen</md-button>
+			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Add Event</md-button>
 		</div>
 		
 		<div v-else class="content">
-			<h1>NEUE TOUR</h1>
+			<h1>NEW TOUR</h1>
 			<tour-form :data="newTour" :selectedLocations="[]"></tour-form>
 
-			<md-button type="submit" v-on:click="addTour" class="md-raised md-accent">Tour hinzufügen</md-button>
+			<md-button type="submit" v-on:click="addTour" class="md-raised md-accent">Add Tour</md-button>
 		</div>
 
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
@@ -93,7 +93,7 @@ export default {
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
 				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 				.then(response => {
-					vm.submitStatus = 'Neues Event erfolgreich angelegt';
+					vm.submitStatus = 'New event successfully created';
 					this.$refs.snackbar.open();
 					this.emitClose();
 					vm.loading = false;
@@ -103,11 +103,13 @@ export default {
 				}).catch(err => {
 					// Error
 					console.log(err);
+						vm.submitStatus = 'An error occurred while creating the Event. Please try again!';
+						this.$refs.snackbar.open();
 					vm.loading = false;
 				});
 			}
 			else { // else show error message
-				this.submitStatus = 'Alle erforderlichen Felder müssen ausgefüllt sein!';
+				this.submitStatus = 'All required input fields have to be filled out!';
 				this.$refs.snackbar.open();
 				this.loading = false;
 				this.newEvent.startDate = '';
@@ -134,11 +136,13 @@ export default {
 						}).catch(err => {
 							// Error
 							console.log(err);
+							vm.submitStatus = 'An error occurred while creating the Tour. Please try again!';
+							this.$refs.snackbar.open();
 							vm.loading = false;
 						});
 				}
 				
-				this.submitStatus = 'Neue Tour erfolgreich angelegt';
+				this.submitStatus = 'New Tour successfully created';
 				this.$refs.snackbar.open();
 				this.emitClose();
 				this.loading = false;
@@ -147,7 +151,7 @@ export default {
 				this.resetTourFields();
 			}
 			else { // else show error message
-				this.submitStatus = 'Alle erforderlichen Felder müssen ausgefüllt sein!';
+				this.submitStatus = 'All required input fields have to be filled out!';
 				this.$refs.snackbar.open();
 				this.loading = false;
 				this.newEvent.startDate = '';

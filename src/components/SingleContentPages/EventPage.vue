@@ -22,7 +22,7 @@
 
 					<hr>
 
-					<h3 class="start-time"><md-icon>alarm</md-icon>Beginn:</h3><span>{{formattedTime}} Uhr</span>
+					<h3 class="start-time"><md-icon>alarm</md-icon>Start:</h3><span>{{formattedTime}} Uhr</span>
 
 					<hr>
 
@@ -33,7 +33,7 @@
 					
 					<hr>
 
-					<h3><md-icon>format_quote</md-icon>Beschreibung des Events </h3>
+					<h3><md-icon>format_quote</md-icon>Description for the event </h3>
 					<p>{{data.description}}</p>
 				</div>
 			</div>

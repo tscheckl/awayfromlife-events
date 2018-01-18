@@ -4,11 +4,11 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<h1>NEUE LOCATION</h1>
+		<h1>NEW LOCATION</h1>
 		
 		<location-form :data="newLocation"></location-form>
 
-		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Send</md-button>
+		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Add Location</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		<md-snackbar ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -54,7 +54,7 @@ export default {
 				console.log(this.newLocation);
 				this.$http.post(backendUrl + this.apiRoute, vm.newLocation)
 					.then(response => {	
-						vm.submitStatus = 'Neue Location erfolgreich angelegt!';
+						vm.submitStatus = 'New Location successfully created';
 						this.$refs.snackbar.open();
 						this.emitClose();
 						vm.loading = false;
@@ -66,11 +66,13 @@ export default {
 					})
 					.catch(err => {
 						this.loading = false;
+						vm.submitStatus = 'An error occurred while creating the location. Please try again!';
+						this.$refs.snackbar.open();
 						console.log(err);
 					});
 			}
 			else {
-				this.submitStatus = 'Alle erforderlichen Felder müssen ausgefüllt sein!';
+				this.submitStatus = 'All required input fields have to be filled out!';
 				this.$refs.snackbar.open();
 				this.loading = false;
 			}

@@ -4,15 +4,15 @@
 			<router-link to="/">
 				<md-button>
 					<md-icon>arrow_back</md-icon>
-					<md-tooltip md-direction="right">Zurück zum Kalender (du bleibst eingeloggt)</md-tooltip>
+					<md-tooltip md-direction="right">Back to Calendar (You stay logged in)</md-tooltip>
 				</md-button>
 			</router-link>
 
-			<h1>ADMIN BEREICH</h1>
+			<h1>ADMIN CONSOLE</h1>
 
 			<md-button v-on:click="openDialog('changePwdDialog')">
 				<md-icon>lock_outline</md-icon>
-				<md-tooltip md-direction="bottom">Passwort ändern</md-tooltip>
+				<md-tooltip md-direction="bottom">Change password</md-tooltip>
 			</md-button>
 
 			<md-button v-on:click="logout">
@@ -25,7 +25,7 @@
 			<div class="verify-list">
 				<md-input-container>
 					<md-select name="content-type" v-model="isEvent" v-on:selected="categoryChange">
-						<md-option :value="true" >Events</md-option>
+						<md-option :value="true">Events</md-option>
 						<md-option :value="false">Locations</md-option>
 					</md-select>
 				</md-input-container>
@@ -37,7 +37,7 @@
 							<span>Event</span>
 						</md-list-item>		
 					</div>
-					<h4 class="nothing-found-msg" v-else>Keine unverifizierten Events verfügbar!</h4>
+					<h4 class="nothing-found-msg" v-else>No unverified events available!</h4>
 					
 					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
@@ -49,7 +49,7 @@
 							<span>Location</span>
 						</md-list-item>
 					</div>
-					<h4 class="nothing-found-msg" v-else>Keine unverifizierten Locations verfügbar!</h4>
+					<h4 class="nothing-found-msg" v-else>No unverified locations available!</h4>
 					
 					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
@@ -60,7 +60,7 @@
 					<md-icon>clear</md-icon>
 				</md-button>
 
-				<h1>Angegebene Daten</h1>
+				<h1>Given data</h1>
 
 				<event-form v-if="isEvent && unverifiedEvents.length > 0" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
 
@@ -69,12 +69,12 @@
 				<div v-if="isEvent && unverifiedEvents.length > 0 || !isEvent && unverifiedLocations.length > 0" >
 					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
 						<md-icon>check</md-icon>
-						<md-tooltip md-direction="top">Eintrag annehmen und freischalten</md-tooltip>
+						<md-tooltip md-direction="top">Keep and activate entry</md-tooltip>
 					</md-button>
 
 					<md-button type="submit" v-on:click="handleVerify(false)" class="md-accent delete-btn">
 						<md-icon>clear</md-icon>
-						<md-tooltip md-direction="top">Eintrag ablehnen und löschen</md-tooltip>
+						<md-tooltip md-direction="top">Decline and delete entry</md-tooltip>
 					</md-button>
 				</div>
 			</div>
