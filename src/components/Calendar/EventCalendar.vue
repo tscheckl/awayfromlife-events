@@ -1,10 +1,5 @@
 <template>
   	<div id="event_calendar">
-		<top-bar v-on:newEvent="getEvents">
-		</top-bar>
-
-		<sidenav></sidenav>
-
 		<div class="event-calendar-content-wrapper">
 			<h1>EVENT CALENDER</h1>
 			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle" v-on:changedMonth="handleChangedMonth"></calendar>
@@ -27,8 +22,7 @@
 
 <script>
 import moment from 'moment';
-import TopBar from '@/Components/TopBar';
-import Sidenav from '@/Components/Sidenav'
+import Sidenav from '@/Components/Sidenav';
 import SingleEvent from './SingleEvent';
 import EventPage from '@/Components/SingleContentPages/EventPage';
 
@@ -37,10 +31,8 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 export default {
 	name: 'event-calendar',
 	components: {
-		TopBar,
 		SingleEvent,
 		EventPage,
-		Sidenav
 	},
 	data() {
 		return {

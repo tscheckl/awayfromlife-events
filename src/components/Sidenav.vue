@@ -1,12 +1,17 @@
 <template>
 	<div id="sidenav">
 		<div class="menu-item toggle-menu-btn" v-on:click="toggleSidenav">
-			<a href="#">
-				<md-icon>menu</md-icon>
-			</a>
+			<md-icon>menu</md-icon>
 		</div>
 
 		<div class="menu-items-list">
+			<div class="menu-item">
+				<router-link to="/events">
+					<md-icon>date_range</md-icon>
+					<span >Events</span>
+				</router-link>
+			</div>
+
 			<div class="menu-item">
 				<router-link to="/">
 					<md-icon>location_on</md-icon>
@@ -18,13 +23,6 @@
 				<router-link to="/">
 					<md-icon>music_note</md-icon>
 					<span >Bands</span>
-				</router-link>
-			</div>
-
-			<div class="menu-item">
-				<router-link to="/">
-					<md-icon>date_range</md-icon>
-					<span >Events</span>
 				</router-link>
 			</div>
 		</div>

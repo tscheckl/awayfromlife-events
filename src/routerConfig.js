@@ -4,12 +4,17 @@ import Eventmap from '@/components/Eventmap'
 import Login from '@/components/Admin/Login'
 import Admin from '@/components/Admin/Admin'
 import BugReport from '@/components/BugReport'
+import EventsList from '@/components/ContentLists/EventsList'
 
 export default new Router({
   routes: [
     {
       	path: '/',
       	component: EventCalendar
+	},
+	{
+		path: '/events',
+		component: EventsList
 	},
 	{
 		path: '/calendar',

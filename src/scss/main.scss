@@ -54,9 +54,16 @@ a {
 }
 
 #app {
-	position: absolute;
+	float: left;
 	width: 100%;
+	overflow: hidden;
+}
+
+.router-view-container {
+	width: calc(100% - 80px);
 	height: 100%;
+	margin-top: 64px;
+	margin-left: 80px;
 }
 
 .md-dialog {
@@ -90,12 +97,17 @@ a {
 }
 
 @media screen and (max-width: 768px){
+	.router-view-container {
+		margin-left: 0;
+		width: 100%;
+	}
+
 	.md-dialog {
 		max-height: 100% !important;
 		max-width: 100% !important;
 		// height: 100%;
 	}
-
+	
 	.content-dialog {
 		.md-dialog {
 			height: 100%;

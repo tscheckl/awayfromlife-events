@@ -1,16 +1,22 @@
 @import "./themeColors";
 
 #sidenav {
-	position: sticky;
+	position: fixed;
 	left: 0;
 	top: 64px;
 	width: 80px;
 	height: calc(100vh - 64px);
 	padding: 10px 20px;
+	display: inline;
 	background-color: $accentDarken2;
 	z-index: 1;
 	transition: width .3s ease-out;
 	float: left;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+	.toggle-menu-btn {
+		cursor: pointer;
+	}
 
 	.menu-item {
 		width: 100%;
@@ -37,7 +43,7 @@
 
 		&:hover {
 			.md-icon {
-				color: $primaryDarken3;
+				color: #000;
 			}
 		}
 	}
@@ -57,6 +63,7 @@
 @media screen and (max-width: 768px){
 	#sidenav {
 		background-color: transparent;
+		display: none;
 
 		.toggle-menu-btn {
 			position: fixed;

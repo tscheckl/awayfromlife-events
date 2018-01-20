@@ -11,7 +11,7 @@
 			<div class="content">
 				
 				<div class="content-header">
-					<h2>{{data.title.toUpperCase()}}</h2>
+					<h2>{{data.title?data.title.toUpperCase(): ''}}</h2>
 					<h4 class="date">{{formattedDate}}</h4>
 				</div>
 
