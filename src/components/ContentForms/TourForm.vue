@@ -92,7 +92,9 @@ export default {
 			//Set the value for the item that will be displayed in the search select input
 			this.selectedLocations[index] = selected;
 			//Set the new Event's location attribute to the ID of the selected location
-			this.data.tourStops[index].location = selected['_id'];
+			if(selected._id) {
+				this.data.tourStops[index].location = selected._id;
+			}
 		},
 		addBand() {
 			this.data.bands.push('');
@@ -112,12 +114,15 @@ export default {
 		},
 		removeTourStop(index) {
 			this.data.tourStops.splice(index, 1);
+			this.selectedLocations.splice(index, 1);
 
 			if(this.data.tourStops.length == 0) {
 				this.data.tourStops[0] = {
 					location: '',
 					startDate: ''
-				}
+				};
+
+				this.selectedLocations[0] = '';
 			}
 		},
 	},
@@ -125,7 +130,6 @@ export default {
 		this.$http.get(backendUrl + "/api/locations")
 			.then(response => {
 				this.locations = response.body;
-				console.log(this.locations);
 				for(let location of this.locations) {
 					location.label = location.name + ' - ' + location.address;
 				}
