@@ -56,25 +56,20 @@ a {
 #app {
 	float: left;
 	width: 100%;
-	overflow: hidden;
+	min-height: 100%;
+	position: relative;
 }
 
 .router-view-container {
 	width: calc(100% - 80px);
-	height: 100%;
+	min-height: calc(100% - 64px);
 	margin-top: 64px;
 	margin-left: 80px;
+	position: absolute;
 }
 
 .md-dialog {
 	max-height: 90%;
-}
-
-.center-ver-hor {
-	max-height: 85%;
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
 }
 
 .close-btn {

@@ -47,19 +47,8 @@ export default {
 		NewEvent,
 	},
 	computed: {
-		isCalendar: function() {
-			if(this.$route.path.indexOf('event-map') !== -1) {
-				return false;
-			}
-			else {
-				return true;
-			}
-		}
 	},
 	methods: {
-		toggleSidenav() {
-			this.$refs.sidenav.toggle();
-		},
 		openDialog(ref) {
 			this.$refs[ref].open();
 		},

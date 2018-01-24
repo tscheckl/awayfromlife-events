@@ -1,28 +1,21 @@
 <template>
-	<div id="admin" >
-		<md-toolbar>
-			<router-link to="/">
-				<md-button>
-					<md-icon>arrow_back</md-icon>
-					<md-tooltip md-direction="right">Back to Calendar (You stay logged in)</md-tooltip>
-				</md-button>
-			</router-link>
-
-			<h1>ADMIN CONSOLE</h1>
-
-			<md-button v-on:click="openDialog('changePwdDialog')">
-				<md-icon>lock_outline</md-icon>
-				<md-tooltip md-direction="bottom">Change password</md-tooltip>
-			</md-button>
-
-			<md-button v-on:click="logout">
-				<md-icon>exit_to_app</md-icon>
-				<md-tooltip md-direction="bottom">Logout</md-tooltip>
-			</md-button>
-		</md-toolbar>
-
+	<div id="admin">
 		<div class="admin-content">
 			<div class="verify-list">
+				<div class="admin-buttons">
+					<md-button v-on:click="openDialog('changePwdDialog')">
+						<md-icon>lock_outline</md-icon>
+						<md-tooltip md-direction="bottom">Change password</md-tooltip>
+					</md-button>
+
+					<md-button v-on:click="logout">
+						<md-icon>exit_to_app</md-icon>
+						<md-tooltip md-direction="bottom">Logout</md-tooltip>
+					</md-button>
+				</div>
+				
+				<h1>ADMIN CONSOLE</h1>
+				
 				<md-input-container>
 					<md-select name="content-type" v-model="isEvent" v-on:selected="categoryChange">
 						<md-option :value="true">Events</md-option>
@@ -264,7 +257,6 @@ export default {
 						this.unverifiedLocations = [];
 					}
 					this.loading = false;
-					console.log("meddl on", this.unverifiedLocations);
 					console.log(this.unverifiedLocations.length);
 				})
 				.catch(err => {
