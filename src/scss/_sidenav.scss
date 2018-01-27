@@ -10,7 +10,7 @@
 	display: inline;
 	background-color: $accentDarken2;
 	z-index: 3;
-	transition: width .3s ease-out;
+	transition: width .3s ease-out, padding .2s ease-out;
 	float: left;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 
@@ -62,27 +62,29 @@
 
 @media screen and (max-width: 768px){
 	#sidenav {
-		background-color: transparent;
-		display: none;
+		width: 0%;
+		padding: 0;
 
 		.toggle-menu-btn {
 			position: fixed;
-			bottom: 0px;
-			left: 10px;
+			bottom: -10px;
+			right: 10px;
 			background-color: $accentDarken1;
 			border-radius: 50%;
 			width: 50px;
 			height: 50px;
 			padding: 5px;
 			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-
-			.md-icon {
-				
-			}
+			transition: background-color .4s ease-out;
 		}
+	}
 
-		.menu-items-list {
-			display: none;
+	.expanded {
+		width: 100%;
+		padding: 20px !important;
+
+		.toggle-menu-btn {
+			background-color: $accentDarken3 !important;
 		}
 	}
 }

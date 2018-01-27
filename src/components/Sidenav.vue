@@ -5,21 +5,21 @@
 		</div>
 
 		<div class="menu-items-list">
-			<div class="menu-item">
+			<div class="menu-item" v-on:click="removeExpandedClass">
 				<router-link to="/events">
 					<md-icon>date_range</md-icon>
 					<span >Events</span>
 				</router-link>
 			</div>
 
-			<div class="menu-item">
+			<div class="menu-item" v-on:click="removeExpandedClass">
 				<router-link to="/">
 					<md-icon>location_on</md-icon>
 					<span>Locations</span>
 				</router-link>
 			</div>
 
-			<div class="menu-item">
+			<div class="menu-item" v-on:click="removeExpandedClass">
 				<router-link to="/">
 					<md-icon>music_note</md-icon>
 					<span >Bands</span>
@@ -39,14 +39,20 @@ export default {
 	},
 	methods: {
 		toggleSidenav() {
-			this.expanded = !this.expanded;
-			
-			if(this.expanded) {
-				document.getElementById('sidenav').classList.add('expanded');
+			if(!this.expanded) {
+				this.addExpandedClass();
 			}
 			else {
-				document.getElementById('sidenav').classList.remove('expanded');
+				this.removeExpandedClass();
 			}
+		},
+		removeExpandedClass() {
+			this.expanded = false;
+			document.getElementById('sidenav').classList.remove('expanded');
+		},
+		addExpandedClass() {
+			this.expanded = true;
+			document.getElementById('sidenav').classList.add('expanded');
 		}
 	}
 }

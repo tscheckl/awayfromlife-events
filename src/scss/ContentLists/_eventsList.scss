@@ -1,16 +1,57 @@
 @import "../themeColors.scss";
 
 #events_list {
-	height: 100%;
+	width: 100%;
 	margin: 0;
-	padding: 10px 100px;
-	background-color: $accent;
+	position: absolute;
+	top: 0;
+	background-color: $primaryLighten4;
+
+	.list-header {
+		margin: 0 20px;
+		
+		h1 {
+			color: $primaryDarken3;
+			margin: 30px 0px;
+			font-size: 3em;
+		}
+	}
+
+	.all-events {
+		margin: 0 30px;
+		margin-bottom: 20px;
+		background-color: rgba(255, 255, 255, 0.4);
+		border-radius: 3px;
+		overflow: hidden;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+	}
 
 	.event {
-		padding: 30px;
-		margin: 10px 20px;
-		background-color: $primaryLighten5;
-		border-radius: 60px;
-		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+		padding: 10px 15px;
+		display: flex;
+		border-bottom: 1px solid $primaryLighten3;
+		background-color: #ffffff;
+		color: $primaryDarken3;
+
+		h3 {
+			flex: 1;
+			display: inline-block;
+		}
+
+		&:nth-of-type(2n) {
+			background-color: #fdfdfd;
+		}
+	}
+}
+
+@media screen and (max-width: 768px){
+	#events_list {
+
+		h1 {
+			margin-left: 30px;
+		}
+		.all-events {
+			margin: 0;
+		}
 	}
 }

@@ -1,7 +1,13 @@
 <template>
 	<div id="events_list">
-		<div class="event" v-for="(event, index) in events" :key="index">
-			<h1>{{event.title}}</h1>
+		<div class="list-header">
+			<h1>All Events</h1>
+		</div>
+		<div class="all-events">
+			<div class="event" v-for="(event, index) in events" :key="index">
+				<h3>{{event.title}}</h3>
+				<md-icon>keyboard_arrow_right</md-icon>
+			</div>
 		</div>
 	</div>
 </template>

@@ -25,7 +25,6 @@
 }
 
 body {
-	background-color: $primaryDarken4 !important;
 	font-family: "OpenSans", sans-serif;
 	//Nicer ton #efadaa
 }
@@ -44,7 +43,6 @@ body, html {
 	padding: 0;
 	height: 100%;
 	position: relative;
-	background-image: url("/static/background.jpg");
 }
 
 a {
