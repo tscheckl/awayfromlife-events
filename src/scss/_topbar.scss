@@ -10,7 +10,7 @@
 	z-index: 4;
 	
 	.md-toolbar {
-		background-color: $accentDarken2;
+		background-color: #232323;
 		width: 100%;
 	}
 	
@@ -19,7 +19,7 @@
 		padding: 3px 15px;
 		font-size: 1em;
 		font-weight: bold;
-		color: $primaryDarken4;
+		color: $accentDarken3;
 
 		.md-icon {
 			font-size: 30px;
@@ -27,11 +27,11 @@
 			min-height: 0;
 			height: auto;
 			width: auto;
-			text-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.24);
+			text-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
 		}
 
 		&:hover {
-			color: #000000;
+			color: $accentDarken1;
 		}
 	}
 }

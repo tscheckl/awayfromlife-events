@@ -1,57 +1,54 @@
-@import "../themeColors.scss";
+@import "./generalList";
 
 #events_list {
-	width: 100%;
-	margin: 0;
-	position: absolute;
-	top: 0;
-	background-color: $primaryLighten4;
-
-	.list-header {
-		margin: 0 20px;
-		
-		h1 {
-			color: $primaryDarken3;
-			margin: 30px 0px;
-			font-size: 3em;
-		}
-	}
-
-	.all-events {
-		margin: 0 30px;
-		margin-bottom: 20px;
-		background-color: rgba(255, 255, 255, 0.4);
-		border-radius: 3px;
-		overflow: hidden;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-	}
-
-	.event {
-		padding: 10px 15px;
+	.list-item {
 		display: flex;
-		border-bottom: 1px solid $primaryLighten3;
-		background-color: #ffffff;
-		color: $primaryDarken3;
-
-		h3 {
-			flex: 1;
-			display: inline-block;
-		}
-
-		&:nth-of-type(2n) {
-			background-color: #fdfdfd;
-		}
 	}
-}
 
-@media screen and (max-width: 768px){
-	#events_list {
+	p {
+		margin: 1.15em 0;
+	}
 
-		h1 {
-			margin-left: 30px;
+	.event-date {
+		margin-right: 20px;
+		width: 5%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.location-name {
+		flex: 1;
+	}
+
+	.list-item-header {
+		padding: 0 15px !important;
+		background-color: #232323 !important;
+		color: $primaryLighten5 !important;
+		cursor: default !important;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+		p {
+			margin: 8px 0;
 		}
-		.all-events {
-			margin: 0;
+
+		.event-date, .item-title {
+			margin-right: 20px;
+			span {
+				cursor: pointer;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+
+		.location-name {
+			margin-left: -20px;
+		}
+
+		.hidden-icon {
+			opacity: 0;
 		}
 	}
 }

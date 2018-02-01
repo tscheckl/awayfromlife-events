@@ -60,8 +60,7 @@ a {
 
 .router-view-container {
 	width: calc(100% - 80px);
-	min-height: calc(100% - 64px);
-	margin-top: 64px;
+	min-height: 100%;
 	margin-left: 80px;
 	position: absolute;
 }

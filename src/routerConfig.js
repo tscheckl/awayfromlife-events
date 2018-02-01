@@ -5,6 +5,7 @@ import Login from '@/components/Admin/Login'
 import Admin from '@/components/Admin/Admin'
 import BugReport from '@/components/BugReport'
 import EventsList from '@/components/ContentLists/EventsList'
+import LocationsList from '@/components/ContentLists/LocationsList';
 
 export default new Router({
   routes: [
@@ -15,6 +16,10 @@ export default new Router({
 	{
 		path: '/events',
 		component: EventsList
+	},
+	{
+		path: '/locations',
+		component: LocationsList
 	},
 	{
 		path: '/calendar',

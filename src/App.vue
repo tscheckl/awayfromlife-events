@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
-		<top-bar>
-		</top-bar>
+		<!-- <top-bar>
+		</top-bar> -->
 		<sidenav></sidenav>
 		<div class="router-view-container">
 			<router-view></router-view>

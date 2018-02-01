@@ -1,6 +1,6 @@
 @import "../themeColors";
 
-#event_form {
+#tour_form, #event_form {
 	.calendar-button {
 		position: absolute;
 		right: 2%;
@@ -15,56 +15,6 @@
 		margin-top: 20px;
 		margin-left: 15px;
 		color: $primaryDarken2;
-	}
-
-	.v-select {
-		width: 100%;
-		
-		.dropdown-toggle {
-			border: none;
-		}
-
-		.selected-tag {
-			position: absolute;
-			left: 0;
-			width: 100%;
-			padding-right: 20px;
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-		}
-
-		input {
-			display: block;
-			width: 100% !important;
-		}
-
-		.dropdown-menu {
-			max-height: 250px !important;
-			li {
-				a {
-					width: 100%;
-					overflow: hidden;
-					padding: 10px;
-					color: $primaryDarken4;
-				}
-
-				&:hover {
-					background-color: $primaryLighten3;
-				}
-			}
-
-			.highlight{
-				a {
-					background-color: $accentDarken2 ;
-					color: $primaryLighten5;
-				}
-			}
-
-			.active {
-				background-color: $primaryLighten3;
-			}
-		}
 	}
 
 	.md-input-container {
@@ -95,6 +45,55 @@
 
 	textarea {
 		height: 135px !important;
+	}
+
+	.v-select {
+		width: 100%;
+		
+		.dropdown-toggle {
+			border: none;
+		}
+
+		.selected-tag {
+			position: absolute;
+			left: 0;
+			width: 100%;
+			padding-right: 20px;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		input {
+			display: block;
+			width: 100% !important;
+		}
+
+		.dropdown-menu {
+			li {
+				a {
+					width: 100%;
+					overflow: hidden;
+					padding: 10px;
+					color: $primaryDarken4;
+				}
+
+				&:hover {
+					background-color: $primaryLighten3;
+				}
+			}
+
+			.highlight{
+				a {
+					background-color: $accentDarken2 ;
+					color: $primaryLighten5;
+				}
+			}
+
+			.active {
+				background-color: $primaryLighten3;
+			}
+		}
 	}
 
 	.picker {
@@ -161,7 +160,7 @@
 }
 
 @media screen and (max-width: 768px) {
-	#event_form {
+	#event_form, #tour_form {
 		h2 {
 			margin-top: 40px;
 		}
