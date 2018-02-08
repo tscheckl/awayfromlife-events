@@ -6,7 +6,7 @@
 		
 		<h1>NEW LOCATION</h1>
 		
-		<location-form :data="newLocation" :value="newLocationValue"></location-form>
+		<location-form :data="newLocation" :bus="bus"></location-form>
 
 		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Add Location</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import Vue from 'Vue';
 import LocationForm from '@/Components/ContentForms/LocationForm';
 
 import {backendUrl} from '@/secrets.js';
@@ -45,7 +46,7 @@ export default {
 				website: '',
 				facebook_page_url: ''
 			},
-			newLocationValue: '',
+			bus: new Vue(),
 			submitStatus: '',
 			loading: false,
 			apiRoute: '/api/unvalidated-locations'
@@ -59,7 +60,6 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				console.log("bla");
 				this.$http.post(backendUrl + this.apiRoute, this.newLocation)
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
@@ -102,7 +102,7 @@ export default {
 				website: '',
 				facebook_page_url: ''
 			};
-			this.newLocationValue = '';
+			this.bus.$emit('close');
 		}
 	},
 	mounted() {

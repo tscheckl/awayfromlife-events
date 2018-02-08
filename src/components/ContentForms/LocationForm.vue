@@ -61,15 +61,14 @@ export default {
 	name: 'location-form',
 	props: {
 		data: Object,
+		bus: undefined,
 	},
 	components: {
     	places
 	},
-	watch: {
-		value() {
-			if(this.value = '') {
-				this.close();
-			}
+	data() {
+		return {
+			placesAutocomplete: undefined
 		}
 	},
 	methods: {
@@ -80,6 +79,9 @@ export default {
 		}
 	},
 	mounted() {
+		this.bus.$on('close', () => {
+			this.close();
+		});
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
 		this.placesAutocomplete.on('change', e => {
 			this.data.address.street = e.suggestion.name;
@@ -90,7 +92,6 @@ export default {
 			this.data.address.lat = e.suggestion.latlng.lat;
 			this.data.address.lng = e.suggestion.latlng.lng;
 			this.data.address.value = e.suggestion.value;
-			this.value = e.suggestion.value;
 		});
 	},
 	
