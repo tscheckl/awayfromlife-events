@@ -15,4 +15,24 @@
 		box-sizing: border-box;
 		margin-left: 15px;
 	}
+
+	p {
+		margin-top: 10px;
+		margin-left: 15px;
+		margin-bottom: 0;
+		font-size: 12px;
+		color: $primaryDarken2;
+	}
+
+	.ap-input {
+		padding-left: 0;
+		margin-left: 15px;
+		font-size: 16px;
+		margin-left: 0;
+		color: rgba(0, 0, 0, 0.87);
+	}
+
+	textarea {
+		height: 135px !important;
+	}
 }

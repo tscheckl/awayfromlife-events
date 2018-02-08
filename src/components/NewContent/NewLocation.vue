@@ -6,7 +6,7 @@
 		
 		<h1>NEW LOCATION</h1>
 		
-		<location-form :data="newLocation"></location-form>
+		<location-form :data="newLocation" :value="newLocationValue"></location-form>
 
 		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Add Location</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
@@ -31,13 +31,21 @@ export default {
 		return {
 			newLocation: {
 				name: '',
-				// street: '',
-				// zipCode: '',
-				// city: '',
-				address: '',
+				address: {
+					street: '',
+					city: '',
+					administrative: '',
+					country: '',
+					postcode: '',
+					lat: 0,
+					lng: 0,
+					value: '',
+				},
+				information: '',
 				website: '',
 				facebook_page_url: ''
 			},
+			newLocationValue: '',
 			submitStatus: '',
 			loading: false,
 			apiRoute: '/api/unvalidated-locations'
@@ -51,18 +59,15 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				console.log(this.newLocation);
-				this.$http.post(backendUrl + this.apiRoute, vm.newLocation)
+				console.log("bla");
+				this.$http.post(backendUrl + this.apiRoute, this.newLocation)
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
 						this.$refs.snackbar.open();
 						this.emitClose();
 						vm.loading = false;
+						this.emptyFormFields();
 
-						vm.newLocation.name = '';
-						vm.newLocation.address = '';
-						vm.newLocation.website = '';
-						vm.newLocation.facebook_page_url = '';
 					})
 					.catch(err => {
 						this.loading = false;
@@ -76,10 +81,29 @@ export default {
 				this.$refs.snackbar.open();
 				this.loading = false;
 			}
-      },
-	  emitClose() {
-		  this.$emit('close');
-	  }
+    	},
+		emitClose() {
+			this.$emit('close');
+		},
+	  	emptyFormFields() {
+			this.newLocation = {
+				name: '',
+				address: {
+					street: '',
+					city: '',
+					administrative: '',
+					country: '',
+					postcode: '',
+					lat: 0,
+					lng: 0,
+					value: '',
+				},
+				information: '',
+				website: '',
+				facebook_page_url: ''
+			};
+			this.newLocationValue = '';
+		}
 	},
 	mounted() {
 		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
@@ -88,7 +112,7 @@ export default {
 			})
 			.catch(err => {
 				console.log(err);
-			})
+			});
 	}
 }
 </script>
