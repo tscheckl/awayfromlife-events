@@ -6,7 +6,7 @@
 		
 		<h1>NEW LOCATION</h1>
 		
-		<location-form :data="newLocation"></location-form>
+		<location-form :data="newLocation" :value="newLocationValue"></location-form>
 
 		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Add Location</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
@@ -45,6 +45,7 @@ export default {
 				website: '',
 				facebook_page_url: ''
 			},
+			newLocationValue: '',
 			submitStatus: '',
 			loading: false,
 			apiRoute: '/api/unvalidated-locations'
@@ -58,8 +59,8 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				console.log('Object for backend', this.newLocation);
-				this.$http.post(backendUrl + this.apiRoute, vm.newLocation)
+				console.log("bla");
+				this.$http.post(backendUrl + this.apiRoute, this.newLocation)
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
 						this.$refs.snackbar.open();
@@ -101,6 +102,7 @@ export default {
 				website: '',
 				facebook_page_url: ''
 			};
+			this.newLocationValue = '';
 		}
 	},
 	mounted() {
