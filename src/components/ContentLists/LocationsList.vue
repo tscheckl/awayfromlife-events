@@ -1,14 +1,36 @@
 <template>
 	<div id="locations_list">
 		<div class="list-header">
-			<h1>All Locations</h1>
+			<div class="left-container">
+				<h1>All Locations</h1>
+			</div>
 
-			<md-button class="md-raised" v-on:click="openDialog('new-location-dialog')"><md-icon>add</md-icon>Create new Location</md-button>
+			<md-button class="md-raised create-content-btn" v-on:click="openDialog('new-location-dialog')"><md-icon>add</md-icon>Create new Location</md-button>
 		</div>
 		<div class="all-items">
 			<div class="list-item" v-for="(location, index) in locations" :key="index">
-				<h3>{{location.name}}</h3>
+				<h3 class="item-title">{{location.name}}</h3>
 				<md-icon>keyboard_arrow_right</md-icon>
+			</div>
+
+			<div class="list-footer">
+				<div class="pages">
+					<span class="page-btn" v-on:click="currentPage > 1 ? getEventsPage(currentPage-1): getEventsPage(currentPage)"><md-icon>keyboard_arrow_left</md-icon></span>
+					<span v-for="number in smallerPages()" :key="number" v-on:click="getEventsPage(number)">{{number}}</span>
+					<span class="current-page">{{currentPage}}</span>
+					<span v-for="number in biggerPages()" :key="number" v-on:click="getEventsPage(number)">{{number}}</span>
+					<span class="page-btn" v-on:click="(currentPage < availablePages)? getEventsPage(currentPage+1): getEventsPage(currentPage)"><md-icon>keyboard_arrow_right</md-icon></span>
+				</div>
+				
+				<md-input-container>
+					<p>Items per Page</p>
+					<md-select name="itemsPerPage" v-model="itemsPerPage" v-on:change="getEventsPage(currentPage)">
+						<md-option value="5">5</md-option>
+						<md-option value="10">10</md-option>
+						<md-option value="20">20</md-option>
+						<md-option value="50">50</md-option>
+					</md-select>
+				</md-input-container>
 			</div>
 		</div>
 		<div class="color-block"></div>
@@ -30,23 +52,61 @@ export default {
 	},
 	data() {
 		return {
-			locations: []
+			locations: [],
+			currentPage: 1,
+			availablePages: 50,
+			itemsPerPage: '20'
 		}
 	},
 	methods: {
 		openDialog(ref) {
 			this.$refs[ref].open();
-		}
-	},
-	mounted() {
-		this.$http.get(backendUrl + '/api/locations')
+		},
+		getEventsPage(page) {
+			this.currentPage = page;
+
+			this.$http.get(backendUrl + '/api/locations/page/' + page + '/' + this.itemsPerPage)
 			.then(response => {
-				this.locations = response.body;
-				console.log(this.locations);
+				this.locations = response.body.locations;
+				this.availablePages = response.body.pages;
+				this.currentPage = response.body.current;
+
+				// this.sortingAsc.date = true;
+				// //Sort the events ascending by their date.
+				// this.sortByDate();
 			})
 			.catch(err => {
 				console.log(err);
 			});
+		},
+		smallerPages() {
+			let smallerPages = [];
+			let counter = 0;
+			for(let i = 1; i < this.currentPage; i++) {
+				smallerPages[counter] = i;
+				counter++;
+			}
+			
+			if(smallerPages.length > 5) {
+				return smallerPages.slice(smallerPages.length-5);
+			}
+			else {
+				return smallerPages;
+			}
+		},
+		biggerPages() {
+			let biggerPages = [];
+			let counter = 0;
+			for(let i = this.currentPage; i < this.availablePages; i++) {
+				biggerPages[counter] = i+1;
+				counter++;
+			}
+
+			return biggerPages.slice(0,5);
+		}
+	},
+	mounted() {
+		this.getEventsPage(this.currentPage);	
 	}
 }
 </script>

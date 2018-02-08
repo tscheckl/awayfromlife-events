@@ -1,54 +1,101 @@
 @import "./generalList";
 
 #events_list {
-	.list-item {
-		display: flex;
-	}
-
+	
 	p {
 		margin: 1.15em 0;
 	}
 
+	.all-items {
+		margin-top: 50px !important;
+		overflow: visible !important;
+	}
+
 	.event-date {
-		margin-right: 20px;
-		width: 5%;
+		width: 15%;
+		padding-right: 5%;
+		box-sizing: border-box;
+		display: block;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
-	.location-name {
-		flex: 1;
+	.location-name, .item-title {
+		width: 42.5%;
+	}
+
+	.learn-more-icon, .hidden-icon {
+		width: 5%;
 	}
 
 	.list-item-header {
-		padding: 0 15px !important;
-		background-color: #232323 !important;
-		color: $primaryLighten5 !important;
-		cursor: default !important;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		height: 10px;
+		padding: 0 5px;
+		display: flex;
+		color: $primaryLighten5;
 
 		p {
 			margin: 8px 0;
-		}
+			position: relative;
+			top: -25px;
 
-		.event-date, .item-title {
-			margin-right: 20px;
 			span {
-				cursor: pointer;
-
-				&:hover {
-					text-decoration: underline;
-				}
+				padding: 10px 15px;
+				background-color: #232323 !important;
+				box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+				border-radius: 3px;
 			}
 		}
 
-		.location-name {
-			margin-left: -20px;
+		.item-title {
+			flex: 1;
+			display: inline-block;
+		}
+
+		.event-date, .item-title {
+			overflow: visible;
+
+			span {
+				cursor: pointer;
+			}
+
+			.md-icon {
+				color: $accentAccent2;
+				text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			}
 		}
 
 		.hidden-icon {
 			opacity: 0;
+		}
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	#events_list {
+		.event-date {
+			width: 20%;
+		}
+
+		.item-title, .location-name {
+			width: 37.5%;
+		}
+	}
+}
+
+@media screen and (max-width: 768px){
+	#events_list {
+		.event-date {
+			display: none;
+		}
+
+		.all-items {
+			margin-top: 70px;
+
+			.event-date {
+				display: none;
+			}
 		}
 	}
 }
