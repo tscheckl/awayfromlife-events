@@ -153,6 +153,7 @@ export default {
 					});
 			}
 			else {
+				console.log('to be verified ', this.verifyLocation);
 				this.$http.delete(backendUrl + '/api/unvalidated-locations/' + this.verifyLocation._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 					.then(response => {
 						if(keepData) {

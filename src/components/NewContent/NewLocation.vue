@@ -31,10 +31,17 @@ export default {
 		return {
 			newLocation: {
 				name: '',
-				// street: '',
-				// zipCode: '',
-				// city: '',
-				address: '',
+				address: {
+					street: '',
+					city: '',
+					administrative: '',
+					country: '',
+					postcode: '',
+					lat: 0,
+					lng: 0,
+					value: '',
+				},
+				information: '',
 				website: '',
 				facebook_page_url: ''
 			},
@@ -51,18 +58,15 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				console.log(this.newLocation);
+				console.log('Object for backend', this.newLocation);
 				this.$http.post(backendUrl + this.apiRoute, vm.newLocation)
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
 						this.$refs.snackbar.open();
 						this.emitClose();
 						vm.loading = false;
+						this.emptyFormFields();
 
-						vm.newLocation.name = '';
-						vm.newLocation.address = '';
-						vm.newLocation.website = '';
-						vm.newLocation.facebook_page_url = '';
 					})
 					.catch(err => {
 						this.loading = false;
@@ -76,10 +80,28 @@ export default {
 				this.$refs.snackbar.open();
 				this.loading = false;
 			}
-      },
-	  emitClose() {
-		  this.$emit('close');
-	  }
+    	},
+		emitClose() {
+			this.$emit('close');
+		},
+	  	emptyFormFields() {
+			this.newLocation = {
+				name: '',
+				address: {
+					street: '',
+					city: '',
+					administrative: '',
+					country: '',
+					postcode: '',
+					lat: 0,
+					lng: 0,
+					value: '',
+				},
+				information: '',
+				website: '',
+				facebook_page_url: ''
+			};
+		}
 	},
 	mounted() {
 		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
@@ -88,7 +110,7 @@ export default {
 			})
 			.catch(err => {
 				console.log(err);
-			})
+			});
 	}
 }
 </script>
