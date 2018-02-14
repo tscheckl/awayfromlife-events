@@ -1,1 +1,24 @@
 @import "./generalList";
+
+#locations_list {
+	
+	.item-title {
+		width: 45%
+	}
+
+	.location-address, .location-city {
+		width: 25%;
+	}
+
+	.hidden-icon, .learn-more-icon {
+		width: 5%;
+	}
+
+	.list-item-header {
+		p {
+			span {
+				cursor: pointer;
+			}
+		}
+	}
+}

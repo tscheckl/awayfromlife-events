@@ -1,20 +1,25 @@
 import Router from 'vue-router'
-import EventCalendar from '@/components/Calendar/EventCalendar'
-import Eventmap from '@/components/Eventmap'
-import Login from '@/components/Admin/Login'
-import Admin from '@/components/Admin/Admin'
-import BugReport from '@/components/BugReport'
-import EventsList from '@/components/ContentLists/EventsList'
+import EventCalendar from '@/components/Calendar/EventCalendar';
+import Eventmap from '@/components/Eventmap';
+import Login from '@/components/Admin/Login';
+import Admin from '@/components/Admin/Admin';
+import BugReport from '@/components/BugReport';
+import EventsList from '@/components/ContentLists/EventsList';
 import LocationsList from '@/components/ContentLists/LocationsList';
+import EventsSearch from '@/components/ContentLists/EventsSearch';
 
 export default new Router({
   routes: [
     {
       	path: '/',
-      	component: LocationsList
+      	component: EventsList
 	},
 	{
 		path: '/events',
+		component: EventsSearch
+	},
+	{
+		path: '/all-events',
 		component: EventsList
 	},
 	{

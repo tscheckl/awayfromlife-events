@@ -173,7 +173,7 @@ export default {
 		},
 		showEventInfo(event, index) {
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
-			this.$http.get(backendUrl + "/api/locations/" + event.location)
+			this.$http.get(backendUrl + "/api/locations/byid/" + event.location)
 				.then(response => {
 					this.verifyEvent = {
 						_id: event._id,

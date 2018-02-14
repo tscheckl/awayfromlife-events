@@ -1,5 +1,5 @@
 <template>
-	<div id="login" class="center-ver-hor">
+	<div id="login">
 		<div class="login-card">
 			<h2>LOGIN</h2>
 			<form v-on:submit.prevent>

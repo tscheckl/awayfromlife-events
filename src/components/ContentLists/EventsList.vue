@@ -15,14 +15,14 @@
 			<h3 class="no-items-title" v-if="events.length == 0">No Events found..</h3>
 
 			<div class="list-item-header" v-if="events.length > 0">
-				<p class="event-date" v-on:click="sortByDate">
+				<p class="event-date" v-on:click="sortBy('startDate')">
 					<span>When?
-						<md-icon v-if="currentlySorted == 'date'">{{sortingAsc.date? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						<md-icon v-if="currentlySorted == 'startDate'">{{!sortingAsc.startDate? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 					</span>
 				</p> 
-				<p class="item-title" v-on:click="sortByTitle">
+				<p class="item-title" v-on:click="sortBy('title')">
 					<span>What? 
-						<md-icon v-if="currentlySorted == 'title'">{{sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						<md-icon v-if="currentlySorted == 'title'">{{!sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 					</span>
 				</p>
 				<p class="location-name"><span>Where?</span></p>
@@ -86,12 +86,12 @@ export default {
 			events: [],
 			showEventData: {},
 			sortingAsc: {
-				date: true,
-				title: true
+				startDate: false,
+				title: false
 			},
-			currentlySorted: 'date',
+			currentlySorted: 'startDate',
 			currentPage: 1,
-			availablePages: 50,
+			availablePages: 1,
 			itemsPerPage: '20'
 		}
 	},
@@ -104,37 +104,28 @@ export default {
 			this.showEventData = event;
 			this.$refs.singleEventDialog.open();
 		},
-		sortByDate() {
-			this.currentlySorted = 'date';
-			this.events.sort((a,b) => 
-				this.sortingAsc.date
-					? moment(a.startDate).format('X') - moment(b.startDate).format('X') 
-					: moment(b.startDate).format('X') - moment(a.startDate).format('X')
-			);
-
-			this.sortingAsc.date = !this.sortingAsc.date;
-		},
-		sortByTitle() {
-			this.currentlySorted = 'title';
-			this.events.sort((a,b) => this.sortingAsc.title? a.title.localeCompare(b.title): b.title.localeCompare(a.title));
-			this.sortingAsc.title = !this.sortingAsc.title;
+		sortBy(sortCrit) {
+			this.currentlySorted = sortCrit;
+			this.sortingAsc[sortCrit] = !this.sortingAsc[sortCrit];
+			this.getEventsPage(this.currentPage);
 		},
 		getEventsPage(page) {
 			this.currentPage = page;
 
-			this.$http.get(backendUrl + '/api/events/page/' + page + '/' + this.itemsPerPage)
+			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
+
+			this.$http.get(backendUrl + '/api/events/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
-				console.log("getPage response: ", response.body);
 				this.events = response.body.events;
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 
 				this.events.forEach((event) => {
 					//Get Name and city of each event's location.
-					this.$http.get(backendUrl + '/api/locations/' + event.location)
+					this.$http.get(backendUrl + '/api/locations/byid/' + event.location)
 						.then(response => {
 							this.$set(event, 'locationName', response.body.name);
-							this.$set(event, 'locationCity', response.body.city);
+							this.$set(event, 'locationCity', response.body.address.city);
 						})
 						.catch(err => {
 							console.log("Error while trying to get location for an event: ", err);
@@ -143,10 +134,6 @@ export default {
 					//Add formatted date Attribute to each event for displaying the date in the list.
 					event.formattedDate = moment(event.startDate).format('L');
 				});
-
-				this.sortingAsc.date = true;
-				//Sort the events ascending by their date.
-				this.sortByDate();
 			})
 			.catch(err => {
 				console.log(err);
@@ -185,7 +172,8 @@ export default {
 	mounted() {
 		this.getEventsPage(this.currentPage);		
 		//Sort the events ascending by their date.
-		this.sortByDate();
+		this.sortingAsc.startDate = true;
+		this.sortBy('startDate');
 	}
 }
 </script>

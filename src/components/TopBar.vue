@@ -1,6 +1,6 @@
 <template>
 	<div id="topbar">
-		<md-toolbar>
+		<!-- <md-toolbar>
 			<md-button href="https://www.awayfromlife.com/" class="topbar-btn" >
 				<md-icon>arrow_back</md-icon>
 				<md-tooltip md-direction="bottom">Back to AFL</md-tooltip> 
@@ -32,46 +32,46 @@
 
 		<md-dialog ref="newLocationDialog" class="content-dialog"  md-open-from="#newLocation" md-close-to="#newLocation">
 			<new-location v-on:close="closeDialog('newLocationDialog')"></new-location>
-		</md-dialog>
+		</md-dialog> -->
 	</div>
 </template>
 
 <script>
-import NewLocation from './NewContent/NewLocation';
-import NewEvent from './NewContent/NewEvent';
+// import NewLocation from './NewContent/NewLocation';
+// import NewEvent from './NewContent/NewEvent';
 
-export default {
-	name: 'top-bar',
-	components: {
-		NewLocation,
-		NewEvent,
-	},
-	computed: {
-	},
-	methods: {
-		openDialog(ref) {
-			this.$refs[ref].open();
-		},
-		closeDialog(ref) {
-			this.$refs[ref].close();
-		},
-		isAuthenticated() {
-			Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-				.then(response => {
-					return true;
-				})
-				.catch(err => {
-					return false;
-				})
-		},
-		emitEventDialogClose() {
-			this.closeDialog('newEventDialog');
-			this.$emit('newEvent');
-		}
-	}
-}
+// export default {
+// 	name: 'top-bar',
+// 	components: {
+// 		NewLocation,
+// 		NewEvent,
+// 	},
+// 	computed: {
+// 	},
+// 	methods: {
+// 		openDialog(ref) {
+// 			this.$refs[ref].open();
+// 		},
+// 		closeDialog(ref) {
+// 			this.$refs[ref].close();
+// 		},
+// 		isAuthenticated() {
+// 			Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+// 				.then(response => {
+// 					return true;
+// 				})
+// 				.catch(err => {
+// 					return false;
+// 				})
+// 		},
+// 		emitEventDialogClose() {
+// 			this.closeDialog('newEventDialog');
+// 			this.$emit('newEvent');
+// 		}
+// 	}
+// }
 </script>
 
 <style lang="scss">
-	@import "src/scss/_topbar.scss";
+	// @import "src/scss/_topbar.scss";
 </style>
