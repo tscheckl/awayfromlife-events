@@ -64,7 +64,7 @@
 
 				<event-form v-if="isEvent && unverifiedEvents.length > 0" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
 
-				<location-form v-if="!isEvent && unverifiedLocations.length > 0" :data="verifyLocation"></location-form>
+				<location-form v-if="!isEvent && unverifiedLocations.length > 0" :data="verifyLocation" :bus="bus"></location-form>
 				
 				<div v-if="isEvent && unverifiedEvents.length > 0 || !isEvent && unverifiedLocations.length > 0" >
 					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import Vue from 'Vue';
 import moment from 'moment';
 
 import EventForm from '@/Components/ContentForms/EventForm';
@@ -123,16 +124,17 @@ export default {
 			selectedLocation: {},
 			unverifiedLocations: [],
 			verifyLocation: {},
-			verifyIndex: Number
+			verifyIndex: Number,
+			bus: new Vue()
 		}
 	},
 	methods: {
 		handleVerify(keepData) {
 			if(this.isEvent) {
-				this.$http.delete(backendUrl + '/api/unvalidated-events/' + this.verifyEvent._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				this.$http.delete(backendUrl + '/api/unvalidated-events/' + this.verifyEvent._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 					.then(response => {
 						if(keepData) {
-							this.$http.post(backendUrl + '/api/events',  this.verifyEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+							this.$http.post(backendUrl + '/api/events',  this.verifyEvent, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 								.then(response => {
 									console.log(response);
 								})
@@ -154,10 +156,10 @@ export default {
 			}
 			else {
 				console.log('to be verified ', this.verifyLocation);
-				this.$http.delete(backendUrl + '/api/unvalidated-locations/' + this.verifyLocation._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				this.$http.delete(backendUrl + '/api/unvalidated-locations/' + this.verifyLocation._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 					.then(response => {
 						if(keepData) {
-							this.$http.post(backendUrl + '/api/locations',  this.verifyLocation, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+							this.$http.post(backendUrl + '/api/locations',  this.verifyLocation, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 								.then(response => {
 									console.log(response);
 								})
@@ -206,7 +208,7 @@ export default {
 			this.verifyIndex = index;
 		},
 		logout() {
-			sessionStorage.removeItem('aflAuthToken');
+			localStorage.removeItem('aflAuthToken');
 			this.$router.push('/');
 		},
 		openDialog(ref) {
@@ -226,7 +228,7 @@ export default {
 		getUnvalidatedEvents() {
 			this.loading = true;
 
-			this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 				.then(response => {
 					if(!response.body.message) {
 						this.unverifiedEvents = response.body;
@@ -255,7 +257,7 @@ export default {
 		getUnvalidatedLocations() {
 			this.loading = true;
 
-			this.$http.get(backendUrl + '/api/unvalidated-locations', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/unvalidated-locations', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 				.then(response => {
 					if(!response.body.message) {
 						this.unverifiedLocations = response.body;

@@ -54,7 +54,7 @@ export default {
 				this.$http.post(backendUrl + '/api/users/login', {token: token})
 				.then((response) => {
 					this.token = response.body.token;
-					sessionStorage.setItem("aflAuthToken", this.token);
+					localStorage.setItem("aflAuthToken", this.token);
 					this.$router.push('/admin');
 				})
 				.catch((err) => {

@@ -43,7 +43,7 @@ new Vue({
 
 router.beforeEach((to, from, next) => {
 	if(to.path == "/admin") {
-		Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 		.then((response) => {
 			next();
 		})

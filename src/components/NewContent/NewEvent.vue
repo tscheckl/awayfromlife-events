@@ -91,7 +91,7 @@ export default {
 			var vm = this;
 			//Only go on if all required fields are filled out
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
-				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 				.then(response => {
 					vm.submitStatus = 'New event successfully created';
 					this.$refs.snackbar.open();
@@ -130,7 +130,7 @@ export default {
 						startDate: this.newTour.tourStops[tourstop].startDate
 					}
 
-					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 						.then(response => {
 							console.log(response);
 						}).catch(err => {
@@ -186,7 +186,7 @@ export default {
 	mounted() {
 		let vm = this;
 		
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				vm.apiRoute = '/api/events';
 			})
