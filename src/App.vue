@@ -5,6 +5,7 @@
 		<sidenav></sidenav>
 		<div class="router-view-container">
 			<router-view></router-view>
+			<app-footer></app-footer>
 		</div>
 	</div>
 </template>
@@ -12,11 +13,13 @@
 <script>
 import Sidenav from '@/Components/Sidenav';
 import TopBar from '@/Components/TopBar';
+import AppFooter from '@/Components/App-Footer';
 
 export default {
 	components: {
 		Sidenav,
-		TopBar
+		TopBar,
+		AppFooter
 	}
 }
 </script>

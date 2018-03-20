@@ -3,13 +3,13 @@
 #events_list, #locations_list {
 	width: 100%;
 	margin: 0;
-	position: absolute;
-	top: 0;
+	margin-bottom: 30px;
+	padding-bottom: 5px;
+	position: relative;
 	background-color: $primaryLighten4;
 
 	.color-block {
 		position: absolute;
-		content: "";
 		width: 100%;
 		background-color: $accentAccent2;
 		height: 250px;
@@ -33,7 +33,9 @@
 		
 		h1 {
 			color: $primaryDarken4;
-			margin: 30px 0px;
+			margin: 0px;
+			margin-bottom: 30px;
+			padding-top: 30px;
 			font-size: 3em;
 			text-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);	
 		}
@@ -81,7 +83,6 @@
 	}
 
 	.all-items {
-		clear: both;
 		margin: 0 30px;
 		margin-top: 50px;
 		margin-bottom: 20px;
@@ -129,11 +130,6 @@
 			background-color: #ffffff;
 			color: $primaryDarken3;
 			cursor: pointer;
-	
-			.item-title {
-				flex: 1;
-				display: inline-block;
-			}
 	
 			&:nth-of-type(2n) {
 				background-color: #fdfdfd;
@@ -210,18 +206,21 @@
 
 @media screen and (max-width: 768px){
 	#events_list, #locations_list {
+		padding-bottom: 0;
+
 		.list-header {
 			display: block;
 			padding: 0;
+			padding-left: 15px;
 
 			h1 {
-				text-align: center;
+				// text-align: center;
 				font-size: 2.2em;
 			}
 
 			.md-button {
 				display: block;
-				margin: 0 auto;
+				// margin: 0 auto;
 				margin-bottom: 10px;
 			}
 		}

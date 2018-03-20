@@ -14,7 +14,7 @@
 					</md-button>
 				</div>
 				
-				<h1>ADMIN CONSOLE</h1>
+				<h1>Admin Console</h1>
 				
 				<md-input-container>
 					<md-select name="content-type" v-model="isEvent" v-on:selected="categoryChange">

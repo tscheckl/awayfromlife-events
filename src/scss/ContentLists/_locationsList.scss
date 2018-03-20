@@ -22,3 +22,21 @@
 		}
 	}
 }
+
+@media screen and (max-width: 768px) {
+	#locations_list {
+		.list-header {
+			.md-button {
+				margin-bottom: 50px;
+			}
+		}
+
+		.location-address {
+			display: none;
+		}
+
+		.item-title {
+			display: block;
+		}
+	}
+}

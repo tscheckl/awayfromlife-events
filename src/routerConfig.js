@@ -15,11 +15,11 @@ export default new Router({
       	component: EventsList
 	},
 	{
-		path: '/events',
+		path: '/search',
 		component: EventsSearch
 	},
 	{
-		path: '/all-events',
+		path: '/events',
 		component: EventsList
 	},
 	{
