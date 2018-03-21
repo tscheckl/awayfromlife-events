@@ -1,14 +1,28 @@
 @import "../themeColors";
 
 #login {
-	max-width: 500px;
-	min-height: 500px;
-	padding: 20px 60px;
-	margin: 0 auto;  
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	background-color: $primaryLighten5;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background-image: url("/static/background.jpg");
+	background-attachment: fixed;
+	background-size: contain;
+
+	.login-card {
+		max-width: 500px;
+		min-height: 500px;
+		max-height: 85%;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+		padding: 20px 60px;
+		margin: 0 auto;  
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		background-color: $primaryLighten5;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	}
 
 	h2 {
 		margin-top: 0;
@@ -23,6 +37,15 @@
 
 	.error-msg {
 		color: $accent;
-		font-weight: bold;
+		font-family: 'OpenSansBold';
+	}
+}
+
+@media screen and (max-width: 768px){
+	#login {
+		.login-card {
+			max-height: none;
+			height: 100%;
+		}
 	}
 }

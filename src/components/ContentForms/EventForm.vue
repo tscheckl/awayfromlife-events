@@ -104,7 +104,7 @@ export default {
 			.then(response => {
 				this.locations = response.body;
 				for(let location of this.locations) {
-					location.label = location.name + ' - ' + location.address;
+					location.label = location.name + ' - ' + location.address.street;
 				}
 			})
 			.catch(err => {

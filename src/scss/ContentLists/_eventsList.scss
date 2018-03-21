@@ -1,16 +1,72 @@
-@import "../themeColors.scss";
+@import "./generalList";
 
 #events_list {
-	height: 100%;
-	margin: 0;
-	padding: 10px 100px;
-	background-color: $accent;
+	
+	p {
+		margin: 1.15em 0;
+	}
 
-	.event {
-		padding: 30px;
-		margin: 10px 20px;
-		background-color: $primaryLighten5;
-		border-radius: 60px;
-		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	.event-date {
+		width: 15%;
+		padding-right: 5%;
+		box-sizing: border-box;
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.location-name, .item-title {
+		width: 42.5%;
+	}
+
+	.learn-more-icon, .hidden-icon {
+		width: 5%;
+	}
+
+	.list-item-header {
+		.event-date, .item-title {
+			span {
+				cursor: pointer;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	#events_list {
+		.event-date {
+			width: 20%;
+		}
+
+		.item-title, .location-name {
+			width: 37.5%;
+		}
+	}
+}
+
+@media screen and (max-width: 768px){
+	#events_list {
+		.event-date {
+			display: none;
+		}
+
+		.all-items {
+			margin-top: 70px;
+
+			.event-date {
+				display: none;
+			}
+		}
+
+		.list-header {
+			h1 {
+				margin-bottom: 10px !important;
+			}
+
+			.md-button {
+				margin-top: 20px !important;
+			}
+		}
 	}
 }

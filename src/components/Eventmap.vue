@@ -96,6 +96,6 @@
 }
 
 .new-location-btn {
-	font-weight: bold;
+	font-family: 'OpenSansBold';
 } */
 </style>

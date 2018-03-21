@@ -93,19 +93,19 @@ export default {
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
 				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 				.then(response => {
-					vm.submitStatus = 'New event successfully created';
+					this.submitStatus = 'New event successfully created';
 					this.$refs.snackbar.open();
 					this.emitClose();
-					vm.loading = false;
+					this.loading = false;
 
 					//Reset all fields
 					this.resetEventFields();
 				}).catch(err => {
 					// Error
 					console.log(err);
-						vm.submitStatus = 'An error occurred while creating the Event. Please try again!';
-						this.$refs.snackbar.open();
-					vm.loading = false;
+					this.submitStatus = 'An error occurred while creating the Event. Please try again!';
+					this.$refs.snackbar.open();
+					this.loading = false;
 				});
 			}
 			else { // else show error message

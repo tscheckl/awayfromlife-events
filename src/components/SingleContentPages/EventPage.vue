@@ -18,7 +18,9 @@
 				<div class="content-body">
 					<h3><md-icon>location_on</md-icon>Location</h3>
 					<p>{{eventLocation.name}}</p>
-					<p>{{eventLocation.address}}</p>
+					<p>{{eventLocation.address.street}}</p>
+					<p>{{eventLocation.address.postcode}} {{eventLocation.address.city}}</p>
+					<p>{{eventLocation.address.country}}</p>
 
 					<hr>
 
@@ -49,7 +51,7 @@ export default {
 	name: 'event-page',
 	watch: {
 		data() {
-			this.$http.get(backendUrl + '/api/locations/' + this.data.location)
+			this.$http.get(backendUrl + '/api/locations/byid/' + this.data.location)
 				.then (response => {
 					this.eventLocation = response.body;
 				})
@@ -59,7 +61,6 @@ export default {
 
 			this.formattedDate = moment(this.data.startDate).format('LL');
 			this.formattedTime = moment(this.data.startDate).format('HH:mm');
-			console.log(this.formattedTime);
 		}
 	},
 	props: {

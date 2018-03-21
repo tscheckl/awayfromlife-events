@@ -1,15 +1,6 @@
 <template>
 	<div id="bug_report" class="center-ver-hor">
-		<md-toolbar>
-			<router-link to="/">
-				<md-button>
-					<md-icon>arrow_back</md-icon>
-					<md-tooltip md-direction="bottom">Back to Calendar (You stay logged in)</md-tooltip>
-				</md-button>
-			</router-link>
-
-			<h1>Report a Bug</h1>
-		</md-toolbar>
+		<h1>Report a Bug</h1>
 
 		<form v-on:submit.prevent >
 			<md-input-container>
@@ -36,10 +27,12 @@
 				<md-radio v-model="bug.loggedIn" md-value="2">Not sure</md-radio>
 			</div>
 
-			<md-button type="submit" class="md-raised md-accent" v-on:click="sendBugReport">Bug melden</md-button>
+			<md-button type="submit" class="md-raised md-accent" v-on:click="sendBugReport">Send</md-button>
 
 			<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		</form>
+		
+		<div class="color-block"></div>
   	</div>
 </template>
 
@@ -58,8 +51,13 @@ export default {
 			},
 			loading: false,
 			componentOptions: [
+				"Search/Start Page",
+				"Events List",
 				"Create new Event",
+				"Locations List",
 				"Create new Location",
+				"Bands List",
+				"Create new Band",
 				"Show Calender",
 				"Admin Console"
 			]

@@ -2,9 +2,14 @@
 
 #event_calendar {
 	width: 100%;
+	min-height: 100%;
+	position: absolute;
 	margin: 0 auto;
 	float: left;
 	box-sizing: border-box;
+	background-image: url("/static/background.jpg");
+	background-attachment: fixed;
+	background-size: contain;
 
 	h1 {
 		margin: 35px 0;

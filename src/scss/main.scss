@@ -1,4 +1,5 @@
 @import "themeColors";
+@import "hamburgers/hamburgers";
 
 @font-face {
 	font-family: "OpenSans";
@@ -25,7 +26,6 @@
 }
 
 body {
-	background-color: $primaryDarken4 !important;
 	font-family: "OpenSans", sans-serif;
 	//Nicer ton #efadaa
 }
@@ -44,7 +44,6 @@ body, html {
 	padding: 0;
 	height: 100%;
 	position: relative;
-	background-image: url("/static/background.jpg");
 }
 
 a {
@@ -56,25 +55,20 @@ a {
 #app {
 	float: left;
 	width: 100%;
-	overflow: hidden;
+	min-height: 100%;
+	position: relative;
+	background-color: $primaryLighten4;
 }
 
 .router-view-container {
 	width: calc(100% - 80px);
-	height: 100%;
-	margin-top: 64px;
+	min-height: 100%;
 	margin-left: 80px;
+	position: absolute;
 }
 
 .md-dialog {
 	max-height: 90%;
-}
-
-.center-ver-hor {
-	max-height: 85%;
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
 }
 
 .close-btn {

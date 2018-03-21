@@ -1,27 +1,29 @@
 <template>
-	<div id="login" class="center-ver-hor">
-		<h2>LOGIN</h2>
-		<form v-on:submit.prevent>
-			<md-layout md-gutter>
-				<md-layout md-flex="100">
-					<md-input-container>
-						<label>Email</label>
-						<md-input v-model="login.email" required></md-input>
-					</md-input-container>
-				</md-layout>
+	<div id="login">
+		<div class="login-card">
+			<h2>LOGIN</h2>
+			<form v-on:submit.prevent>
+				<md-layout md-gutter>
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Email</label>
+							<md-input v-model="login.email" required></md-input>
+						</md-input-container>
+					</md-layout>
 
-				<md-layout md-flex="100">
-					<md-input-container>
-						<label>Password</label>
-						<md-input v-model="login.pwd" type="password" required></md-input>
-					</md-input-container>
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Password</label>
+							<md-input v-model="login.pwd" type="password" required></md-input>
+						</md-input-container>
+					</md-layout>
 				</md-layout>
-			</md-layout>
-			<p class="error-msg" v-if="error"><md-icon>warning</md-icon> {{errorMsg}}</p>
+				<p class="error-msg" v-if="error"><md-icon>warning</md-icon> {{errorMsg}}</p>
 
-			<md-button type="submit" v-on:click="handleLogin" class="md-raised md-accent">Login</md-button>
-			<md-spinner v-if="loading" md-indeterminate></md-spinner>
-		</form>
+				<md-button type="submit" v-on:click="handleLogin" class="md-raised md-accent">Login</md-button>
+				<md-spinner v-if="loading" md-indeterminate></md-spinner>
+			</form>
+		</div>
 	</div>
 </template>
 

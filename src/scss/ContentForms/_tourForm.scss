@@ -1,79 +1,16 @@
 @import "../themeColors";
+@import './eventForm';
 
 #tour_form {
-	.calendar-button {
-		position: absolute;
-		right: 2%;
-		top: 7%;
-	}
-
-	.form-content {
-		margin-top: 50px;
-	}
-
-	h2 {
-		margin-top: 20px;
-		margin-left: 15px;
-		color: $primaryDarken2;
-	}
-
 	.tourstop {
 		width: 100%;
+
 		.md-input-container, .picker {
 			width: 40%;
 			margin-top: 0;
 			min-height: 0;
 			padding-top: 0;
 			float: left;
-		}
-
-		.v-select {
-			width: 100%;
-			
-			.dropdown-toggle {
-				border: none;
-			}
-
-			.selected-tag {
-				position: absolute;
-				left: 0;
-				width: 100%;
-				padding-right: 20px;
-				overflow: hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-			}
-
-			input {
-				display: block;
-				width: 100% !important;
-			}
-
-			.dropdown-menu {
-				li {
-					a {
-						width: 100%;
-						overflow: hidden;
-						padding: 10px;
-						color: $primaryDarken4;
-					}
-	
-					&:hover {
-						background-color: $primaryLighten3;
-					}
-				}
-	
-				.highlight{
-					a {
-						background-color: $accentDarken2 ;
-						color: $primaryLighten5;
-					}
-				}
-
-				.active {
-					background-color: $primaryLighten3;
-				}
-			}
 		}
 
 		.picker {
@@ -96,90 +33,10 @@
 			margin: 0;
 		}
 	}
-
-	.md-input-container {
-		box-sizing: border-box;
-		margin-left: 15px;
-	}
-
-	.single-band {
-		width: 100%;
-
-		.md-input-container {
-			float: left;
-			width: calc(100% - 65px);
-		}
-
-		.md-button {
-			float: left;
-			margin-left: 0;
-			margin-top: 12px;
-		}
-	}
-
-	.add-band-btn {
-		margin-top: -5px;
-		margin-bottom: 10px;
-		margin-left: 10px;
-	}
-
-	textarea {
-		height: 135px !important;
-	}
-
-	.picker {
-		box-sizing: border-box;
-		display: inline;
-		padding: 3px 5px;
-		font-size: 16px;
-		line-height: 16px;
-		border-radius: 4px;
-
-		.vdatetime {
-			display: inline;
-
-			.vdatetime-popup__header {
-				background-color: $accentDarken2;
-			}
-
-			.vdatetime-popup__date-picker__item--selected {
-				span {
-					span {
-						background-color: $accentDarken2;
-					}
-				}
-			}
-
-			.vdatetime-popup__actions__button {
-				color: $accentDarken2;
-				font-weight: 500;
-			}
-
-			.vdatetime-popup__list-picker__item--selected {
-				color: $accentDarken2;
-			}
-		}
-
-		input {
-			max-width: 100% !important;
-			border: none;
-			font-family: 'OpenSans';
-			font-size: 1em;
-			color: rgba(0, 0, 0, 0.54);
-			margin-left: 10px;
-			background-color: transparent;
-			cursor: pointer;
-			border-bottom: 1px solid $primaryLighten2;
-		}
-	}
 }
 
 @media screen and (max-width: 768px) {
 	#tour_form {
-		h2 {
-			margin-top: 40px;
-		}
-
 		.tourstop {
 			position: relative;
 			margin-bottom: 30px;

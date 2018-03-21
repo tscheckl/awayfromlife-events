@@ -1,0 +1,253 @@
+@import "../themeColors.scss";
+
+#events_list, #locations_list {
+	width: 100%;
+	margin: 0;
+	margin-bottom: 30px;
+	padding-bottom: 5px;
+	position: relative;
+	background-color: $primaryLighten4;
+
+	.color-block {
+		position: absolute;
+		width: 100%;
+		background-color: $accentAccent2;
+		height: 250px;
+		top: 0;
+		left: 0;
+		z-index: 0;
+	}
+
+	.list-header {
+		margin: 0 20px;
+		padding: 20px 30px;
+		position: relative;
+		z-index: 1;
+		box-sizing: border-box;
+		display: flex;
+
+		.left-container {
+			flex: 1;
+			position: relative;
+		}
+		
+		h1 {
+			color: $primaryDarken4;
+			margin: 0px;
+			margin-bottom: 30px;
+			padding-top: 30px;
+			font-size: 3em;
+			text-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);	
+		}
+		
+		a {
+			color: inherit;
+			position: relative;
+			
+			&:after {
+				content: "";
+				width: 0;
+				height: 1px;
+				margin: 0 auto;
+				display: block;
+				position: absolute;
+				left: 0;
+				bottom: -3px;
+				background-color: #232323;
+				transition: width .3s ease-out;
+			}
+
+			&:hover {
+				&:after {
+					width: 100px;
+				}
+			}
+		}
+
+		.create-content-btn {
+			height: 46px;
+			margin: auto 0;
+			background-color: $primaryDarken4;
+			color: $primaryLighten5;
+			font-family: 'OpenSansBold';
+
+			.md-icon {
+				color: $accentAccent2;
+			}
+		}
+	}
+
+	.no-items-title {
+		text-align: center;
+		padding: 40px;
+	}
+
+	.all-items {
+		margin: 0 30px;
+		margin-top: 50px;
+		margin-bottom: 20px;
+		position: relative;
+		background-color: #fdfdfd;
+		border-radius: 3px;
+		overflow: visible;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		z-index: 1;
+
+		.list-item-header {
+			height: 10px;
+			padding: 0 5px;
+			display: flex;
+			color: $primaryLighten5;
+	
+			p {
+				margin: 8px 0;
+				position: relative;
+				top: -25px;
+				overflow: visible;
+	
+				span {
+					padding: 10px 15px;
+					background-color: #232323 !important;
+					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+					border-radius: 3px;
+				}
+
+				.md-icon {
+					color: $accentAccent2;
+					text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+				}
+			}
+
+			.hidden-icon {
+				opacity: 0;
+			}
+		}
+
+		.list-item {
+			padding: 10px 15px;
+			display: flex;
+			border-bottom: 1px solid $primaryLighten3;
+			background-color: #ffffff;
+			color: $primaryDarken3;
+			cursor: pointer;
+	
+			&:nth-of-type(2n) {
+				background-color: #fdfdfd;
+	
+				&:hover {
+					background-color: $primaryLighten3;
+				}
+			}
+	
+			&:hover {
+				background-color: $primaryLighten4;
+			}
+		}
+	}
+
+	.list-footer {
+		padding: 20px;
+		position: relative;
+		background-color: #232323;
+		color: $primaryLighten5;
+
+		.md-input-container {
+			min-width: 0;
+			width: auto;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			padding-top: 0;
+			margin: 0;
+			min-height: 32px;
+			text-align: center;
+
+			p {
+				color: $primaryLighten5;
+				margin: 5px 0;
+				margin-right: 10px;
+			}
+
+			.md-select {
+				width: 15%;
+				max-width: 150px;
+				background-color: #fdfdfd;
+				color: #232323;
+				box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+				border-radius: 3px;
+
+				span {
+					height: auto;
+					line-height: inherit;
+				}
+			}
+		}
+
+		.pages {
+			text-align: center;
+		}
+
+		.page-btn {
+			color: $accentAccent2;
+		}
+
+		.current-page {
+			font-family: 'OpenSansBold';
+			font-size: 1.1em;
+			color: $accentAccent2;
+		}
+
+		span {
+			padding: 5px;
+			cursor: pointer;
+		}
+	}
+}
+
+@media screen and (max-width: 768px){
+	#events_list, #locations_list {
+		padding-bottom: 0;
+
+		.list-header {
+			display: block;
+			padding: 0;
+			padding-left: 15px;
+
+			h1 {
+				// text-align: center;
+				font-size: 2.2em;
+			}
+
+			.md-button {
+				display: block;
+				// margin: 0 auto;
+				margin-bottom: 10px;
+			}
+		}
+
+		.all-items {
+			margin: 0;
+
+			.list-item {
+				h3 {
+					font-size: 1em;
+					margin-right: 10px;
+				}
+			}
+		}
+
+		.list-footer {
+			.md-input-container {
+				position: initial;
+				top: auto;
+				transform: initial;
+				margin: 0 auto;
+				margin-top: 20px;
+			}
+
+			.page-btn i{
+				font-size: 2em;
+			}
+		}
+	}
+}
