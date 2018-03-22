@@ -9,6 +9,36 @@
 	background-image: url("/static/TUI.jpg");
 	background-size: cover;
 	background-attachment: fixed;
+
+	#follow_buttons {
+		a {
+			color: $primaryLighten5;
+		}
+
+		.facebook:hover {
+			color: #3B5998;
+		}
+	
+		.instagram:hover {
+			color: #8a3ab9;
+		}
+	
+		.mail:hover {
+			color: #dddddd;
+		}
+	
+		.paypal:hover {
+			color: #009cde;
+		}
+	
+		.twitter:hover {
+			color: #1da1f2;
+		}
+	
+		.youtube:hover {
+			color: #ff0000;
+		}
+	}
 	
 	.darken {
 		position: absolute;

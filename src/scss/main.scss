@@ -2,6 +2,11 @@
 @import "hamburgers/hamburgers";
 
 @font-face {
+	font-family: "Icomoon";
+	src: url("/static/fonts/icomoon.woff") format("woff");
+}
+
+@font-face {
 	font-family: "OpenSans";
 	src: url("/static/fonts/Open_Sans/OpenSans.ttf") format("truetype");
 	font-weight: normal;

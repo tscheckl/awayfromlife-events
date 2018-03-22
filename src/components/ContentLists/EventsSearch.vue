@@ -1,5 +1,6 @@
 <template>
   	<div id="events_search">
+		<follow-buttons></follow-buttons>
 		<div class="darken"></div>
 		<div class="main-input">
 			<h1>Find Hardcore and Punk Events in your City</h1>
@@ -21,9 +22,13 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import FollowButtons from '@/components/FollowButtons';
 
 export default {
 	name: 'events-search',
+	components: {
+		FollowButtons
+	},
 	data() {
 		return {
 			cities: [],

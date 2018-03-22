@@ -1,5 +1,7 @@
 <template>
 	<div id="events_list">
+		<follow-buttons></follow-buttons>
+
 		<div class="list-header">
 			<div class="left-container">
 				<h1>All Events</h1>
@@ -74,12 +76,14 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
 import NewEvent from "@/components/NewContent/NewEvent";
 import EventPage from '@/Components/SingleContentPages/EventPage';
+import FollowButtons from '@/components/FollowButtons';
 
 export default {
 	name: 'events-list',
 	components: {
 		NewEvent,
-		EventPage
+		EventPage,
+		FollowButtons
 	},
 	data() {
 		return {

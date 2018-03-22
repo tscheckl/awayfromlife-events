@@ -1,5 +1,7 @@
 <template>
 	<div id="locations_list">
+		<follow-buttons></follow-buttons>
+
 		<div class="list-header">
 			<div class="left-container">
 				<h1>All Locations</h1>
@@ -67,11 +69,13 @@
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import NewLocation from "@/components/NewContent/NewLocation";
+import FollowButtons from "@/components/FollowButtons";
 
 export default {
 	name: 'locations-list',
 	components: {
-		NewLocation
+		NewLocation,
+		FollowButtons
 	},
 	data() {
 		return {
