@@ -31,7 +31,7 @@
 				<md-icon class="hidden-icon"></md-icon>
 			</div>
 
-			<div class="list-item" v-for="(location, index) in locations" :key="index">
+			<div class="list-item" v-for="(location, index) in locations" :key="index" v-on:click="showLocation(location)">
 				<h3 class="item-title">{{location.name}}</h3>
 				<p class="location-address">{{location.address.street}}</p>
 				<p class="location-city">{{location.address.city}}</p>
@@ -63,6 +63,10 @@
 		<md-dialog ref="new-location-dialog">
 			<new-location v-on:close="$refs['new-location-dialog'].close()"></new-location>
 		</md-dialog>
+
+		<md-dialog ref="singleLocationDialog" class="content-dialog">
+			<location-page :data="showLocationData" v-on:close="$refs.singleLocationDialog.close()"></location-page>
+		</md-dialog>
 	</div>
 </template>
 
@@ -70,12 +74,14 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import NewLocation from "@/components/NewContent/NewLocation";
 import FollowButtons from "@/components/FollowButtons";
+import LocationPage from "@/components/SingleContentPages/LocationPage";
 
 export default {
 	name: 'locations-list',
 	components: {
 		NewLocation,
-		FollowButtons
+		FollowButtons,
+		LocationPage
 	},
 	data() {
 		return {
@@ -88,7 +94,8 @@ export default {
 			currentlySorted: 'name',
 			currentPage: 1,
 			availablePages: 50,
-			itemsPerPage: '20'
+			itemsPerPage: '20',
+			showLocationData: {}
 		}
 	},
 	methods: {
@@ -139,6 +146,10 @@ export default {
 			}
 
 			return biggerPages.slice(0,5);
+		},
+		showLocation(location) {
+			this.showLocationData = location;
+			this.$refs.singleLocationDialog.open();
 		}
 	},
 	mounted() {

@@ -1,6 +1,6 @@
 <template>
 	<div id="event_page">
-		<div class="event-page-container">
+		<div class="page-container">
 			<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
 				<md-icon>clear</md-icon>
 			</md-button>
@@ -35,7 +35,7 @@
 					
 					<hr>
 
-					<h3><md-icon>format_quote</md-icon>Description for the event </h3>
+					<h3><md-icon>format_quote</md-icon>Description</h3>
 					<p>{{data.description}}</p>
 				</div>
 			</div>
