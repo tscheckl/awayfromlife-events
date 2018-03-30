@@ -102,9 +102,9 @@ export default {
 	mounted() {
 		this.$http.get(backendUrl + "/api/locations")
 			.then(response => {
-				this.locations = response.body;
+				this.locations = response.body.data;
 				for(let location of this.locations) {
-					location.label = location.name + ' - ' + location.address.street;
+					location.label = location.name + ' - ' + location.address.city;
 				}
 			})
 			.catch(err => {

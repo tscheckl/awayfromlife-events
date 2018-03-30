@@ -175,6 +175,8 @@ export default {
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
 			this.$http.get(backendUrl + "/api/locations/byid/" + event.location)
 				.then(response => {
+					console.log("Response 1: ", response);
+					
 					this.verifyEvent = {
 						_id: event._id,
 						title: event.title,

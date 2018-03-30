@@ -120,7 +120,7 @@ export default {
 
 			this.$http.get(backendUrl + '/api/events/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
-				this.events = response.body.events;
+				this.events = response.body.data;
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 
@@ -128,8 +128,8 @@ export default {
 					//Get Name and city of each event's location.
 					this.$http.get(backendUrl + '/api/locations/byid/' + event.location)
 						.then(response => {
-							this.$set(event, 'locationName', response.body.name);
-							this.$set(event, 'locationCity', response.body.address.city);
+							this.$set(event, 'locationName', response.body.data.name);
+							this.$set(event, 'locationCity', response.body.data.address.city);
 						})
 						.catch(err => {
 							console.log("Error while trying to get location for an event: ", err);

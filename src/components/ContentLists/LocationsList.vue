@@ -114,7 +114,7 @@ export default {
 
 			this.$http.get(backendUrl + '/api/locations/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
-				this.locations = response.body.locations;
+				this.locations = response.body.data;
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 			})

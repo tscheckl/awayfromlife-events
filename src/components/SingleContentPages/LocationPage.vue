@@ -63,8 +63,8 @@ export default {
 		data() {
 			this.$http.get(backendUrl + '/api/events/location/' + this.data._id)
 			.then(response => {
-				console.log('Events at this location: ', response);
-				this.locationEvents = response.body;
+				console.log("response 1: " , response);
+				this.locationEvents = response.body.data;
 
 				for(let event of this.locationEvents) {
 					event.formattedDate = moment(event.startDate).format('LL');

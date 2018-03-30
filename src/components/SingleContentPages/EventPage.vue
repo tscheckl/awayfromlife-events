@@ -53,7 +53,7 @@ export default {
 		data() {
 			this.$http.get(backendUrl + '/api/locations/byid/' + this.data.location)
 				.then (response => {
-					this.eventLocation = response.body;
+					this.eventLocation = response.body.data;
 				})
 				.catch(err => {
 					console.log(err);

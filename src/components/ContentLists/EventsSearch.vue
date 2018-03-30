@@ -43,7 +43,7 @@ export default {
 	mounted() {
 		this.$http.get(backendUrl + '/api/locations/cities')
 			.then(response => {
-				this.cities = response.body;
+				this.cities = response.body.data;
 			})
 			.catch(err => {
 				console.log(err);
