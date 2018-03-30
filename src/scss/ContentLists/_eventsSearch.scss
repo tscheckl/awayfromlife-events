@@ -1,7 +1,7 @@
 @import "../themeColors";
 
 #events_search {
-	width: 100%;
+	width: calc(100% - 80px);
 	height: 100%;
 	max-height: 100%;
 	overflow: hidden;
@@ -59,8 +59,6 @@
 
 	.main-input {
 		position: relative;
-		top: 50%;
-		transform: translateY(-60%);
 		width: 1000px;
 		max-width: 90%;
 		margin: 0 auto; 
@@ -71,7 +69,7 @@
 	}
 
 	.slide-up {
-		transform: translateY(-120%);
+		transform: translateY(-50%);
 	}
 
 	.search-input {
@@ -184,5 +182,13 @@
 		border-bottom-left-radius: 0;
 		color: $primaryLighten4;
 		font-family: 'OpenSansBold';
+	}
+}
+
+@media screen and (max-width:768px) {
+	#events_search {
+		
+		width: 100%;
+		max-height: calc(100% - 49px);
 	}
 }

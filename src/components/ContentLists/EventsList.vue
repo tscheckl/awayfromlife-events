@@ -132,16 +132,14 @@ export default {
 							this.$set(event, 'locationCity', response.body.data.address.city);
 						})
 						.catch(err => {
-							console.log("Error while trying to get location for an event: ", err);
+							console.log("Error while trying to get location for an event: ");
 						});
 						
 					//Add formatted date Attribute to each event for displaying the date in the list.
 					event.formattedDate = moment(event.startDate).format('L');
 				});
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => {});
 		},
 		smallerPages() {
 			let smallerPages = [];

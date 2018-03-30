@@ -55,9 +55,7 @@ export default {
 				.then (response => {
 					this.eventLocation = response.body.data;
 				})
-				.catch(err => {
-					console.log(err);
-				});
+				.catch(err => {});
 
 			this.formattedDate = moment(this.data.startDate).format('LL');
 			this.formattedTime = moment(this.data.startDate).format('HH:mm');

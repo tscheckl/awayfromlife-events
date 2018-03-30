@@ -118,9 +118,7 @@ export default {
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => {});
 		},
 		smallerPages() {
 			let smallerPages = [];

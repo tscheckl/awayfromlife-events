@@ -60,7 +60,6 @@ export default {
 					this.$router.push('/admin');
 				})
 				.catch((err) => {
-					console.log(err);
 					this.error = true;
 					if(err.status == 401) {
 						this.errorMsg = "Invalid email or password!";

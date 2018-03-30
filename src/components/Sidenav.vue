@@ -1,7 +1,7 @@
 <template>
 	<div id="sidenav">
-		<div class="menu-item toggle-menu-btn" v-on:click="toggleSidenav">
-			<button class="hamburger hamburger--spring" type="button">
+		<div class="mobile-toggle-btn">
+			<button class="hamburger hamburger--spring" type="button" v-on:click="toggleSidenav">
 				<span class="hamburger-box">
 					<span class="hamburger-inner"></span>
 				</span>
@@ -9,6 +9,13 @@
 		</div>
 
 		<div class="menu-items-list">
+			<div class="menu-item toggle-menu-btn" v-on:click="toggleSidenav">
+				<button class="hamburger hamburger--spring" type="button">
+					<span class="hamburger-box">
+						<span class="hamburger-inner"></span>
+					</span>
+				</button>
+			</div>
 			
 			<router-link to="/search">
 				<div class="menu-item" v-on:click="removeExpandedClass">
@@ -65,15 +72,27 @@ export default {
 				this.removeExpandedClass();
 			}
 		},
-		removeExpandedClass() {
-			this.expanded = false;
-			document.getElementById('sidenav').classList.remove('expanded');
-			document.getElementsByClassName('hamburger')[0].classList.remove('is-active');
-		},
 		addExpandedClass() {
 			this.expanded = true;
 			document.getElementById('sidenav').classList.add('expanded');
-			document.getElementsByClassName('hamburger')[0].classList.add('is-active');
+			if(window.matchMedia('(max-width: 768px)').matches) {
+				document.getElementsByTagName('body')[0].classList.add('unscrollable');
+				document.getElementsByClassName('hamburger')[0].classList.add('is-active');
+			}
+			else {
+				document.getElementsByClassName('hamburger')[1].classList.add('is-active');
+			}
+		},
+		removeExpandedClass() {
+			this.expanded = false;
+			document.getElementById('sidenav').classList.remove('expanded');
+			if(window.matchMedia('(max-width: 768px)').matches) {
+				document.getElementsByTagName('body')[0].classList.remove('unscrollable');
+				document.getElementsByClassName('hamburger')[0].classList.remove('is-active');
+			}
+			else {
+				document.getElementsByClassName('hamburger')[1].classList.remove('is-active');
+			}
 		},
 		isAuthenticated() {
 			Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})

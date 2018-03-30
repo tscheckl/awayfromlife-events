@@ -59,7 +59,6 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				console.log("bla");
 				this.$http.post(backendUrl + this.apiRoute, this.newLocation)
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
@@ -73,7 +72,6 @@ export default {
 						this.loading = false;
 						vm.submitStatus = 'An error occurred while creating the location. Please try again!';
 						this.$refs.snackbar.open();
-						console.log(err);
 					});
 			}
 			else {
@@ -111,7 +109,6 @@ export default {
 				this.apiRoute = '/api/locations';
 			})
 			.catch(err => {
-				console.log(err);
 			});
 	}
 }

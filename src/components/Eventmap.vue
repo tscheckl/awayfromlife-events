@@ -70,9 +70,7 @@
   //   },
   //   methods: {
 	// 	showInfo(event) {
-	// 		console.log("test");
 	// 		alert(event.latLng);
-	// 		console.log(this.icon);
 	// 	},
 	// 	openDialog(ref) {
 	// 		this.$refs[ref].open();

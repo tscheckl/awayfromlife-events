@@ -134,9 +134,7 @@ export default {
 					location.label = location.name + ' - ' + location.address.city;
 				}
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => {});
 	},
 }
 </script>

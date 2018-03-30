@@ -126,12 +126,8 @@ export default {
 					.then(response => {
 						if(keepData) {
 							this.$http.post(backendUrl + '/api/events',  this.verifyEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-								.then(response => {
-									console.log(response);
-								})
-								.catch(err => {
-									console.log(err);
-								});
+								.then(response => {})
+								.catch(err => {});
 						}
 						
 						this.unverifiedEvents.splice(this.verifyIndex, 1);
@@ -141,22 +137,15 @@ export default {
 							this.showEventInfo(this.unverifiedEvents[0]);
 						}
 					})
-					.catch(err => {
-						console.log(err);
-					});
+					.catch(err => {});
 			}
 			else {
-				console.log('to be verified ', this.verifyLocation);
 				this.$http.delete(backendUrl + '/api/unvalidated-locations/' + this.verifyLocation._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 					.then(response => {
 						if(keepData) {
 							this.$http.post(backendUrl + '/api/locations',  this.verifyLocation, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-								.then(response => {
-									console.log(response);
-								})
-								.catch(err => {
-									console.log(err);
-								});
+								.then(response => {})
+								.catch(err => {});
 						}
 
 						this.unverifiedLocations.splice(this.verifyIndex, 1);
@@ -166,17 +155,13 @@ export default {
 							this.showLocationInfo(this.unverifiedLocations[0]);
 						}
 					})
-					.catch(err => {
-						console.log(err);
-					});
+					.catch(err => {});
 			}
 		},
 		showEventInfo(event, index) {
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
 			this.$http.get(backendUrl + "/api/locations/byid/" + event.location)
 				.then(response => {
-					console.log("Response 1: ", response);
-					
 					this.verifyEvent = {
 						_id: event._id,
 						title: event.title,
@@ -190,13 +175,10 @@ export default {
 					this.selectedLocation = response.body;
 					this.selectedLocation.label = this.selectedLocation.name + ' - ' + this.selectedLocation.address;
 				})
-				.catch(err => {
-					console.log(err);
-				})
+				.catch(err => {})
 			this.verifyIndex = index;
 		},
 		showLocationInfo(location, index) {
-			console.log(location);
 			this.verifyLocation = location;
 			this.verifyIndex = index;
 		},
@@ -233,7 +215,6 @@ export default {
 								this.showEventInfo(this.unverifiedEvents[0]);
 							})
 							.catch(err => {
-								console.log(err);
 								this.loading = false;
 							})
 					}
@@ -243,7 +224,6 @@ export default {
 					}
 				})
 				.catch(err => {
-					console.log(err);
 					this.loading = false;
 				});
 		},
@@ -260,10 +240,8 @@ export default {
 						this.unverifiedLocations = [];
 					}
 					this.loading = false;
-					console.log(this.unverifiedLocations.length);
 				})
 				.catch(err => {
-					console.log(err);
 					this.loading = false;
 				});
 		},

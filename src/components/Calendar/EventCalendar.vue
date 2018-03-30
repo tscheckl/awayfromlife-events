@@ -108,9 +108,7 @@ export default {
 				//Display all events for the currently selected date.
 				this.handle(this.date);
 			})
-			.catch((err) => {
-				console.log(err);
-			}).bind(this);
+			.catch((err) => {}).bind(this);
 		},
 		//Function that is called when the user changes the month of the calendar
 		handleChangedMonth(newDate) {

@@ -64,7 +64,6 @@ export default {
 								this.$emit('pwdChanged');
 							})
 							.catch(err => {
-								console.log(err);
 								this.snackbarMsg = 'An Error occurred while changing your password. Please try again.';
 								this.$refs.snackbar.open();
 								this.loading = false;

@@ -14,7 +14,7 @@
 		</md-button-toggle>
 
 		<div v-if="createEvent" class="content">
-			<h1 v-on:click="show">NEW EVENT</h1>
+			<h1>NEW EVENT</h1>
 			<event-form :data="newEvent"></event-form>
 			
 			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Add Event</md-button>
@@ -79,9 +79,6 @@ export default {
 		}
 	},
 	methods: {
-		show() {
-			console.log(this.newEvent);
-		},
 		addEvent() {
 
 			this.loading = true;
@@ -102,7 +99,6 @@ export default {
 					this.resetEventFields();
 				}).catch(err => {
 					// Error
-					console.log(err);
 					this.submitStatus = 'An error occurred while creating the Event. Please try again!';
 					this.$refs.snackbar.open();
 					this.loading = false;
@@ -131,11 +127,9 @@ export default {
 					}
 
 					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-						.then(response => {
-							console.log(response);
-						}).catch(err => {
+						.then(response => {})
+						.catch(err => {
 							// Error
-							console.log(err);
 							vm.submitStatus = 'An error occurred while creating the Tour. Please try again!';
 							this.$refs.snackbar.open();
 							vm.loading = false;
@@ -190,9 +184,7 @@ export default {
 			.then(response => {
 				vm.apiRoute = '/api/events';
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => {});
 	}
 }
 </script>

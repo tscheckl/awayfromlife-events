@@ -69,8 +69,6 @@ export default {
 
 			this.$http.post(backendUrl + '/api/bugs', this.bug)
 				.then(response => {
-					console.log("Bug was successfully reported!");
-					console.log(response);
 					this.bug.function = '';
 					this.bug.description = '';
 					this.bug.loggedIn = 2;
@@ -78,7 +76,6 @@ export default {
 					this.loading = false;
 				})
 				.catch(err => {
-					console.log("An error occurred, please try again!");
 					this.loading = false;
 				});
 		}

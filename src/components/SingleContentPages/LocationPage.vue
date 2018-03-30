@@ -14,11 +14,13 @@
 				</div>
 
 				<div class="content-body">
-					<h3><md-icon>directions</md-icon>Address</h3>
-					<p>{{data.address.street}}</p>
-					<p>{{data.address.postcode}} {{data.address.city}}</p>
-					<p>{{data.address.administrative}}</p>
-					<p>{{data.address.country}}</p>
+					<div v-if="data.address">
+						<h3><md-icon>directions</md-icon>Address</h3>
+						<p>{{data.address.street}}</p>
+						<p>{{data.address.postcode}} {{data.address.city}}</p>
+						<p>{{data.address.administrative}}</p>
+						<p>{{data.address.country}}</p>
+					</div>
 
 					<hr v-if="data.website || data.facebook_page_url">
 
@@ -31,7 +33,7 @@
 					<h3 v-if="data.information"><md-icon>format_quote</md-icon>Description</h3>
 					<p>{{data.information}}</p>
 
-					<div class="events" v-if="locationEvents.length > 0">
+					<div class="events" v-if="locationEvents">
 						<h3><md-icon>event</md-icon>Upcoming Events:</h3>
 						<div class="event" v-for="event in locationEvents" :key="event._id">
 							<p>{{event.title}}</p>
@@ -63,17 +65,15 @@ export default {
 		data() {
 			this.$http.get(backendUrl + '/api/events/location/' + this.data._id)
 			.then(response => {
-				console.log("response 1: " , response);
 				this.locationEvents = response.body.data;
-
-				for(let event of this.locationEvents) {
-					event.formattedDate = moment(event.startDate).format('LL');
-					event.formattedTime = moment(event.startDate).format('HH:mm');
+				if(this.locationEvents) {
+					for(let event of this.locationEvents) {
+						event.formattedDate = moment(event.startDate).format('LL');
+						event.formattedTime = moment(event.startDate).format('HH:mm');
+					}
 				}
 			})
-			.catch(err => {
-				console.log(err);
-			})
+			.catch(err => {})
 		}
 	},
 	methods: {

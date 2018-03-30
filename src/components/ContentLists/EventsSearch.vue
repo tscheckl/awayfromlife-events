@@ -37,7 +37,6 @@ export default {
 	},
 	methods: {
 		onSelect() {
-			console.log("meddl");
 		},
 	},
 	mounted() {
@@ -45,10 +44,7 @@ export default {
 			.then(response => {
 				this.cities = response.body.data;
 			})
-			.catch(err => {
-				console.log(err);
-				
-			});
+			.catch(err => {});
 
 		let inputElement = document.getElementsByClassName('form-control')[0];
 		inputElement.addEventListener('focus', () => {
