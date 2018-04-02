@@ -36,9 +36,12 @@
 					<div class="events" v-if="locationEvents">
 						<h3><md-icon>event</md-icon>Upcoming Events:</h3>
 						<div class="event" v-for="event in locationEvents" :key="event._id">
-							<p>{{event.title}}</p>
-							<p>{{event.formattedDate}}, {{event.formattedTime}}</p>
-							<p>Lineup: <span v-for="band in event.bands" :key="band" class="event-band">{{band}}</span></p>
+							<div class="event-information">
+								<p>{{event.title}}</p>
+								<p>{{event.formattedDate}}, {{event.formattedTime}}</p>
+								<p>Lineup: <span v-for="band in event.bands" :key="band" class="event-band">{{band}}</span></p>
+							</div>
+							<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 						</div>
 					</div>
 				</div>

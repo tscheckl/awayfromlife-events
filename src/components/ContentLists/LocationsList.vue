@@ -128,8 +128,8 @@ export default {
 				counter++;
 			}
 			
-			if(smallerPages.length > 5) {
-				return smallerPages.slice(smallerPages.length-5);
+			if(smallerPages.length > 3) {
+				return smallerPages.slice(smallerPages.length-3);
 			}
 			else {
 				return smallerPages;
@@ -143,7 +143,7 @@ export default {
 				counter++;
 			}
 
-			return biggerPages.slice(0,5);
+			return biggerPages.slice(0,3);
 		},
 		showLocation(location) {
 			this.showLocationData = location;

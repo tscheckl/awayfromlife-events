@@ -149,8 +149,8 @@ export default {
 				counter++;
 			}
 
-			if(smallerPages.length > 10) {
-				return smallerPages.slice(1,10);
+			if(smallerPages.length > 3) {
+				return smallerPages.slice(1,3);
 			}
 			else {
 				return smallerPages;
@@ -163,8 +163,8 @@ export default {
 				biggerPages[counter] = i+1;
 				counter++;
 			}
-			if(biggerPages.length > 10) {
-				return biggerPages.slice(1,10);
+			if(biggerPages.length > 3) {
+				return biggerPages.slice(1,3);
 			}
 			else {
 				return biggerPages;

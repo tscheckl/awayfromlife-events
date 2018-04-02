@@ -35,6 +35,8 @@
 		.event {
 			padding: 10px;
 			border-bottom: 1px solid #bbb;
+			overflow: auto;
+			display: flex;
 
 			p:first-child {
 				font-family: "OpenSansBold";
@@ -42,6 +44,19 @@
 
 			&:last-of-type {
 				border-bottom: none;
+			}
+
+			.event-information {
+				width: 95%;
+				float: left;
+			}
+
+			.learn-more-icon {
+				width: 3%;
+				height: 100%;
+				margin: auto;
+				margin-right: 0 !important;
+				float: left;
 			}
 
 			.event-band {
@@ -54,6 +69,24 @@
 					&:after {
 						content: "";
 					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#location_page {
+		.events {
+			margin-left: -29%;
+
+			h3 {
+				font-size: 1.3em;
+			}
+
+			.event {
+				.event-information {
+					width: 85%;
 				}
 			}
 		}
