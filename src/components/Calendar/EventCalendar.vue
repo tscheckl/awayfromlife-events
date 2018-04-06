@@ -1,15 +1,18 @@
 <template>
   	<div id="event_calendar">
+		<div class="color-block"></div>
 		<div class="event-calendar-content-wrapper">
-			<h1>EVENT CALENDER</h1>
-			<calendar language="de" :inline="true" v-model="date" v-on:selected="handle" v-on:changedMonth="handleChangedMonth"></calendar>
-			<div class="events" id="all_events">
-				<h2>All Events for {{formattedDate}}</h2>
-				<h5 class="no-events" v-if="noEvents && foundEvents"> <i class="material-icons">warning</i> No events available for the selected date!</h5>
-				<h5 class="next-events" v-if="noEvents && foundEvents">Next available events: </h5>
-				<h5 class="no-events" v-if="noEvents && !foundEvents"> <i class="material-icons">warning</i> No more events found for this month!</h5>
-				<div v-for="event in foundEvents" :key="event['_id']" v-on:click="showEvent(event)">
-					<single-event :data="event"></single-event>
+			<h1>Event Calendar</h1>
+			<div class="calendar-content">
+				<calendar language="de" :inline="true" v-model="date" v-on:selected="handle" v-on:changedMonth="handleChangedMonth"></calendar>
+				<div class="events" id="all_events">
+					<h2>All Events for {{formattedDate}}</h2>
+					<h5 class="no-events" v-if="noEvents && foundEvents"> <i class="material-icons">warning</i> No events available for the selected date!</h5>
+					<h5 class="next-events" v-if="noEvents && foundEvents">Next available events: </h5>
+					<h5 class="no-events" v-if="noEvents && !foundEvents"> <i class="material-icons">warning</i> No more events found for this month!</h5>
+					<div v-for="event in foundEvents" :key="event['_id']" v-on:click="showEvent(event)">
+						<single-event :data="event"></single-event>
+					</div>
 				</div>
 			</div>
 		</div>

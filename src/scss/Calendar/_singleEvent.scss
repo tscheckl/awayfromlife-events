@@ -2,47 +2,65 @@
 
 #single_event{
 	margin: 15px;
-	padding: 10px 15px;
-	padding-top: 5px;
+	padding-bottom: 10px;
 	position: relative;
 	background-color: $primaryLighten5;
-	color: #222;
+	color: $primaryLighten4;
 	border-radius: 5px;
-	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	cursor: pointer;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	overflow: hidden;
+
+	&:last-of-type {
+		margin-bottom: 0;
+	}
+
+	.color-block {
+		height: 50px;
+	}
+
+	.upper-information {
+		display: flex;
+		overflow: auto;
+	}
 
 	.event-title {
-		width: 68%;
+		width: 70%;
 		float: left;
-		margin-top: 15px;
-		margin-bottom: 10px;
+		margin: 0;
+		padding: 10px 15px;
+		position: relative;
+		background-color: #232323;
+		text-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	}
 
 	.event-date {
 		float: right;
 		width: 30%;
-		margin-top: 15px;
+		margin: 0;
+		padding: 10px 15px;
 		padding-right: 10px;
+		position: relative;
+		background-color: #232323;
 		text-align: right;
-		font-weight: lighter;
-		color: $primaryDarken1;
+		font-family: "OpenSansBold";
+	}
+
+	.event-location, .event-description {
+		margin: 0;
+		padding: 10px 15px;
+		clear: both;
+		color: #232323;
+		
+		span {
+			font-family: "OpenSansBold";
+		}
 	}
 
 	.event-description {
-		clear: both;
-		line-height: 1.2em;
-		max-height: 2.4em;
+		padding-top: 0;
+		line-height: 18px;
+		max-height: 44px;
 		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-
-		&:before {
-			content: "";
-			width: 100%;
-			height: 1px;
-			margin-bottom: 15px;
-			display: block;
-			background-color: $primaryLighten3;
-		}
 	}
 }

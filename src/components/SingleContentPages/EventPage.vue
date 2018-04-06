@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { backendUrl } from '@/secrets.js'
+import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
 
 export default {

@@ -3,38 +3,54 @@
 #event_calendar {
 	width: 100%;
 	min-height: 100%;
-	position: absolute;
 	margin: 0 auto;
-	float: left;
-	box-sizing: border-box;
-	background-image: url("/static/background.jpg");
-	background-attachment: fixed;
-	background-size: contain;
+	background-color: #F5F5F5;
 
 	h1 {
-		margin: 35px 0;
-		color: $primaryLighten4;
-		//text-align: center;
-		font-size: 3.5em;
+		// margin: 35px 0;
+		color: #232323;
+		margin-bottom: 30px;
+		padding-top: 30px;
+		font-size: 3em;
+		text-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);
+	}
+
+	.color-block {
+		position: absolute;
+		width: 100%;
+		height: 250px;
+		top: 0;
+		left: 0;
+		background-color: $accentAccent2;
+		z-index: 0;
 	}
 
 	.event-calendar-content-wrapper {
 		width: 95%;
-		max-width: 1300px;
 		margin: 0 auto;
+		position: relative;
+	}
+
+	.calendar-content {
+		margin-top: 45px;
+		margin-bottom: 60px;
+		box-shadow: 0 6px 8px rgba(0,0,0,0.16), 0 6px 8px rgba(0,0,0,0.23);
+		overflow: auto;
+		display: flex;
+		background-color: $primaryLighten5;
+		border-radius: 3px;
 	}
 
 	.vdp-datepicker {
-		width: 60%;
-		float: left;
+		width: 55%;
 		border-radius: 5px;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
 		.vdp-datepicker__calendar {
 			width: auto;
 			border: none;
 			background-color: $primaryLighten5;
-			border-radius: 5px;
+			border-top-left-radius: 3px;
+			border-bottom-left-radius: 3px;
 			overflow: hidden;
 
 			& > div {
@@ -44,9 +60,9 @@
 
 		header {
 			margin-bottom: 15px;
-			background-color: $accentDarken3;
-			box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+			background-color: $primaryLighten5;
 			overflow: hidden;
+			border-bottom: 1px solid $primaryLighten2;
 
 			&:after {
 				content: "";
@@ -56,11 +72,13 @@
 
 			span {
 				padding: 5px;
-				color: white;
-				background-color: $accentDarken3;
+				background-color: #232323;
+				color: $primaryLighten4;
+				font-family: "Montserrat";
+				text-shadow: 0 1px 2px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.23);
 
 				&:hover {
-					background-color: $accentDarken4;
+					background-color: #181818;
 				}
 			}
 
@@ -70,13 +88,13 @@
 
 			.prev {
 				&:after {
-					border-right: 10px solid white;
+					border-right: 10px solid $primaryLighten4;
 				}
 			}
 
 			.next {
 				&:after {
-					border-left: 10px solid white;
+					border-left: 10px solid $primaryLighten4;
 				}
 			}
 		}
@@ -87,13 +105,14 @@
 
 		.day {
 			height: auto;
-			padding: 15px 0px;
+			padding: 20px 0px;
 			-webkit-touch-callout: none; /* iOS Safari */
 			-webkit-user-select: none; /* Safari */
 			 -khtml-user-select: none; /* Konqueror HTML */
 			   -moz-user-select: none; /* Firefox */
 				-ms-user-select: none; /* Internet Explorer/Edge */
 					user-select: none;
+			border-radius: 3px;
 
 			&:hover {
 				border: none;
@@ -104,41 +123,45 @@
 
 		.selected {
 			color: white;
-			background-color: $accentDarken3;
+			background-color: $accentAccent2;
 			box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-			border-radius: 5px;
+			border-radius: 3px;
 
 			&:hover {
-				background-color: $accentDarken4;
+				background-color: $accent;
 			}
 		}
 	}
 
 	.events {
-		width: 38%;
-		height: 100%;
-		box-sizing: border-box;
-		float: right;
-		color: $primaryLighten5;
-		background-color: $accentDarken3;
-		border-radius: 5px;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+		width: 45%;
+		padding-bottom: 15px;
+		color: $primaryLighten4;
+		background-color: $accentLighten1;
+		border-left: 1px solid $primaryLighten3;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
 
 		h2 {
+			font-family: "Montserrat";
+			margin: 0;
+			padding: 15px;
 			text-align: center;
+			color: $primaryLighten4;
+			background-color: #232323;
+			text-shadow: 0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
 		}
 
 		.no-events {
-			width: 80%;
-			margin: 0 auto;
+			width: 75%;
+			margin: 15px auto;
 			margin-bottom: 10px;
 			padding: 15px 10px;
 			text-align: center;
 			font-size: 1em;
-			background-color: $primaryLighten5;
-			color: $accentDarken2;
+			background-color: $primaryLighten4;
+			color: $accentAccent2;
 			border-radius: 5px;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
 			.material-icons{
 				display: block;
@@ -151,6 +174,7 @@
 			margin-bottom: -10px;
 			margin-left: 15px;
 			font-size: 1em;
+			text-shadow: 0 1px 2px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.23);
 		}
 	}
 }
@@ -158,7 +182,10 @@
 @media screen and (max-width: 1024px){
 	#event_calendar {
 		.event-calendar-content-wrapper{
-			width: 80%;
+			
+			.calendar-content {
+				display: block;
+			}
 	
 			.vdp-datepicker {
 				width: 100%;
@@ -177,6 +204,8 @@
 			.events {
 				width: 100%;
 				margin-top: 20px;
+				border-left: none;
+				border-top: 1px solid $primaryLighten3;
 			}
 		}
 	}
@@ -186,12 +215,16 @@
 
 	#event_calendar {
 		.event-calendar-content-wrapper{
-			width: 98%;
-
+			width: 95%;
+			
 			h1 {
 				margin: 10px 0;
 				font-size: 2.2em;
 				line-height: 1.05em;
+			}
+
+			.calendar-content {
+				display: block;
 			}
 				
 			.vdp-datepicker {
