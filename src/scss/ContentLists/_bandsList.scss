@@ -1,0 +1,15 @@
+@import "./generalList";
+
+#bands_list {
+	.band-name {
+		width: 55%;
+	}
+
+	.band-genre {
+		width: 40%
+	}
+	
+	.hidden-icon, .learn-more-icon {
+		width: 5%;
+	}	
+}

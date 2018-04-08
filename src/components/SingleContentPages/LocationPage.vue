@@ -35,7 +35,7 @@
 
 					<div class="events" v-if="locationEvents">
 						<h3><md-icon>event</md-icon>Upcoming Events:</h3>
-						<div class="event" v-for="event in locationEvents" :key="event._id">
+						<div class="event" v-for="event in locationEvents" :key="event._id" v-on:click="showEvent(event)">
 							<div class="event-information">
 								<p>{{event.title}}</p>
 								<p>{{event.formattedDate}}, {{event.formattedTime}}</p>
@@ -47,21 +47,30 @@
 				</div>
 			</div>
 		</div>
+
+		<md-dialog ref="singleEventDialog" class="content-dialog">
+			<event-page :data="showEventData" v-on:close="$refs.singleEventDialog.close()"></event-page>
+		</md-dialog>
 	</div>
 </template>
 
 <script>
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
+import EventPage from '@/Components/SingleContentPages/EventPage';
 
 export default {
 	name: 'location-page',
 	props: {
 		data: undefined
 	},
+	components: {
+		EventPage
+	},
 	data() {
 		return {
-			locationEvents: []
+			locationEvents: [],
+			showEventData: {}
 		}
 	},
 	watch: {
@@ -82,7 +91,12 @@ export default {
 	methods: {
 		emitClose() {
 			this.$emit('close');
-		}
+		},
+		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
+		showEvent(event) {
+			this.showEventData = event;
+			this.$refs.singleEventDialog.open();
+		},
 	}
 }
 </script>

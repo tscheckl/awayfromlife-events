@@ -6,6 +6,7 @@ import Admin from '@/components/Admin/Admin';
 import BugReport from '@/components/BugReport';
 import EventsList from '@/components/ContentLists/EventsList';
 import LocationsList from '@/components/ContentLists/LocationsList';
+import BandsList from '@/components/ContentLists/BandsList';
 import EventsSearch from '@/components/ContentLists/EventsSearch';
 
 export default new Router({
@@ -25,6 +26,10 @@ export default new Router({
 	{
 		path: '/locations',
 		component: LocationsList
+	},
+	{
+		path: '/bands',
+		component: BandsList
 	},
 	{
 		path: '/calendar',

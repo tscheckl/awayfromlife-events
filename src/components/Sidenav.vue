@@ -38,7 +38,7 @@
 				</div>
 			</router-link>
 
-			<router-link to="/">
+			<router-link to="/bands">
 				<div class="menu-item" v-on:click="removeExpandedClass">
 					<md-icon>music_note</md-icon>
 					<span >Bands</span>

@@ -55,8 +55,6 @@
 <script>
 import places from 'places.js';
 
-
-
 export default {
 	name: 'location-form',
 	props: {

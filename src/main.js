@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueResource from 'vue-resource';
+import Vuex from 'vuex';
 import App from './App'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
@@ -11,6 +12,7 @@ import router from './routerConfig'
 import Calendar from 'vuejs-datepicker';
 import vSelect from 'vue-select';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import store from '@/store/index.js';
 
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
@@ -38,6 +40,7 @@ new Vue({
   template: '<App/>',
   components: { App },
   render: h => h(App), 
+  store: store
 })
 
 
