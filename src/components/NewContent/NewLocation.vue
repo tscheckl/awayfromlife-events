@@ -59,7 +59,10 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				this.$http.post(backendUrl + this.apiRoute, this.newLocation)
+				//Check if sending directly to validated route and if so, also send token to verify.
+				let authHeader = this.apiRoute == '/api/locations'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+
+				this.$http.post(backendUrl + this.apiRoute, this.newLocation, {headers: authHeader})
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
 						this.$refs.snackbar.open();

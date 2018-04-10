@@ -1,15 +1,49 @@
 @import "./generalList";
 
 #bands_list {
-	.band-name {
-		width: 55%;
+	.list-item-header {
+		p {
+			cursor: pointer;
+		}
 	}
 
-	.band-genre {
-		width: 40%
+	.band-name {
+		width: 45%;
+	}
+
+	.band-genre, .band-origin {
+		width: 20%
+	}
+
+	.list-item {
+		.band-origin {
+			span {
+				font-family: "OpenSansBold";
+			}
+		}
 	}
 	
 	.hidden-icon, .learn-more-icon {
 		width: 5%;
 	}	
+}
+
+@media screen and (max-width: 768px) {
+	#bands_list {
+		.list-item-header {
+			margin-top: 50px;
+		}
+		
+		.band-name {
+			width: 60%;
+		}
+
+		.band-genre {
+			width: 35%;
+		}
+
+		.band-origin {
+			display: none;
+		}
+	}
 }

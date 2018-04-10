@@ -131,9 +131,7 @@ export default {
 							this.$set(event, 'locationName', response.body.data.name);
 							this.$set(event, 'locationCity', response.body.data.address.city);
 						})
-						.catch(err => {
-							console.log("Error while trying to get location for an event: ");
-						});
+						.catch(err => {});
 						
 					//Add formatted date Attribute to each event for displaying the date in the list.
 					event.formattedDate = moment(event.startDate).format('L');

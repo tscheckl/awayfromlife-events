@@ -148,8 +148,8 @@ export default {
 	mounted() {
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city'});
 		this.placesAutocomplete.on('change', e => {
-			console.log(e.suggestion);
 			
+			this.data.origin.name = e.suggestion.name;
 			this.data.origin.administrative = e.suggestion.administrative;
 			this.data.origin.country = e.suggestion.country;
 			this.data.origin.postcode = e.suggestion.postcode;
@@ -157,8 +157,8 @@ export default {
 			this.data.origin.lng = e.suggestion.latlng.lng;
 			this.data.origin.value = e.suggestion.value;
 			this.value = e.suggestion.value;
-		});
-	},
+		});	
+	}
 }
 </script>
 

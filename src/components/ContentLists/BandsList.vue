@@ -20,16 +20,22 @@
 					</span>
 				</p> 
 				<p class="band-genre" v-on:click="sortBy('genre')">
-					<span>What? 
-						<md-icon v-if="currentlySorted == 'genre'">{{!sortingAsc.gemre? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+					<span>Genre 
+						<md-icon v-if="currentlySorted == 'genre'">{{!sortingAsc.genre? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+					</span>
+				</p>
+				<p class="band-origin" v-on:click="sortBy('origin.name')">
+					<span>Origin 
+						<md-icon v-if="currentlySorted == 'origin.name'">{{!sortingAsc['origin.name']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 					</span>
 				</p>
 				<md-icon class="hidden-icon"></md-icon>
 			</div>
 
 			<div class="list-item" v-for="(band, index) in bands" :key="index" v-on:click="showBand(band)">
-				<p class="band-name">{{band.name}}</p>
-				<h3 class="band-genre">{{band.genre}}</h3>
+				<h3 class="band-name">{{band.name}}</h3>
+				<p class="band-genre">{{band.genre}}</p>
+				<p class="band-origin"><span>{{band.origin.name}}</span> {{band.origin.country}}</p>
 				<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 			</div>
 
@@ -61,7 +67,7 @@
 		</md-dialog>
 
 		<md-dialog ref="single-band-dialog" class="content-dialog">
-			<band-page :data="showBandData" v-on:close="$refs.single-band-dialog.close()"></band-page>
+			<band-page :data="showBandData" v-on:close="$refs['single-band-dialog'].close()"></band-page>
 		</md-dialog>
 	</div>
 </template>
@@ -86,7 +92,8 @@ export default {
 			showBandData: {},
 			sortingAsc: {
 				name: false,
-				genre: false
+				genre: false,
+				'origin.name': false
 			},
 			currentlySorted: 'name',
 			currentPage: 1,
@@ -116,6 +123,8 @@ export default {
 			this.$http.get(backendUrl + '/api/bands/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
 				this.bands = response.body.data;
+				console.log("Bands: ", this.bands);
+				
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 			})

@@ -15,7 +15,7 @@
 					<h4 class="date">{{formattedDate}}</h4>
 				</div>
 
-				<div class="content-body">
+				<div class="content-body" v-if="eventLocation.address">
 					<h3><md-icon>location_on</md-icon>Location</h3>
 					<p>{{eventLocation.name}}</p>
 					<p>{{eventLocation.address.street}}</p>
@@ -68,7 +68,7 @@ export default {
 		return {
 			formattedDate: '',
 			formattedTime: '',
-			eventLocation: Object
+			eventLocation: {}
 		}
 	},
 	methods: {

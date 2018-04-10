@@ -17,13 +17,14 @@
 				<h1>Admin Console</h1>
 				
 				<md-input-container>
-					<md-select name="content-type" v-model="isEvent" v-on:selected="categoryChange">
-						<md-option :value="true">Events</md-option>
-						<md-option :value="false">Locations</md-option>
+					<md-select name="content-type" v-model="currentCategory" v-on:selected="categoryChange">
+						<md-option value="unverifiedEvents">Events</md-option>
+						<md-option value="unverifiedLocations">Locations</md-option>
+						<md-option value="unverifiedBands">Bands</md-option>
 					</md-select>
 				</md-input-container>
 				
-				<md-list v-if="isEvent">
+				<md-list v-if="currentCategory == 'unverifiedEvents'">
 					<div v-if="unverifiedEvents.length > 0">
 						<md-list-item v-for="(event, index) in unverifiedEvents" :key="event._id" @click="showEventInfo(event, index)">
 							<h4>{{event.title}}</h4>
@@ -35,7 +36,7 @@
 					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
 
-				<md-list v-else>
+				<md-list v-if="currentCategory == 'unverifiedLocations'">
 					<div v-if="unverifiedLocations.length > 0">
 						<md-list-item v-for="(location, index) in unverifiedLocations" :key="location._id" @click="showLocationInfo(location, index)">
 							<h4>{{location.name}}</h4>
@@ -43,6 +44,18 @@
 						</md-list-item>
 					</div>
 					<h4 class="nothing-found-msg" v-else>No unverified locations available!</h4>
+					
+					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
+				</md-list>
+
+				<md-list v-if="currentCategory == 'unverifiedBands'">
+					<div v-if="unverifiedBands.length > 0">
+						<md-list-item v-for="(band, index) in unverifiedBands" :key="band._id" @click="showBandInfo(band, index)">
+							<h4>{{band.name}}</h4>
+							<span>Band</span>
+						</md-list-item>
+					</div>
+					<h4 class="nothing-found-msg" v-else>No unverified bands available!</h4>
 					
 					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
@@ -55,11 +68,15 @@
 
 				<h1>Given data</h1>
 
-				<event-form v-if="isEvent && unverifiedEvents.length > 0" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
+				<event-form v-if="currentCategory == 'unverifiedEvents' && unverifiedEvents.length > 0" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
 
-				<location-form v-if="!isEvent && unverifiedLocations.length > 0" :data="verifyLocation"></location-form>
+				<location-form v-if="currentCategory == 'unverifiedLocations' && unverifiedLocations.length > 0" :data="verifyLocation"></location-form>
+
+				<band-form v-if="currentCategory == 'unverifiedBands' && unverifiedBands.length > 0" :data="verifyBand"></band-form>
 				
-				<div v-if="isEvent && unverifiedEvents.length > 0 || !isEvent && unverifiedLocations.length > 0" >
+				<div v-if="currentCategory == 'unverifiedEvents' && unverifiedEvents.length > 0 
+						|| currentCategory == 'unverifiedLocations' && unverifiedLocations.length > 0
+						|| currentCategory == 'unverifiedBands' && unverifiedBands.length > 0" >
 					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
 						<md-icon>check</md-icon>
 						<md-tooltip md-direction="top">Keep and activate entry</md-tooltip>
@@ -84,6 +101,7 @@ import moment from 'moment';
 
 import EventForm from '@/Components/ContentForms/EventForm';
 import LocationForm from '@/Components/ContentForms/LocationForm';
+import BandForm from '@/Components/ContentForms/BandForm';
 import ChangePasswordForm from './ChangePasswordForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
@@ -93,6 +111,7 @@ export default {
 	components: {
 		EventForm,
 		LocationForm,
+		BandForm,
 		ChangePasswordForm
 	},
 	data() {
@@ -100,7 +119,8 @@ export default {
 			error: false,
 			errorMsg: '',
 			loading: false,
-			isEvent: true,
+			// isEvent: true,
+			currentCategory: 'unverifiedEvents',
 			unverifiedEvents: [],
 			locations: [],
 			verifyEvent: {
@@ -116,50 +136,51 @@ export default {
 			selectedLocation: {},
 			unverifiedLocations: [],
 			verifyLocation: {},
-			verifyIndex: Number
+			unverifiedBands: [],
+			verifyBand: {},
+			verifyIndex: Number,
+			unvalidatedRoute: '/api/unvalidated-events/',
+			validatedRoute: '/api/events',
+			verifyData: {}
 		}
 	},
 	methods: {
 		handleVerify(keepData) {
-			if(this.isEvent) {
-				this.$http.delete(backendUrl + '/api/unvalidated-events/' + this.verifyEvent._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-					.then(response => {
-						if(keepData) {
-							this.$http.post(backendUrl + '/api/events',  this.verifyEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-								.then(response => {})
-								.catch(err => {});
-						}
-						
-						this.unverifiedEvents.splice(this.verifyIndex, 1);
-						this.verifyEvent = {};
-						document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
-						if(this.unverifiedEvents[0]) {
-							this.showEventInfo(this.unverifiedEvents[0]);
-						}
-					})
-					.catch(err => {});
-			}
-			else {
-				this.$http.delete(backendUrl + '/api/unvalidated-locations/' + this.verifyLocation._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-					.then(response => {
-						if(keepData) {
-							this.$http.post(backendUrl + '/api/locations',  this.verifyLocation, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-								.then(response => {})
-								.catch(err => {});
-						}
+			//Delete the currently viewed data from the respective unvalidated-route.
+			this.$http.delete(backendUrl + this.unvalidatedRoute + this.verifyData._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				.then(response => {
+					//If the Admin chooses to unlock the data, send a post request to the respective route to unlock it for all users
+					if(keepData) {
+						this.$http.post(backendUrl + this.validatedRoute,  this.verifyData, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+							.then(response => {})
+							.catch(err => {});
+					}
+					
+					//Delete the currently verified data-element from the array of unverified elements of the currently selected category.
+					this[this.currentCategory].splice(this.verifyIndex, 1);
+					//Reset all Object that are used for displaying the data
+					this.verifyEvent = {};
+					this.verifyLocation = {};
+					this.verifyBand = {};
 
-						this.unverifiedLocations.splice(this.verifyIndex, 1);
-						this.verifyLocation = {};
-						document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
-						if(this.unverifiedLocations[0]) {
+					//If there are still unverified elements of the current category left, show the first one of them.
+					if(this[this.currentCategory][0]) {
+						//Call the respective show-function according to the current category
+						if(this.currentCategory == 'unverifiedEvents')
+							this.showEventInfo(this.unverifiedEvents[0]);
+						else if (this.currentCategory == 'unverifiedLocations')
 							this.showLocationInfo(this.unverifiedLocations[0]);
-						}
-					})
-					.catch(err => {});
-			}
+						else
+							this.showBandInfo(this.unverifiedBands[0]);
+					}
+
+					document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
+				})
+				.catch(err => {});
 		},
 		showEventInfo(event, index) {
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
+			
 			this.$http.get(backendUrl + "/api/locations/byid/" + event.location)
 				.then(response => {
 					this.verifyEvent = {
@@ -172,6 +193,7 @@ export default {
 						bands: event.bands,
 						endDate: ''
 					};
+					this.verifyData = this.verifyEvent;
 					this.selectedLocation = response.body;
 					this.selectedLocation.label = this.selectedLocation.name + ' - ' + this.selectedLocation.address;
 				})
@@ -179,12 +201,18 @@ export default {
 			this.verifyIndex = index;
 		},
 		showLocationInfo(location, index) {
+			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
+			
 			this.verifyLocation = location;
+			this.verifyData = this.verifyLocation;
 			this.verifyIndex = index;
 		},
-		logout() {
-			sessionStorage.removeItem('aflAuthToken');
-			this.$router.push('/');
+		showBandInfo(band, index) {
+			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
+			
+			this.verifyBand = band;
+			this.verifyData = this.verifyBand;
+			this.verifyIndex = index;
 		},
 		openDialog(ref) {
 			this.$refs[ref].open();
@@ -192,34 +220,64 @@ export default {
 		closeDialog(ref) {
 			this.$refs[ref].close();
 		},
+		//Function for setting the currently selected category in the verify-list and set all variables for handling data for the respective category
 		categoryChange() {
-			if(this.isEvent) {
-				this.getUnvalidatedEvents();
+			if(this.currentCategory == 'unverifiedEvents') {
+				this.unvalidatedRoute = '/api/unvalidated-events/';
+				this.validatedRoute = '/api/events';
+				this.verifyData = this.verifyEvent;
+			}
+			else if (this.currentCategory == 'unverifiedLocations') {
+				this.unvalidatedRoute = '/api/unvalidated-locations/';
+				this.validatedRoute = '/api/locations';
+				this.verifyData = this.verifyLocation;
 			}
 			else {
-				this.getUnvalidatedLocations();
+				this.unvalidatedRoute = '/api/unvalidated-Bands/';
+				this.validatedRoute = '/api/bands';
+				this.verifyData = this.verifyBand;
 			}
+
+			//Get the unverified-data for the selected category
+			this.getUnvalidatedData();
 		},
-		getUnvalidatedEvents() {
+		//Function for getting the unvalidated data for the currently selected category
+		getUnvalidatedData() {
 			this.loading = true;
 
-			this.$http.get(backendUrl + '/api/unvalidated-events', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			this.$http.get(backendUrl + this.unvalidatedRoute, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 				.then(response => {
+					
+					//Check if there is a message in the response (= error)
 					if(!response.body.message) {
-						this.unverifiedEvents = response.body;
+						//Set the array of unvalidated events for the currently selected category to the data from the reponse
+						this[this.currentCategory] = response.body.data;
 
-						this.$http.get(backendUrl + "/api/locations")
-							.then(response => {
-								this.locations = response.body;
-								this.loading = false;
-								this.showEventInfo(this.unverifiedEvents[0]);
-							})
-							.catch(err => {
-								this.loading = false;
-							})
+						//Get all locations for the unvalidated events to choose from in case the location of an event is to be changed
+						// and display the first unvalidated event.
+						if(this.currentCategory == 'unverifiedEvents') {
+							this.$http.get(backendUrl + "/api/locations")
+								.then(response => {
+									this.locations = response.body;
+									this.loading = false;
+									this.showEventInfo(this.unverifiedEvents[0]);
+								})
+								.catch(err => {
+									this.loading = false;
+								});
+						}
+						else {
+							this.loading = false;
+							//Display the first element of the array of unvalidated data for the currently selected category.
+							if(this.currentCategory == 'unverifiedLocations')
+								this.showLocationInfo(this.unverifiedLocations[0]);
+							else
+								this.showBandInfo(this.unverifiedBands[0]);
+						}
 					}
 					else {
-						this.unverifiedEvents = [];
+						//If there was an error or no data was found, set the array of unvalidated data for the current category to an empty array.
+						this[this.currentCategory] = [];
 						this.loading = false;
 					}
 				})
@@ -227,27 +285,13 @@ export default {
 					this.loading = false;
 				});
 		},
-		getUnvalidatedLocations() {
-			this.loading = true;
-
-			this.$http.get(backendUrl + '/api/unvalidated-locations', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
-				.then(response => {
-					if(!response.body.message) {
-						this.unverifiedLocations = response.body;
-						this.showLocationInfo(this.unverifiedLocations[0]);
-					}
-					else {
-						this.unverifiedLocations = [];
-					}
-					this.loading = false;
-				})
-				.catch(err => {
-					this.loading = false;
-				});
-		},
 		closeInfo() {
 			document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
-		}
+		},
+		logout() {
+			sessionStorage.removeItem('aflAuthToken');
+			this.$router.push('/');
+		},
 	},
 	mounted() {
 		this.categoryChange();

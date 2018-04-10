@@ -88,7 +88,10 @@ export default {
 			var vm = this;
 			//Only go on if all required fields are filled out
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
-				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				//Check if sending directly to validated route and if so, also send token to verify.
+				let authHeader = this.apiRoute == '/api/events'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+				
+				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: authHeader})
 				.then(response => {
 					this.submitStatus = 'New event successfully created';
 					this.$refs.snackbar.open();
@@ -99,6 +102,8 @@ export default {
 					this.resetEventFields();
 				}).catch(err => {
 					// Error
+					console.log(err);
+					
 					this.submitStatus = 'An error occurred while creating the Event. Please try again!';
 					this.$refs.snackbar.open();
 					this.loading = false;

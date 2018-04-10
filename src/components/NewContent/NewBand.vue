@@ -48,7 +48,7 @@ export default {
 			newBandValue: '',
 			submitStatus: '',
 			loading: false,
-			apiRoute: '/api/bands'
+			apiRoute: '/api/unvalidated-bands'
 		}
 	},
 	methods: {
@@ -59,7 +59,10 @@ export default {
 			var vm = this;
 
 			if(this.newBand.name && this.newBand.genre) {
-				this.$http.post(backendUrl + this.apiRoute, this.newBand, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				//Check if sending directly to validated route and if so, also send token to verify.
+				let authHeader = this.apiRoute == '/api/bands'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+
+				this.$http.post(backendUrl + this.apiRoute, this.newBand, {headers: authHeader})
 					.then(response => {	
 						vm.submitStatus = 'New Bands successfully created';
 						this.$refs.snackbar.open();
@@ -108,8 +111,7 @@ export default {
 			.then(response => {
 				this.apiRoute = '/api/bands';
 			})
-			.catch(err => {
-			});
+			.catch(err => {});
 	}
 }
 </script>
