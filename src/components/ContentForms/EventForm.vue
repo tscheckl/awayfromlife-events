@@ -13,7 +13,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<v-select :options="locations"
-									:on-change="onSelect"
+									:on-change="onSelectLocation"
 									v-model="selectedLocation"
 									placeholder="Select event location*">
 							</v-select>
@@ -27,8 +27,11 @@
 					<md-layout md-flex="100">
 						<div class="single-band" v-for="(band, index) in data.bands" :key="index">
 							<md-input-container>
-								<label>Bandname</label>
-								<md-input v-model="data.bands[index]"></md-input>
+								<v-select :options="backendBands"
+											:on-change="(selected) => onSelectBand(selected, index)"
+											v-model="selectedBands[index]"
+											placeholder="Select event's bands*">
+								</v-select>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -68,25 +71,36 @@ export default {
 	name: 'event-form',
 	props: {
 		data: Object,
-		selectedLocation: {}
+		selectedLocation: {},
+		selectedBands: Array
 	},
 	data() {
 		return {
 			locations: [],
 			//Variable for the search-select that contains the currently selected item/location
 			//selectedLocation: {},
-			bands: []
+			bands: [],
+			backendBands: []
 		}
 	},
 	methods: {
 		nameAndAddress(selectedLocation) { //Function to format the value that is displayed in the search-select
 			return `${selectedLocation.name} - ${selectedLocation.address}`;
 		},
-		onSelect(selected) {
+		onSelectLocation(selected) {
 			//Set the value for the item that will be displayed in the search select input
 			this.selectedLocation = selected;
 			//Set the new Event's location attribute to the ID of the selected location
 			this.data.location = selected['_id'];
+		},
+		onSelectBand(selected, index) {
+			//Set the value for the item that will be displayed in the search select input
+			this.selectedBands[index] = selected;
+			//Set the new Event's location attribute to the ID of the selected location
+			
+			if(selected._id) {
+				this.data.bands[index] = selected._id;
+			}
 		},
 		addBand() {
 			this.data.bands.push('');
@@ -105,6 +119,15 @@ export default {
 				this.locations = response.body.data;
 				for(let location of this.locations) {
 					location.label = location.name + ' - ' + location.address.city;
+				}
+			})
+			.catch(err => {});
+
+		this.$http.get(backendUrl + "/api/bands")
+			.then(response => {
+				this.backendBands = response.body.data;
+				for(let band of this.backendBands) {
+					band.label = band.name + ' - ' + band.origin.country;
 				}
 			})
 			.catch(err => {});

@@ -68,7 +68,10 @@
 
 				<h1>Given data</h1>
 
-				<event-form v-if="currentCategory == 'unverifiedEvents' && unverifiedEvents.length > 0" :data="verifyEvent" :selectedLocation="selectedLocation"></event-form>
+				<event-form v-if="currentCategory == 'unverifiedEvents' && unverifiedEvents.length > 0" 
+					:data="verifyEvent" 
+					:selectedLocation="selectedLocation"
+					:selectedBands="selectedBands"></event-form>
 
 				<location-form v-if="currentCategory == 'unverifiedLocations' && unverifiedLocations.length > 0" :data="verifyLocation"></location-form>
 
@@ -138,6 +141,7 @@ export default {
 			verifyLocation: {},
 			unverifiedBands: [],
 			verifyBand: {},
+			selectedBands: [],
 			verifyIndex: Number,
 			unvalidatedRoute: '/api/unvalidated-events/',
 			validatedRoute: '/api/events',
@@ -179,6 +183,8 @@ export default {
 				.catch(err => {});
 		},
 		showEventInfo(event, index) {
+			console.log(event);
+			
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
 			
 			this.$http.get(backendUrl + "/api/locations/byid/" + event.location)
@@ -194,8 +200,19 @@ export default {
 						endDate: ''
 					};
 					this.verifyData = this.verifyEvent;
-					this.selectedLocation = response.body;
-					this.selectedLocation.label = this.selectedLocation.name + ' - ' + this.selectedLocation.address;
+					this.selectedLocation = response.body.data;
+					this.selectedLocation.label = this.selectedLocation.name + ' - ' + this.selectedLocation.address.city;
+
+					this.verifyEvent.bands.forEach((band, index) => {
+						console.log(index);
+						
+						this.$http.get(backendUrl + "/api/bands/byid/" + band)
+							.then(response => {
+								this.selectedBands[index] = response.body.data;
+								this.selectedBands[index].label = response.body.data.name + ' - ' + response.body.data.origin.country;
+							})
+							.catch(err => {});
+					});
 				})
 				.catch(err => {})
 			this.verifyIndex = index;

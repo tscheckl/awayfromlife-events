@@ -30,7 +30,7 @@
 
 					<h3><md-icon>queue_music</md-icon>Lineup </h3>
 					<ul>
-						<li v-for="band in data.bands" :key="band">{{band}}</li>
+						<li v-for="band in eventBands" :key="band._id">{{band.name}}</li>
 					</ul>
 					
 					<hr>
@@ -59,6 +59,15 @@ export default {
 
 			this.formattedDate = moment(this.data.startDate).format('LL');
 			this.formattedTime = moment(this.data.startDate).format('HH:mm');
+
+			
+			for(let i=0; i < this.data.bands.length; i++) {			
+				this.$http.get(backendUrl + "/api/bands/byid/" + this.data.bands[i])
+					.then(response => {
+						this.eventBands[i] = response.body.data;
+					})
+					.catch(err => {});
+			}
 		}
 	},
 	props: {
@@ -68,7 +77,8 @@ export default {
 		return {
 			formattedDate: '',
 			formattedTime: '',
-			eventLocation: {}
+			eventLocation: {},
+			eventBands: []
 		}
 	},
 	methods: {
