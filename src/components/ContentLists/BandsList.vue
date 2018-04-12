@@ -107,7 +107,7 @@ export default {
 		},
 		//Function for giving the Band-Event dialog the data of the clicked band and opening it.
 		showBand(band) {
-			this.showEBandData = band;
+			this.showBandData = band;
 			this.$refs['single-band-dialog'].open();
 		},
 		sortBy(sortCrit) {

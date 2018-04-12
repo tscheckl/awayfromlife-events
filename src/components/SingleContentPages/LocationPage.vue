@@ -24,7 +24,7 @@
 
 					<hr v-if="data.website || data.facebook_page_url">
 
-					<h3 v-if="data.website || data.facebook_page_url"><md-icon>info_outline</md-icon>Additional Information</h3>
+					<h3 v-if="data.website || data.facebook_page_url"><md-icon>subject</md-icon>Additional Information</h3>
 					<p v-if="data.website" class="website">Website: <a :href="data.website">{{data.website}}</a></p>
 					<p v-if="data.facebook_page_url" class="facebook-page">Facebook Page: <a :href="data.facebook_page_url">{{data.facebook_page_url}}</a></p>
 
@@ -34,7 +34,7 @@
 					<p>{{data.information}}</p>
 
 					<div class="events" v-if="locationEvents">
-						<h3><md-icon>event</md-icon>Upcoming Events:</h3>
+						<h3><md-icon>date_range</md-icon>Upcoming Events:</h3>
 						<div class="event" v-for="event in locationEvents" :key="event._id" v-on:click="showEvent(event)">
 							<div class="event-information">
 								<p>{{event.title}}</p>
