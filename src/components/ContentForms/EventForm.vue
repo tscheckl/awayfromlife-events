@@ -84,9 +84,6 @@ export default {
 		}
 	},
 	methods: {
-		nameAndAddress(selectedLocation) { //Function to format the value that is displayed in the search-select
-			return `${selectedLocation.name} - ${selectedLocation.address}`;
-		},
 		onSelectLocation(selected) {
 			//Set the value for the item that will be displayed in the search select input
 			this.selectedLocation = selected;

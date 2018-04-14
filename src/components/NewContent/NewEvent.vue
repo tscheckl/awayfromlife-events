@@ -15,7 +15,7 @@
 
 		<div v-if="createEvent" class="content">
 			<h1>NEW EVENT</h1>
-			<event-form :data="newEvent" :selectedBands="[]"></event-form>
+			<event-form :data="newEvent" :selectedBands="selectedBands" :selectedLocation="selectedLocation"></event-form>
 			
 			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Add Event</md-button>
 		</div>
@@ -48,6 +48,22 @@ export default {
 	components: {
 		EventForm,
 		TourForm
+	},
+	props: {
+		data: Object,
+		selectedBands: Array,
+		selectedLocation: {}
+	},
+	watch: {
+		data() {
+			if(this.data.title) {
+				this.newEvent = this.data; 
+			}
+
+			if(this.selectedBands[0] == '') {
+				this.selectedBands = [];
+			}
+		}
 	},
 	data() {
 		return {

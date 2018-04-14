@@ -30,13 +30,20 @@
 				margin-left: -25%;
 				color: $primaryDarken4;
 				text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-			}
-
-			h2 {
 				font-family: 'Montserrat';
 				font-size: 3em;
 				letter-spacing: 1px;
 				line-height: 1em;
+			}
+
+			.content-header {
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+
+				.edit-buttons {
+					margin-top: 10px;
+				}
 			}
 
 			hr {
@@ -134,9 +141,12 @@
 			.content {
 				padding: 10px;
 
+				.content-header {
+					margin-top: 40px;
+				}
+
 				h2 {
 					margin-left: -20%;
-					margin-top: 40px;
 					font-size: 2em;
 				}
 			}

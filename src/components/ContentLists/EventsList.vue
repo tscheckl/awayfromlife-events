@@ -62,11 +62,11 @@
 		<div class="color-block"></div>
 
 		<md-dialog ref="new-event-dialog">
-			<new-event v-on:close="$refs['new-event-dialog'].close()"></new-event>
+			<new-event v-on:close="$refs['new-event-dialog'].close()" :data="{}" :selectedLocation="{}" :selectedBands="[]"></new-event>
 		</md-dialog>
 
 		<md-dialog ref="singleEventDialog" class="content-dialog">
-			<event-page :data="showEventData" v-on:close="$refs.singleEventDialog.close()"></event-page>
+			<event-page :data="showEventData" v-on:close="handleDialogClose" v-if="eventVisible"></event-page>
 		</md-dialog>
 	</div>
 </template>
@@ -96,7 +96,8 @@ export default {
 			currentlySorted: 'startDate',
 			currentPage: 1,
 			availablePages: 1,
-			itemsPerPage: '20'
+			itemsPerPage: '20',
+			eventVisible: false
 		}
 	},
 	methods: {
@@ -106,6 +107,7 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event) {
 			this.showEventData = event;
+			this.eventVisible = true;
 			this.$refs.singleEventDialog.open();
 		},
 		sortBy(sortCrit) {
@@ -167,6 +169,11 @@ export default {
 			else {
 				return biggerPages;
 			}
+		},
+		handleDialogClose() {
+			this.$refs.singleEventDialog.close();
+			this.getEventsPage(this.currentPage);
+			this.eventVisible = false;
 		}
 	},
 	mounted() {
