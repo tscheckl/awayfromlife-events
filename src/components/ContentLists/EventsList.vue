@@ -31,10 +31,10 @@
 				<md-icon class="hidden-icon"></md-icon>
 			</div>
 
-			<div class="list-item" v-for="(event, index) in events" :key="index" v-on:click="showEvent(event)">
+			<div class="list-item" v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
 				<p class="event-date">{{event.formattedDate}}</p>
 				<h3 class="item-title">{{event.title}}</h3>
-				<p class="location-name"><b>{{event.locationName}}</b> {{event.locationCity}}</p>
+				<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
 				<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 			</div>
 
@@ -62,11 +62,11 @@
 		<div class="color-block"></div>
 
 		<md-dialog ref="new-event-dialog">
-			<new-event v-on:close="$refs['new-event-dialog'].close()" :data="{}" :selectedLocation="{}" :selectedBands="[]"></new-event>
+			<new-event v-on:close="$refs['new-event-dialog'].close()"></new-event>
 		</md-dialog>
 
 		<md-dialog ref="singleEventDialog" class="content-dialog">
-			<event-page :data="showEventData" v-on:close="handleDialogClose" v-if="eventVisible"></event-page>
+			<event-page v-on:close="handleDialogClose"></event-page>
 		</md-dialog>
 	</div>
 </template>
@@ -88,7 +88,7 @@ export default {
 	data() {
 		return {
 			events: [],
-			showEventData: {},
+			locations: [],
 			sortingAsc: {
 				startDate: false,
 				title: false
@@ -97,7 +97,6 @@ export default {
 			currentPage: 1,
 			availablePages: 1,
 			itemsPerPage: '20',
-			eventVisible: false
 		}
 	},
 	methods: {
@@ -105,9 +104,10 @@ export default {
 			this.$refs[ref].open();
 		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
-		showEvent(event) {
-			this.showEventData = event;
-			this.eventVisible = true;
+		showEvent(event, index) {
+			this.$store.commit('setCurrentEvent', event);
+			
+			
 			this.$refs.singleEventDialog.open();
 		},
 		sortBy(sortCrit) {
@@ -116,28 +116,27 @@ export default {
 			this.getEventsPage(this.currentPage);
 		},
 		getEventsPage(page) {
+			
 			this.currentPage = page;
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 
+			console.log(backendUrl + '/api/events/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection);
+			
+
 			this.$http.get(backendUrl + '/api/events/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
+				
 				this.events = response.body.data;
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
+				
 
-				this.events.forEach((event) => {
-					//Get Name and city of each event's location.
-					this.$http.get(backendUrl + '/api/locations/byid/' + event.location)
-						.then(response => {
-							this.$set(event, 'locationName', response.body.data.name);
-							this.$set(event, 'locationCity', response.body.data.address.city);
-						})
-						.catch(err => {});
-						
+				for(let event of this.events) {
+					this.locations.push(event.location);
 					//Add formatted date Attribute to each event for displaying the date in the list.
 					event.formattedDate = moment(event.startDate).format('L');
-				});
+				}
 			})
 			.catch(err => {});
 		},
@@ -173,14 +172,17 @@ export default {
 		handleDialogClose() {
 			this.$refs.singleEventDialog.close();
 			this.getEventsPage(this.currentPage);
-			this.eventVisible = false;
 		}
 	},
-	mounted() {
-		this.getEventsPage(this.currentPage);		
+	created() {
+		// this.getEventsPage(this.currentPage);		
 		//Sort the events ascending by their date.
 		this.sortingAsc.startDate = true;
 		this.sortBy('startDate');
+	},
+	updated() {
+		console.log("updated");
+		
 	}
 }
 </script>

@@ -39,9 +39,12 @@
 			.content-header {
 				width: 100%;
 				display: flex;
-				flex-wrap: wrap;
 
-				.edit-buttons {
+				.title {
+					flex: 1;
+				}
+
+				.edit-button {
 					margin-top: 10px;
 				}
 			}
@@ -143,6 +146,7 @@
 
 				.content-header {
 					margin-top: 40px;
+					flex-wrap: wrap;
 				}
 
 				h2 {

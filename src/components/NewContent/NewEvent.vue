@@ -1,10 +1,6 @@
 <template>
   	<div id="new_event">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
-			<md-icon>clear</md-icon>
-		</md-button>
-
-		<md-button-toggle class="event-type-switch" md-single>
+		<md-button-toggle v-if="!edit" class="event-type-switch" md-single>
 			<md-button v-on:click="createEvent=true" :class="createEvent? 'active' : ''">
 				Single Event
 			</md-button>
@@ -13,11 +9,15 @@
 			</md-button>
 		</md-button-toggle>
 
+		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
+			<md-icon>clear</md-icon>
+		</md-button>
+
 		<div v-if="createEvent" class="content">
-			<h1>NEW EVENT</h1>
-			<event-form :data="newEvent" :selectedBands="selectedBands" :selectedLocation="selectedLocation"></event-form>
+			<h1>{{edit?'EDIT EVENT' :'NEW EVENT'}}</h1>
+			<event-form :data="newEvent" :edit="edit"></event-form>
 			
-			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Add Event</md-button>
+			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">{{edit?'Update Event' :'Add Event'}}</md-button>
 		</div>
 		
 		<div v-else class="content">
@@ -51,31 +51,29 @@ export default {
 	},
 	props: {
 		data: Object,
-		selectedBands: Array,
-		selectedLocation: {}
+		edit: {
+			type: Boolean,
+			default: false
+		}
 	},
-	watch: {
-		data() {
-			if(this.data.title) {
-				this.newEvent = this.data; 
+	computed: {
+		newEvent() {
+			if(this.edit) {
+				return Object.assign({}, this.$store.getters.currentEvent);
 			}
-
-			if(this.selectedBands[0] == '') {
-				this.selectedBands = [];
+			else {
+				return  {
+					title: '',
+					location: '',
+					bands: [''],
+					description: '',
+					startDate: ''
+				}
 			}
 		}
 	},
 	data() {
 		return {
-			newEvent: {
-				title: '',
-				description: '',
-				location: {},
-				bands: [''],
-				startDate: '',
-				endDate: '',
-				time: ''
-			},
 			newTour: {
 				title: '',
 				description: '',
@@ -106,10 +104,13 @@ export default {
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
 				//Check if sending directly to validated route and if so, also send token to verify.
 				let authHeader = this.apiRoute == '/api/events'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+
+				let requestType = this.edit?'put':'post'
+				let editEvent = this.edit?'/' + this.newEvent._id: '';
 				
-				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: authHeader})
+				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent, {headers: authHeader})
 				.then(response => {
-					this.submitStatus = 'New event successfully created';
+					this.submitStatus = this.edit?'Event successfully updated' :'New event successfully created';
 					this.$refs.snackbar.open();
 					this.emitClose();
 					this.loading = false;
@@ -120,7 +121,8 @@ export default {
 					// Error
 					console.log(err);
 					
-					this.submitStatus = 'An error occurred while creating the Event. Please try again!';
+					this.submitStatus = this.edit ?'An error occurred while updating the Event. Please try again!'
+										:'An error occurred while creating the Event. Please try again!';
 					this.$refs.snackbar.open();
 					this.loading = false;
 				});
