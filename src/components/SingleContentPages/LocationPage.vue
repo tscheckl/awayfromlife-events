@@ -118,7 +118,7 @@ export default {
 			this.$refs[ref].open();
 		},
 		deleteLocation() {
-			this.$http.delete(backendUrl + '/api/locations/' + this.location._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			this.$http.delete(backendUrl + '/api/locations/' + this.location._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 				.then(response => {
 					this.emitClose();
 					this.submitStatus = 'Location successfully deleted!';
@@ -135,7 +135,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				this.isAuthenticated = true;
 			})

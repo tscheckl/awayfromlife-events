@@ -131,7 +131,7 @@ export default {
 			this.$refs.singleEventDialog.open();
 		},
 		deleteBand() {
-			this.$http.delete(backendUrl + '/api/bands/' + this.band._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			this.$http.delete(backendUrl + '/api/bands/' + this.band._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 				.then(response => {
 					this.emitClose();
 					this.submitStatus = 'Band successfully deleted!';
@@ -148,7 +148,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				this.isAuthenticated = true;
 			})
