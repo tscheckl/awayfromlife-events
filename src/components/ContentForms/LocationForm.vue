@@ -57,14 +57,15 @@ import places from 'places.js';
 
 export default {
 	name: 'location-form',
-	props: {
-		data: Object,
-	},
 	components: {
     	places
 	},
+	props: {
+		data: Object,
+		value: String
+	},
 	watch: {
-		value() {
+		data() {
 			if(this.value = '') {
 				this.close();
 			}
@@ -88,7 +89,7 @@ export default {
 			this.data.address.lat = e.suggestion.latlng.lat;
 			this.data.address.lng = e.suggestion.latlng.lng;
 			this.data.address.value = e.suggestion.value;
-			this.value = e.suggestion.value;
+			this.value = e.suggestion.value ?e.suggestion.value :this.value;
 		});
 	},
 	

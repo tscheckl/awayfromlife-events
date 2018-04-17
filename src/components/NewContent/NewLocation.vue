@@ -4,11 +4,11 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<h1>NEW LOCATION</h1>
+		<h1>{{edit ?'EDIT LOCATION' :'NEW LOCATION'}}</h1>
 		
 		<location-form :data="newLocation" :value="newLocationValue"></location-form>
 
-		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">Add Location</md-button>
+		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">{{edit ?'Update Location' :'Add Location'}}</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		<md-snackbar ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -27,25 +27,40 @@ export default {
 	components: {
 		LocationForm
 	},
+	props: {
+		edit: {
+			type: Boolean,
+			default: false
+		}
+	},
+	computed: {
+		newLocation() {
+			if(this.edit) {
+				return Object.assign({},this.$store.getters.currentLocation);
+			}
+			else {
+				return {
+					name: '',
+					address: {
+						street: '',
+						city: '',
+						administrative: '',
+						country: '',
+						postcode: '',
+						lat: 0,
+						lng: 0,
+						value: '',
+					},
+					information: '',
+					website: '',
+					facebook_page_url: ''
+				}
+			}
+		}
+	},
 	data() {
 		return {
-			newLocation: {
-				name: '',
-				address: {
-					street: '',
-					city: '',
-					administrative: '',
-					country: '',
-					postcode: '',
-					lat: 0,
-					lng: 0,
-					value: '',
-				},
-				information: '',
-				website: '',
-				facebook_page_url: ''
-			},
-			newLocationValue: '',
+			newLocationValue: 'wdwadaw',
 			submitStatus: '',
 			loading: false,
 			apiRoute: '/api/unvalidated-locations'
@@ -62,7 +77,11 @@ export default {
 				//Check if sending directly to validated route and if so, also send token to verify.
 				let authHeader = this.apiRoute == '/api/locations'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
 
-				this.$http.post(backendUrl + this.apiRoute, this.newLocation, {headers: authHeader})
+				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
+				let requestType = this.edit?'put':'post'
+				let editLocation = this.edit?'/' + this.newLocation._id: '';
+
+				this.$http[requestType](backendUrl + this.apiRoute + editLocation, this.newLocation, {headers: authHeader})
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
 						this.$refs.snackbar.open();

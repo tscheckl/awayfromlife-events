@@ -4,11 +4,11 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<h1>New Band</h1>
+		<h1>{{edit? 'EDIT BAND' :'NEW BAND'}}</h1>
 		
 		<band-form :data="newBand"></band-form>
 
-		<md-button type="submit" v-on:click="addBand" class="md-raised md-accent">Add Band</md-button>
+		<md-button type="submit" v-on:click="addBand" class="md-raised md-accent">{{edit ?'Update Band' :'Add Band'}}</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		<md-snackbar ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -27,24 +27,39 @@ export default {
 	components: {
 		BandForm
 	},
+	props: {
+		edit: {
+			type: Boolean,
+			default: false
+		}
+	},
+	computed: {
+		newBand() {
+			if(this.edit) {
+				return Object.assign({},this.$store.getters.currentBand);
+			}
+			else {
+				return {
+					name: '',
+					genre: '',
+					origin: {},
+					history: '',
+					recordLabel: '',
+					releases: [{
+						releaseName: '',
+						releaseYear: ''
+					}],
+					foundingDate: '',
+					websiteUrl: '',
+					bandcampUrl: '',
+					soundcloudUrl: '',
+					facebookUrl: ''
+				}
+			}
+		}
+	},
 	data() {
 		return {
-			newBand: {
-				name: '',
-				genre: '',
-				origin: {},
-				history: '',
-				label: '',
-				releases: [{
-					releaseName: '',
-					releaseYear: ''
-				}],
-				foundingDate: '',
-				websiteUrl: '',
-				bandcampUrl: '',
-				soundcloudUrl: '',
-				facebookUrl: ''
-			},
 			newBandValue: '',
 			submitStatus: '',
 			loading: false,
@@ -62,7 +77,11 @@ export default {
 				//Check if sending directly to validated route and if so, also send token to verify.
 				let authHeader = this.apiRoute == '/api/bands'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
 
-				this.$http.post(backendUrl + this.apiRoute, this.newBand, {headers: authHeader})
+				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
+				let requestType = this.edit?'put':'post'
+				let editBand = this.edit?'/' + this.newBand._id: '';
+
+				this.$http[requestType](backendUrl + this.apiRoute + editBand, this.newBand, {headers: authHeader})
 					.then(response => {	
 						vm.submitStatus = 'New Bands successfully created';
 						this.$refs.snackbar.open();

@@ -14,7 +14,7 @@
 						<md-input-container>
 							<v-select :options="locations"
 									:on-change="onSelectLocation"
-									v-model="selectedLocation"
+									v-model="data.location"
 									placeholder="Select event location*">
 							</v-select>
 						</md-input-container>
@@ -25,11 +25,11 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="single-band" v-for="(band, index) in data.bands" :key="index">
+						<div class="single-band" v-for="(band, index) in localBands" :key="index">
 							<md-input-container>
 								<v-select :options="backendBands"
 											:on-change="(selected) => onSelectBand(selected, index)"
-											v-model="selectedBands[index]"
+											v-model="localBands[index]"
 											placeholder="Select event's bands*">
 								</v-select>
 							</md-input-container>
@@ -85,47 +85,24 @@ export default {
 			backendBands: [],			
 			selectedBands: [],
 			selectedLocation: {},	
+			localBands: []
 		}
 	},
 	watch: {
 		data() {
-			if(this.edit) {
-				console.log("fisch");
-				
-				this.selectedBands = this.data.bands.slice();
-				this.selectedLocation = Object.assign({},this.data.location);
-
-				if(this.data.bands.length > 0 && this.data.location.name) {
-					this.selectedLocation.label = this.selectedLocation.name + ' - ' + this.selectedLocation.address.city;
-
-					this.selectedBands.forEach(band => {
-						band.label = band.name + ' - ' +  band.origin.country;
-					});
-				}
-			}
+			this.localBands = this.data.bands;
 		}
 	},
 	methods: {
 		onSelectLocation(selected) {
-			//Set the value for the item that will be displayed in the search select input
-			this.selectedLocation = selected;
 			//Set the new Event's location attribute to the ID of the selected location
-			this.data.location = selected['_id'];
+			this.data.location = selected;
 		},
 		onSelectBand(selected, index) {
-			console.log("selected:", selected);
-			
-			//Set the value for the item that will be displayed in the search select input
-			this.selectedBands[index] = selected;
-			//Set the new Event's location attribute to the ID of the selected location
-			
-			if(selected._id) {
-				this.data.bands[index] = selected._id;
-			}
+			this.localBands[index] = selected;
 		},
 		addBand() {
-			this.data.bands.push('');
-			this.selectedBands.push('');
+			this.$set(this.localBands, this.localBands.length, '');
 		},
 		removeBand(index) {
 			this.data.bands.splice(index, 1);
@@ -154,9 +131,7 @@ export default {
 			})
 			.catch(err => {});
 
-			
-		this.selectedBands = [''];
-		this.selectedLocation = '';
+		this.localBands = this.data.bands;
 	}
 }
 </script>

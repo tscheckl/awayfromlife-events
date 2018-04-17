@@ -10,36 +10,44 @@
 
 			<div class="content">
 				<div class="content-header">
-					<h2>{{data.name}}</h2>
+					<h2 class="title">{{location.name}}</h2>
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newLocationDialog')">
+						<md-icon>edit</md-icon>
+						<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
+					</md-button>
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteLocation">
+						<md-icon>delete</md-icon>
+						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
+					</md-button>
 				</div>
 
 				<div class="content-body">
-					<div v-if="data.address">
+					<div v-if="location.address">
 						<h3><md-icon>directions</md-icon>Address</h3>
-						<p>{{data.address.street}}</p>
-						<p>{{data.address.postcode}} {{data.address.city}}</p>
-						<p>{{data.address.administrative}}</p>
-						<p>{{data.address.country}}</p>
+						<p>{{location.address.street}}</p>
+						<p>{{location.address.postcode}} {{location.address.city}}</p>
+						<p>{{location.address.administrative}}</p>
+						<p>{{location.address.country}}</p>
 					</div>
 
-					<hr v-if="data.website || data.facebook_page_url">
+					<hr v-if="location.website || location.facebook_page_url">
 
-					<h3 v-if="data.website || data.facebook_page_url"><md-icon>subject</md-icon>Additional Information</h3>
-					<p v-if="data.website" class="website">Website: <a :href="data.website">{{data.website}}</a></p>
-					<p v-if="data.facebook_page_url" class="facebook-page">Facebook Page: <a :href="data.facebook_page_url">{{data.facebook_page_url}}</a></p>
+					<h3 v-if="location.website || location.facebook_page_url"><md-icon>subject</md-icon>Additional Information</h3>
+					<p v-if="location.website" class="website">Website: <a :href="location.website">{{location.website}}</a></p>
+					<p v-if="location.facebook_page_url" class="facebook-page">Facebook Page: <a :href="location.facebook_page_url">{{location.facebook_page_url}}</a></p>
 
-					<hr v-if="data.information">
+					<hr v-if="location.information">
 
-					<h3 v-if="data.information"><md-icon>format_quote</md-icon>Description</h3>
-					<p>{{data.information}}</p>
+					<h3 v-if="location.information"><md-icon>format_quote</md-icon>Description</h3>
+					<p>{{location.information}}</p>
 
 					<div class="events" v-if="locationEvents">
 						<h3><md-icon>date_range</md-icon>Upcoming Events:</h3>
-						<div class="event" v-for="event in locationEvents" :key="event._id" v-on:click="showEvent(event)">
+						<div class="event" v-for="event in locationEvents" :key="event._id" v-on:click="openDialog('singleEventDialog')">
 							<div class="event-information">
 								<p>{{event.title}}</p>
 								<p>{{event.formattedDate}}, {{event.formattedTime}}</p>
-								<p>Lineup: <span v-for="band in event.bands" :key="band" class="event-band">{{band}}</span></p>
+								<p>Lineup: <span v-for="band in event.bands" :key="band._id" class="event-band">{{band.name}}</span></p>
 							</div>
 							<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 						</div>
@@ -49,33 +57,47 @@
 		</div>
 
 		<md-dialog ref="singleEventDialog" class="content-dialog">
-			<event-page :data="showEventData" v-on:close="$refs.singleEventDialog.close()"></event-page>
+			<event-page v-on:close="$refs.singleEventDialog.close()"></event-page>
 		</md-dialog>
+
+		<md-dialog ref="newLocationDialog" class="content-dialog">
+			<new-location v-on:close="handleEditClose" :edit="true"></new-location>
+		</md-dialog>
+
+		<md-snackbar ref="snackbar">
+			<span >{{this.submitStatus}}</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
 	</div>
 </template>
 
 <script>
-import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
+import { backendUrl } from '@/secrets.js';
 import EventPage from '@/Components/SingleContentPages/EventPage';
+import NewLocation from '@/Components/NewContent/NewLocation';
 
 export default {
 	name: 'location-page',
-	props: {
-		data: undefined
-	},
 	components: {
-		EventPage
+		EventPage,
+		NewLocation
+	},
+	computed: {
+		location() {
+			return Object.assign({},this.$store.getters.currentLocation);
+		}
 	},
 	data() {
 		return {
 			locationEvents: [],
-			showEventData: {}
+			submitStatus: '',
+			isAuthenticated: false,
 		}
 	},
 	watch: {
-		data() {
-			this.$http.get(backendUrl + '/api/events/location/' + this.data._id)
+		location() {
+			this.$http.get(backendUrl + '/api/events/location/' + this.location._id)
 			.then(response => {
 				this.locationEvents = response.body.data;
 				if(this.locationEvents) {
@@ -92,11 +114,32 @@ export default {
 		emitClose() {
 			this.$emit('close');
 		},
-		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
-		showEvent(event) {
-			this.showEventData = event;
-			this.$refs.singleEventDialog.open();
+		openDialog(ref) {
+			this.$refs[ref].open();
 		},
+		deleteLocation() {
+			this.$http.delete(backendUrl + '/api/locations/' + this.location._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				.then(response => {
+					this.emitClose();
+					this.submitStatus = 'Location successfully deleted!';
+					this.$refs.snackbar.open();
+				})
+				.catch(err => {
+					this.submitStatus = 'Error while deleting the location. Please try again!';
+					this.$refs.snackbar.open();
+				})
+		},
+		handleEditClose() {
+			this.$refs['newLocationDialog'].close();
+			this.emitClose();
+		}
+	},
+	mounted() {
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			.then(response => {
+				this.isAuthenticated = true;
+			})
+			.catch(err => {});
 	}
 }
 </script>

@@ -9,37 +9,44 @@
 			</div>
 
 			<div class="content">
-				
 				<div class="content-header">
-					<h2>{{data.name?data.name.toUpperCase(): ''}}</h2>
+					<h2 class="title">{{band.name?band.name.toUpperCase(): ''}}</h2>
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newBandDialog')">
+						<md-icon>edit</md-icon>
+						<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
+					</md-button>
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteBand">
+						<md-icon>delete</md-icon>
+						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
+					</md-button>
 				</div>
 
 				<div class="content-body">
 					<h3><md-icon>info_outline</md-icon>General Information</h3>
-					<p><span>Genre: </span>{{data.genre}}</p>
-					<p v-if="data.label"><span>Label: </span>{{data.label}}</p>
+					<p><span>Genre: </span>{{band.genre}}</p>
+					<p v-if="band.recordLabel"><span>Label: </span>{{band.recordLabel}}</p>
 					
 					<hr>
 
 					<h3><md-icon>timeline</md-icon>History and Origin</h3>
-					<p><span>Founded: </span>{{data.foundingDate}}</p>
-					<p><span>Origin: </span> {{data.origin.value}}</p>
-					<p v-if="data.history" class="band-history"><span>History / Band description: <br></span> {{data.history}}</p>
+					<p><span>Founded: </span>{{band.foundingDate}}</p>
+					<p v-if="band.origin"><span>Origin: </span> {{band.origin.value}}</p>
+					<p v-if="band.history" class="band-history"><span>History / Band description: <br></span> {{band.history}}</p>
 
-					<div class="releases" v-if="data.releases.length > 0">
+					<div class="releases" v-if="band.releases && band.releases.length > 0">
 						<hr>
 
 						<h3><md-icon>album</md-icon>Releases</h3>
-						<p v-for="release in data.releases" :key="release.releaseName">{{release.releaseName}} - {{release.releaseYear}}</p>
+						<p v-for="release in band.releases" :key="release.releaseName">{{release.releaseName}} - {{release.releaseYear}}</p>
 					</div>
 
-					<hr v-if="data.facebookUrl || data.website || data.bandcampUrl || data.soundclouldUrl">
+					<hr v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl">
 
-					<h3 v-if="data.facebookUrl || data.website || data.bandcampUrl || data.soundclouldUrl"><md-icon>subject</md-icon>Additional Information</h3>
-					<p v-if="data.facebookUrl"><span>Facebook Page: </span><a :href="data.facebookUrl">{{data.facebookUrl}}</a></p>
-					<p v-if="data.website"><span>Website: </span><a :href="data.website">{{data.website}}</a></p>
-					<p v-if="data.bandcampUrl"><span>Bandcamp Page: </span><a :href="data.bandcampUrl">{{data.bandcampUrl}}</a></p>
-					<p v-if="data.soundclouldUrl"><span>Soundcloud Page: </span><a :href="data.soundclouldUrl">{{data.soundclouldUrl}}</a></p>
+					<h3 v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl"><md-icon>subject</md-icon>Additional Information</h3>
+					<p v-if="band.facebookUrl"><span>Facebook Page: </span><a :href="band.facebookUrl">{{band.facebookUrl}}</a></p>
+					<p v-if="band.website"><span>Website: </span><a :href="band.website">{{band.website}}</a></p>
+					<p v-if="band.bandcampUrl"><span>Bandcamp Page: </span><a :href="band.bandcampUrl">{{band.bandcampUrl}}</a></p>
+					<p v-if="band.soundclouldUrl"><span>Soundcloud Page: </span><a :href="band.soundclouldUrl">{{band.soundclouldUrl}}</a></p>
 
 					<div class="events" v-if="bandEvents.length > 0">
 						<h3><md-icon>date_range</md-icon>Next Shows:</h3>
@@ -59,6 +66,15 @@
 		<md-dialog ref="singleEventDialog" class="content-dialog">
 			<event-page :data="showEventData" v-on:close="$refs.singleEventDialog.close()"></event-page>
 		</md-dialog>
+
+		<md-dialog ref="newBandDialog" class="content-dialog">
+			<new-band v-on:close="handleEditClose" :edit="true"></new-band>
+		</md-dialog>
+
+		<md-snackbar ref="snackbar">
+			<span >{{this.submitStatus}}</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
 	</div>
 </template>
 
@@ -66,24 +82,30 @@
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
 import EventPage from '@/Components/SingleContentPages/EventPage';
+import NewBand from '@/Components/NewContent/NewBand';
 
 export default {
 	name: 'band-page',
 	components: {
-		EventPage
+		EventPage,
+		NewBand
 	},
-	props: {
-		data: Object
+	computed: {
+		band() {
+			return Object.assign({},this.$store.getters.currentBand);
+		}
 	},
 	data() {
 		return {
 			bandEvents: [],
-			showEventData: {}
+			showEventData: {},
+			submitStatus: '',
+			isAuthenticated: false,
 		}
 	},
 	watch: {
 		data() {
-			this.$http.get(backendUrl + '/api/bands/events/' + this.data._id)
+			this.$http.get(backendUrl + '/api/bands/events/' + this.band._id)
 			.then(response => {
 				this.bandEvents = response.body.data;
 				if(this.bandEvents) {
@@ -100,15 +122,37 @@ export default {
 		emitClose() {
 			this.$emit('close');
 		},
+		openDialog(ref) {
+			this.$refs[ref].open();
+		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event) {
 			this.showEventData = event;
 			this.$refs.singleEventDialog.open();
+		},
+		deleteBand() {
+			this.$http.delete(backendUrl + '/api/bands/' + this.band._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+				.then(response => {
+					this.emitClose();
+					this.submitStatus = 'Band successfully deleted!';
+					this.$refs.snackbar.open();
+				})
+				.catch(err => {
+					this.submitStatus = 'Error while deleting the band. Please try again!';
+					this.$refs.snackbar.open();
+				})
+		},
+		handleEditClose() {
+			this.$refs['newBandDialog'].close();
+			this.emitClose();
 		}
 	},
-	updated() {
-		console.log("data: ", this.data);
-		
+	mounted() {
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			.then(response => {
+				this.isAuthenticated = true;
+			})
+			.catch(err => {});
 	}
 }
 </script>

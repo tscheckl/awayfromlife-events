@@ -7,7 +7,7 @@
 				<h1>All Locations</h1>
 			</div>
 
-			<md-button class="md-raised create-content-btn" v-on:click="openDialog('new-location-dialog')"><md-icon>add</md-icon>Create new Location</md-button>
+			<md-button class="md-raised create-content-btn" v-on:click="openDialog('newLocationDialog')"><md-icon>add</md-icon>Create new Location</md-button>
 		</div>
 		<div class="all-items">
 			<h3 class="no-items-title" v-if="locations.length == 0">No Locations found..</h3>
@@ -40,16 +40,16 @@
 
 			<div class="list-footer">
 				<div class="pages">
-					<span class="page-btn" v-on:click="currentPage > 1 ? getEventsPage(currentPage-1): getEventsPage(currentPage)"><md-icon>keyboard_arrow_left</md-icon></span>
-					<span v-for="number in smallerPages()" :key="number" v-on:click="getEventsPage(number)">{{number}}</span>
+					<span class="page-btn" v-on:click="currentPage > 1 ? getLocationsPage(currentPage-1): getLocationsPage(currentPage)"><md-icon>keyboard_arrow_left</md-icon></span>
+					<span v-for="number in smallerPages()" :key="number" v-on:click="getLocationsPage(number)">{{number}}</span>
 					<span class="current-page">{{currentPage}}</span>
-					<span v-for="number in biggerPages()" :key="number" v-on:click="getEventsPage(number)">{{number}}</span>
-					<span class="page-btn" v-on:click="(currentPage < availablePages)? getEventsPage(currentPage+1): getEventsPage(currentPage)"><md-icon>keyboard_arrow_right</md-icon></span>
+					<span v-for="number in biggerPages()" :key="number" v-on:click="getLocationsPage(number)">{{number}}</span>
+					<span class="page-btn" v-on:click="(currentPage < availablePages)? getLocationsPage(currentPage+1): getLocationsPage(currentPage)"><md-icon>keyboard_arrow_right</md-icon></span>
 				</div>
 				
 				<md-input-container>
 					<p>Items per Page</p>
-					<md-select name="itemsPerPage" v-model="itemsPerPage" v-on:change="getEventsPage(currentPage)">
+					<md-select name="itemsPerPage" v-model="itemsPerPage" v-on:change="getLocationsPage(currentPage)">
 						<md-option value="5">5</md-option>
 						<md-option value="10">10</md-option>
 						<md-option value="20">20</md-option>
@@ -60,21 +60,21 @@
 		</div>
 		<div class="color-block"></div>
 
-		<md-dialog ref="new-location-dialog">
-			<new-location v-on:close="$refs['new-location-dialog'].close()"></new-location>
+		<md-dialog ref="newLocationDialog">
+			<new-location v-on:close="handleDialogClose('newLocationDialog')"></new-location>
 		</md-dialog>
 
 		<md-dialog ref="singleLocationDialog" class="content-dialog">
-			<location-page :data="showLocationData" v-on:close="$refs.singleLocationDialog.close()"></location-page>
+			<location-page v-on:close="handleDialogClose('singleLocationDialog')"></location-page>
 		</md-dialog>
 	</div>
 </template>
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
-import NewLocation from "@/components/NewContent/NewLocation";
-import FollowButtons from "@/components/FollowButtons";
-import LocationPage from "@/components/SingleContentPages/LocationPage";
+import NewLocation from "@/Components/NewContent/NewLocation";
+import FollowButtons from "@/Components/FollowButtons";
+import LocationPage from "@/Components/SingleContentPages/LocationPage";
 
 export default {
 	name: 'locations-list',
@@ -95,7 +95,6 @@ export default {
 			currentPage: 1,
 			availablePages: 50,
 			itemsPerPage: '20',
-			showLocationData: {}
 		}
 	},
 	methods: {
@@ -105,9 +104,9 @@ export default {
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
 			this.sortingAsc[sortCrit] = !this.sortingAsc[sortCrit];
-			this.getEventsPage(this.currentPage);
+			this.getLocationsPage(this.currentPage);
 		},
-		getEventsPage(page) {
+		getLocationsPage(page) {
 			this.currentPage = page;
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
@@ -146,12 +145,16 @@ export default {
 			return biggerPages.slice(0,3);
 		},
 		showLocation(location) {
-			this.showLocationData = location;
+			this.$store.commit('setCurrentLocation', location);
 			this.$refs.singleLocationDialog.open();
+		},
+		handleDialogClose(ref) {
+			this.$refs[ref].close();
+			this.getLocationsPage(this.currentPage);
 		}
 	},
 	mounted() {
-		this.getEventsPage(this.currentPage);	
+		this.getLocationsPage(this.currentPage);	
 		this.sortingAsc.name = false;
 		this.sortBy('name');
 	}

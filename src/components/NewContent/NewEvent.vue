@@ -54,12 +54,25 @@ export default {
 		edit: {
 			type: Boolean,
 			default: false
-		}
+		},
 	},
 	computed: {
 		newEvent() {
 			if(this.edit) {
-				return Object.assign({}, this.$store.getters.currentEvent);
+				
+				let eventBands = [];
+				for(let band of this.$store.getters.currentEvent.bands) {
+					eventBands.push(Object.assign({}, band));
+				}
+				
+				return {
+					_id: this.$store.getters.currentEvent._id,
+					title: this.$store.getters.currentEvent.title,
+					location: Object.assign({}, this.$store.getters.currentEvent.location),
+					bands: eventBands,
+					startDate: this.$store.getters.currentEvent.startDate,
+					description: this.$store.getters.currentEvent.description
+				}
 			}
 			else {
 				return  {
@@ -89,25 +102,32 @@ export default {
 			loading: false,
 			//Variable for the api route according to if the user is authenticated or not
 			apiRoute: '/api/unvalidated-events',
-			createEvent: true
+			createEvent: true,
 		}
 	},
 	methods: {
 		addEvent() {
-			
 			this.loading = true;
-
 			//Reset the error messages
 			this.submitStatus = '';
 			var vm = this;
 			//Only go on if all required fields are filled out
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
+				//Extract ids of selected bands for the event to send it to the backend.
+				for(let i in this.newEvent.bands) {
+					this.newEvent.bands[i] = this.newEvent.bands[i]._id
+				}
+				//Extract id of selected location for the event to send it to the backend.
+				this.newEvent.location = this.newEvent.location._id;
+
 				//Check if sending directly to validated route and if so, also send token to verify.
 				let authHeader = this.apiRoute == '/api/events'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
 
+				//Check if an event is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editEvent = this.edit?'/' + this.newEvent._id: '';
 				
+				//Send new/updated event to the backend.
 				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent, {headers: authHeader})
 				.then(response => {
 					this.submitStatus = this.edit?'Event successfully updated' :'New event successfully created';

@@ -10,7 +10,7 @@
 				</router-link>
 			</div>
 
-			<md-button class="md-raised create-content-btn" v-on:click="openDialog('new-event-dialog')"><md-icon>add</md-icon>Create new Event</md-button>
+			<md-button class="md-raised create-content-btn" v-on:click="openDialog('newEventDialog')"><md-icon>add</md-icon>Create new Event</md-button>
 		</div>
 		<div class="all-items">
 
@@ -61,12 +61,12 @@
 
 		<div class="color-block"></div>
 
-		<md-dialog ref="new-event-dialog">
-			<new-event v-on:close="$refs['new-event-dialog'].close()"></new-event>
+		<md-dialog ref="newEventDialog">
+			<new-event v-on:close="handleDialogClose('newEventDialog')"></new-event>
 		</md-dialog>
 
 		<md-dialog ref="singleEventDialog" class="content-dialog">
-			<event-page v-on:close="handleDialogClose"></event-page>
+			<event-page :event="displayEvent" v-on:close="handleDialogClose('singleEventDialog')"></event-page>
 		</md-dialog>
 	</div>
 </template>
@@ -76,7 +76,7 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
 import NewEvent from "@/components/NewContent/NewEvent";
 import EventPage from '@/Components/SingleContentPages/EventPage';
-import FollowButtons from '@/components/FollowButtons';
+import FollowButtons from '@/Components/FollowButtons';
 
 export default {
 	name: 'events-list',
@@ -97,6 +97,7 @@ export default {
 			currentPage: 1,
 			availablePages: 1,
 			itemsPerPage: '20',
+			displayEvent: {}
 		}
 	},
 	methods: {
@@ -106,7 +107,7 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event, index) {
 			this.$store.commit('setCurrentEvent', event);
-			
+			this.displayEvent = event;
 			
 			this.$refs.singleEventDialog.open();
 		},
@@ -121,19 +122,15 @@ export default {
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 
-			console.log(backendUrl + '/api/events/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection);
-			
-
 			this.$http.get(backendUrl + '/api/events/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
 				
-				this.events = response.body.data;
+				this.events = response.body.data.slice(0);
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 				
 
 				for(let event of this.events) {
-					this.locations.push(event.location);
 					//Add formatted date Attribute to each event for displaying the date in the list.
 					event.formattedDate = moment(event.startDate).format('L');
 				}
@@ -169,8 +166,8 @@ export default {
 				return biggerPages;
 			}
 		},
-		handleDialogClose() {
-			this.$refs.singleEventDialog.close();
+		handleDialogClose(ref) {
+			this.$refs[ref].close();
 			this.getEventsPage(this.currentPage);
 		}
 	},
@@ -179,10 +176,6 @@ export default {
 		//Sort the events ascending by their date.
 		this.sortingAsc.startDate = true;
 		this.sortBy('startDate');
-	},
-	updated() {
-		console.log("updated");
-		
 	}
 }
 </script>

@@ -22,7 +22,7 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
-import FollowButtons from '@/components/FollowButtons';
+import FollowButtons from '@/Components/FollowButtons';
 
 export default {
 	name: 'events-search',

@@ -27,7 +27,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Label the band is signed to</label>
-							<md-input v-model="data.label"></md-input>
+							<md-input v-model="data.recordLabel"></md-input>
 						</md-input-container>
 					</md-layout>
 

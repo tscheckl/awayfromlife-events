@@ -15,22 +15,24 @@
 						<h2>{{event.title?event.title.toUpperCase(): ''}}</h2>
 						<h4 class="date">{{event.formattedDate}}</h4>
 					</div>
-					<md-button class="md-icon-button edit-button" v-on:click="openDialog('new-event-dialog')">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newEventDialog')">
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
 					</md-button>
-					<md-button class="md-icon-button edit-button" v-on:click="deleteEvent">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteEvent">
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
 					</md-button>
 				</div>
 
-				<div class="content-body" v-if="event.location">
-					<h3><md-icon>location_on</md-icon>Location</h3>
-					<p>{{event.location.name}}</p>
-					<p>{{event.location.address.street}}</p>
-					<p>{{event.location.address.postcode}} {{event.location.address.city}}</p>
-					<p>{{event.location.address.country}}</p>
+				<div class="content-body">
+					<div v-if="event.location.address">
+						<h3><md-icon>location_on</md-icon>Location</h3>
+						<p>{{event.location.name}}</p>
+						<p>{{event.location.address.street}}</p>
+						<p>{{event.location.address.postcode}} {{event.location.address.city}}</p>
+						<p>{{event.location.address.country}}</p>
+					</div>
 
 					<hr>
 
@@ -51,7 +53,7 @@
 			</div>
 		</div>
 
-		<md-dialog ref="new-event-dialog">
+		<md-dialog ref="newEventDialog">
 			<new-event v-on:close="handleEditClose" :edit="true"></new-event>
 		</md-dialog>
 
@@ -74,9 +76,9 @@ export default {
 	},
 	computed: {
 		event() {
-			return this.$store.getters.currentEvent;
+			return Object.assign({},this.$store.getters.currentEvent);
 		}
-	}, 
+	},
 	data() {
 		return {
 			submitStatus: '',
@@ -93,19 +95,17 @@ export default {
 		deleteEvent() {
 			this.$http.delete(backendUrl + '/api/events/' + this.event._id, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 				.then(response => {
-					console.log(response);
 					this.emitClose();
 					this.submitStatus = 'Event successfully deleted!';
 					this.$refs.snackbar.open();
 				})
 				.catch(err => {
-					console.log(err);
 					this.submitStatus = 'Error while deleting the event. Please try again!';
 					this.$refs.snackbar.open();
 				})
 		},
 		handleEditClose() {
-			this.$refs['new-event-dialog'].close();
+			this.$refs['newEventDialog'].close();
 			this.emitClose();
 		}
 	},
@@ -115,10 +115,6 @@ export default {
 				this.isAuthenticated = true;
 			})
 			.catch(err => {});
-	},
-	updated() {
-		console.log("store event: ", this.event);
-		
 	}
 }
 </script>

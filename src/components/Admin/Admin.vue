@@ -69,9 +69,7 @@
 				<h1>Given data</h1>
 
 				<event-form v-if="currentCategory == 'unverifiedEvents' && unverifiedEvents.length > 0" 
-					:data="verifyEvent" 
-					:selectedLocation="selectedLocation"
-					:selectedBands="selectedBands"></event-form>
+					:data="verifyEvent" :edit="false" :selectedBands="selectedBands" :selectedLocation="selectedLocation"></event-form>
 
 				<location-form v-if="currentCategory == 'unverifiedLocations' && unverifiedLocations.length > 0" :data="verifyLocation"></location-form>
 
@@ -125,7 +123,6 @@ export default {
 			// isEvent: true,
 			currentCategory: 'unverifiedEvents',
 			unverifiedEvents: [],
-			locations: [],
 			verifyEvent: {
 				_id: '',
 				title: '',
@@ -137,11 +134,11 @@ export default {
 				endDate: ''
 			},
 			selectedLocation: {},
+			selectedBands: [],
 			unverifiedLocations: [],
 			verifyLocation: {},
 			unverifiedBands: [],
 			verifyBand: {},
-			selectedBands: [],
 			verifyIndex: Number,
 			unvalidatedRoute: '/api/unvalidated-events/',
 			validatedRoute: '/api/events',
@@ -187,35 +184,17 @@ export default {
 			
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
 			
-			this.$http.get(backendUrl + "/api/locations/byid/" + event.location)
-				.then(response => {
-					this.verifyEvent = {
-						_id: event._id,
-						title: event.title,
-						description: event.description,
-						startDate: event.startDate,
-						time: event.time,
-						location: response.body._id,
-						bands: event.bands,
-						endDate: ''
-					};
-					this.verifyData = this.verifyEvent;
-					this.selectedLocation = response.body.data;
-					this.selectedLocation.label = this.selectedLocation.name + ' - ' + this.selectedLocation.address.city;
+			this.verifyEvent = Object.assign({}, event);
 
-					this.verifyEvent.bands.forEach((band, index) => {
-						console.log(index);
-						
-						this.$http.get(backendUrl + "/api/bands/byid/" + band)
-							.then(response => {
-								this.selectedBands[index] = response.body.data;
-								this.selectedBands[index].label = response.body.data.name + ' - ' + response.body.data.origin.country;
-							})
-							.catch(err => {});
-					});
-				})
-				.catch(err => {})
-			this.verifyIndex = index;
+			this.verifyEvent.bands.forEach(band => {
+				band.origin ?band.label = band.name + ' - ' + band.origin.country :'';
+			});
+
+			this.verifyEvent.location.address ?this.verifyEvent.location.label = this.verifyEvent.location.name + ' - ' + this.verifyEvent.location.address.city :'';
+			this.selectedLocation = Object.assign({}, event.location);
+			this.selectedBands = event.bands.slice();
+			
+			this.verifyData = this.verifyEvent;
 		},
 		showLocationInfo(location, index) {
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
@@ -264,33 +243,18 @@ export default {
 
 			this.$http.get(backendUrl + this.unvalidatedRoute, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
 				.then(response => {
-					
 					//Check if there is a message in the response (= error)
 					if(!response.body.message) {
 						//Set the array of unvalidated events for the currently selected category to the data from the reponse
 						this[this.currentCategory] = response.body.data;
-
-						//Get all locations for the unvalidated events to choose from in case the location of an event is to be changed
-						// and display the first unvalidated event.
-						if(this.currentCategory == 'unverifiedEvents') {
-							this.$http.get(backendUrl + "/api/locations")
-								.then(response => {
-									this.locations = response.body;
-									this.loading = false;
-									this.showEventInfo(this.unverifiedEvents[0]);
-								})
-								.catch(err => {
-									this.loading = false;
-								});
-						}
-						else {
-							this.loading = false;
-							//Display the first element of the array of unvalidated data for the currently selected category.
-							if(this.currentCategory == 'unverifiedLocations')
-								this.showLocationInfo(this.unverifiedLocations[0]);
-							else
-								this.showBandInfo(this.unverifiedBands[0]);
-						}
+						this.loading= false;
+						//Display the first element of the array of unvalidated data for the currently selected category.
+						if(this.currentCategory == 'unverifiedEvents') 
+							this.showEventInfo(this.unverifiedEvents[0]);
+						else if(this.currentCategory == 'unverifiedLocations')
+							this.showLocationInfo(this.unverifiedLocations[0]);
+						else
+							this.showBandInfo(this.unverifiedBands[0]);
 					}
 					else {
 						//If there was an error or no data was found, set the array of unvalidated data for the current category to an empty array.

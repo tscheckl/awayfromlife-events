@@ -66,8 +66,8 @@
 			<new-band v-on:close="$refs['new-band-dialog'].close()"></new-band>
 		</md-dialog>
 
-		<md-dialog ref="single-band-dialog" class="content-dialog">
-			<band-page :data="showBandData" v-on:close="$refs['single-band-dialog'].close()"></band-page>
+		<md-dialog ref="singleBandDialog" class="content-dialog">
+			<band-page v-on:close="handleDialogClose('singleBandDialog')"></band-page>
 		</md-dialog>
 	</div>
 </template>
@@ -75,9 +75,9 @@
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
-import NewBand from "@/components/NewContent/NewBand";
+import NewBand from "@/Components/NewContent/NewBand";
 import BandPage from '@/Components/SingleContentPages/BandPage';
-import FollowButtons from '@/components/FollowButtons';
+import FollowButtons from '@/Components/FollowButtons';
 
 export default {
 	name: 'bands-list',
@@ -89,7 +89,6 @@ export default {
 	data() {
 		return {
 			bands: [],
-			showBandData: {},
 			sortingAsc: {
 				name: false,
 				genre: false,
@@ -107,8 +106,8 @@ export default {
 		},
 		//Function for giving the Band-Event dialog the data of the clicked band and opening it.
 		showBand(band) {
-			this.showBandData = band;
-			this.$refs['single-band-dialog'].open();
+			this.$store.commit('setCurrentBand', band);
+			this.$refs['singleBandDialog'].open();
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
@@ -123,7 +122,6 @@ export default {
 			this.$http.get(backendUrl + '/api/bands/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
 				this.bands = response.body.data;
-				console.log("Bands: ", this.bands);
 				
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
@@ -158,6 +156,10 @@ export default {
 			else {
 				return biggerPages;
 			}
+		},
+		handleDialogClose(ref) {
+			this.$refs[ref].close();
+			this.getBandsPage(this.currentPage);
 		}
 	},
 	mounted() {

@@ -17,8 +17,11 @@
 					<md-layout md-flex="100">
 						<div class="single-band" v-for="(band, index) in data.bands" :key="index">
 							<md-input-container>
-								<label>Bandname</label>
-								<md-input v-model="data.bands[index]"></md-input>
+								<v-select :options="backendBands"
+											:on-change="(selected) => onSelectBand(selected, index)"
+											v-model="selectedBands[index]"
+											placeholder="Select event's bands*">
+								</v-select>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -84,7 +87,9 @@ export default {
 	},
 	data() {
 		return {
-			locations: []
+			locations: [],
+			backendBands: [],
+			selectedBands: []
 		}
 	},
 	methods: {
@@ -96,11 +101,22 @@ export default {
 				this.data.tourStops[index].location = selected._id;
 			}
 		},
+		onSelectBand(selected, index) {
+			//Set the value for the item that will be displayed in the search select input
+			this.selectedBands[index] = selected;
+			//Set the new Event's location attribute to the ID of the selected location
+			
+			if(selected._id) {
+				this.data.bands[index] = selected._id;
+			}
+		},
 		addBand() {
 			this.data.bands.push('');
+			this.selectedBands.push('');
 		},
 		removeBand(index) {
 			this.data.bands.splice(index, 1);
+			this.selectedBands.splice(index,1);
 			
 			if(this.data.bands.length == 0) {
 				this.data.bands[0] = '';
@@ -132,6 +148,15 @@ export default {
 				this.locations = response.body.data;
 				for(let location of this.locations) {
 					location.label = location.name + ' - ' + location.address.city;
+				}
+			})
+			.catch(err => {});
+
+		this.$http.get(backendUrl + "/api/bands")
+			.then(response => {
+				this.backendBands = response.body.data;
+				for(let band of this.backendBands) {
+					band.label = band.name + ' - ' + band.origin.country;
 				}
 			})
 			.catch(err => {});
