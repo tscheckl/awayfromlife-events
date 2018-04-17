@@ -74,8 +74,8 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				//Check if sending directly to validated route and if so, also send token to verify.
-				let authHeader = this.apiRoute == '/api/locations'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+				//Check if auth token is available in localStorage, if so also send it to verify.
+				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
 
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
@@ -126,7 +126,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				this.apiRoute = '/api/locations';
 			})

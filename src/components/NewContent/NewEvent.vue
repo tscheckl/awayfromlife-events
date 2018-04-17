@@ -120,8 +120,8 @@ export default {
 				//Extract id of selected location for the event to send it to the backend.
 				this.newEvent.location = this.newEvent.location._id;
 
-				//Check if sending directly to validated route and if so, also send token to verify.
-				let authHeader = this.apiRoute == '/api/events'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+				//Check if auth token is available in localStorage, if so also send it to verify.
+				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
 
 				//Check if an event is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
@@ -169,7 +169,7 @@ export default {
 						startDate: this.newTour.tourStops[tourstop].startDate
 					}
 
-					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 						.then(response => {})
 						.catch(err => {
 							// Error
@@ -223,7 +223,7 @@ export default {
 	mounted() {
 		let vm = this;
 		
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				vm.apiRoute = '/api/events';
 			})
