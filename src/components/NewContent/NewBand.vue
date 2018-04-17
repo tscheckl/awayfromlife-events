@@ -58,7 +58,7 @@ export default {
 			
 			var vm = this;
 
-			if(this.newBand.name && this.newBand.genre) {
+			if(this.newBand.name && this.newBand.genre && this.newBand.origin && this.newBand.foundingDate) {
 				//Check if sending directly to validated route and if so, also send token to verify.
 				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
 

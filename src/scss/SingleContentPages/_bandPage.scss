@@ -2,5 +2,17 @@
 @import "../themeColors";
 
 #band_page {
+	.content-body {
+		p {
+			margin-bottom: 3px;
 
+			span {
+				font-family: "OpenSansBold";
+			}
+		}
+
+		.band-history {
+			margin-top: 15px;
+		}
+	}
 }

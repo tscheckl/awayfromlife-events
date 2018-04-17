@@ -15,7 +15,7 @@
 
 		<div v-if="createEvent" class="content">
 			<h1>NEW EVENT</h1>
-			<event-form :data="newEvent"></event-form>
+			<event-form :data="newEvent" :selectedBands="[]"></event-form>
 			
 			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">Add Event</md-button>
 		</div>
@@ -80,7 +80,7 @@ export default {
 	},
 	methods: {
 		addEvent() {
-
+			
 			this.loading = true;
 
 			//Reset the error messages
