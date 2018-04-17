@@ -89,7 +89,7 @@ export default {
 			//Only go on if all required fields are filled out
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
 				//Check if sending directly to validated route and if so, also send token to verify.
-				let authHeader = this.apiRoute == '/api/events'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
 				
 				this.$http.post(backendUrl + this.apiRoute, this.newEvent, {headers: authHeader})
 				.then(response => {
@@ -131,7 +131,7 @@ export default {
 						startDate: this.newTour.tourStops[tourstop].startDate
 					}
 
-					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 						.then(response => {})
 						.catch(err => {
 							// Error
@@ -185,7 +185,7 @@ export default {
 	mounted() {
 		let vm = this;
 		
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				vm.apiRoute = '/api/events';
 			})

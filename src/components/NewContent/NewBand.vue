@@ -60,7 +60,7 @@ export default {
 
 			if(this.newBand.name && this.newBand.genre) {
 				//Check if sending directly to validated route and if so, also send token to verify.
-				let authHeader = this.apiRoute == '/api/bands'? {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}: {};
+				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
 
 				this.$http.post(backendUrl + this.apiRoute, this.newBand, {headers: authHeader})
 					.then(response => {	
@@ -107,7 +107,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				this.apiRoute = '/api/bands';
 			})

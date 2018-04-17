@@ -95,7 +95,7 @@ export default {
 			}
 		},
 		isAuthenticated() {
-			Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + sessionStorage.aflAuthToken}})
+			Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 				.then(response => {
 					return true;
 				})
