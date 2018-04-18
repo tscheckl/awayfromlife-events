@@ -25,7 +25,7 @@
 	}
 
 	.list-item-header {
-		.event-date, .item-title {
+		.event-date, .item-title, .location-name {
 			span {
 				cursor: pointer;
 			}
@@ -52,7 +52,6 @@
 		}
 
 		.all-items {
-			margin-top: 70px;
 
 			.event-date {
 				display: none;

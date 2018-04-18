@@ -59,29 +59,27 @@ export default {
 	computed: {
 		newEvent() {
 			if(this.edit) {
-				
 				let eventBands = [];
-				for(let band of this.$store.getters.currentEvent.bands) {
-					eventBands.push(Object.assign({}, band));
+				if(this.$store.getters.currentEvent.bands[0] != '') {
+					for(let band of this.$store.getters.currentEvent.bands) {
+						eventBands.push(Object.assign({}, band));
+					}
+				}
+				else {
+					eventBands = this.$store.getters.currentEvent.bands;
 				}
 				
 				return {
 					_id: this.$store.getters.currentEvent._id,
 					title: this.$store.getters.currentEvent.title,
-					location: Object.assign({}, this.$store.getters.currentEvent.location),
+					location: this.$store.getters.currentEvent.location,
 					bands: eventBands,
 					startDate: this.$store.getters.currentEvent.startDate,
 					description: this.$store.getters.currentEvent.description
 				}
 			}
 			else {
-				return  {
-					title: '',
-					location: '',
-					bands: [''],
-					description: '',
-					startDate: ''
-				}
+				return this.blankEvent;
 			}
 		}
 	},
@@ -103,6 +101,13 @@ export default {
 			//Variable for the api route according to if the user is authenticated or not
 			apiRoute: '/api/unvalidated-events',
 			createEvent: true,
+			blankEvent: {
+				title: '',
+				location: '',
+				bands: [''],
+				description: '',
+				startDate: ''
+			}
 		}
 	},
 	methods: {
@@ -111,8 +116,9 @@ export default {
 			//Reset the error messages
 			this.submitStatus = '';
 			var vm = this;
+			
 			//Only go on if all required fields are filled out
-			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location) {
+			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location && this.newEvent.bands[0] != '') {
 				//Extract ids of selected bands for the event to send it to the backend.
 				for(let i in this.newEvent.bands) {
 					this.newEvent.bands[i] = this.newEvent.bands[i]._id
@@ -130,6 +136,7 @@ export default {
 				//Send new/updated event to the backend.
 				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent, {headers: authHeader})
 				.then(response => {
+					
 					this.submitStatus = this.edit?'Event successfully updated' :'New event successfully created';
 					this.$refs.snackbar.open();
 					this.emitClose();
@@ -151,7 +158,6 @@ export default {
 				this.submitStatus = 'All required input fields have to be filled out!';
 				this.$refs.snackbar.open();
 				this.loading = false;
-				this.newEvent.startDate = '';
 			}
 	 	},
 	  	addTour() {
@@ -197,15 +203,23 @@ export default {
 		emitClose() {
 			this.$emit('close');
 		},
-	 	resetEventFields() {
-			this.newEvent = {
+	 	resetEventFields() {			 
+			this.$store.commit('setCurrentEvent', {
 				title: '',
 				description: '',
-				location: '',
+				location: {label: ''},
 				bands: [''],
 				startDate: '',
 				endDate: '',
 				time: ''
+			});
+
+			this.blankEvent = {
+				title: '',
+				location: '',
+				bands: [''],
+				description: '',
+				startDate: ''
 			}
 	  	},
 		resetTourFields() {

@@ -10,7 +10,7 @@
 				</router-link>
 			</div>
 
-			<md-button class="md-raised create-content-btn" v-on:click="openDialog('newEventDialog')"><md-icon>add</md-icon>Create new Event</md-button>
+			<md-button class="md-raised create-content-btn" v-on:click="openNewEvent"><md-icon>add</md-icon>Create new Event</md-button>
 		</div>
 		<div class="all-items">
 
@@ -27,7 +27,11 @@
 						<md-icon v-if="currentlySorted == 'title'">{{!sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 					</span>
 				</p>
-				<p class="location-name"><span>Where?</span></p>
+				<p class="location-name" v-on:click="sortBy('location')">
+					<span>Where? 
+						<md-icon v-if="currentlySorted == 'location'">{{!sortingAsc.location? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+					</span>
+				</p>
 				<md-icon class="hidden-icon"></md-icon>
 			</div>
 
@@ -91,18 +95,29 @@ export default {
 			locations: [],
 			sortingAsc: {
 				startDate: false,
-				title: false
+				title: false,
+				location: false
 			},
 			currentlySorted: 'startDate',
 			currentPage: 1,
 			availablePages: 1,
 			itemsPerPage: '20',
-			displayEvent: {}
+			displayEvent: {},
+			resetForm: false
 		}
 	},
 	methods: {
-		openDialog(ref) {
-			this.$refs[ref].open();
+		openNewEvent() {
+			this.$store.commit('setCurrentEvent', {
+				title: '',
+				description: '',
+				location: '',
+				bands: [''],
+				startDate: '',
+				endDate: '',
+				time: ''
+			});
+			this.$refs['newEventDialog'].open();	
 		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event, index) {
@@ -113,7 +128,14 @@ export default {
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
-			this.sortingAsc[sortCrit] = !this.sortingAsc[sortCrit];
+			//Save the current state of the category that is to be sorted.
+			let currentlySortedSortingAscTemp = this.sortingAsc[sortCrit];
+			//Reset all other categories direction
+			for(let key in this.sortingAsc) {
+				this.sortingAsc[key] = false;
+			}
+			//Assign the category to be sorted the negative value of its former value.
+			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
 			this.getEventsPage(this.currentPage);
 		},
 		getEventsPage(page) {

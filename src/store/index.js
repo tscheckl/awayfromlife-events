@@ -37,12 +37,12 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		setCurrentEvent(state, event) {
-			// console.log("event to be set:" );
-			
-			console.log("clicked event: ", event);
 			event.formattedDate = moment(event.startDate).format('LL');
 			event.formattedTime = moment(event.startDate).format('HH:mm');
-			event.location.label = event.location.name + ' - ' + event.location.address.city;
+			if (event.location.address) {
+				event.location.label = event.location.name + ' - ' + event.location.address.city;
+			}
+
 			if(event.bands[0] != '') {
 				event.bands.forEach(band => {
 					band.label = band.name + ' - ' + band.origin.country;

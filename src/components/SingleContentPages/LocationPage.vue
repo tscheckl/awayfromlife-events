@@ -11,14 +11,16 @@
 			<div class="content">
 				<div class="content-header">
 					<h2 class="title">{{location.name}}</h2>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newLocationDialog')">
-						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteLocation">
-						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
-					</md-button>
+					<div class="edit-buttons">
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newLocationDialog')">
+							<md-icon>edit</md-icon>
+							<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
+						</md-button>
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteLocation">
+							<md-icon>delete</md-icon>
+							<md-tooltip md-direction="bottom">delete this event</md-tooltip>
+						</md-button>
+					</div>
 				</div>
 
 				<div class="content-body">
@@ -43,7 +45,7 @@
 
 					<div class="events" v-if="locationEvents">
 						<h3><md-icon>date_range</md-icon>Upcoming Events:</h3>
-						<div class="event" v-for="event in locationEvents" :key="event._id" v-on:click="openDialog('singleEventDialog')">
+						<div class="event" v-for="event in locationEvents" :key="event._id" v-on:click="showEvent(event)">
 							<div class="event-information">
 								<p>{{event.title}}</p>
 								<p>{{event.formattedDate}}, {{event.formattedTime}}</p>
@@ -97,7 +99,7 @@ export default {
 	},
 	watch: {
 		location() {
-			this.$http.get(backendUrl + '/api/events/location/' + this.location._id)
+			this.$http.get(backendUrl + '/api/locations/events/' + this.location._id)
 			.then(response => {
 				this.locationEvents = response.body.data;
 				if(this.locationEvents) {
@@ -116,6 +118,11 @@ export default {
 		},
 		openDialog(ref) {
 			this.$refs[ref].open();
+		},
+		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
+		showEvent(event) {
+			this.$store.commit('setCurrentEvent', event);
+			this.$refs.singleEventDialog.open();
 		},
 		deleteLocation() {
 			this.$http.delete(backendUrl + '/api/locations/' + this.location._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})

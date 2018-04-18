@@ -66,7 +66,7 @@ export default {
 	},
 	watch: {
 		data() {
-			if(this.value = '') {
+			if(this.value == '') {
 				this.close();
 			}
 		}

@@ -103,7 +103,14 @@ export default {
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
-			this.sortingAsc[sortCrit] = !this.sortingAsc[sortCrit];
+			//Save the current state of the category that is to be sorted.
+			let currentlySortedSortingAscTemp = this.sortingAsc[sortCrit];
+			//Reset all other categories direction
+			for(let key in this.sortingAsc) {
+				this.sortingAsc[key] = false;
+			}
+			//Assign the category to be sorted the negative value of its former value.
+			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
 			this.getLocationsPage(this.currentPage);
 		},
 		getLocationsPage(page) {

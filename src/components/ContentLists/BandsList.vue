@@ -7,7 +7,7 @@
 				<h1>All Bands</h1>
 			</div>
 
-			<md-button class="md-raised create-content-btn" v-on:click="openDialog('new-band-dialog')"><md-icon>add</md-icon>Create new Band</md-button>
+			<md-button class="md-raised create-content-btn" v-on:click="openDialog('newBandDialog')"><md-icon>add</md-icon>Create new Band</md-button>
 		</div>
 		<div class="all-items">
 
@@ -62,8 +62,8 @@
 
 		<div class="color-block"></div>
 
-		<md-dialog ref="new-band-dialog">
-			<new-band v-on:close="$refs['new-band-dialog'].close()"></new-band>
+		<md-dialog ref="newBandDialog">
+			<new-band v-on:close="handleDialogClose('newBandDialog')"></new-band>
 		</md-dialog>
 
 		<md-dialog ref="singleBandDialog" class="content-dialog">
@@ -111,7 +111,14 @@ export default {
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
-			this.sortingAsc[sortCrit] = !this.sortingAsc[sortCrit];
+			//Save the current state of the category that is to be sorted.
+			let currentlySortedSortingAscTemp = this.sortingAsc[sortCrit];
+			//Reset all other categories direction
+			for(let key in this.sortingAsc) {
+				this.sortingAsc[key] = false;
+			}
+			//Assign the category to be sorted the negative value of its former value.
+			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
 			this.getBandsPage(this.currentPage);
 		},
 		getBandsPage(page) {

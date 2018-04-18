@@ -74,12 +74,13 @@ a {
 }
 
 .close-btn {
-	position: absolute;
-	top: 2%;
-	right: 2%;
-	margin: 0 !important;
+	top: 15px;
+	right: 3%;
 	width: auto;
 	height: auto;
+	position: absolute !important;
+	margin: 0 !important;
+	z-index: 2;
 
 	i {
 		font-size: 36px;

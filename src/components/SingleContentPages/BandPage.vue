@@ -11,14 +11,16 @@
 			<div class="content">
 				<div class="content-header">
 					<h2 class="title">{{band.name?band.name.toUpperCase(): ''}}</h2>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newBandDialog')">
-						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteBand">
-						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
-					</md-button>
+					<div class="edit-buttons">
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newBandDialog')">
+							<md-icon>edit</md-icon>
+							<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
+						</md-button>
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteBand">
+							<md-icon>delete</md-icon>
+							<md-tooltip md-direction="bottom">delete this event</md-tooltip>
+						</md-button>
+					</div>
 				</div>
 
 				<div class="content-body">
@@ -50,14 +52,15 @@
 
 					<div class="events" v-if="bandEvents.length > 0">
 						<h3><md-icon>date_range</md-icon>Next Shows:</h3>
-						<div class="event" v-for="event in bandEvents" :key="event._id" v-on:click="showEvent(event)">
+						<div class="event" v-for="index in eventLimiter" :key="index" v-on:click="showEvent(bandEvents[index-1])">
 							<div class="event-information">
-								<p>{{event.title}}</p>
-								<p>{{event.formattedDate}}, {{event.formattedTime}}</p>
-								<p>Lineup: <span v-for="band in event.bands" :key="band" class="event-band">{{band}}</span></p>
+								<p>{{bandEvents[index-1].title}}</p>
+								<p>{{bandEvents[index-1].formattedDate}}, {{bandEvents[index-1].formattedTime}}</p>
+								<p>Lineup: <span v-for="band in bandEvents[index-1].bands" :key="band._id" class="event-band">{{band.name}}</span></p>
 							</div>
 							<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 						</div>
+						<p class="more-events-btn" v-if="eventLimiter!=bandEvents.length" @click="eventLimiter=bandEvents.length">More Events<md-icon>keyboard_arrow_down</md-icon></p>
 					</div>
 				</div>
 			</div>
@@ -101,12 +104,15 @@ export default {
 			showEventData: {},
 			submitStatus: '',
 			isAuthenticated: false,
+			eventLimiter: 3
 		}
 	},
 	watch: {
-		data() {
+		band() {
 			this.$http.get(backendUrl + '/api/bands/events/' + this.band._id)
 			.then(response => {
+				console.log(response);
+				
 				this.bandEvents = response.body.data;
 				if(this.bandEvents) {
 					for(let event of this.bandEvents) {
@@ -114,8 +120,10 @@ export default {
 						event.formattedTime = moment(event.startDate).format('HH:mm');
 					}
 				}
+
+				this.eventLimiter = this.bandEvents.length>=3 ?3 :this.bandEvents.length;
 			})
-			.catch(err => {})
+			.catch(err => {});
 		}
 	},
 	methods: {
@@ -127,7 +135,7 @@ export default {
 		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event) {
-			this.showEventData = event;
+			this.$store.commit('setCurrentEvent', event);
 			this.$refs.singleEventDialog.open();
 		},
 		deleteBand() {

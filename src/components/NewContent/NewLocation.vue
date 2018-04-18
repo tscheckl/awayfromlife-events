@@ -39,22 +39,7 @@ export default {
 				return Object.assign({},this.$store.getters.currentLocation);
 			}
 			else {
-				return {
-					name: '',
-					address: {
-						street: '',
-						city: '',
-						administrative: '',
-						country: '',
-						postcode: '',
-						lat: 0,
-						lng: 0,
-						value: '',
-					},
-					information: '',
-					website: '',
-					facebook_page_url: ''
-				}
+				return this.blankLocation
 			}
 		}
 	},
@@ -63,7 +48,23 @@ export default {
 			newLocationValue: 'wdwadaw',
 			submitStatus: '',
 			loading: false,
-			apiRoute: '/api/unvalidated-locations'
+			apiRoute: '/api/unvalidated-locations',
+			blankLocation: {
+				name: '',
+				address: {
+					street: '',
+					city: '',
+					administrative: '',
+					country: '',
+					postcode: '',
+					lat: 0,
+					lng: 0,
+					value: '',
+				},
+				information: '',
+				website: '',
+				facebook_page_url: ''
+			}
 		}
 	},
 	methods: {
@@ -92,7 +93,8 @@ export default {
 					})
 					.catch(err => {
 						this.loading = false;
-						vm.submitStatus = 'An error occurred while creating the location. Please try again!';
+						this.submitStatus = this.edit ?'An error occurred while updating the Location. Please try again!'
+										:'An error occurred while creating the Location. Please try again!';
 						this.$refs.snackbar.open();
 					});
 			}
@@ -106,7 +108,7 @@ export default {
 			this.$emit('close');
 		},
 	  	emptyFormFields() {
-			this.newLocation = {
+			this.blankLocation = {
 				name: '',
 				address: {
 					street: '',

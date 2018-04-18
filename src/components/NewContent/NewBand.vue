@@ -39,22 +39,7 @@ export default {
 				return Object.assign({},this.$store.getters.currentBand);
 			}
 			else {
-				return {
-					name: '',
-					genre: '',
-					origin: {},
-					history: '',
-					recordLabel: '',
-					releases: [{
-						releaseName: '',
-						releaseYear: ''
-					}],
-					foundingDate: '',
-					websiteUrl: '',
-					bandcampUrl: '',
-					soundcloudUrl: '',
-					facebookUrl: ''
-				}
+				return this.blankBand
 			}
 		}
 	},
@@ -63,7 +48,23 @@ export default {
 			newBandValue: '',
 			submitStatus: '',
 			loading: false,
-			apiRoute: '/api/unvalidated-bands'
+			apiRoute: '/api/unvalidated-bands',
+			blankBand: {
+				name: '',
+				genre: '',
+				origin: {},
+				history: '',
+				recordLabel: '',
+				releases: [{
+					releaseName: '',
+					releaseYear: ''
+				}],
+				foundingDate: '',
+				websiteUrl: '',
+				bandcampUrl: '',
+				soundcloudUrl: '',
+				facebookUrl: ''
+			}
 		}
 	},
 	methods: {
@@ -83,7 +84,7 @@ export default {
 
 				this.$http[requestType](backendUrl + this.apiRoute + editBand, this.newBand, {headers: authHeader})
 					.then(response => {	
-						vm.submitStatus = 'New Bands successfully created';
+						vm.submitStatus = 'New Band successfully created';
 						this.$refs.snackbar.open();
 						this.emitClose();
 						vm.loading = false;
@@ -92,7 +93,8 @@ export default {
 					})
 					.catch(err => {
 						this.loading = false;
-						vm.submitStatus = 'An error occurred while creating the location. Please try again!';
+						this.submitStatus = this.edit ?'An error occurred while updating the Band. Please try again!'
+										:'An error occurred while creating the Band. Please try again!';
 						this.$refs.snackbar.open();
 					});
 			}
@@ -106,7 +108,7 @@ export default {
 			this.$emit('close');
 		},
 	  	emptyFormFields() {
-			this.newBand = {
+			this.blankBand = {
 				name: '',
 				genre: '',
 				origin: {},

@@ -18,7 +18,7 @@
 		</div>
 
 		<md-dialog ref="singleEventDialog" class="content-dialog">
-			<event-page :data="showEventData" v-on:close="$refs.singleEventDialog.close()"></event-page>
+			<event-page v-on:close="$refs.singleEventDialog.close()"></event-page>
 		</md-dialog>
   	</div>
 </template>
@@ -122,7 +122,7 @@ export default {
 		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event) {
-			this.showEventData = event;
+			this.$store.commit('setCurrentEvent', event);
 			this.$refs.singleEventDialog.open();
 		}
 	},

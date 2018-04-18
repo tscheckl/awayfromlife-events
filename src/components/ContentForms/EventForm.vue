@@ -1,6 +1,6 @@
 <template>
   <div id="event_form">
-	  <form v-on:submit.prevent>
+	  <form class="new-event-form" v-on:submit.prevent>
 			<div class="form-content">
 				<md-layout md-gutter>
 					<md-layout md-flex="50" md-flex-small="100">
@@ -74,17 +74,16 @@ export default {
 		edit: {
 			type: Boolean,
 			default: false
-		}	
+		},
+		resetForm: {
+			type: Boolean,
+			default: false
+		}
 	},
 	data() {
 		return {
 			locations: [],
-			//Variable for the search-select that contains the currently selected item/location
-			//selectedLocation: {},
-			bands: [],
-			backendBands: [],			
-			selectedBands: [],
-			selectedLocation: {},	
+			backendBands: [],
 			localBands: []
 		}
 	},
@@ -102,13 +101,13 @@ export default {
 			this.localBands[index] = selected;
 		},
 		addBand() {
-			this.$set(this.localBands, this.localBands.length, '');
+			this.localBands.push('');
 		},
 		removeBand(index) {
-			this.data.bands.splice(index, 1);
+			this.localBands.splice(index, 1);
 			
-			if(this.data.bands.length == 0) {
-				this.data.bands[0] = '';
+			if(this.localBands.length == 0) {
+				this.localBands[0] = '';
 			}
 		},
 	},

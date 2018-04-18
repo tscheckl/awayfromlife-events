@@ -4,7 +4,7 @@
 			<h3 class="event-title">{{data.title}}</h3>
 			<span class="event-date">{{formattedDate}}</span>
 		</div>
-		<div class="event-location"><span><md-icon>location_on</md-icon></span> {{eventLocation.name}}, {{eventLocation.address.city}}</div>
+		<div class="event-location"><span><md-icon>location_on</md-icon></span> {{data.location.name}}, {{data.location.address.city}}</div>
 		<p class="event-description"><span><md-icon>format_quote</md-icon></span> {{data.description}}</p>
  	 </div>
 </template>
@@ -27,13 +27,6 @@ export default {
 		formattedDate() {
 			return moment(this.data.startDate).format('YYYY-MM-DD');
 		}
-	},
-	mounted() {
-		this.$http.get(backendUrl + '/api/locations/byid/' + this.data.location)
-				.then (response => {
-					this.eventLocation = response.body.data;
-				})
-				.catch(err => {});
 	}
 }
 </script>

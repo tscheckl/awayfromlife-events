@@ -15,14 +15,16 @@
 						<h2>{{event.title?event.title.toUpperCase(): ''}}</h2>
 						<h4 class="date">{{event.formattedDate}}</h4>
 					</div>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newEventDialog')">
-						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteEvent">
-						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
-					</md-button>
+					<div class="edit-buttons">
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newEventDialog')">
+							<md-icon>edit</md-icon>
+							<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
+						</md-button>
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteEvent">
+							<md-icon>delete</md-icon>
+							<md-tooltip md-direction="bottom">delete this event</md-tooltip>
+						</md-button>
+					</div>
 				</div>
 
 				<div class="content-body">
