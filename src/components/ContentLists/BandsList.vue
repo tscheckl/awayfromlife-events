@@ -110,6 +110,7 @@ export default {
 			this.$refs['singleBandDialog'].open();
 		},
 		sortBy(sortCrit) {
+			
 			this.currentlySorted = sortCrit;
 			//Save the current state of the category that is to be sorted.
 			let currentlySortedSortingAscTemp = this.sortingAsc[sortCrit];
@@ -142,9 +143,8 @@ export default {
 				smallerPages[counter] = i;
 				counter++;
 			}
-
 			if(smallerPages.length > 3) {
-				return smallerPages.slice(1,3);
+				return smallerPages.slice(smallerPages.length-3);
 			}
 			else {
 				return smallerPages;
@@ -157,22 +157,17 @@ export default {
 				biggerPages[counter] = i+1;
 				counter++;
 			}
-			if(biggerPages.length > 3) {
-				return biggerPages.slice(1,3);
-			}
-			else {
-				return biggerPages;
-			}
+
+			return biggerPages.slice(0,3);
 		},
 		handleDialogClose(ref) {
 			this.$refs[ref].close();
 			this.getBandsPage(this.currentPage);
 		}
 	},
-	mounted() {
-		this.getBandsPage(this.currentPage);		
+	mounted() {		
 		//Sort the bands ascending by their date.
-		this.sortingAsc.name = true;
+		this.sortingAsc.name = false;
 		this.sortBy('name');
 	}
 }

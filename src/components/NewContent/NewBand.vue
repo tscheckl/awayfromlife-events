@@ -4,11 +4,14 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<h1>{{edit? 'EDIT BAND' :'NEW BAND'}}</h1>
+		<div class="content">
+			<h1>{{edit? 'EDIT BAND' :'NEW BAND'}}</h1>
 		
-		<band-form :data="newBand"></band-form>
+			<band-form :data="newBand"></band-form>
 
-		<md-button type="submit" v-on:click="addBand" class="md-raised md-accent">{{edit ?'Update Band' :'Add Band'}}</md-button>
+			<md-button type="submit" v-on:click="addBand" class="md-raised md-accent">{{edit ?'Update Band' :'Add Band'}}</md-button>
+		</div>
+		
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		<md-snackbar ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -74,7 +77,7 @@ export default {
 			
 			var vm = this;
 
-			if(this.newBand.name && this.newBand.genre && this.newBand.origin && this.newBand.foundingDate) {
+			if(this.newBand.name && this.newBand.genre && this.newBand.origin) {
 				//Check if auth token is available in localStorage, if so also send it to verify.
 				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
 

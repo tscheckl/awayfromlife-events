@@ -168,7 +168,7 @@ export default {
 			}
 
 			if(smallerPages.length > 3) {
-				return smallerPages.slice(1,3);
+				return smallerPages.slice(smallerPages.length-3);
 			}
 			else {
 				return smallerPages;
@@ -181,12 +181,8 @@ export default {
 				biggerPages[counter] = i+1;
 				counter++;
 			}
-			if(biggerPages.length > 3) {
-				return biggerPages.slice(1,3);
-			}
-			else {
-				return biggerPages;
-			}
+
+			return biggerPages.slice(0,3);
 		},
 		handleDialogClose(ref) {
 			this.$refs[ref].close();
@@ -196,7 +192,7 @@ export default {
 	created() {
 		// this.getEventsPage(this.currentPage);		
 		//Sort the events ascending by their date.
-		this.sortingAsc.startDate = true;
+		this.sortingAsc.startDate = false;
 		this.sortBy('startDate');
 	}
 }

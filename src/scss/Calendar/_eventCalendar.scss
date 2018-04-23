@@ -11,7 +11,7 @@
 		color: #232323;
 		margin-bottom: 30px;
 		padding-top: 30px;
-		font-size: 3em;
+		font-size: 2.5em;
 		text-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);
 	}
 
@@ -83,7 +83,7 @@
 			}
 
 			.up {
-				font-size: 1.15em;
+				font-size: 1.1em;
 			}
 
 			.prev {
@@ -100,7 +100,7 @@
 		}
 
 		.day-header {
-			font-size: 1.1em;
+			font-size: 1em;
 		}
 
 		.day {
@@ -159,13 +159,14 @@
 			padding: 15px 10px;
 			text-align: center;
 			font-size: 1em;
-			background-color: $primaryLighten4;
-			color: $accentAccent2;
+			background-color: $primaryLighten5;
+			color: #232323;
 			border-radius: 5px;
 
 			.material-icons{
 				display: block;
-				font-size: 36px;
+				font-size: 32px;
+				color: $accentAccent2;
 			}
 		}
 
@@ -219,7 +220,7 @@
 			
 			h1 {
 				margin: 10px 0;
-				font-size: 2.2em;
+				font-size: 2em;
 				line-height: 1.05em;
 			}
 

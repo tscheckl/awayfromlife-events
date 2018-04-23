@@ -20,7 +20,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Band's Founding year</label>
-							<md-input type="number" v-model="data.foundingDate" required></md-input>
+							<md-input type="number" v-model="data.foundingDate"></md-input>
 						</md-input-container>
 					</md-layout>
 

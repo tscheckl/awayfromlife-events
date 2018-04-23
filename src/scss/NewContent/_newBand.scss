@@ -4,7 +4,6 @@
 	position: relative;
 	width: 800px;
 	margin: 0 auto;
-	padding: 40px;
 	background-color: $primaryLighten4;
 	color: $primaryDarken3;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -27,4 +26,22 @@
 		margin-top: 20px;
 	}
 
+	.content {
+		padding: 40px;
+	}
+
+}
+
+@media screen and (max-width: 768px){
+	#new_band {
+		height: 100%;
+
+		.content {
+			padding: 20px;
+		}
+
+		h1 {
+			font-size: 2em;
+		}
+	}
 }

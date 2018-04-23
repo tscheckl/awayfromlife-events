@@ -17,12 +17,12 @@
 				</button>
 			</div>
 			
-			<router-link to="/search">
+			<!-- <router-link to="/search">
 				<div class="menu-item" v-on:click="removeExpandedClass">
 					<md-icon>search</md-icon>
 					<span >Search</span>
 				</div>
-			</router-link>
+			</router-link> -->
 
 			<router-link to="/events">
 				<div class="menu-item" v-on:click="removeExpandedClass">

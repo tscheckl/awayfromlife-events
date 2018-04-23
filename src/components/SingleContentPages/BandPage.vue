@@ -39,7 +39,9 @@
 						<hr>
 
 						<h3><md-icon>album</md-icon>Releases</h3>
-						<p v-for="release in band.releases" :key="release.releaseName">{{release.releaseName}} - {{release.releaseYear}}</p>
+						<ul>
+							<li v-for="release in band.releases" :key="release.releaseName">{{release.releaseName}} - {{release.releaseYear}}</li>
+						</ul>
 					</div>
 
 					<hr v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl">

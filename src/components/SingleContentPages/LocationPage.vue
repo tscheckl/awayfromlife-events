@@ -45,14 +45,15 @@
 
 					<div class="events" v-if="locationEvents">
 						<h3><md-icon>date_range</md-icon>Upcoming Events:</h3>
-						<div class="event" v-for="event in locationEvents" :key="event._id" v-on:click="showEvent(event)">
+						<div class="event" v-for="index in eventLimiter" :key="index" v-on:click="showEvent(locationEvents[index-1])">
 							<div class="event-information">
-								<p>{{event.title}}</p>
-								<p>{{event.formattedDate}}, {{event.formattedTime}}</p>
-								<p>Lineup: <span v-for="band in event.bands" :key="band._id" class="event-band">{{band.name}}</span></p>
+								<p>{{locationEvents[index-1].title}}</p>
+								<p>{{locationEvents[index-1].formattedDate}}, {{locationEvents[index-1].formattedTime}}</p>
+								<p>Lineup: <span v-for="band in locationEvents[index-1].bands" :key="band._id" class="event-band">{{band.name}}</span></p>
 							</div>
 							<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 						</div>
+						<p class="more-events-btn" v-if="eventLimiter!=locationEvents.length" @click="eventLimiter=locationEvents.length">More Events<md-icon>keyboard_arrow_down</md-icon></p>
 					</div>
 				</div>
 			</div>
@@ -95,6 +96,7 @@ export default {
 			locationEvents: [],
 			submitStatus: '',
 			isAuthenticated: false,
+			eventLimiter: 3
 		}
 	},
 	watch: {
@@ -108,6 +110,8 @@ export default {
 						event.formattedTime = moment(event.startDate).format('HH:mm');
 					}
 				}
+
+				this.eventLimiter = this.locationEvents.length>=3 ?3 :this.locationEvents.length;
 			})
 			.catch(err => {})
 		}
