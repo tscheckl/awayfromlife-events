@@ -154,7 +154,7 @@ export default {
 
 				for(let event of this.events) {
 					//Add formatted date Attribute to each event for displaying the date in the list.
-					event.formattedDate = moment(event.startDate).format('L');
+					event.formattedDate = moment(event.startDate).format('LL');
 				}
 			})
 			.catch(err => {});

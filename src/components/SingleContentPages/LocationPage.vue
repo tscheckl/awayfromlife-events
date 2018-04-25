@@ -43,7 +43,7 @@
 					<h3 v-if="location.information"><md-icon>format_quote</md-icon>Description</h3>
 					<p>{{location.information}}</p>
 
-					<div class="events" v-if="locationEvents">
+					<div class="events" v-if="locationEvents.length>0">
 						<h3><md-icon>date_range</md-icon>Upcoming Events:</h3>
 						<div class="event" v-for="index in eventLimiter" :key="index" v-on:click="showEvent(locationEvents[index-1])">
 							<div class="event-information">
@@ -56,6 +56,8 @@
 						<p class="more-events-btn" v-if="eventLimiter!=locationEvents.length" @click="eventLimiter=locationEvents.length">More Events<md-icon>keyboard_arrow_down</md-icon></p>
 					</div>
 				</div>
+
+				<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 			</div>
 		</div>
 
@@ -96,24 +98,37 @@ export default {
 			locationEvents: [],
 			submitStatus: '',
 			isAuthenticated: false,
-			eventLimiter: 3
+			eventLimiter: 3,
+			loading: false
 		}
 	},
 	watch: {
+		
 		location() {
+			this.loading = true;
+
 			this.$http.get(backendUrl + '/api/locations/events/' + this.location._id)
 			.then(response => {
-				this.locationEvents = response.body.data;
-				if(this.locationEvents) {
-					for(let event of this.locationEvents) {
-						event.formattedDate = moment(event.startDate).format('LL');
-						event.formattedTime = moment(event.startDate).format('HH:mm');
+				if(!response.body.message) {
+					this.locationEvents = response.body.data;
+					if(this.locationEvents) {
+						for(let event of this.locationEvents) {
+							event.formattedDate = moment(event.startDate).format('LL');
+							event.formattedTime = moment(event.startDate).format('HH:mm');
+						}
 					}
-				}
 
-				this.eventLimiter = this.locationEvents.length>=3 ?3 :this.locationEvents.length;
+					this.eventLimiter = this.locationEvents.length>=3 ?3 :this.locationEvents.length;
+				}
+				else {
+					this.locationEvents = [];
+				}
+				this.loading = false;
 			})
-			.catch(err => {})
+			.catch(err => {
+				this.locationEvents = [];
+				this.loading = false;
+			});
 		}
 	},
 	methods: {

@@ -31,11 +31,11 @@
 					<hr>
 
 					<h3><md-icon>timeline</md-icon>History and Origin</h3>
-					<p><span>Founded: </span>{{band.foundingDate}}</p>
+					<p v-if="band.foundingDate"><span>Founded: </span>{{band.foundingDate}}</p>
 					<p v-if="band.origin"><span>Origin: </span> {{band.origin.value}}</p>
 					<p v-if="band.history" class="band-history"><span>History / Band description: <br></span> {{band.history}}</p>
 
-					<div class="releases" v-if="band.releases && band.releases.length > 0">
+					<div class="releases" v-if="band.releases.length > 0 && band.releases[0].releaseName != ''">
 						<hr>
 
 						<h3><md-icon>album</md-icon>Releases</h3>
@@ -65,6 +65,8 @@
 						<p class="more-events-btn" v-if="eventLimiter!=bandEvents.length" @click="eventLimiter=bandEvents.length">More Events<md-icon>keyboard_arrow_down</md-icon></p>
 					</div>
 				</div>
+
+				<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 			</div>
 		</div>
 
@@ -106,26 +108,37 @@ export default {
 			showEventData: {},
 			submitStatus: '',
 			isAuthenticated: false,
-			eventLimiter: 3
+			eventLimiter: 3,
+			loading: false
 		}
 	},
 	watch: {
 		band() {
+			this.loading = true;
+
 			this.$http.get(backendUrl + '/api/bands/events/' + this.band._id)
 			.then(response => {
-				console.log(response);
 				
-				this.bandEvents = response.body.data;
-				if(this.bandEvents) {
-					for(let event of this.bandEvents) {
-						event.formattedDate = moment(event.startDate).format('LL');
-						event.formattedTime = moment(event.startDate).format('HH:mm');
+				if(!response.body.message) {
+					this.bandEvents = response.body.data;
+					if(this.bandEvents) {
+						for(let event of this.bandEvents) {
+							event.formattedDate = moment(event.startDate).format('LL');
+							event.formattedTime = moment(event.startDate).format('HH:mm');
+						}
 					}
-				}
 
-				this.eventLimiter = this.bandEvents.length>=3 ?3 :this.bandEvents.length;
+					this.eventLimiter = this.bandEvents.length>=3 ?3 :this.bandEvents.length;
+				}
+				else {
+					this.bandEvents = [];
+				}
+				this.loading = false;
 			})
-			.catch(err => {});
+			.catch(err => {
+				this.bandEvents = [];
+				this.loading = false;
+			});
 		}
 	},
 	methods: {
