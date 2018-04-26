@@ -115,6 +115,7 @@ export default {
 	watch: {
 		band() {
 			this.loading = true;
+			this.bandEvents = [];
 
 			this.$http.get(backendUrl + '/api/bands/events/' + this.band._id)
 			.then(response => {
@@ -130,13 +131,9 @@ export default {
 
 					this.eventLimiter = this.bandEvents.length>=3 ?3 :this.bandEvents.length;
 				}
-				else {
-					this.bandEvents = [];
-				}
 				this.loading = false;
 			})
 			.catch(err => {
-				this.bandEvents = [];
 				this.loading = false;
 			});
 		}

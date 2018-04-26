@@ -193,6 +193,12 @@ export default {
 		// this.getEventsPage(this.currentPage);		
 		//Sort the events ascending by their date.
 		this.sortingAsc.startDate = false;
+		if(this.$router.currentRoute.query.page) {
+			this.currentPage = this.$router.currentRoute.query.page;
+		}
+		else {
+			this.$router.push({query: {page: 1}})
+		}
 		this.sortBy('startDate');
 	}
 }

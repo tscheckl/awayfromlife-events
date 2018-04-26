@@ -40,16 +40,16 @@
 
 			<div class="list-footer">
 				<div class="pages">
-					<span class="page-btn" v-on:click="currentPage > 1 ? getLocationsPage(currentPage-1): getLocationsPage(currentPage)"><md-icon>keyboard_arrow_left</md-icon></span>
+					<span class="page-btn" v-on:click="currentPage > 1 ? getLocationsPage(currentPage-1): ''"><md-icon>keyboard_arrow_left</md-icon></span>
 					<span v-for="number in smallerPages()" :key="number" v-on:click="getLocationsPage(number)">{{number}}</span>
 					<span class="current-page">{{currentPage}}</span>
 					<span v-for="number in biggerPages()" :key="number" v-on:click="getLocationsPage(number)">{{number}}</span>
-					<span class="page-btn" v-on:click="(currentPage < availablePages)? getLocationsPage(currentPage+1): getLocationsPage(currentPage)"><md-icon>keyboard_arrow_right</md-icon></span>
+					<span class="page-btn" v-on:click="(currentPage < availablePages)? getLocationsPage(currentPage+1): ''"><md-icon>keyboard_arrow_right</md-icon></span>
 				</div>
 				
 				<md-input-container>
 					<p>Items per Page</p>
-					<md-select name="itemsPerPage" v-model="itemsPerPage" v-on:change="getLocationsPage(currentPage)">
+					<md-select name="itemsPerPage" v-model="itemsPerPage" v-on:selected="getLocationsPage(currentPage)">
 						<md-option value="5">5</md-option>
 						<md-option value="10">10</md-option>
 						<md-option value="20">20</md-option>
@@ -115,6 +115,7 @@ export default {
 		},
 		getLocationsPage(page) {
 			this.currentPage = page;
+			this.$router.push({query: {page: page}});
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 
@@ -152,6 +153,7 @@ export default {
 			return biggerPages.slice(0,3);
 		},
 		showLocation(location) {
+			this.$router.push({query: {page: this.currentPage, location: location._id}});
 			this.$store.commit('setCurrentLocation', location);
 			this.$refs.singleLocationDialog.open();
 		},
@@ -160,8 +162,24 @@ export default {
 			this.getLocationsPage(this.currentPage);
 		}
 	},
-	mounted() {
-		this.getLocationsPage(this.currentPage);	
+	created() {
+		if(this.$router.currentRoute.query.page) {
+			this.currentPage = this.$router.currentRoute.query.page;
+		}
+		else {
+			this.$router.push({query: {page: 1}});
+		}
+		
+		if(this.$router.currentRoute.query.location) {
+			console.log("location query found");
+			
+			this.$http.get(backendUrl + '/api/locations/byId/' + this.$router.currentRoute.query.location)
+			.then(response => {
+				this.showLocation(response.body.data);
+			})
+			.catch(err => {});
+		}
+
 		this.sortingAsc.name = false;
 		this.sortBy('name');
 	}

@@ -106,6 +106,7 @@ export default {
 		
 		location() {
 			this.loading = true;
+			this.locationEvents = [];
 
 			this.$http.get(backendUrl + '/api/locations/events/' + this.location._id)
 			.then(response => {
@@ -120,13 +121,9 @@ export default {
 
 					this.eventLimiter = this.locationEvents.length>=3 ?3 :this.locationEvents.length;
 				}
-				else {
-					this.locationEvents = [];
-				}
 				this.loading = false;
 			})
 			.catch(err => {
-				this.locationEvents = [];
 				this.loading = false;
 			});
 		}
