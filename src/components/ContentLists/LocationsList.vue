@@ -87,7 +87,7 @@ export default {
 		return {
 			locations: [],
 			sortingAsc: {
-				name: true,
+				name: false,
 				'address.street': false,
 				'address.city': false
 			},
@@ -111,11 +111,25 @@ export default {
 			}
 			//Assign the category to be sorted the negative value of its former value.
 			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
+			
+			this.$router.push({query: {
+				page: this.currentPage, 
+				itemsPerPage: this.itemsPerPage, 
+				sortBy: this.currentlySorted, 
+				ascending: this.sortingAsc[this.currentlySorted]
+			}});
+
 			this.getLocationsPage(this.currentPage);
 		},
 		getLocationsPage(page) {
 			this.currentPage = page;
-			this.$router.push({query: {page: page}});
+			
+			this.$router.push({query: {
+				page: this.currentPage, 
+				itemsPerPage: this.itemsPerPage, 
+				sortBy: this.currentlySorted, 
+				ascending: this.sortingAsc[this.currentlySorted]
+			}});
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 
@@ -153,7 +167,6 @@ export default {
 			return biggerPages.slice(0,3);
 		},
 		showLocation(location) {
-			this.$router.push({query: {page: this.currentPage, location: location._id}});
 			this.$store.commit('setCurrentLocation', location);
 			this.$refs.singleLocationDialog.open();
 		},
@@ -166,22 +179,19 @@ export default {
 		if(this.$router.currentRoute.query.page) {
 			this.currentPage = this.$router.currentRoute.query.page;
 		}
-		else {
-			this.$router.push({query: {page: 1}});
-		}
-		
-		if(this.$router.currentRoute.query.location) {
-			console.log("location query found");
-			
-			this.$http.get(backendUrl + '/api/locations/byId/' + this.$router.currentRoute.query.location)
-			.then(response => {
-				this.showLocation(response.body.data);
-			})
-			.catch(err => {});
+
+		if(this.$route.query.itemsPerPage) {
+			this.itemsPerPage = this.$route.query.itemsPerPage;
 		}
 
-		this.sortingAsc.name = false;
-		this.sortBy('name');
+		if(this.$route.query.sortBy && this.$route.query.ascending) {
+			this.currentlySorted = this.$route.query.sortBy;
+			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
+			this.getLocationsPage(this.currentPage);
+		}
+		else {
+			this.sortingAsc.name = true;
+		}
 	}
 }
 </script>

@@ -136,11 +136,25 @@ export default {
 			}
 			//Assign the category to be sorted the negative value of its former value.
 			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
+
+			this.$router.push({query: {
+				page: this.currentPage, 
+				itemsPerPage: this.itemsPerPage, 
+				sortBy: this.currentlySorted, 
+				ascending: this.sortingAsc[this.currentlySorted]
+			}});
+
 			this.getEventsPage(this.currentPage);
 		},
 		getEventsPage(page) {
-			
 			this.currentPage = page;
+			
+			this.$router.push({query: {
+				page: this.currentPage, 
+				itemsPerPage: this.itemsPerPage, 
+				sortBy: this.currentlySorted, 
+				ascending: this.sortingAsc[this.currentlySorted]
+			}});
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 
@@ -190,16 +204,22 @@ export default {
 		}
 	},
 	created() {
-		// this.getEventsPage(this.currentPage);		
-		//Sort the events ascending by their date.
-		this.sortingAsc.startDate = false;
 		if(this.$router.currentRoute.query.page) {
 			this.currentPage = this.$router.currentRoute.query.page;
 		}
-		else {
-			this.$router.push({query: {page: 1}})
+
+		if(this.$route.query.itemsPerPage) {
+			this.itemsPerPage = this.$route.query.itemsPerPage;
 		}
-		this.sortBy('startDate');
+		
+		if(this.$route.query.sortBy && this.$route.query.ascending) {
+			this.currentlySorted = this.$route.query.sortBy;
+			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
+			this.getLocationsPage(this.currentPage);
+		}
+		else {
+			this.sortingAsc.startDate = true;
+		}
 	}
 }
 </script>
