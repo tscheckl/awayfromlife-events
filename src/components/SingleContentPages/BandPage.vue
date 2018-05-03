@@ -1,78 +1,81 @@
 <template>
 	<div id="band_page">
-		<div class="page-container">
-			<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
-				<md-icon>clear</md-icon>
-			</md-button>
+		<follow-buttons></follow-buttons>
 
-			<div class="color-block">
-			</div>
+		<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)">
+			<md-icon>keyboard_backspace</md-icon>
+			<md-tooltip md-direction="bottom">Go Back</md-tooltip>	
+		</md-button>
 
-			<div class="content">
-				<div class="content-header">
-					<h2 class="title">{{band.name?band.name.toUpperCase(): ''}}</h2>
-					<div class="edit-buttons">
-						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newBandDialog')">
-							<md-icon>edit</md-icon>
-							<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
-						</md-button>
-						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteBand">
-							<md-icon>delete</md-icon>
-							<md-tooltip md-direction="bottom">delete this event</md-tooltip>
-						</md-button>
-					</div>
+		<div class="page-header">
+
+			<div class="left-container">
+
+				<div class="edit-buttons">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newBandDialog')">
+						<md-icon>edit</md-icon>
+						<md-tooltip md-direction="bottom">Edit this band</md-tooltip>	
+					</md-button>
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteBand">
+						<md-icon>delete</md-icon>
+						<md-tooltip md-direction="bottom">delete this band</md-tooltip>
+					</md-button>
 				</div>
-
-				<div class="content-body">
-					<h3><md-icon>info_outline</md-icon>General Information</h3>
-					<p><span>Genre: </span>{{band.genre}}</p>
-					<p v-if="band.recordLabel"><span>Label: </span>{{band.recordLabel}}</p>
-					
-					<hr>
-
-					<h3><md-icon>timeline</md-icon>History and Origin</h3>
-					<p v-if="band.foundingDate"><span>Founded: </span>{{band.foundingDate}}</p>
-					<p v-if="band.origin"><span>Origin: </span> {{band.origin.value}}</p>
-					<p v-if="band.history" class="band-history"><span>History / Band description: <br></span> {{band.history}}</p>
-
-					<div class="releases" v-if="band.releases.length > 0 && band.releases[0].releaseName != ''">
-						<hr>
-
-						<h3><md-icon>album</md-icon>Releases</h3>
-						<ul>
-							<li v-for="release in band.releases" :key="release.releaseName">{{release.releaseName}} - {{release.releaseYear}}</li>
-						</ul>
-					</div>
-
-					<hr v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl">
-
-					<h3 v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl"><md-icon>subject</md-icon>Additional Information</h3>
-					<p v-if="band.facebookUrl"><span>Facebook Page: </span><a :href="band.facebookUrl">{{band.facebookUrl}}</a></p>
-					<p v-if="band.website"><span>Website: </span><a :href="band.website">{{band.website}}</a></p>
-					<p v-if="band.bandcampUrl"><span>Bandcamp Page: </span><a :href="band.bandcampUrl">{{band.bandcampUrl}}</a></p>
-					<p v-if="band.soundclouldUrl"><span>Soundcloud Page: </span><a :href="band.soundclouldUrl">{{band.soundclouldUrl}}</a></p>
-
-					<div class="events" v-if="bandEvents.length > 0">
-						<h3><md-icon>date_range</md-icon>Next Shows:</h3>
-						<div class="event" v-for="index in eventLimiter" :key="index" v-on:click="showEvent(bandEvents[index-1])">
-							<div class="event-information">
-								<p>{{bandEvents[index-1].title}}</p>
-								<p>{{bandEvents[index-1].formattedDate}}, {{bandEvents[index-1].formattedTime}}</p>
-								<p>Lineup: <span v-for="band in bandEvents[index-1].bands" :key="band._id" class="event-band">{{band.name}}</span></p>
-							</div>
-							<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
-						</div>
-						<p class="more-events-btn" v-if="eventLimiter!=bandEvents.length" @click="eventLimiter=bandEvents.length">More Events<md-icon>keyboard_arrow_down</md-icon></p>
-					</div>
-				</div>
-
-				<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 			</div>
 		</div>
 
-		<md-dialog ref="singleEventDialog" class="content-dialog">
-			<event-page :data="showEventData" v-on:close="$refs.singleEventDialog.close()"></event-page>
-		</md-dialog>
+		<div class="content">
+			<div class="content-header">
+				<h2 class="title">{{band.name?band.name.toUpperCase(): ''}}</h2>
+			</div>
+
+			<div class="content-body">
+				<h3><md-icon>info_outline</md-icon>General Information</h3>
+				<p><span>Genre: </span>{{band.genre}}</p>
+				<p v-if="band.recordLabel"><span>Label: </span>{{band.recordLabel}}</p>
+				
+				<hr>
+
+				<h3><md-icon>timeline</md-icon>History and Origin</h3>
+				<p v-if="band.foundingDate"><span>Founded: </span>{{band.foundingDate}}</p>
+				<p v-if="band.origin"><span>Origin: </span> {{band.origin.value}}</p>
+				<p v-if="band.history" class="band-history"><span>History / Band description: <br></span> {{band.history}}</p>
+
+				<div class="releases" v-if="band.releases.length > 0 && band.releases[0].releaseName != ''">
+					<hr>
+
+					<h3><md-icon>album</md-icon>Releases</h3>
+					<ul>
+						<li v-for="release in band.releases" :key="release.releaseName">{{release.releaseName}} - {{release.releaseYear}}</li>
+					</ul>
+				</div>
+
+				<hr v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl">
+
+				<h3 v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl"><md-icon>subject</md-icon>Additional Information</h3>
+				<p v-if="band.facebookUrl"><span>Facebook Page: </span><a :href="band.facebookUrl">{{band.facebookUrl}}</a></p>
+				<p v-if="band.website"><span>Website: </span><a :href="band.website">{{band.website}}</a></p>
+				<p v-if="band.bandcampUrl"><span>Bandcamp Page: </span><a :href="band.bandcampUrl">{{band.bandcampUrl}}</a></p>
+				<p v-if="band.soundclouldUrl"><span>Soundcloud Page: </span><a :href="band.soundclouldUrl">{{band.soundclouldUrl}}</a></p>
+
+				<div class="events" v-if="bandEvents.length > 0">
+					<h3><md-icon>date_range</md-icon>Next Shows:</h3>
+					<div class="event" v-for="index in eventLimiter" :key="index" v-on:click="showEvent(bandEvents[index-1])">
+						<div class="event-information">
+							<p>{{bandEvents[index-1].title}}</p>
+							<p>{{bandEvents[index-1].formattedDate}}, {{bandEvents[index-1].formattedTime}}</p>
+							<p>Lineup: <span v-for="band in bandEvents[index-1].bands" :key="band._id" class="event-band">{{band.name}}</span></p>
+						</div>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+					</div>
+					<p class="more-events-btn" v-if="eventLimiter!=bandEvents.length" @click="eventLimiter=bandEvents.length">More Events<md-icon>keyboard_arrow_down</md-icon></p>
+				</div>
+			</div>
+
+			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
+		</div>
+
+		<div class="color-block"></div>
 
 		<md-dialog ref="newBandDialog" class="content-dialog">
 			<new-band v-on:close="handleEditClose" :edit="true"></new-band>
@@ -86,15 +89,15 @@
 </template>
 
 <script>
+import FollowButtons from '@/Components/FollowButtons';
+import NewBand from '@/Components/NewContent/NewBand';
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
-import EventPage from '@/Components/SingleContentPages/EventPage';
-import NewBand from '@/Components/NewContent/NewBand';
 
 export default {
 	name: 'band-page',
 	components: {
-		EventPage,
+		FollowButtons,
 		NewBand
 	},
 	computed: {
@@ -112,14 +115,46 @@ export default {
 			loading: false
 		}
 	},
-	watch: {
-		band() {
+	methods: {
+		openDialog(ref) {
+			this.$refs[ref].open();
+		},
+		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
+		showEvent(event) {
+			this.$store.commit('setCurrentEvent', event);
+			this.$router.push({path: `/event/${event._id}`});
+		},
+		deleteBand() {
+			this.$http.delete(backendUrl + '/api/bands/' + this.band._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+				.then(response => {
+					this.$router.go(-1);
+					this.submitStatus = 'Band successfully deleted!';
+					this.$refs.snackbar.open();
+				})
+				.catch(err => {
+					this.submitStatus = 'Error while deleting the band. Please try again!';
+					this.$refs.snackbar.open();
+				})
+		},
+		handleEditClose() {
+			this.$refs['newBandDialog'].close();
+			
+			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			.then(response => {
+				if(response.body.data) {
+					this.$store.commit('setCurrentBand', response.body.data);
+				}
+			})
+			.catch(err => {
+				console.log(err);
+			});
+		},
+		getBandEvents() {
 			this.loading = true;
 			this.bandEvents = [];
 
 			this.$http.get(backendUrl + '/api/bands/events/' + this.band._id)
 			.then(response => {
-				
 				if(!response.body.message) {
 					this.bandEvents = response.body.data;
 					if(this.bandEvents) {
@@ -138,41 +173,28 @@ export default {
 			});
 		}
 	},
-	methods: {
-		emitClose() {
-			this.$emit('close');
-		},
-		openDialog(ref) {
-			this.$refs[ref].open();
-		},
-		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
-		showEvent(event) {
-			this.$store.commit('setCurrentEvent', event);
-			this.$refs.singleEventDialog.open();
-		},
-		deleteBand() {
-			this.$http.delete(backendUrl + '/api/bands/' + this.band._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
-				.then(response => {
-					this.emitClose();
-					this.submitStatus = 'Band successfully deleted!';
-					this.$refs.snackbar.open();
-				})
-				.catch(err => {
-					this.submitStatus = 'Error while deleting the band. Please try again!';
-					this.$refs.snackbar.open();
-				})
-		},
-		handleEditClose() {
-			this.$refs['newBandDialog'].close();
-			this.emitClose();
-		}
-	},
 	mounted() {
 		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				this.isAuthenticated = true;
 			})
 			.catch(err => {});
+
+		if(this.$store.getters.currentBand.name == '') {
+			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			.then(response => {
+				if(response.body.data) {
+					this.$store.commit('setCurrentBand', response.body.data);
+					this.getBandEvents();
+				}
+			})
+			.catch(err => {
+				console.log(err);
+			});
+		}
+		else {
+			this.getBandEvents();
+		}
 	}
 }
 </script>

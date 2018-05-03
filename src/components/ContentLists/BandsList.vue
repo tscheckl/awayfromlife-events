@@ -65,10 +65,6 @@
 		<md-dialog ref="newBandDialog">
 			<new-band v-on:close="handleDialogClose('newBandDialog')"></new-band>
 		</md-dialog>
-
-		<md-dialog ref="singleBandDialog" class="content-dialog">
-			<band-page v-on:close="handleDialogClose('singleBandDialog')"></band-page>
-		</md-dialog>
 	</div>
 </template>
 
@@ -76,14 +72,12 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
 import NewBand from "@/Components/NewContent/NewBand";
-import BandPage from '@/Components/SingleContentPages/BandPage';
 import FollowButtons from '@/Components/FollowButtons';
 
 export default {
 	name: 'bands-list',
 	components: {
 		NewBand,
-		BandPage,
 		FollowButtons
 	},
 	data() {
@@ -107,7 +101,7 @@ export default {
 		//Function for giving the Band-Event dialog the data of the clicked band and opening it.
 		showBand(band) {
 			this.$store.commit('setCurrentBand', band);
-			this.$refs['singleBandDialog'].open();
+			this.$router.push({path: `/band/${band._id}`});
 		},
 		sortBy(sortCrit) {
 			

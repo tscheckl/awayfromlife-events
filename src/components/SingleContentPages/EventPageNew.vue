@@ -1,5 +1,5 @@
 <template>
-	<div id="event_page">
+	<div id="event_page_new">
 		<follow-buttons></follow-buttons>
 
 		<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)">
@@ -113,7 +113,6 @@ export default {
 		},
 		handleEditClose() {
 			this.$refs['newEventDialog'].close();
-			
 			this.$http.get(backendUrl + '/api/events/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 			.then(response => {
 				if(response.body.data) {
@@ -151,5 +150,9 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/SingleContentPages/_eventPage.scss";
+	@import "src/scss/SingleContentPages/_eventPageNew.scss";
 </style>
+
+<!--<style lang="scss">-->
+// 	@import "src/scss/SingleContentPages/_eventPage.scss";
+// </style>

@@ -8,6 +8,9 @@ import EventsList from '@/components/ContentLists/EventsList';
 import LocationsList from '@/components/ContentLists/LocationsList';
 import BandsList from '@/components/ContentLists/BandsList';
 import EventsSearch from '@/components/ContentLists/EventsSearch';
+import EventPage from '@/Components/SingleContentPages/EventPage';
+import LocationPage from '@/Components/SingleContentPages/LocationPage';
+import BandPage from '@/Components/SingleContentPages/BandPage';
 
 export default new Router({
   routes: [
@@ -24,12 +27,24 @@ export default new Router({
 		component: EventsList
 	},
 	{
+		path: '/event/:id',
+		component: EventPage
+	},
+	{
 		path: '/locations',
 		component: LocationsList
 	},
 	{
+		path: '/location/:id',
+		component: LocationPage
+	},
+	{
 		path: '/bands',
 		component: BandsList
+	},
+	{
+		path: '/band/:id',
+		component: BandPage
 	},
 	{
 		path: '/calendar',

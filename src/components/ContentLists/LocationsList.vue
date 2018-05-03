@@ -63,10 +63,6 @@
 		<md-dialog ref="newLocationDialog">
 			<new-location v-on:close="handleDialogClose('newLocationDialog')"></new-location>
 		</md-dialog>
-
-		<md-dialog ref="singleLocationDialog" class="content-dialog">
-			<location-page v-on:close="handleDialogClose('singleLocationDialog')"></location-page>
-		</md-dialog>
 	</div>
 </template>
 
@@ -74,14 +70,12 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import NewLocation from "@/Components/NewContent/NewLocation";
 import FollowButtons from "@/Components/FollowButtons";
-import LocationPage from "@/Components/SingleContentPages/LocationPage";
 
 export default {
 	name: 'locations-list',
 	components: {
 		NewLocation,
-		FollowButtons,
-		LocationPage
+		FollowButtons
 	},
 	data() {
 		return {
@@ -168,7 +162,7 @@ export default {
 		},
 		showLocation(location) {
 			this.$store.commit('setCurrentLocation', location);
-			this.$refs.singleLocationDialog.open();
+			this.$router.push({path: `/location/${location._id}`});
 		},
 		handleDialogClose(ref) {
 			this.$refs[ref].close();

@@ -68,10 +68,6 @@
 		<md-dialog ref="newEventDialog">
 			<new-event v-on:close="handleDialogClose('newEventDialog')"></new-event>
 		</md-dialog>
-
-		<md-dialog ref="singleEventDialog" class="content-dialog">
-			<event-page :event="displayEvent" v-on:close="handleDialogClose('singleEventDialog')"></event-page>
-		</md-dialog>
 	</div>
 </template>
 
@@ -79,14 +75,12 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
 import NewEvent from "@/components/NewContent/NewEvent";
-import EventPage from '@/Components/SingleContentPages/EventPage';
 import FollowButtons from '@/Components/FollowButtons';
 
 export default {
 	name: 'events-list',
 	components: {
 		NewEvent,
-		EventPage,
 		FollowButtons
 	},
 	data() {
@@ -122,9 +116,7 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event, index) {
 			this.$store.commit('setCurrentEvent', event);
-			this.displayEvent = event;
-			
-			this.$refs.singleEventDialog.open();
+			this.$router.push({path: `/event/${event._id}`});
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
@@ -148,7 +140,7 @@ export default {
 		},
 		getEventsPage(page) {
 			this.currentPage = page;
-			
+
 			this.$router.push({query: {
 				page: this.currentPage, 
 				itemsPerPage: this.itemsPerPage, 
@@ -215,7 +207,7 @@ export default {
 		if(this.$route.query.sortBy && this.$route.query.ascending) {
 			this.currentlySorted = this.$route.query.sortBy;
 			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
-			this.getLocationsPage(this.currentPage);
+			this.getEventsPage(this.currentPage);
 		}
 		else {
 			this.sortingAsc.startDate = true;
