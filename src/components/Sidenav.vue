@@ -24,21 +24,21 @@
 				</div>
 			</router-link> -->
 
-			<router-link to="/events">
+			<router-link to="/events?page=1&itemsPerPage=20&sortBy=startDate&ascending=true">
 				<div class="menu-item" v-on:click="removeExpandedClass">
 					<md-icon>date_range</md-icon>
 					<span >Events</span>
 				</div>
 			</router-link>
 
-			<router-link to="/locations">
+			<router-link to="/locations?page=1&itemsPerPage=20&sortBy=name&ascending=true">
 				<div class="menu-item" v-on:click="removeExpandedClass">
 					<md-icon>location_on</md-icon>
 					<span>Locations</span>
 				</div>
 			</router-link>
 
-			<router-link to="/bands">
+			<router-link to="/bands?page=1&itemsPerPage=20&sortBy=name&ascending=true">
 				<div class="menu-item" v-on:click="removeExpandedClass">
 					<md-icon>music_note</md-icon>
 					<span >Bands</span>

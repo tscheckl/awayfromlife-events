@@ -43,8 +43,21 @@ new Vue({
   store: store
 })
 
+let routerStack = [window.location.hash.substr(1)];
 
 router.beforeEach((to, from, next) => {
+	
+	if(to.fullPath == routerStack[routerStack.length-2]) {
+		store.commit('setAnimation', 'slide-out');
+		routerStack.pop();
+	}
+	else {
+		store.commit('setAnimation', 'slide-in');
+		routerStack.push(to.fullPath);
+	}
+	
+	window.scrollTo(0, 0);
+
 	if(to.path == "/admin") {
 		Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
 		.then((response) => {
@@ -57,4 +70,4 @@ router.beforeEach((to, from, next) => {
 	else {
 		next();
 	}
-})
+});

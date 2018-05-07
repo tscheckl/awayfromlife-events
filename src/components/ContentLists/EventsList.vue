@@ -14,32 +14,36 @@
 		</div>
 		<div class="all-items">
 
-			<h3 class="no-items-title" v-if="events.length == 0">No Events found..</h3>
+			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 
-			<div class="list-item-header" v-if="events.length > 0">
-				<p class="event-date" v-on:click="sortBy('startDate')">
-					<span>When?
-						<md-icon v-if="currentlySorted == 'startDate'">{{!sortingAsc.startDate? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p> 
-				<p class="item-title" v-on:click="sortBy('title')">
-					<span>What? 
-						<md-icon v-if="currentlySorted == 'title'">{{!sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p>
-				<p class="location-name" v-on:click="sortBy('location')">
-					<span>Where? 
-						<md-icon v-if="currentlySorted == 'location'">{{!sortingAsc.location? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p>
-				<md-icon class="hidden-icon"></md-icon>
-			</div>
+			<div class="list-content" v-if="!loading">
+				<h3 class="no-items-title" v-if="events.length == 0">No Events found..</h3>
 
-			<div class="list-item" v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
-				<p class="event-date">{{event.formattedDate}}</p>
-				<h3 class="item-title">{{event.title}}</h3>
-				<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
-				<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				<div class="list-item-header" v-if="events.length > 0">
+					<p class="event-date" v-on:click="sortBy('startDate')">
+						<span>When?
+							<md-icon v-if="currentlySorted == 'startDate'">{{!sortingAsc.startDate? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p> 
+					<p class="item-title" v-on:click="sortBy('title')">
+						<span>What? 
+							<md-icon v-if="currentlySorted == 'title'">{{!sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p>
+					<p class="location-name" v-on:click="sortBy('location')">
+						<span>Where? 
+							<md-icon v-if="currentlySorted == 'location'">{{!sortingAsc.location? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p>
+					<md-icon class="hidden-icon"></md-icon>
+				</div>
+
+				<div class="list-item" v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
+					<p class="event-date">{{event.formattedDate}}</p>
+					<h3 class="item-title">{{event.title}}</h3>
+					<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
+					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				</div>
 			</div>
 
 			<div class="list-footer">
@@ -97,7 +101,8 @@ export default {
 			availablePages: 1,
 			itemsPerPage: '20',
 			displayEvent: {},
-			resetForm: false
+			resetForm: false,
+			loading: false
 		}
 	},
 	methods: {
@@ -139,6 +144,8 @@ export default {
 			this.getEventsPage(this.currentPage);
 		},
 		getEventsPage(page) {
+			this.loading = true;
+
 			this.currentPage = page;
 
 			this.$router.push({query: {
@@ -162,8 +169,12 @@ export default {
 					//Add formatted date Attribute to each event for displaying the date in the list.
 					event.formattedDate = moment(event.startDate).format('LL');
 				}
+
+				this.loading = false;
 			})
-			.catch(err => {});
+			.catch(err => {
+				this.loading = false;
+			});
 		},
 		smallerPages() {
 			let smallerPages = [];

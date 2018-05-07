@@ -10,32 +10,37 @@
 			<md-button class="md-raised create-content-btn" v-on:click="openDialog('newLocationDialog')"><md-icon>add</md-icon>Create new Location</md-button>
 		</div>
 		<div class="all-items">
-			<h3 class="no-items-title" v-if="locations.length == 0">No Locations found..</h3>
 
-			<div class="list-item-header" v-if="locations.length > 0">
-				<p class="item-title" v-on:click="sortBy('name')">
-					<span>Name
-						<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p> 
-				<p class="location-address" v-on:click="sortBy('address.street')">
-					<span>Address 
-						<md-icon v-if="currentlySorted == 'address.street'">{{!sortingAsc['address.street']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p>
-				<p class="location-city" v-on:click="sortBy('address.city')">
-					<span>City 
-						<md-icon v-if="currentlySorted == 'address.city'">{{!sortingAsc['address.city']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p>
-				<md-icon class="hidden-icon"></md-icon>
-			</div>
+			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 
-			<div class="list-item" v-for="(location, index) in locations" :key="index" v-on:click="showLocation(location)">
-				<h3 class="item-title">{{location.name}}</h3>
-				<p class="location-address">{{location.address.street}}</p>
-				<p class="location-city">{{location.address.city}}</p>
-				<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+			<div class="list-content" v-if="!loading">
+				<h3 class="no-items-title" v-if="locations.length == 0">No Locations found..</h3>
+
+				<div class="list-item-header" v-if="locations.length > 0">
+					<p class="item-title" v-on:click="sortBy('name')">
+						<span>Name
+							<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p> 
+					<p class="location-address" v-on:click="sortBy('address.street')">
+						<span>Address 
+							<md-icon v-if="currentlySorted == 'address.street'">{{!sortingAsc['address.street']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p>
+					<p class="location-city" v-on:click="sortBy('address.city')">
+						<span>City 
+							<md-icon v-if="currentlySorted == 'address.city'">{{!sortingAsc['address.city']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p>
+					<md-icon class="hidden-icon"></md-icon>
+				</div>
+
+				<div class="list-item" v-for="(location, index) in locations" :key="index" v-on:click="showLocation(location)">
+					<h3 class="item-title">{{location.name}}</h3>
+					<p class="location-address">{{location.address.street}}</p>
+					<p class="location-city">{{location.address.city}}</p>
+					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				</div>
 			</div>
 
 			<div class="list-footer">
@@ -89,6 +94,7 @@ export default {
 			currentPage: 1,
 			availablePages: 50,
 			itemsPerPage: '20',
+			loading: false
 		}
 	},
 	methods: {
@@ -116,6 +122,8 @@ export default {
 			this.getLocationsPage(this.currentPage);
 		},
 		getLocationsPage(page) {
+			this.loading = true;
+
 			this.currentPage = page;
 			
 			this.$router.push({query: {
@@ -132,8 +140,12 @@ export default {
 				this.locations = response.body.data;
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
+
+				this.loading = false;
 			})
-			.catch(err => {});
+			.catch(err => {
+				this.loading = false;
+			});
 		},
 		smallerPages() {
 			let smallerPages = [];

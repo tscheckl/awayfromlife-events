@@ -4,9 +4,11 @@
 		</top-bar> -->
 		<sidenav></sidenav>
 		<div class="router-view-container">
-			<router-view></router-view>
-			<app-footer></app-footer>
+			<transition :name="$store.getters.animation">
+				<router-view class="router-view"></router-view>
+			</transition>
 		</div>
+		<app-footer></app-footer>
 	</div>
 </template>
 

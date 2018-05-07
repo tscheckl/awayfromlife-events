@@ -33,7 +33,9 @@ export default new Vuex.Store({
 			facebookUrl: '',
 			bandcampUrl: '',
 			soundcloudUrl: ''
-		}
+		},
+		animation: 'slide-in',
+		previousRoute: ''
 	},
 	mutations: {
 		setCurrentEvent(state, event) {
@@ -60,6 +62,12 @@ export default new Vuex.Store({
 		},
 		setCurrentBand(state, band) {
 			state.currentBand = band;
+		},
+		setAnimation(state, animation) {
+			state.animation = animation;
+		},
+		setPreviousRoute(state, route) {
+			state.previousRoute = route;
 		}
 	},
 	getters: {
@@ -71,6 +79,12 @@ export default new Vuex.Store({
 		},
 		currentBand: state => {
 			return state.currentBand;
+		},
+		animation: state => {
+			return state.animation;
+		},
+		previousRoute: state => {
+			return state.previousRoute;
 		}
 	}
 });

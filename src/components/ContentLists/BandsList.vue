@@ -11,32 +11,36 @@
 		</div>
 		<div class="all-items">
 
-			<h3 class="no-items-title" v-if="bands.length == 0">No Bands found..</h3>
+			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 
-			<div class="list-item-header" v-if="bands.length > 0">
-				<p class="band-name" v-on:click="sortBy('name')">
-					<span>Name
-						<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p> 
-				<p class="band-genre" v-on:click="sortBy('genre')">
-					<span>Genre 
-						<md-icon v-if="currentlySorted == 'genre'">{{!sortingAsc.genre? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p>
-				<p class="band-origin" v-on:click="sortBy('origin.name')">
-					<span>Origin 
-						<md-icon v-if="currentlySorted == 'origin.name'">{{!sortingAsc['origin.name']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-					</span>
-				</p>
-				<md-icon class="hidden-icon"></md-icon>
-			</div>
+			<div class="list-content" v-if="!loading">
+				<h3 class="no-items-title" v-if="bands.length == 0">No Bands found..</h3>
 
-			<div class="list-item" v-for="(band, index) in bands" :key="index" v-on:click="showBand(band)">
-				<h3 class="band-name">{{band.name}}</h3>
-				<p class="band-genre">{{band.genre}}</p>
-				<p class="band-origin"><span>{{band.origin.name}}</span> {{band.origin.country}}</p>
-				<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				<div class="list-item-header" v-if="bands.length > 0">
+					<p class="band-name" v-on:click="sortBy('name')">
+						<span>Name
+							<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p> 
+					<p class="band-genre" v-on:click="sortBy('genre')">
+						<span>Genre 
+							<md-icon v-if="currentlySorted == 'genre'">{{!sortingAsc.genre? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p>
+					<p class="band-origin" v-on:click="sortBy('origin.name')">
+						<span>Origin 
+							<md-icon v-if="currentlySorted == 'origin.name'">{{!sortingAsc['origin.name']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
+					</p>
+					<md-icon class="hidden-icon"></md-icon>
+				</div>
+
+				<div class="list-item" v-for="(band, index) in bands" :key="index" v-on:click="showBand(band)">
+					<h3 class="band-name">{{band.name}}</h3>
+					<p class="band-genre">{{band.genre}}</p>
+					<p class="band-origin"><span>{{band.origin.name}}</span> {{band.origin.country}}</p>
+					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				</div>
 			</div>
 
 			<div class="list-footer">
@@ -91,7 +95,8 @@ export default {
 			currentlySorted: 'name',
 			currentPage: 1,
 			availablePages: 1,
-			itemsPerPage: '20'
+			itemsPerPage: '20',
+			loading: false
 		}
 	},
 	methods: {
@@ -125,6 +130,8 @@ export default {
 			this.getBandsPage(this.currentPage);
 		},
 		getBandsPage(page) {
+			this.loading = true;
+
 			this.currentPage = page;
 
 			this.$router.push({query: {
@@ -142,8 +149,12 @@ export default {
 				
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
+				
+				this.loading = false;
 			})
-			.catch(err => {});
+			.catch(err => {
+				this.loading = false;
+			});
 		},
 		smallerPages() {
 			let smallerPages = [];
@@ -186,7 +197,7 @@ export default {
 		if(this.$route.query.sortBy && this.$route.query.ascending) {
 			this.currentlySorted = this.$route.query.sortBy;
 			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
-			this.getLocationsPage(this.currentPage);
+			this.getBandsPage(this.currentPage);
 		}
 		else {
 			this.sortingAsc.name = true;
