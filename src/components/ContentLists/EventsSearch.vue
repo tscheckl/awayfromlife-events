@@ -21,9 +21,26 @@
 			</div>
 			<div class="results">
 				<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-				<div class="result" v-if="!loading" v-for="(result, index) of results" :key="index">
-					<h3>{{result.category}}</h3>
-					<p>{{result.data.title? result.data.title: result.data.name}}</p>
+				<div class="result-category result-events"  v-if="resultEvents.length > 0">
+					<h2>Event Results: </h2>
+					<div class="result" v-if="!loading" v-for="(result, index) of resultEvents" :key="index">
+						<h3>{{result.category}}</h3>
+						<p>{{result.data.title? result.data.title: result.data.name}}</p>
+					</div>
+				</div>
+				<div class="result-category result-locations" v-if="resultLocations.length > 0">
+					<h2>Location Results: </h2>
+					<div class="result" v-if="!loading" v-for="(result, index) of resultLocations" :key="index">
+						<h3>{{result.category}}</h3>
+						<p>{{result.data.title? result.data.title: result.data.name}}</p>
+					</div>
+				</div>
+				<div class="result-category result-bands" v-if="resultBands.length > 0">
+					<h2>Band Results: </h2>
+					<div class="result" v-if="!loading" v-for="(result, index) of resultBands" :key="index">
+						<h3>{{result.category}}</h3>
+						<p>{{result.data.title? result.data.title: result.data.name}}</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -45,18 +62,35 @@ export default {
 			selectedCity: '',
 			query: '',
 			results: [],
+			resultEvents: [],
+			resultLocations: [],
+			resultBands: [],
 			loading: false
 		}
 	},
 	methods: {
-		onSelect() {
+		emptyResults() {
+			this.resultEvents = [];
+			this.resultLocations = [];
+			this.resultBands = [];
 		},
 		search() {
+			this.emptyResults();
 			document.getElementsByClassName('page-content')[0].classList.remove('slide-up');
 			this.loading = true;
 			this.$http.get(backendUrl + '/api/search/' + this.query)
 			.then(response => {
-				console.log(response.body);
+				console.log(response.body.data);
+				
+				for(let result of response.body.data) {
+					if(result.category == 'Event')
+						this.resultEvents.push(result);
+					else if(result.category == 'Location')
+						this.resultLocations.push(result);
+					else if(result.category == 'Band')
+						this.resultBands.push(result);
+				}
+				
 				this.results = response.body.data;
 				document.getElementsByClassName('page-content')[0].classList.add('slide-up');
 				this.loading = false;
