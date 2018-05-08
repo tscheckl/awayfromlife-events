@@ -245,5 +245,12 @@
 		
 		width: 100%;
 		max-height: calc(100% - 49px);
+
+		.results {
+			display: block;
+			.result-category {
+
+			}
+		}
 	}
 }
