@@ -56,7 +56,7 @@
 // 			this.$refs[ref].close();
 // 		},
 // 		isAuthenticated() {
-// 			Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+// 			Vue.http.get(backendUrl + '/api/users/auth')
 // 				.then(response => {
 // 					return true;
 // 				})

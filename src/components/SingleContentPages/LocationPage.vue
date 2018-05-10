@@ -116,7 +116,7 @@ export default {
 			this.$router.push({path: `/event/${event._id}`});
 		},
 		deleteLocation() {
-			this.$http.delete(backendUrl + '/api/locations/' + this.location._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.delete(backendUrl + '/api/locations/' + this.location._id)
 				.then(response => {
 					this.$router.go(-1);
 					this.submitStatus = 'Location successfully deleted!';
@@ -130,7 +130,7 @@ export default {
 		handleEditClose() {
 			this.$refs['newLocationDialog'].close();
 			
-			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentLocation', response.body.data);
@@ -165,7 +165,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.isAuthenticated = true;
 			})
@@ -174,7 +174,7 @@ export default {
 		if(this.$store.getters.currentLocation.name == '') {
 			console.log("nix da");
 			
-			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentLocation', response.body.data);

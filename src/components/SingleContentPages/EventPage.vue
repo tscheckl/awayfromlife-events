@@ -100,7 +100,7 @@ export default {
 			this.$refs[ref].open();
 		},
 		deleteEvent() {
-			this.$http.delete(backendUrl + '/api/events/' + this.event._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.delete(backendUrl + '/api/events/' + this.event._id)
 				.then(response => {
 					this.$router.go(-1);
 					this.submitStatus = 'Event successfully deleted!';
@@ -114,7 +114,7 @@ export default {
 		handleEditClose() {
 			this.$refs['newEventDialog'].close();
 			
-			this.$http.get(backendUrl + '/api/events/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/events/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentEvent', response.body.data);
@@ -126,7 +126,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.isAuthenticated = true;
 			})
@@ -135,7 +135,7 @@ export default {
 		if(this.$store.getters.currentEvent.title == '') {
 			console.log("nix da");
 			
-			this.$http.get(backendUrl + '/api/events/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/events/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentEvent', response.body.data);

@@ -52,7 +52,7 @@ export default {
 						oldPassword: this.oldPassword,
 						newPassword: this.newPassword
 					}, frontEndSecret, (err, token) => {
-						this.$http.post(backendUrl + '/api/users/reset-password', {token: token}, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+						this.$http.post(backendUrl + '/api/users/reset-password', {token: token})
 							.then(response => {
 								localStorage.setItem('aflAuthToken', response.body.token);
 

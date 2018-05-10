@@ -175,7 +175,7 @@ export default {
 						startDate: this.newTour.tourStops[tourstop].startDate
 					}
 
-					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent)
 						.then(response => {})
 						.catch(err => {
 							// Error
@@ -237,7 +237,7 @@ export default {
 	mounted() {
 		let vm = this;
 		
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				vm.apiRoute = '/api/events';
 			})
