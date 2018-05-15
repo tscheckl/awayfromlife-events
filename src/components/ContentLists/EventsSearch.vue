@@ -12,7 +12,7 @@
 								placeholder="Choose City">
 					</v-select> -->
 					<form v-on:submit.prevent>
-						<input class="search-bar" v-model="query" required placeholder="Enter what you are looking for..."></input>
+						<input class="search-bar" v-model="query" required placeholder="Enter what you are looking for...">
 						<md-button type="submit" class="md-raised" v-on:click="search">
 								Search
 						</md-button>
@@ -23,23 +23,32 @@
 				<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 				<div class="result-category result-events"  v-if="resultEvents.length > 0">
 					<h2>Event Results: </h2>
-					<div class="result" v-if="!loading" v-for="(result, index) of resultEvents" :key="index">
-						<h3>{{result.category}}</h3>
-						<p>{{result.data.title? result.data.title: result.data.name}}</p>
+					<div class="result" v-if="!loading" v-for="(result, index) of resultEvents" :key="index" v-on:click="showResult(result)">
+						<div class="result-content">
+							<h3>{{result.data.title}}</h3>
+							<p>Result found in {{result.match.pretty}}: {{result.match.value}}</p>
+						</div>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 					</div>
 				</div>
 				<div class="result-category result-locations" v-if="resultLocations.length > 0">
 					<h2>Location Results: </h2>
-					<div class="result" v-if="!loading" v-for="(result, index) of resultLocations" :key="index">
-						<h3>{{result.category}}</h3>
-						<p>{{result.data.title? result.data.title: result.data.name}}</p>
+					<div class="result" v-if="!loading" v-for="(result, index) of resultLocations" :key="index" v-on:click="showResult(result)">
+						<div class="result-content">
+							<h3>{{result.data.name}}</h3>
+							<p>Result found in {{result.match.pretty}}: {{result.match.value}}</p>
+						</div>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 					</div>
 				</div>
 				<div class="result-category result-bands" v-if="resultBands.length > 0">
 					<h2>Band Results: </h2>
-					<div class="result" v-if="!loading" v-for="(result, index) of resultBands" :key="index">
-						<h3>{{result.category}}</h3>
-						<p>{{result.data.title? result.data.title: result.data.name}}</p>
+					<div class="result" v-if="!loading" v-for="(result, index) of resultBands" :key="index" v-on:click="showResult(result)">
+						<div class="result-content">
+							<h3>{{result.data.name}}</h3>
+							<p>Result found in {{result.match.pretty}}: {{result.match.value}}</p>
+						</div>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 					</div>
 				</div>
 			</div>
@@ -80,7 +89,9 @@ export default {
 			this.loading = true;
 			this.$http.get(backendUrl + '/api/search/' + this.query)
 			.then(response => {
-				console.log(response.body.data);
+				this.$router.push({query: {
+					query: this.query,
+				}});
 				
 				for(let result of response.body.data) {
 					if(result.category == 'Event')
@@ -98,6 +109,10 @@ export default {
 			.catch(err => {
 				this.loading = false;
 			});
+		},
+		showResult(result) {
+			this.$store.commit(('setCurrent' + result.category), result.data);
+			this.$router.push({path: `/${result.category}/${result.data._id}`});
 		}
 	},
 	mounted() {
@@ -115,6 +130,11 @@ export default {
 		// inputElement.addEventListener('blur', () => {
 		// 	document.getElementsByClassName('page-content')[0].classList.remove('slide-up');
 		// });
+
+		if(this.$route.query.query) {
+			this.query = this.$route.query.query;
+			this.search();
+		}
 	}
 } 
 </script>
