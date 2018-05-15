@@ -125,7 +125,7 @@ export default {
 			this.$router.push({path: `/event/${event._id}`});
 		},
 		deleteBand() {
-			this.$http.delete(backendUrl + '/api/bands/' + this.band._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.delete(backendUrl + '/api/bands/' + this.band._id)
 				.then(response => {
 					this.$router.go(-1);
 					this.submitStatus = 'Band successfully deleted!';
@@ -139,7 +139,7 @@ export default {
 		handleEditClose() {
 			this.$refs['newBandDialog'].close();
 			
-			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentBand', response.body.data);
@@ -174,14 +174,14 @@ export default {
 		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.isAuthenticated = true;
 			})
 			.catch(err => {});
 
 		if(this.$store.getters.currentBand.name == '') {
-			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentBand', response.body.data);

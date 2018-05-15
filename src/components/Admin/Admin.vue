@@ -148,11 +148,11 @@ export default {
 	methods: {
 		handleVerify(keepData) {
 			//Delete the currently viewed data from the respective unvalidated-route.
-			this.$http.delete(backendUrl + this.unvalidatedRoute + this.verifyData._id, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.delete(backendUrl + this.unvalidatedRoute + this.verifyData._id)
 				.then(response => {
 					//If the Admin chooses to unlock the data, send a post request to the respective route to unlock it for all users
 					if(keepData) {
-						this.$http.post(backendUrl + this.validatedRoute,  this.verifyData, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+						this.$http.post(backendUrl + this.validatedRoute,  this.verifyData)
 							.then(response => {})
 							.catch(err => {});
 					}
@@ -241,7 +241,7 @@ export default {
 		getUnvalidatedData() {
 			this.loading = true;
 
-			this.$http.get(backendUrl + this.unvalidatedRoute, {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+			this.$http.get(backendUrl + this.unvalidatedRoute)
 				.then(response => {
 					//Check if there is a message in the response (= error)
 					if(!response.body.message) {
@@ -270,8 +270,14 @@ export default {
 			document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
 		},
 		logout() {
-			localStorage.removeItem('aflAuthToken');
-			this.$router.push('/');
+			this.$http.get(backendUrl + '/api/users/logout')
+				.then(response => {
+					this.$router.push('/');
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+			
 		},
 	},
 	mounted() {

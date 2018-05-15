@@ -55,8 +55,6 @@ export default {
 			}, frontEndSecret, (err, token) => {
 				this.$http.post(backendUrl + '/api/users/login', {token: token})
 				.then((response) => {
-					this.token = response.body.token;
-					localStorage.setItem("aflAuthToken", this.token);
 					this.$router.push('/admin');
 				})
 				.catch((err) => {
@@ -66,6 +64,8 @@ export default {
 					}
 					else {
 						this.errorMsg = "An error occurred. Please try again!";
+						console.log(err);
+						
 					}
 					this.loading = false;
 				})

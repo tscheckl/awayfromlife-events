@@ -41,7 +41,22 @@ new Vue({
   components: { App },
   render: h => h(App), 
   store: store
-})
+});
+
+Vue.http.interceptors.push((request, next) => {
+	Vue.http.headers.common['Authorization'] = localStorage.aflAuthToken? 'JWT ' + localStorage.aflAuthToken : '';
+	
+	next(response => {
+		if(!!response.body.token) {
+			localStorage.setItem('aflAuthToken', response.body.token);
+			Vue.http.headers.common['Authorization'] = 'JWT ' + localStorage.aflAuthToken;
+		}
+		else {			
+			localStorage.removeItem('aflAuthToken');
+			Vue.http.headers.common['Authorization'] = '';
+		}
+	});
+});
 
 let routerStack = [window.location.hash.substr(1)];
 
@@ -59,7 +74,7 @@ router.beforeEach((to, from, next) => {
 	window.scrollTo(0, 0);
 
 	if(to.path == "/admin") {
-		Vue.http.get(backendUrl + '/api/users/auth', {headers: {'Authorization': 'JWT ' + localStorage.aflAuthToken}})
+		Vue.http.get(backendUrl + '/api/users/auth')
 		.then((response) => {
 			next();
 		})
