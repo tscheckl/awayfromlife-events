@@ -48,11 +48,11 @@ Vue.http.interceptors.push((request, next) => {
 	
 	next(response => {
 		if(!!response.body.token) {
-			localStorage.setItem("aflAuthToken", response.body.token);
+			localStorage.setItem('aflAuthToken', response.body.token);
 			Vue.http.headers.common['Authorization'] = 'JWT ' + localStorage.aflAuthToken;
 		}
 		else {			
-			localStorage.removeItem("aflAuthToken");
+			localStorage.removeItem('aflAuthToken');
 			Vue.http.headers.common['Authorization'] = '';
 		}
 	});

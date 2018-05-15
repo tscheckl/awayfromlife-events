@@ -78,14 +78,11 @@ export default {
 			var vm = this;
 
 			if(this.newBand.name && this.newBand.genre && this.newBand.origin) {
-				//Check if auth token is available in localStorage, if so also send it to verify.
-				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
-
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editBand = this.edit?'/' + this.newBand._id: '';
 
-				this.$http[requestType](backendUrl + this.apiRoute + editBand, this.newBand, {headers: authHeader})
+				this.$http[requestType](backendUrl + this.apiRoute + editBand, this.newBand)
 					.then(response => {	
 						vm.submitStatus = 'New Band successfully created';
 						this.$refs.snackbar.open();

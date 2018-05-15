@@ -126,15 +126,12 @@ export default {
 				//Extract id of selected location for the event to send it to the backend.
 				this.newEvent.location = this.newEvent.location._id;
 
-				//Check if auth token is available in localStorage, if so also send it to verify.
-				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
-
 				//Check if an event is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editEvent = this.edit?'/' + this.newEvent._id: '';
 				
 				//Send new/updated event to the backend.
-				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent, {headers: authHeader})
+				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent)
 				.then(response => {
 					
 					this.submitStatus = this.edit?'Event successfully updated' :'New event successfully created';

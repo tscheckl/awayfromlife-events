@@ -54,8 +54,6 @@ export default {
 					}, frontEndSecret, (err, token) => {
 						this.$http.post(backendUrl + '/api/users/reset-password', {token: token})
 							.then(response => {
-								localStorage.setItem('aflAuthToken', response.body.token);
-
 								this.snackbarMsg = 'Passwort erfolgreich geändert.';
 								this.$refs.snackbar.open();
 								

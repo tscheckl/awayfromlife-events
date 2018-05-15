@@ -75,14 +75,11 @@ export default {
 			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				//Check if auth token is available in localStorage, if so also send it to verify.
-				let authHeader =  localStorage.aflAuthToken? {'Authorization': 'JWT ' + localStorage.aflAuthToken}: {};
-
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editLocation = this.edit?'/' + this.newLocation._id: '';
 
-				this.$http[requestType](backendUrl + this.apiRoute + editLocation, this.newLocation, {headers: authHeader})
+				this.$http[requestType](backendUrl + this.apiRoute + editLocation, this.newLocation)
 					.then(response => {	
 						vm.submitStatus = 'New Location successfully created';
 						this.$refs.snackbar.open();
