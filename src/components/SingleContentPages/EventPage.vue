@@ -36,6 +36,7 @@
 					<p><b>{{event.location.name}}</b></p>
 					<p>{{event.location.address.street}}</p>
 					<p>{{event.location.address.postcode}} {{event.location.address.city}}</p>
+					<p v-if="event.location.address.county">{{event.location.address.county}}</p>
 					<p>{{event.location.address.country}}</p>
 				</div>
 

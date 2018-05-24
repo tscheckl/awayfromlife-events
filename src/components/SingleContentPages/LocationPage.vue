@@ -35,6 +35,7 @@
 					<h3><md-icon>directions</md-icon>Address</h3>
 					<p>{{location.address.street}}</p>
 					<p>{{location.address.postcode}} {{location.address.city}}</p>
+					<p v-if="location.address.county">{{location.address.county}}</p>
 					<p>{{location.address.administrative}}</p>
 					<p>{{location.address.country}}</p>
 				</div>

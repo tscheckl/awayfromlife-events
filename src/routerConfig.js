@@ -16,7 +16,7 @@ export default new Router({
   routes: [
     {
       	path: '/',
-      	component: EventsList
+      	component: EventsSearch
 	},
 	{
 		path: '/search',
