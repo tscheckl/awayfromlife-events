@@ -1,11 +1,7 @@
 @import "../themeColors";
 
 #events_search {
-	// width: calc(100% - 80px);
-	// height: 100%;
 	min-height: 100vh;
-	// overflow: hidden;
-	// position: relative;
 	padding-bottom: 60px;
 	background-image: url("/static/d.jpg");
 	background-size: cover;
@@ -128,22 +124,117 @@
 	}
 
 	.advanced-search {
-		color: $primaryLighten4;
-		background-color: #232323;
-		.algolia-places {
-			display: block;
-			width: 100%;
+		color: #232323;
+
+		h3 {
+			color: $primaryLighten4;
+			padding-left: 20px;
+			cursor: pointer;
+
+			.md-icon {
+				color: $accent;
+			}
 		}
 
-		.ap-input {
+		.search-options {
+			max-height: 700px;
+			padding: 5px 20px;
+			padding-bottom: 15px;
 			background-color: $primaryLighten4;
-			color: #232323;
-			font-size: 16px;
+			border-radius: 3px;
+			transition: max-height .3s ease-out;
+			box-shadow: 0 5px 6px rgba(0,0,0,0.12), 0 5px 6px rgba(0,0,0,0.24);
+
+			.md-input-container {
+				min-height: 0;
+				margin: 0;
+				padding: 0;
+			}
 		}
 
-		.ap-dropdown-menu {
-			color: #232323;
+		.md-checkbox {
+			margin-top: 0;
 		}
+		
+		.location-select {
+			display: flex;
+
+			.md-input-container {
+				margin-left: 10px;
+				
+			}
+
+			.md-button-toggle {
+				.md-button {
+					background-color: $primaryLighten2;
+					color: #232323;
+				}
+	
+				.md-toggle {
+					background-color: $accent;
+					color: $primaryLighten4;
+				}
+			}
+
+			.algolia-places {
+				display: block;
+				width: 100%;
+			}
+	
+			.ap-input {
+				background-color: $primaryLighten4;
+				color: #232323;
+				font-size: 16px;
+			}
+
+			.ap-input-icon {
+				display: none;
+			}
+	
+			.ap-dropdown-menu {
+				color: #232323;
+			}
+		}
+
+		.genre-select {
+			.v-select {
+				width: 100%;
+				position: relative;
+			}
+
+			.dropdown-toggle {
+				border: none;
+			}
+
+			.dropdown-menu {
+				height: 11em;
+				padding: 0;
+
+				.highlight {
+					a {
+						background-color: $accent;
+					}
+				}
+
+				li {
+					margin-top: 0;
+					line-height: 1em;
+
+					a {
+						width: 100%;
+						padding: 10px;
+						overflow: hidden;
+						color: #232323;
+					}
+				}
+			}
+		}
+	}
+
+	.hide-options {
+		padding: 0 !important;
+		max-height: 0px !important;
+		overflow: hidden;
 	}
 
 	.md-spinner {
@@ -285,6 +376,22 @@
 				.md-button {
 					padding: 0 10px;
 					font-size: 12px;
+				}
+			}
+
+			.advanced-search {
+				.location-select {
+					display: block;
+
+					.md-button-toggle {
+						display: flex;
+						margin-bottom: 10px;
+						justify-content: center;
+					}
+
+					.md-input-container {
+						margin-left: 0;
+					}
 				}
 			}
 		}
