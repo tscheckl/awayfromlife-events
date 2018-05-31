@@ -3,9 +3,6 @@
 #events_search {
 	min-height: 100vh;
 	padding-bottom: 60px;
-	background-image: url("/static/d.jpg");
-	background-size: cover;
-	background-attachment: fixed !important;
 
 	#follow_buttons {
 		a {
@@ -35,6 +32,18 @@
 		.youtube:hover {
 			color: #ff0000;
 		}
+	}
+
+	.background-img {
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 100vh;
+		width: 100%;
+		background-image: url("/static/d.jpg");
+		background-size: cover;
+		background-position-x: center;
+		background-position-y: top;
 	}
 	
 	.darken {
@@ -424,6 +433,24 @@
 @media screen and (max-width: 400px) {
 	#events_search {
 		.page-content {
+
+			.search-input {
+
+				.md-button {
+					padding: 0 5px;
+					// font-size: 10px;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-height: 500px) {
+	#events_search {
+		padding-bottom: 0px;
+
+		.page-content {
+			margin-top: 50px;
 
 			.search-input {
 

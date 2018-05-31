@@ -1,6 +1,7 @@
 <template>
   	<div id="events_search">
 		<follow-buttons></follow-buttons>
+		<div class="background-img"></div>
 		<div class="darken"></div>
 		<div class="page-content">
 			<div class="main-input">
@@ -305,7 +306,7 @@ export default {
 			}
 			else {
 				document.getElementsByClassName('search-options')[0].classList.add('hide-options');
-				document.getElementById('events_search').style.paddingBottom = '60px';
+				document.getElementById('events_search').style.paddingBottom = '';
 				if(!this.searched)
 					document.getElementsByClassName('page-content')[0].classList.remove('slide-up');
 			}
