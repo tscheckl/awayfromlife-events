@@ -1,6 +1,5 @@
 <template>
 	<div id="location_page">
-		<follow-buttons></follow-buttons>
 
 		<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)">
 			<md-icon>keyboard_backspace</md-icon>
@@ -82,7 +81,6 @@
 </template>
 
 <script>
-import FollowButtons from '@/Components/FollowButtons';
 import NewLocation from '@/Components/NewContent/NewLocation';
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -90,7 +88,6 @@ import moment from 'moment';
 export default {
 	name: 'location-page',
 	components: {
-		FollowButtons,
 		NewLocation
 	},
 	computed: {
@@ -166,6 +163,8 @@ export default {
 		}
 	},
 	mounted() {
+		document.getElementById('topbar').classList.add('single-page');
+		
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.isAuthenticated = true;

@@ -1,6 +1,5 @@
 <template>
 	<div id="event_page">
-		<follow-buttons></follow-buttons>
 
 		<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)">
 			<md-icon>keyboard_backspace</md-icon>
@@ -73,7 +72,6 @@
 </template>
 
 <script>
-import FollowButtons from '@/Components/FollowButtons';
 import NewEvent from '@/components/NewContent/NewEvent';
 
 import {frontEndSecret, backendUrl } from '@/secrets.js';
@@ -82,7 +80,6 @@ import moment from 'moment';
 export default {
 	name: 'event-page-new',
 	components: {
-		FollowButtons,
 		NewEvent
 	},
 	computed: {
@@ -127,6 +124,8 @@ export default {
 		}
 	},
 	mounted() {
+		document.getElementById('topbar').classList.add('single-page');
+		
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.isAuthenticated = true;

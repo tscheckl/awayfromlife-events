@@ -3,7 +3,7 @@
 #event_page, #location_page, #band_page {
 	width: 100%;
 	margin: 0;
-	padding-bottom: 30px;
+	padding: 30px 0;
 	position: relative;
 	background-color: $primaryLighten4;
 
@@ -15,52 +15,6 @@
 		top: 0;
 		left: 0;
 		z-index: 0;
-	}
-
-	#follow_buttons {
-		a {
-			color: $accentAccent2;
-		}
-
-		.facebook:hover {
-			color: #3B5998;
-		}
-	
-		.instagram:hover {
-			color: #8a3ab9;
-		}
-	
-		.mail:hover {
-			color: #dddddd;
-		}
-	
-		.paypal:hover {
-			color: #009cde;
-		}
-	
-		.twitter:hover {
-			color: #1da1f2;
-		}
-	
-		.youtube:hover {
-			color: #ff0000;
-		}
-	}
-
-	.back-button {
-		margin-left: 40px;
-		margin-top: 5px;
-		z-index: 2;
-		position: absolute;
-		top: 0;
-		left: 0;
-		color: $accentAccent2;
-
-		i {
-			font-size: 36px;
-			width: 36px;
-			height: 36px;
-		}
 	}
 
 	.page-header {
@@ -82,6 +36,7 @@
 	.content {
 		max-width: 1300px;
 		margin: 20px auto;
+		margin-top: 0;
 		margin-bottom: 30px;
 		padding: 30px 50px;
 		position: relative;
@@ -246,6 +201,7 @@
 
 @media screen and (max-width: 768px) {
 	#event_page, #location_page, #band_page {
+		padding-top: 0;
 
 		.back-button {
 			margin-left: 15px;

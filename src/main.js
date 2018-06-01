@@ -73,6 +73,14 @@ router.beforeEach((to, from, next) => {
 	
 	window.scrollTo(0, 0);
 
+	//Check if a 'Single-Page' is opened and give top-bar extra class to change color.
+	if(to.path.indexOf('/event/') != -1 || to.path.indexOf('/location/') != -1 || to.path.indexOf('/band/') != -1) {
+		document.getElementById('topbar').classList.add('single-page');
+	}
+	else {
+		document.getElementById('topbar') ?document.getElementById('topbar').classList.remove('single-page') :'';
+	}
+
 	if(to.path == "/admin") {
 		Vue.http.get(backendUrl + '/api/users/auth')
 		.then((response) => {

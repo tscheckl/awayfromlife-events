@@ -1,9 +1,10 @@
 <template>
 	<div id="app">
-		<!-- <top-bar>
-		</top-bar> -->
 		<sidenav></sidenav>
 		<div class="router-view-container">
+			<transition :name="$store.getters.animation">
+				<top-bar></top-bar>
+			</transition>
 			<transition :name="$store.getters.animation">
 				<router-view class="router-view"></router-view>
 			</transition>

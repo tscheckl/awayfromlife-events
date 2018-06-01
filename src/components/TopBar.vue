@@ -1,77 +1,63 @@
 <template>
-	<div id="topbar">
-		<!-- <md-toolbar>
-			<md-button href="https://www.awayfromlife.com/" class="topbar-btn" >
-				<md-icon>arrow_back</md-icon>
-				<md-tooltip md-direction="bottom">Back to AFL</md-tooltip> 
+	<div id="topbar" v-if="$route.path != '/search' && $route.path != '/login' && $route.path != '/admin' && $route.path !='/'">
+		<md-toolbar>
+			<follow-buttons></follow-buttons>
+
+			<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)" v-if="isSinglePage()">
+				<md-icon>keyboard_backspace</md-icon>
+				<md-tooltip md-direction="bottom">Go Back</md-tooltip>	
 			</md-button>
 
-			<div class="spacer" style="flex:1;"></div>
-			
-			<md-button id="newEvent" class="new-event-btn topbar-btn" v-on:click="openDialog('newEventDialog')">
-				<md-icon>event</md-icon>
-				<md-tooltip md-direction="bottom">Create new Event</md-tooltip>
-			</md-button>
-
-			<md-button id="newLocation" class="new-location-btn topbar-btn" v-on:click="openDialog('newLocationDialog')">
-				<md-icon>location_on</md-icon>
-				<md-tooltip md-direction="bottom">Create new Location</md-tooltip>
-			</md-button>
-
-			<router-link :to="isAuthenticated? '/admin': '/login'">
-				<md-button class="admin-login-btn topbar-btn">
-					<md-icon>supervisor_account</md-icon>
-					<md-tooltip md-direction="bottom">Admin-Login</md-tooltip>
-				</md-button>
-			</router-link>
+			<div class="search">
+				<md-icon>search</md-icon>
+				<input placeholder="Search..." v-on:keyup="search" v-model="query"/>
+				<button>Search</button>
+			</div>
 		</md-toolbar>
-
-		<md-dialog ref="newEventDialog" class="content-dialog" md-open-from="#newEvent" md-close-to="#newEvent">
-			<new-event v-on:close="emitEventDialogClose"></new-event>
-		</md-dialog>
-
-		<md-dialog ref="newLocationDialog" class="content-dialog"  md-open-from="#newLocation" md-close-to="#newLocation">
-			<new-location v-on:close="closeDialog('newLocationDialog')"></new-location>
-		</md-dialog> -->
 	</div>
 </template>
 
 <script>
-// import NewLocation from './NewContent/NewLocation';
-// import NewEvent from './NewContent/NewEvent';
+import FollowButtons from '@/Components/FollowButtons';
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
-// export default {
-// 	name: 'top-bar',
-// 	components: {
-// 		NewLocation,
-// 		NewEvent,
-// 	},
-// 	computed: {
-// 	},
-// 	methods: {
-// 		openDialog(ref) {
-// 			this.$refs[ref].open();
-// 		},
-// 		closeDialog(ref) {
-// 			this.$refs[ref].close();
-// 		},
-// 		isAuthenticated() {
-// 			Vue.http.get(backendUrl + '/api/users/auth')
-// 				.then(response => {
-// 					return true;
-// 				})
-// 				.catch(err => {
-// 					return false;
-// 				})
-// 		},
-// 		emitEventDialogClose() {
-// 			this.closeDialog('newEventDialog');
-// 			this.$emit('newEvent');
-// 		}
-// 	}
-// }
+export default {
+	name: 'top-bar',
+	components: {
+		FollowButtons
+	},
+	data() {
+		return {
+			results: '',
+			query: '',
+			timeOut: undefined
+		}
+	},
+	methods: {
+		search() {
+			clearTimeout(this.timeOut);
+
+			if(this.query.length > 3) {
+				this.timeOut = setTimeout(() => {
+					this.$http.get(backendUrl + '/api/search/' + this.query)
+					.then(response => {
+						console.log(response.body.data);
+						
+					})
+					.catch(err => {});			
+				},1000);
+			}
+		},
+		isSinglePage() {
+			if(this.$route.path.indexOf('/event/') != -1 || this.$route.path.indexOf('/location/') != -1 || this.$route.path.indexOf('/band/') != -1)
+				return true;
+			else
+				return false;
+		}
+	}
+}
 </script>
 
 <style lang="scss">
-	// @import "src/scss/_topbar.scss";
+	@import "src/scss/_topbar.scss";
 </style>

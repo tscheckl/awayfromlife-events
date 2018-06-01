@@ -1,6 +1,5 @@
 <template>
 	<div id="bands_list">
-		<follow-buttons></follow-buttons>
 
 		<div class="list-header">
 			<div class="left-container">
@@ -76,13 +75,11 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
 import NewBand from "@/Components/NewContent/NewBand";
-import FollowButtons from '@/Components/FollowButtons';
 
 export default {
 	name: 'bands-list',
 	components: {
-		NewBand,
-		FollowButtons
+		NewBand
 	},
 	data() {
 		return {
