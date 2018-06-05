@@ -11,7 +11,7 @@
 		left: 0;
 		width: 80px;
 		height: 100%;
-		padding: 10px 20px;
+		padding: 10px 0px;
 		display: inline;
 		background-color: #232323;
 		z-index: 3;
@@ -22,8 +22,11 @@
 		.menu-item {
 			width: 100%;
 			margin-bottom: 35px;
+			padding: 0 20px;
 			height: 40px;
 			overflow: hidden;
+			position: relative;
+			cursor: pointer;
 
 			.md-icon {
 				width: 38px;
@@ -40,6 +43,13 @@
 				font-size: 1.15em;
 				color: $accentAccent2;
 				transition: opacity .3s ease-out;
+
+				.md-icon {
+					width: 25px;
+					height: 25px;
+					font-size: 25px;
+					margin-top: -3px;
+				}
 			}
 
 			&:hover {
@@ -48,6 +58,64 @@
 				}
 			}
 		}
+	}
+
+	.sub-items {
+		position: absolute;
+		width: 250px;
+		margin-left: 85px;
+		margin-top: -80px;
+		background-color: #232323;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		border-radius: 3px;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity .2s ease-out;
+
+		.indicator {
+			display: block;
+			width: 60px;
+			height: 60px;
+			margin-left: -30px;
+			font-size: 60px;
+			color: #232323;
+			position: absolute;
+		}
+
+		.sub-item {
+			padding: 10px;
+			padding-left: 20px;
+			margin-bottom: 15px;
+			height: 40px;
+			overflow: hidden;
+
+			.md-icon {
+				width: 30px;
+				height: 30px;
+				font-size: 30px;
+				color: $accentAccent2;
+				text-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
+				transition: transform .3s ease-out;
+			}
+
+			span {
+				margin-left: 15px;
+				font-size: 1.15em;
+				color: $accentAccent2;
+				transition: opacity .3s ease-out;
+			}
+
+			&:hover {
+				.md-icon, span {
+					color: $accentAccent3;
+				}
+			}
+		}
+	}
+
+	.show {
+		opacity: 1;
+		visibility: visible;
 	}
 
 	
@@ -67,18 +135,43 @@
 		}
 	}
 
-}
+	.expanded {
+		.menu-items-list {
+			width: 250px !important;
+	
+			.menu-item {
+				span {
+					opacity: 1 !important;
+				}
+			}
+			
+			.sub-items {
+				position: relative;
+				width: auto;
+				max-height: 0;
+				margin-left: 0;
+				margin-top: -25px;
+				margin-bottom: 30px;
+				opacity: 1;
+				visibility: visible;
+				overflow: hidden;
+				background-color: #181818;
+				box-shadow: none;
+				transition: all 0s ease-out;
+				transition: max-height .2s ease-out;
 
-.expanded {
-	.menu-items-list {
-		width: 250px !important;
+				.indicator {
+					display: none;
+				}
+			}
 
-		.menu-item {
-			span {
-				opacity: 1 !important;
+			.show {
+				max-height: 200px;
+				padding: 5px 10px;
 			}
 		}
 	}
+
 }
 
 @media screen and (max-width: 768px){
@@ -86,6 +179,7 @@
 		.menu-items-list {
 			width: 0%;
 			padding: 0;
+			overflow: hidden;
 		}
 
 		.toggle-menu-btn {
@@ -126,7 +220,11 @@
 	.expanded {
 		.menu-items-list {
 			width: 100%;
-			padding: 20px !important;
+			padding: 20px 0px !important;
+
+			.menu-item {
+				padding: 0 20px;
+			}
 		}
 	}
 }

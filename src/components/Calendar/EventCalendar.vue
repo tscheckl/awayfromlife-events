@@ -127,6 +127,7 @@ export default {
 		}
 	},
 	mounted() {
+		document.getElementById('topbar').classList.remove('single-page');
 		this.handle();
 		this.getEvents();
 	}

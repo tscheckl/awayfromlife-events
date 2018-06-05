@@ -8,10 +8,28 @@
 				<md-tooltip md-direction="bottom">Go Back</md-tooltip>	
 			</md-button>
 
-			<div class="search">
+			<div class="search topbar-search">
 				<md-icon>search</md-icon>
 				<input placeholder="Search..." v-on:keyup="search" v-model="query"/>
 				<button>Search</button>
+
+				<div class="results" v-if="searched && !loading && results.length > 0">
+					<router-link :to="'/' + result.category.toLowerCase() + '/' + result.data._id" class="result" v-for="(result, index) in results" :key="index">
+						<div class="result-information">
+							<h4>{{result.data.title ?result.data.title :result.data.name}}</h4>
+							<p>Result found in: {{result.match.pretty}}</p>
+						</div>
+						<p>{{result.category}}</p>
+					</router-link>
+				</div>
+
+				<div class="no-results" v-if="searched && !loading && results.length == 0">
+					<p>no results found..</p>
+				</div>
+
+				<div class="loading" v-if="loading">
+					<md-spinner md-indeterminate class="md-accent"></md-spinner>
+				</div>
 			</div>
 		</md-toolbar>
 	</div>
@@ -30,7 +48,15 @@ export default {
 		return {
 			results: '',
 			query: '',
-			timeOut: undefined
+			timeOut: undefined,
+			loading: false,
+			searched: false
+		}
+	},
+	watch: {
+		$route() {
+			this.hideResults();
+			this.query = '';
 		}
 	},
 	methods: {
@@ -39,21 +65,40 @@ export default {
 
 			if(this.query.length > 3) {
 				this.timeOut = setTimeout(() => {
-					this.$http.get(backendUrl + '/api/search/' + this.query)
+					this.loading = true;
+					this.searched = true;
+					
+					this.$http.get(backendUrl + '/api/search/simple/' + this.query)
 					.then(response => {
 						console.log(response.body.data);
 						
+						this.results = response.body.data;
+						this.loading = false;
 					})
 					.catch(err => {});			
-				},1000);
+				},700);
 			}
 		},
 		isSinglePage() {
-			if(this.$route.path.indexOf('/event/') != -1 || this.$route.path.indexOf('/location/') != -1 || this.$route.path.indexOf('/band/') != -1)
+			if(this.$route.path.indexOf('/event/') != -1 || this.$route.path.indexOf('/location/') != -1 || this.$route.path.indexOf('/band/') != -1) 
 				return true;
 			else
 				return false;
+		},
+		hideResults() {
+			this.searched = false;
 		}
+	},
+	mounted() {
+		let context = this;
+		window.addEventListener('click', function(e){  
+			
+			if (document.getElementsByClassName('topbar-search')[0] && !document.getElementsByClassName('topbar-search')[0].contains(e.target)){
+				context.hideResults();
+			} else{
+				// Clicked outside the box
+			}
+		});
 	}
 }
 </script>

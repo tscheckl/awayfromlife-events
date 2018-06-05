@@ -5,6 +5,7 @@ import Login from '@/components/Admin/Login';
 import Admin from '@/components/Admin/Admin';
 import BugReport from '@/components/BugReport';
 import EventsList from '@/components/ContentLists/EventsList';
+import EventsArchive from '@/components/ContentLists/EventsArchive';
 import LocationsList from '@/components/ContentLists/LocationsList';
 import BandsList from '@/components/ContentLists/BandsList';
 import EventsSearch from '@/components/ContentLists/EventsSearch';
@@ -25,6 +26,10 @@ export default new Router({
 	{
 		path: '/events',
 		component: EventsList
+	},
+	{
+		path: '/archived-events',
+		component: EventsArchive
 	},
 	{
 		path: '/event/:id',

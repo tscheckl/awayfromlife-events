@@ -2,7 +2,7 @@
 	<div id="events_list">
 		<div class="list-header">
 			<div class="left-container">
-				<h1>All Events</h1>
+				<h1>{{archive ?'Events Archive' :'All Events'}}</h1>
 				<router-link to="/calendar" class="switch-view-btn">
 					Calendar View <md-icon>arrow_forward</md-icon>
 				</router-link>
@@ -82,6 +82,12 @@ export default {
 	name: 'events-list',
 	components: {
 		NewEvent,
+	},
+	props: {
+		archive: {
+			type: Boolean,
+			default: false
+		}
 	},
 	data() {
 		return {
@@ -219,7 +225,7 @@ export default {
 		else {
 			this.sortingAsc.startDate = true;
 		}
-	}
+	},
 }
 </script>
 

@@ -1,11 +1,6 @@
 <template>
 	<div id="location_page">
 
-		<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)">
-			<md-icon>keyboard_backspace</md-icon>
-			<md-tooltip md-direction="bottom">Go Back</md-tooltip>	
-		</md-button>
-
 		<div class="page-header">
 
 			<div class="left-container">
