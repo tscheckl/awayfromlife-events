@@ -21,7 +21,11 @@
 				</div>
 
 				<div class="advanced-search">
-					<h3 v-on:click="toggleAdvancedSearch(!showAdvancedSearch)">Advanced Search <md-icon>{{showAdvancedSearch ?'keyboard_arrow_down' :'keyboard_arrow_right'}}</md-icon></h3>
+					<h3 v-on:click="toggleAdvancedSearch(!showAdvancedSearch)">
+						Advanced Search 
+						<md-icon>{{showAdvancedSearch ?'keyboard_arrow_down' :'keyboard_arrow_right'}}</md-icon>
+					</h3>
+					
 					<div class="search-options hide-options">
 						<h4>Include Categories: </h4>
 						<div class="include-cate">

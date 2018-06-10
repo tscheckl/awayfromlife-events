@@ -37,6 +37,10 @@
 				transition: transform .3s ease-out;
 			}
 
+			img {
+				height: 40px;
+			}
+
 			span {
 				opacity: 0;
 				margin-left: 15px;
@@ -55,6 +59,10 @@
 			&:hover {
 				.md-icon, span {
 					color: $accentAccent3;
+				}
+
+				path {
+					fill: $accentAccent3;
 				}
 			}
 		}
@@ -109,6 +117,10 @@
 				.md-icon, span {
 					color: $accentAccent3;
 				}
+
+				path {
+					fill: $accentAccent3;
+				}
 			}
 		}
 	}
@@ -131,7 +143,24 @@
 
 		.hamburger {
 			padding: 15px 0;
-			margin-left: -30px;
+			margin-left: -33px;
+
+			.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
+				width: 45px;
+				height: 7px;
+				background-color: #232323;
+				border: 2px solid $accentAccent2;
+			}
+
+			.hamburger-inner:before, .hamburger-inner:after {
+				margin-left: -2px;
+			}
+		}
+
+		.is-active {
+			.hamburger-inner {
+				border: none;
+			}
 		}
 	}
 
@@ -201,7 +230,20 @@
 				margin-left: 10px;
 
 				.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
-					width: 35px;
+					width: 45px;
+					height: 7px;
+					background-color: #232323;
+					border: 2px solid $accentAccent2;
+				}
+
+				.hamburger-inner:before, .hamburger-inner:after {
+					margin-left: -2px;
+				}
+			}
+
+			.is-active {
+				.hamburger-inner {
+					border: none;
 				}
 			}
 

@@ -10,8 +10,8 @@
 
 			<div class="search topbar-search">
 				<md-icon>search</md-icon>
-				<input placeholder="Search..." v-on:keyup="search" v-model="query"/>
-				<button>Search</button>
+				<input placeholder="Search..." v-on:keyup="search" v-on:keyup.enter="search(false)" v-model="query"/>
+				<button v-on:click="search(false)">Search</button>
 
 				<div class="results" v-if="searched && !loading && results.length > 0">
 					<router-link :to="'/' + result.category.toLowerCase() + '/' + result.data._id" class="result" v-for="(result, index) in results" :key="index">
@@ -20,6 +20,11 @@
 							<p>Result found in: {{result.match.pretty}}</p>
 						</div>
 						<p>{{result.category}}</p>
+					</router-link>
+					<router-link :to="'/search?query=' + this.query + '&locations=true&events=true&bands=true'">
+						<div class="more-results">
+							Show all results <md-icon>keyboard_arrow_right</md-icon>
+						</div>
 					</router-link>
 				</div>
 
@@ -60,24 +65,22 @@ export default {
 		}
 	},
 	methods: {
-		search() {
+		search(setTimer = true) {
 			clearTimeout(this.timeOut);
 
-			if(this.query.length > 3) {
-				this.timeOut = setTimeout(() => {
-					this.loading = true;
-					this.searched = true;
+			this.timeOut = setTimeout(() => {
+				this.loading = true;
+				this.searched = true;
+				
+				this.$http.get(backendUrl + '/api/search/simple/' + this.query)
+				.then(response => {
+					console.log(response.body.data);
 					
-					this.$http.get(backendUrl + '/api/search/simple/' + this.query)
-					.then(response => {
-						console.log(response.body.data);
-						
-						this.results = response.body.data;
-						this.loading = false;
-					})
-					.catch(err => {});			
-				},700);
-			}
+					this.results = response.body.data;
+					this.loading = false;
+				})
+				.catch(err => {});			
+			}, setTimer ?700 :0);
 		},
 		isSinglePage() {
 			if(this.$route.path.indexOf('/event/') != -1 || this.$route.path.indexOf('/location/') != -1 || this.$route.path.indexOf('/band/') != -1) 

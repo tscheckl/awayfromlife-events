@@ -56,6 +56,7 @@
 				font-family: "OpenSans";
 				color: $primaryLighten4;
 				border: none;
+				cursor: pointer;
 				border-top-right-radius: 3px;
 				border-bottom-right-radius: 3px;
 			}
@@ -70,12 +71,14 @@
 			}
 
 			.results {
+				overflow: hidden;
 
 				.result {
 					padding: 5px 10px;
 					display: flex;
 					cursor: pointer;
 					color: #232323;
+					border-bottom: 1px solid $primaryLighten3;
 
 					&:hover {
 						background-color: $primaryLighten3;
@@ -92,6 +95,24 @@
 							margin-top: 5px;
 							margin-bottom: 0;
 						}
+					}
+				}
+
+				.more-results {
+					padding: 3px 0;
+					background-color: #232323;
+					color: $primaryLighten5;
+					text-align: center;
+
+					.md-icon {
+						margin-top: 0 !important;
+						font-size: 21px !important;
+						min-height: 21px !important;
+						height: 21px !important;
+					}
+
+					&:hover {
+						background-color: #171717;
 					}
 				}
 			}

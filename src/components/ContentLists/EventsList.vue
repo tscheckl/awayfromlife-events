@@ -3,9 +3,6 @@
 		<div class="list-header">
 			<div class="left-container">
 				<h1>{{archive ?'Events Archive' :'All Events'}}</h1>
-				<router-link to="/calendar" class="switch-view-btn">
-					Calendar View <md-icon>arrow_forward</md-icon>
-				</router-link>
 			</div>
 
 			<md-button class="md-raised create-content-btn" v-on:click="openNewEvent"><md-icon>add</md-icon>Create new Event</md-button>
@@ -158,8 +155,9 @@ export default {
 			}});
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
+			let endpoint = this.archive ?'archived-events' :'events'
 
-			this.$http.get(backendUrl + '/api/events/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
+			this.$http.get(backendUrl + '/api/' + endpoint + '/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
 			.then(response => {
 				
 				this.events = response.body.data.slice(0);
