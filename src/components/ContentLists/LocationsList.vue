@@ -1,11 +1,13 @@
 <template>
 	<div id="locations_list">
 		<div class="list-header">
-			<div class="left-container">
-				<h1>All Locations</h1>
-			</div>
+			<div class="header-line">
+				<div class="left-container">
+					<h1>All Locations</h1>
+				</div>
 
-			<md-button class="md-raised create-content-btn" v-on:click="openDialog('newLocationDialog')"><md-icon>add</md-icon>Create new Location</md-button>
+				<md-button class="md-raised create-content-btn" v-on:click="openDialog('newLocationDialog')"><md-icon>add</md-icon>Create new Location</md-button>
+			</div>
 		</div>
 		<div class="all-items">
 

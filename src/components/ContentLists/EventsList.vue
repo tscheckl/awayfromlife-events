@@ -1,11 +1,25 @@
 <template>
 	<div id="events_list">
 		<div class="list-header">
-			<div class="left-container">
-				<h1>{{archive ?'Events Archive' :'All Events'}}</h1>
+			<div class="header-line">	
+				<div class="left-container">
+					<h1>{{archive ?'Events Archive' :'All Events'}}</h1>
+				</div>
+
+				<md-button class="md-raised create-content-btn" v-on:click="openNewEvent"><md-icon>add</md-icon>Create new Event</md-button>
 			</div>
 
-			<md-button class="md-raised create-content-btn" v-on:click="openNewEvent"><md-icon>add</md-icon>Create new Event</md-button>
+			<div class="filters">
+				<h3>Events from A to Z: </h3>
+				<ul class="starting-letter-filter">
+					<li v-for="i in 26" :key="i" :class="'start-letter-' + (i+9).toString(36).toUpperCase()">
+						<span v-on:click="filterByStartingLetter((i+9).toString(36))">{{(i+9).toString(36).toUpperCase()}}</span>
+						<div v-on:click="clearFilters">
+							<md-icon v-if="filterCriteria.startingLetter == (i+9).toString(36).toUpperCase()">clear</md-icon>
+						</div>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<div class="all-items">
 
@@ -96,6 +110,9 @@ export default {
 				location: false
 			},
 			currentlySorted: 'startDate',
+			filterCriteria: {
+				startingLetter: undefined
+			},
 			currentPage: 1,
 			availablePages: 1,
 			itemsPerPage: '20',
@@ -147,20 +164,25 @@ export default {
 
 			this.currentPage = page;
 
-			this.$router.push({query: {
-				page: this.currentPage, 
-				itemsPerPage: this.itemsPerPage, 
-				sortBy: this.currentlySorted, 
-				ascending: this.sortingAsc[this.currentlySorted]
-			}});
+			this.buildUrl();
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 			let endpoint = this.archive ?'archived-events' :'events'
 
-			this.$http.get(backendUrl + '/api/' + endpoint + '/page?page=' + page + '&perPage=' + this.itemsPerPage + '&sortBy=' + this.currentlySorted + '&order=' + sortingDirection)
+			this.$http.get(backendUrl + '/api/' + endpoint + '/page?page=' + page + 
+							'&perPage=' + this.itemsPerPage + 
+							'&sortBy=' + this.currentlySorted + 
+							'&order=' + sortingDirection + 
+							'&startWith=' + this.filterCriteria.startingLetter)
 			.then(response => {
+				console.log(response);
 				
-				this.events = response.body.data.slice(0);
+				if(response.body.data) {
+					this.events = response.body.data.slice(0);
+				}
+				else {
+					this.events = [];
+				}
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 				
@@ -175,6 +197,15 @@ export default {
 			.catch(err => {
 				this.loading = false;
 			});
+		},
+		buildUrl() {
+			this.$router.push({query: {
+				page: this.currentPage, 
+				itemsPerPage: this.itemsPerPage, 
+				sortBy: this.currentlySorted, 
+				ascending: this.sortingAsc[this.currentlySorted],
+				startingLetter: this.filterCriteria.startingLetter
+			}});
 		},
 		smallerPages() {
 			let smallerPages = [];
@@ -204,6 +235,19 @@ export default {
 		handleDialogClose(ref) {
 			this.$refs[ref].close();
 			this.getEventsPage(this.currentPage);
+		},
+		filterByStartingLetter(letter) {
+			if(this.filterCriteria.startingLetter)
+				document.getElementsByClassName('start-letter-' + this.filterCriteria.startingLetter)[0].classList.remove('active-start-letter');
+
+			this.filterCriteria.startingLetter = letter.toUpperCase();
+			document.getElementsByClassName('start-letter-' + letter.toUpperCase())[0].classList.add('active-start-letter');
+			this.getEventsPage(this.currentPage);
+		},
+		clearFilters() {
+			document.getElementsByClassName('start-letter-' + this.filterCriteria.startingLetter)[0].classList.remove('active-start-letter');
+			this.filterCriteria.startingLetter = undefined;
+			this.getEventsPage(this.currentPage);
 		}
 	},
 	created() {
@@ -213,6 +257,10 @@ export default {
 
 		if(this.$route.query.itemsPerPage) {
 			this.itemsPerPage = this.$route.query.itemsPerPage;
+		}
+
+		if(this.$route.query.startingLetter) {
+			this.filterCriteria.startingLetter = this.$route.query.startingLetter;
 		}
 		
 		if(this.$route.query.sortBy && this.$route.query.ascending) {
@@ -224,6 +272,11 @@ export default {
 			this.sortingAsc.startDate = true;
 		}
 	},
+	mounted() {
+		if(this.$route.query.startingLetter) {
+			document.getElementsByClassName('start-letter-' + this.$route.query.startingLetter)[0].classList.add('active-start-letter');
+		}
+	}
 }
 </script>
 

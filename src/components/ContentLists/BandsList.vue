@@ -1,12 +1,13 @@
 <template>
 	<div id="bands_list">
-
 		<div class="list-header">
-			<div class="left-container">
-				<h1>All Bands</h1>
-			</div>
+			<div class="header-line">
+				<div class="left-container">
+					<h1>All Bands</h1>
+				</div>
 
-			<md-button class="md-raised create-content-btn" v-on:click="openDialog('newBandDialog')"><md-icon>add</md-icon>Create new Band</md-button>
+				<md-button class="md-raised create-content-btn" v-on:click="openDialog('newBandDialog')"><md-icon>add</md-icon>Create new Band</md-button>
+			</div>
 		</div>
 		<div class="all-items">
 
