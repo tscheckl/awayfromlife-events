@@ -18,7 +18,7 @@
 		position: absolute;
 		width: 100%;
 		background-color: $accentAccent2;
-		height: 250px;
+		height: 450px;
 		top: 0;
 		left: 0;
 		z-index: 0;
@@ -87,7 +87,6 @@
 		}
 
 		.filters {
-
 			.starting-letter-filter {
 				display: flex;
 				margin: 0;
@@ -102,14 +101,7 @@
 					margin-right: 10px;
 					padding-left: 6px;
 					font-size: 16px;
-					cursor: pointer;
-					text-shadow: 0 0px 0px rgba(0,0,0,0), 0 0px 0px rgba(0,0,0,0);
-				
-					&:hover {
-						background-color: #232323;
-						color: $accentAccent2;
-						box-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);
-					}
+					color: $accentLighten3;
 
 					&:first-of-type {
 						margin-top: 8px;
@@ -120,6 +112,18 @@
 					}
 				}
 
+				.available {
+					color: #232323;
+					cursor: pointer;
+					text-shadow: 0 0px 0px rgba(0,0,0,0), 0 0px 0px rgba(0,0,0,0);
+				
+					&:hover {
+						background-color: #232323;
+						color: $accentAccent2;
+						box-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);
+					}
+				}
+
 				.active-start-letter {
 					padding: 3px;
 					padding-left: 6px;
@@ -127,18 +131,144 @@
 					color: $accentAccent2;
 					box-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);
 
-					.md-icon {
-						width: 24px;
-						height: 24px;
-						min-width: 18px;
-						min-height: 18px;
-						font-size: 16px;
+					div {
+						margin-left: -40%;
+
+						.md-icon {
+							width: 24px;
+							height: 24px;
+							min-width: 18px;
+							min-height: 18px;
+							font-size: 16px;
+							background-color: #232323;
+							padding: 4px;
+							border-bottom-left-radius: 50px;
+							border-bottom-right-radius: 50px;
+							box-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);
+						}
+					}
+				}
+			}
+
+			.filters-header {
+				margin-top: 30px;
+			}
+
+			.additional-filters {
+				margin-top: 20px;
+
+				.md-input-container {
+					// width: 150px;
+					height: 30px;
+					min-height: 0;
+					display: inline-block;
+					width: auto;
+					margin-left: 15px;
+					margin-right: 15px;
+					padding-top: 0;
+					background-color: $primaryLighten4;
+					border-radius: 3px;
+					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+					&:first-of-type {
+						margin-left: 0;
+					}
+
+					.input-label {
+						position: absolute;
+						margin-top: -20px;
+						margin-left: 5px;
+					}
+				}
+
+				.genre-select {
+					margin-top: -20px;
+				}
+
+				.v-select {
+					width: 100%;
+					position: relative;
+					font-family: "OpenSans";
+
+					.dropdown-toggle {
+						position: relative;
+						display: flex;
+						border: none;
+					}
+
+					input, .selected-tag {
+						font-size: 14px;
+					}
+
+					.selected-tag {
+						position: absolute;
+						margin-top: 2px;
+					}
+
+					.dropdown-menu {
+						position: absolute;
+						height: 11em;
+						padding: 0;
+						z-index: 5;
+		
+						.highlight {
+							a {
+								background-color: $accentAccent2;
+								color: $primaryLighten4;
+							}
+						}
+		
+						li {
+							margin-top: 0;
+							line-height: 1em;
+		
+							a {
+								width: 100%;
+								padding: 10px;
+								overflow: hidden;
+								color: #232323;
+							}
+						}
+					}
+				}
+
+				.date-select {
+					input {
+						margin-top: 2px;
+					}
+				}
+
+				.vdatetime {
+					input {
+						padding-left: 10px;
+						font-size: 14px;
+						color: #232323;
+						cursor: pointer;
+					}
+				}
+
+				.country-select, .city-select {
+					min-width: 250px;
+					margin-top: 5px;
+					border-top-right-radius: 0;
+					border-bottom-right-radius: 0;
+					margin-right: -3px;
+				}
+
+				.md-button-toggle {
+					display: inline-block;
+					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+					.md-button {
+						height: 30px;
+						min-height: 0;
+						margin-top: -8px;
+						margin-right: -4px;
+						line-height: 30px;
+						background-color: $accentLighten3;
+					}
+
+					.md-toggle {
 						background-color: #232323;
-						margin-left: calc(-50% + 1px);
-						padding: 4px;
-						border-bottom-left-radius: 50px;
-						border-bottom-right-radius: 50px;
-						box-shadow: 0 3px 3px rgba(0,0,0,0.12), 0 3px 3px rgba(0,0,0,0.24);
 					}
 				}
 			}
@@ -159,7 +289,7 @@
 		border-radius: 3px;
 		overflow: visible;
 		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-		z-index: 1;
+		z-index: 0;
 
 		.list-item-header {
 			height: 10px;
