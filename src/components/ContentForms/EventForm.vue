@@ -55,7 +55,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
 							<md-icon>date_range</md-icon>
-							<datetime v-if="!edit || edit && data.startDate" v-model="data.startDate" placeholder="Select date*" type="datetime" input-format="DD-MM-YYYY HH:mm"></datetime>
+							<datetime v-if="!edit || edit && data.startDate" v-model="data.startDate" placeholder="Select date*" type="datetime"></datetime>
 						</div>
 					</md-layout>
 				</md-layout>

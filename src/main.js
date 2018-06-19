@@ -7,6 +7,7 @@ import App from './App'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import Datetime from 'vue-datetime'
+import 'vue-datetime/dist/vue-datetime.css'
 import VueRouter from 'vue-router'
 import router from './routerConfig'
 import Calendar from 'vuejs-datepicker';

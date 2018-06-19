@@ -129,7 +129,8 @@ export default {
 				//Check if an event is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editEvent = this.edit?'/' + this.newEvent._id: '';
-				
+				console.log("new Event: ", this.newEvent);
+				return;
 				//Send new/updated event to the backend.
 				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent)
 				.then(response => {

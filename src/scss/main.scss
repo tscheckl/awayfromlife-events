@@ -126,6 +126,31 @@ a {
 	transform: translateX(100%);
 }
 
+.vdatetime {
+	display: inline;
+
+	.vdatetime-popup__header {
+		background-color: $accentDarken2;
+	}
+
+	.vdatetime-calendar__month__day--selected {
+		span {
+			span {
+				background-color: $accentDarken2;
+			}
+		}
+	}
+
+	.vdatetime-time-picker__item--selected, .vdatetime-year-picker__item--selected {
+		color: $accentDarken2;
+	}
+
+	.vdatetime-popup__actions__button {
+		color: $accentDarken2;
+		font-weight: 500;
+	}
+}
+
 @media screen and (max-width: 768px){
 	.router-view-container {
 		margin-left: 0;
