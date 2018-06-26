@@ -247,12 +247,7 @@ export default {
 			//Assign the category to be sorted the negative value of its former value.
 			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
 
-			this.$router.push({query: {
-				page: this.currentPage, 
-				itemsPerPage: this.itemsPerPage, 
-				sortBy: this.currentlySorted, 
-				ascending: this.sortingAsc[this.currentlySorted]
-			}});
+			this.buildUrl();
 
 			this.getEventsPage(this.currentPage);
 		},
@@ -277,9 +272,10 @@ export default {
 							'&startWith=' + startingLetter + 
 							(this.appliedFilters.genre ?('&genre=' + this.appliedFilters.genre) :'') + 
 							(this.appliedFilters.firstDate ?('&startDate=' + this.appliedFilters.firstDate) :'') +
-							(this.appliedFilters.lastDate ?('&endDate=' + this.appliedFilters.lastDate) :''))
+							(this.appliedFilters.lastDate ?('&endDate=' + this.appliedFilters.lastDate) :'') +
+							((this.filterByCity && this.appliedFilters.city) ?('&city=' + this.appliedFilters.city) :'') +
+							((!this.filterByCity && this.appliedFilters.country) ?('&country=' + this.appliedFilters.country) :''))
 			.then(response => {
-				console.log(response);
 				//Check if backend sent data, i.e. not sending an error message.
 				if(response.body.data) {
 					this.events = response.body.data;
@@ -309,7 +305,12 @@ export default {
 				itemsPerPage: this.itemsPerPage, 
 				sortBy: this.currentlySorted, 
 				ascending: this.sortingAsc[this.currentlySorted],
-				startWith: this.appliedFilters.startWith
+				startWith: this.appliedFilters.startWith,
+				genre: this.appliedFilters.genre,
+				firstDate: this.appliedFilters.firstDate.length > 0 ?this.appliedFilters.firstDate :undefined,
+				lastDate: this.appliedFilters.lastDate.length > 0 ?this.appliedFilters.lastDate :undefined,
+				city: this.filterByCity ?this.appliedFilters.city :undefined,
+				country: !this.filterByCity ?this.appliedFilters.country :undefined
 			}});
 		},
 		//Function for getting all or the previous 3 smaller pages than the current one.
@@ -391,6 +392,28 @@ export default {
 
 		if(this.$route.query.startWith) {
 			this.appliedFilters.startWith = this.$route.query.startWith;
+		}
+
+		if(this.$route.query.genre) {
+			this.appliedFilters.genre = this.$route.query.genre;
+		}
+
+		if(this.$route.query.firstDate) {
+			this.appliedFilters.firstDate = this.$route.query.firstDate;
+		}
+
+		if(this.$route.query.lastDate) {
+			this.appliedFilters.lastDate = this.$route.query.lastDate;
+		}
+
+		if(this.$route.query.city) {
+			this.filterByCity = true;
+			this.appliedFilters.city = this.$route.query.city;
+		}
+
+		if(this.$route.query.country) {
+			this.filterByCity = false;
+			this.appliedFilters.country = this.$route.query.country;
 		}
 		
 		if(this.$route.query.sortBy && this.$route.query.ascending) {

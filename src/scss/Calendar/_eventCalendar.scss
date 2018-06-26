@@ -136,9 +136,8 @@
 	.events {
 		width: 45%;
 		padding-bottom: 15px;
-		color: $primaryLighten4;
-		background-color: $accentLighten1;
-		border-left: 1px solid $primaryLighten3;
+		color: #232323;
+		background-color: $primaryLighten3;
 		border-top-right-radius: 3px;
 		border-bottom-right-radius: 3px;
 
@@ -162,6 +161,7 @@
 			background-color: $primaryLighten5;
 			color: #232323;
 			border-radius: 5px;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
 			.material-icons{
 				display: block;
