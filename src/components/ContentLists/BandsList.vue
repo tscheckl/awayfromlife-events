@@ -33,6 +33,22 @@
 
 				<h3 class="filters-header">Additional Filters: </h3>
 				<div class="additional-filters">
+					<md-input-container class="genre-select">
+						<span class="input-label" v-if="appliedFilters.genre && appliedFilters.genre != ''">Genre</span>
+						<v-select :options="filterCriteria.genres"
+								  v-model="appliedFilters.genre"
+								  placeholder="Genre">
+						</v-select>
+					</md-input-container>
+
+					<md-input-container class="label-select">
+						<span class="input-label" v-if="appliedFilters.label && appliedFilters.label != ''">Label</span>
+						<v-select :options="filterCriteria.labels"
+								  v-model="appliedFilters.label"
+								  placeholder="Label">
+						</v-select>
+					</md-input-container>
+
 					<div class="switch-select">
 						<md-button-toggle md-single class="md-accent">
 							<md-button :class="'md-button ' + (filterByCity ?'md-toggle' :'')" v-on:click="filterByCity = true">
@@ -150,11 +166,15 @@ export default {
 				startWith: [],
 				cities: undefined,
 				countries: undefined,
+				genres: undefined,
+				label: undefined
 			},
 			appliedFilters: {
 				startWith: undefined,
 				city: undefined,
 				country: undefined,
+				genre: undefined,
+				label: undefined
 			},
 			filterByCity: false,
 			currentPage: 1,
@@ -213,6 +233,8 @@ export default {
 										'&sortBy=' + this.currentlySorted + 
 										'&order=' + sortingDirection +
 										'&startWith=' + startingLetter + 
+										(this.appliedFilters.genre ?('&genre=' + this.appliedFilters.genre) :'') + 
+										(this.appliedFilters.label ?('&label=' + this.appliedFilters.label) :'') + 
 										((this.filterByCity && this.appliedFilters.city) ?('&city=' + this.appliedFilters.city) :'') +
 										((!this.filterByCity && this.appliedFilters.country) ?('&country=' + this.appliedFilters.country) :''))
 			.then(response => {
@@ -241,6 +263,8 @@ export default {
 				sortBy: this.currentlySorted, 
 				ascending: this.sortingAsc[this.currentlySorted],
 				startWith: this.appliedFilters.startWith,
+				genre: this.appliedFilters.genre,
+				label: this.appliedFilters.label,
 				city: this.filterByCity ?this.appliedFilters.city :undefined,
 				country: !this.filterByCity ?this.appliedFilters.country :undefined
 			}});
