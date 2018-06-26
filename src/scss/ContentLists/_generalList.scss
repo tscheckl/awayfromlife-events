@@ -6,6 +6,7 @@
 	padding-bottom: 35px;
 	position: relative;
 	background-color: $primaryLighten4;
+	z-index: 5;
 
 	.md-spinner {
 		text-align: center;
@@ -170,6 +171,10 @@
 					border-radius: 3px;
 					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 
+					input {
+						padding-bottom: 5px;
+					}
+
 					&:first-of-type {
 						margin-left: 0;
 					}
@@ -232,12 +237,6 @@
 					}
 				}
 
-				.date-select {
-					input {
-						margin-top: 2px;
-					}
-				}
-
 				.vdatetime {
 					input {
 						padding-left: 10px;
@@ -247,24 +246,36 @@
 					}
 				}
 
+				.switch-select {
+					display: inline-block;
+					padding: 0;
+					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+				}
+
 				.country-select, .city-select {
 					min-width: 250px;
-					margin-top: 5px;
-					border-top-right-radius: 0;
-					border-bottom-right-radius: 0;
-					margin-right: -3px;
+					margin: 0px;
+					padding: 0;
+					border-top-left-radius: 0;
+					border-bottom-left-radius: 0;
+					box-shadow: none;
 				}
 
 				.md-button-toggle {
 					display: inline-block;
-					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
 					.md-button {
 						height: 30px;
 						min-height: 0;
-						margin-top: -8px;
+						margin-top: -6px;
 						margin-right: -4px;
 						line-height: 30px;
 						background-color: $accentLighten3;
+
+						&:last-of-type {
+							border-top-right-radius: 0;
+							border-bottom-right-radius: 0;
+						}
 					}
 
 					.md-toggle {

@@ -36,8 +36,8 @@
 					<md-input-container class="genre-select">
 						<span class="input-label" v-if="appliedFilters.genre && appliedFilters.genre != ''">Genre</span>
 						<v-select :options="filterCriteria.genres"
-									v-model="appliedFilters.genre"
-									placeholder="Genre">
+								  v-model="appliedFilters.genre"
+								  placeholder="Genre">
 						</v-select>
 					</md-input-container>
 					<md-input-container class="date-select">
@@ -45,7 +45,9 @@
 						<datetime v-model="appliedFilters.firstDate" 
 								  type="date" 
 								  :min-datetime="filterCriteria.firstDate" 
-								  :max-datetime="filterCriteria.lastDate" 
+								  :max-datetime="appliedFilters.lastDate && (appliedFilters.lastDate < filterCriteria.lastDate) 
+								  	? appliedFilters.lastDate
+									: filterCriteria.lastDate" 
 								  placeholder="From" 
 								  input-format="DD-MM-YYYY">
 						</datetime>
@@ -54,38 +56,42 @@
 						<span class="input-label" v-if="appliedFilters.lastDate != ''">To</span>
 						<datetime v-model="appliedFilters.lastDate" 
 								  type="date" 
-								  :min-datetime="filterCriteria.firstDate" 
+								  :min-datetime="appliedFilters.firstDate > filterCriteria.firstDate 
+								  	? appliedFilters.firstDate 
+									: filterCriteria.firstDate" 
 								  :max-datetime="filterCriteria.lastDate"
 								  placeholder="To" 
 								  input-format="DD-MM-YYYY">
 						</datetime>
 					</md-input-container>
 
-					<md-input-container class="city-select" v-if="filterByCity">
-						<span class="input-label" v-if="appliedFilters.city && appliedFilters.city != ''">City</span>
-						<v-select :options="filterCriteria.cities"
-									v-model="appliedFilters.city"
-									placeholder="City">
-						</v-select>
-					</md-input-container>
+					<div class="switch-select">
+						<md-button-toggle md-single class="md-accent">
+							<md-button :class="'md-button ' + (filterByCity ?'md-toggle' :'')" v-on:click="filterByCity = true">
+								City
+							</md-button>
 
-					<md-input-container class="country-select" v-if="!filterByCity">
-						<span class="input-label" v-if="appliedFilters.country && appliedFilters.country != ''">Country</span>
-						<v-select :options="filterCriteria.countries"
-									v-model="appliedFilters.country"
-									placeholder="Country">
-						</v-select>
-					</md-input-container>
+							<md-button :class="'md-button ' + (!filterByCity ?'md-toggle' :'')" v-on:click="filterByCity = false">
+								Country
+							</md-button>
+						</md-button-toggle>
 
-					<md-button-toggle md-single class="md-accent">
-						<md-button :class="'md-button ' + (filterByCity ?'md-toggle' :'')" v-on:click="filterByCity = true">
-							City
-						</md-button>
+						<md-input-container class="city-select" v-if="filterByCity">
+							<span class="input-label" v-if="appliedFilters.city && appliedFilters.city != ''">City</span>
+							<v-select :options="filterCriteria.cities"
+										v-model="appliedFilters.city"
+										placeholder="City">
+							</v-select>
+						</md-input-container>
 
-						<md-button :class="'md-button ' + (!filterByCity ?'md-toggle' :'')" v-on:click="filterByCity = false">
-							Country
-						</md-button>
-					</md-button-toggle>
+						<md-input-container class="country-select" v-if="!filterByCity">
+							<span class="input-label" v-if="appliedFilters.country && appliedFilters.country != ''">Country</span>
+							<v-select :options="filterCriteria.countries"
+										v-model="appliedFilters.country"
+										placeholder="Country">
+							</v-select>
+						</md-input-container>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -204,6 +210,14 @@ export default {
 			loading: false
 		}
 	},
+	watch: {
+		appliedFilters: {
+			handler(val){
+				this.getEventsPage(this.currentPage);
+			},
+			deep: true
+		}
+	},
 	methods: {
 		openNewEvent() {
 			this.$store.commit('setCurrentEvent', {
@@ -260,9 +274,12 @@ export default {
 							'&perPage=' + this.itemsPerPage + 
 							'&sortBy=' + this.currentlySorted + 
 							'&order=' + sortingDirection + 
-							'&startWith=' + startingLetter)
+							'&startWith=' + startingLetter + 
+							(this.appliedFilters.genre ?('&genre=' + this.appliedFilters.genre) :'') + 
+							(this.appliedFilters.firstDate ?('&startDate=' + this.appliedFilters.firstDate) :'') +
+							(this.appliedFilters.lastDate ?('&endDate=' + this.appliedFilters.lastDate) :''))
 			.then(response => {
-				console.log(response.body.data);
+				console.log(response);
 				//Check if backend sent data, i.e. not sending an error message.
 				if(response.body.data) {
 					this.events = response.body.data;
@@ -379,11 +396,12 @@ export default {
 		if(this.$route.query.sortBy && this.$route.query.ascending) {
 			this.currentlySorted = this.$route.query.sortBy;
 			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
-			this.getEventsPage(this.currentPage);
 		}
 		else {
 			this.sortingAsc.startDate = true;
 		}
+		
+		
 	},
 }
 </script>
