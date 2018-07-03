@@ -9,15 +9,21 @@
 				<md-button class="md-raised create-content-btn" v-on:click="openDialog('newBandDialog')"><md-icon>add</md-icon>Create new Band</md-button>
 			</div>
 
+			<h3 class="show-filters-button" v-on:click="toggleFilters">
+				<md-icon>filter_list</md-icon> 
+				<span>Filter Results</span> 
+				<md-icon>keyboard_arrow_right</md-icon>
+			</h3>
 			<div class="filters">
-				<h3>Events from A to Z: </h3>
+				<h3>Bands from A to Z: </h3>
 				<ul class="starting-letter-filter">
 					<li v-for="i in 26" :key="i" 
-						:class="buildLetterCssClasses((i+9).toString(36).toUpperCase())">
-						<span v-on:click="filterCriteria.startWith.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''">
+						:class="buildLetterCssClasses((i+9).toString(36).toUpperCase())"
+						v-on:click="filterCriteria.startWith.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''">
+						<span>
 							{{(i+9).toString(36).toUpperCase()}}
 						</span>
-						<div v-on:click="clearFilters">
+						<div v-on:click="clearStartLetter">
 							<md-icon v-if="appliedFilters.startWith == (i+9).toString(36).toUpperCase()">clear</md-icon>
 						</div>
 					</li>
@@ -25,7 +31,7 @@
 						<span v-on:click="filterCriteria.startWith.indexOf('#') != -1 ?filterByStartingLetter('#') :''">
 							#
 						</span>
-						<div v-on:click="clearFilters">
+						<div v-on:click="clearStartLetter">
 							<md-icon v-if="appliedFilters.startWith == '#'">clear</md-icon>
 						</div>
 					</li>
@@ -77,6 +83,12 @@
 						</md-input-container>
 					</div>
 				</div>
+
+				<md-button v-if="appliedFilters.startWith || appliedFilters.genre || appliedFilters.country || appliedFilters.city || appliedFilters.label" 
+						   class="clear-filters-button" 
+						   v-on:click="clearFilters">
+						   		<md-icon>restore</md-icon> Reset Filters
+				</md-button>
 			</div>
 		</div>
 
@@ -250,6 +262,9 @@ export default {
 				this.currentPage = response.body.current;
 				
 				this.loading = false;
+				//Fade filters out on mobile
+				document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
+				document.getElementsByClassName('filters')[0].classList.remove('show-filters');
 			})
 			.catch(err => {
 				this.loading = false;
@@ -307,16 +322,30 @@ export default {
 			this.getBandsPage(this.currentPage);
 		},
 		//Function for clearing one or all filters.
-		clearFilters() {
+		clearStartLetter() {
 			document.getElementsByClassName('start-letter-' + this.appliedFilters.startWith)[0].classList.remove('active-start-letter');
 			this.appliedFilters.startWith = undefined;
 			this.getBandsPage(this.currentPage);
+		},
+		//Function for clearing all additional filters.
+		clearFilters() {
+			this.appliedFilters = {
+				startWith: undefined,
+				city: undefined,
+				country: undefined,
+				label: undefined,
+				genre: undefined
+			}
 		},
 		//Function for returning the css classes of one letter of the starting-letters filter.
 		buildLetterCssClasses(letter) {
 			return 'start-letter-' + letter 
 					+ (this.filterCriteria.startWith.indexOf(letter) != -1 ?' available' :' ') //Check if there are events starting with that letter and add respective class.
 					+ (this.$route.query.startWith == letter ?' active-start-letter' :''); //Check if the letter is currently selected and add respective class.
+		},
+		toggleFilters() {
+			document.getElementsByClassName('show-filters-button')[0].classList.toggle('opened');
+			document.getElementsByClassName('filters')[0].classList.toggle('show-filters');
 		}
 	},
 	created() {

@@ -19,10 +19,14 @@
 		position: absolute;
 		width: 100%;
 		background-color: $accentAccent2;
-		height: 450px;
+		height: 470px;
 		top: 0;
 		left: 0;
 		z-index: 0;
+	}
+
+	.show-filters-button {
+		display: none;
 	}
 	
 	.list-header {
@@ -248,6 +252,7 @@
 
 				.switch-select {
 					display: inline-block;
+					margin-bottom: 15px;
 					padding: 0;
 					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 				}
@@ -281,6 +286,13 @@
 					.md-toggle {
 						background-color: #232323;
 					}
+				}
+			}
+	
+			.clear-filters-button {
+				margin: 0px;
+				.md-icon {
+					margin-left: -4px;
 				}
 			}
 		}
@@ -417,6 +429,20 @@
 	#events_list, #locations_list, #bands_list {
 		padding-bottom: 30px;
 
+		.color-block {
+			height: 700px;
+		}
+
+		.show-filters-button {
+			display: block;
+			margin-top: 20px;
+			margin-bottom: 0;
+			.md-icon {
+				margin-top: -2px;
+				transition: transform .3s ease-out;
+			}
+		}
+
 		.list-header {
 			display: block;
 			padding: 0;
@@ -434,6 +460,89 @@
 				display: block;
 				// margin: 0 auto;
 				margin-bottom: 10px;
+			}
+			
+			.filters {
+				max-height: 0;
+				overflow: hidden;
+				opacity: 0;
+				transition: all .3s ease-out;
+
+				.starting-letter-filter {
+					flex-wrap: wrap;
+					// justify-content: center;
+
+					.active-start-letter {
+						margin-top: 5px;
+						div {
+							display: none;
+						}
+					}
+				}
+
+				.additional-filters {
+					margin-top: 40px;
+
+					.genre-select, .label-select {
+						margin-right: 0;
+						margin-left: 0;
+						margin-bottom: 30px;
+						display: block;
+					}
+
+					.date-select {
+						margin-left: 0;
+						margin-right: 0;
+						margin-bottom: 30px;
+						width: calc(50% - 2px);
+					}
+
+					.switch-select {
+						display: flex;
+						flex-wrap: wrap;
+						box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+						.md-button-toggle {
+							display: flex;
+							min-width: 100%;
+							order: 2;
+							border-bottom-left-radius: 3px;
+							border-bottom-right-radius: 3px;
+							overflow: hidden;
+
+							.md-button {
+								flex: 1;
+								margin: 0;
+							}
+						}
+
+						.md-input-container {
+							min-width: 100%;
+							flex: 1;
+							order: 1;
+							border-bottom-right-radius: 0;
+							border-top-left-radius: 3px;
+						}
+					}
+				}
+
+				.clear-filters-button {
+					margin-top: 20px;
+				}
+			}
+
+			.show-filters {
+				opacity: 1;
+				overflow: visible;
+				max-height: 700px;
+			}
+
+			.opened {
+				.md-icon {
+					&:last-of-type {
+						transform: rotate(90deg);
+					}
+				}
 			}
 		}
 

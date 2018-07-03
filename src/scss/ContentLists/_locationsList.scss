@@ -27,7 +27,13 @@
 	#locations_list {
 		.list-header {
 			.md-button {
-				margin-bottom: 50px;
+				margin-bottom: 30px;
+			}
+
+			.filters {
+				.additional-filters {
+					margin-top: 20px !important;
+				}
 			}
 		}
 

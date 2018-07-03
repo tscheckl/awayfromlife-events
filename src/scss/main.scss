@@ -8,26 +8,14 @@
 
 @font-face {
 	font-family: "OpenSans";
-	src: url("/static/fonts/Open_Sans/OpenSans.ttf") format("truetype");
+	src: url("/static/fonts/OpenSans.woff2") format("woff2");
 	font-weight: normal;
 }
 
 @font-face {
 	font-family: "OpenSansBold";
-	src: url("/static/fonts/Open_Sans/OpenSans-Bold.ttf") format("truetype");
+	src: url("/static/fonts/OpenSans-Bold.woff2") format("woff2");
 	font-weight: bold;
-}
-
-@font-face {
-	font-family: "OpenSansLight";
-	src: url("/static/fonts/Open_Sans/OpenSans-Light.ttf") format("truetype");
-	font-weight: lighter;
-}
-
-@font-face {
-	font-family: "OpenSansBlack";
-	src: url("/static/fonts/Open_Sans/OpenSans-ExtraBold.ttf") format("truetype");
-	font-weight: 900;
 }
 
 body {
@@ -136,7 +124,7 @@ a {
 	.vdatetime-calendar__month__day--selected {
 		span {
 			span {
-				background-color: $accentDarken2;
+				background-color: $accentDarken2 !important;
 			}
 		}
 	}
