@@ -1,6 +1,6 @@
 <template>
-  <!-- <div class="map-container">
-	<top-bar>
+  <div class="map-container">
+	<!--<top-bar>
 		<md-button id="newLocation" class="md-flat new-location-btn" v-on:click="openDialog('newLocationDialog')"> <i class="material-icons ">add</i> Create new Location</md-button>
 	</top-bar>
 
@@ -14,8 +14,8 @@
 
 	<md-dialog ref="newLocationDialog"  md-open-from="#newLocation" md-close-to="#newLocation">
 			<new-location></new-location>
-		</md-dialog>
-  </div> -->
+		</md-dialog>-->
+  </div>
 </template>
 
 <script type="text/javascript">
