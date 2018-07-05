@@ -15,9 +15,8 @@
 
 		<div v-if="createEvent" class="content">
 			<h1>{{edit?'EDIT EVENT' :'NEW EVENT'}}</h1>
-			<event-form :data="newEvent" :edit="edit"></event-form>
-			
-			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">{{edit?'Update Event' :'Add Event'}}</md-button>
+			<event-form :event="newEvent" :edit="edit"></event-form>
+			<md-button type="submit" v-if="!similarEventFound" v-on:click="addEvent" class="md-raised md-accent">{{edit?'Update Event' :'Add Event'}}</md-button>
 		</div>
 		
 		<div v-else class="content">
@@ -32,6 +31,20 @@
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
+
+		<md-dialog class="similar-dialog" ref="similarEventDialog">
+			<h3>There already is an event at the selected location on the selcted date. Maybe you wanted to enter this one?</h3>
+			<div v-for="event in similarEvents" :key="event._id">
+				<p>{{event.title}} {{event.formattedDate}}</p>
+				<p>Location: {{event.location.name}}</p>
+				<p>Lineup:</p>
+				<ul>
+					<li v-for="band in event.bands" :key="band">{{band.name}}</li>
+				</ul>
+			</div>
+			<md-button v-on:click="checkSimilar(true)">Yes</md-button>
+			<md-button v-on:click="checkSimilar(false)">No</md-button>
+		</md-dialog>
   	</div>
 </template>
 
@@ -55,6 +68,28 @@ export default {
 			type: Boolean,
 			default: false
 		},
+	},
+	watch: {
+		newEvent: {
+			deep: true,
+			handler() {
+				this.similarEventFound = false;
+				if(this.newEvent.location && this.newEvent.startDate) {
+					this.$http.get(backendUrl + '/api/events/similar?location=' + this.newEvent.location._id + '&date=' + this.newEvent.startDate)
+					.then(response => {
+						if (response.body.data) {
+							this.similarEvents = response.body.data;
+
+							for (let event of this.similarEvents)
+								event.formattedDate = moment(event.startDate).format('LL');
+
+							this.similarEventFound = true;
+							this.$refs.similarEventDialog.open()
+						}
+					}).catch(err => {console.log(err);});
+				}
+			}
+		}
 	},
 	computed: {
 		newEvent() {
@@ -107,7 +142,9 @@ export default {
 				bands: [''],
 				description: '',
 				startDate: ''
-			}
+			},
+			similarEventFound: false,
+			similarEvents: []
 		}
 	},
 	methods: {
@@ -129,7 +166,6 @@ export default {
 				//Check if an event is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editEvent = this.edit?'/' + this.newEvent._id: '';
-				console.log("new Event: ", this.newEvent);
 				return;
 				//Send new/updated event to the backend.
 				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent)
@@ -230,7 +266,14 @@ export default {
 					startDate: ''
 				}],
 			}
-		}
+		},
+		checkSimilar(accept) {
+			if(accept)
+				this.emitClose();
+
+			this.similarEventFound = false;
+			this.$refs.similarEventDialog.close();
+		},
 	},
 	mounted() {
 		let vm = this;

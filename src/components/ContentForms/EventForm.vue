@@ -6,7 +6,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Title</label>
-							<md-input v-model="data.title" required></md-input>
+							<md-input v-model="event.title" required></md-input>
 						</md-input-container>
 					</md-layout>
 
@@ -14,7 +14,7 @@
 						<md-input-container>
 							<v-select :options="locations"
 									:on-change="onSelectLocation"
-									v-model="data.location"
+									v-model="event.location"
 									placeholder="Select event location*">
 							</v-select>
 						</md-input-container>
@@ -39,7 +39,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="data.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
+						<md-button v-if="event.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another band</md-tooltip>
 						</md-button>
@@ -48,14 +48,14 @@
 					<md-layout md-flex="100">
 						<md-input-container>
 							<label>Description</label>
-							<md-textarea v-model="data.description"></md-textarea>
+							<md-textarea v-model="event.description"></md-textarea>
 						</md-input-container>
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
 							<md-icon>date_range</md-icon>
-							<datetime v-if="!edit || edit && data.startDate" v-model="data.startDate" placeholder="Select date*" type="datetime"></datetime>
+							<datetime v-if="!edit || edit && event.startDate" v-model="event.startDate" placeholder="Select date*" type="datetime"></datetime>
 						</div>
 					</md-layout>
 				</md-layout>
@@ -70,7 +70,7 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 export default {
 	name: 'event-form',
 	props: {
-		data: Object,
+		event: Object,
 		edit: {
 			type: Boolean,
 			default: false
@@ -88,14 +88,16 @@ export default {
 		}
 	},
 	watch: {
-		data() {
-			this.localBands = this.data.bands;
+		event() {
+			console.log("ÄNDERUNG");
+			
+			this.localBands = this.event.bands;
 		}
 	},
 	methods: {
 		onSelectLocation(selected) {
 			//Set the new Event's location attribute to the ID of the selected location
-			this.data.location = selected;
+			this.event.location = selected;
 		},
 		onSelectBand(selected, index) {
 			this.localBands[index] = selected;
@@ -130,7 +132,7 @@ export default {
 			})
 			.catch(err => {});
 
-		this.localBands = this.data.bands;
+		this.localBands = this.event.bands;
 	}
 }
 </script>
