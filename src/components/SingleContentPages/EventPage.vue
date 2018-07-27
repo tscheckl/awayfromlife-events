@@ -120,7 +120,7 @@ export default {
 	},
 	mounted() {
 		document.getElementById('topbar').classList.add('single-page');
-		console.log(this.$route.path);
+		
 		if(this.$route.path.indexOf('archived-event') != -1) {
 			this.backendEndpoint = 'archived-events';
 		}
