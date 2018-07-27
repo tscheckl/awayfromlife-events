@@ -247,7 +247,12 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event, index) {
 			this.$store.commit('setCurrentEvent', event);
-			this.$router.push({path: `/event/${event._id}`});
+			if(!this.archive) {
+				this.$router.push({path: `/event/${event._id}`});
+			}
+			else {
+				this.$router.push({path: `/archived-event/${event._id}`});
+			}
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;

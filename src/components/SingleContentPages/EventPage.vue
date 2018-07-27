@@ -85,6 +85,7 @@ export default {
 		return {
 			submitStatus: '',
 			isAuthenticated: false,
+			backendEndpoint: 'events'
 		}
 	},
 	methods: {
@@ -92,7 +93,7 @@ export default {
 			this.$refs[ref].open();
 		},
 		deleteEvent() {
-			this.$http.delete(backendUrl + '/api/events/' + this.event._id)
+			this.$http.delete(backendUrl + `/api/${this.backendEndpoint}/` + this.event._id)
 				.then(response => {
 					this.$router.go(-1);
 					this.submitStatus = 'Event successfully deleted!';
@@ -106,7 +107,7 @@ export default {
 		handleEditClose() {
 			this.$refs['newEventDialog'].close();
 			
-			this.$http.get(backendUrl + '/api/events/byId/' + this.$route.params.id)
+			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byId/` + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentEvent', response.body.data);
@@ -119,6 +120,11 @@ export default {
 	},
 	mounted() {
 		document.getElementById('topbar').classList.add('single-page');
+		console.log(this.$route.path);
+		if(this.$route.path.indexOf('archived-event') != -1) {
+			this.backendEndpoint = 'archived-events';
+		}
+		
 		
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
@@ -129,7 +135,7 @@ export default {
 		if(this.$store.getters.currentEvent.title == '') {
 			console.log("nix da");
 			
-			this.$http.get(backendUrl + '/api/events/byId/' + this.$route.params.id)
+			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byId/` + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentEvent', response.body.data);

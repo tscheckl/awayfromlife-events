@@ -36,6 +36,10 @@ export default new Router({
 		component: EventPage
 	},
 	{
+		path: '/archived-event/:id',
+		component: EventPage
+	},
+	{
 		path: '/locations',
 		component: LocationsList
 	},
