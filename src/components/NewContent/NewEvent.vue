@@ -16,7 +16,7 @@
 		<div v-if="createEvent" class="content">
 			<h1>{{edit?'EDIT EVENT' :'NEW EVENT'}}</h1>
 			<event-form :event="newEvent" :edit="edit"></event-form>
-			<md-button type="submit" v-if="!similarEventFound" v-on:click="addEvent" class="md-raised md-accent">{{edit?'Update Event' :'Add Event'}}</md-button>
+			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">{{edit?'Update Event' :'Add Event'}}</md-button>
 		</div>
 		
 		<div v-else class="content">
@@ -104,7 +104,7 @@
 				</g>
 			</svg>
 
-			<h3>There already is an event at the selected location on the selcted date. Maybe you wanted to enter this one?</h3>
+			<h3>There already is an event at happening at that location on the same date. Maybe you wanted to enter this one?</h3>
 			<div class="similar-event" v-for="event in similarEvents" :key="event._id">
 				<a :href="`/#/event/${event._id}`" target="_blank">
 					<div class="similar-event-info">
@@ -145,26 +145,11 @@ export default {
 		},
 	},
 	watch: {
-		newEvent: {
-			deep: true,
-			handler() {
-				this.similarEventFound = false;
-				if(this.newEvent.location && this.newEvent.startDate && this.$route.path.indexOf('/event/') == -1) {
-					
-					this.$http.get(backendUrl + '/api/events/similar?location=' + this.newEvent.location._id + '&date=' + this.newEvent.startDate)
-					.then(response => {
-						if (response.body.data) {
-							this.similarEvents = response.body.data;
-
-							for (let event of this.similarEvents)
-								event.formattedDate = moment(event.startDate).format('LL');
-
-							this.similarEventFound = true;
-							this.$refs.similarEventDialog.open()
-						}
-					}).catch(err => {console.log(err);});
-				}
-			}
+		newEventDate() {
+			this.getSimilar();
+		},
+		newEventLocation() {
+			this.getSimilar();
 		}
 	},
 	computed: {
@@ -192,6 +177,12 @@ export default {
 			else {
 				return this.blankEvent;
 			}
+		},
+		newEventDate() {
+			return this.newEvent.startDate
+		},
+		newEventLocation() {
+			return this.newEvent.location
 		}
 	},
 	data() {
@@ -342,6 +333,24 @@ export default {
 				}],
 			}
 		},
+		getSimilar() {
+			this.similarEventFound = false;
+			if(this.newEvent.location && this.newEvent.startDate && this.$route.path.indexOf('/event/') == -1) {
+				
+				this.$http.get(backendUrl + '/api/events/similar?location=' + this.newEvent.location._id + '&date=' + this.newEvent.startDate)
+				.then(response => {
+					if (response.body.data) {
+						this.similarEvents = response.body.data;
+
+						for (let event of this.similarEvents)
+							event.formattedDate = moment(event.startDate).format('LL');
+
+						this.similarEventFound = true;
+						this.$refs.similarEventDialog.open()
+					}
+				}).catch(err => {console.log(err);});
+			}
+		},
 		checkSimilar(accept) {
 			document.getElementsByClassName(accept ?'yes' :'no')[0].classList.add('selected');
 			document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.add('selected');
@@ -350,21 +359,17 @@ export default {
 					this.emitClose();
 
 				this.similarEventFound = false;
-				this.$refs.similarEventDialog.close();
 				setTimeout(() => {
-					document.getElementsByClassName(accept ?'yes' :'no')[0].classList.remove('selected');
-					document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.remove('selected');
-				}, 400);
+					this.$refs.similarEventDialog.close();
+					setTimeout(() => {
+						document.getElementsByClassName(accept ?'yes' :'no')[0].classList.remove('selected');
+						document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.remove('selected');
+					}, 200);
+				},200);
 			}, 500);
 		}
 	},
 	mounted() {
-		if(this.$route.path.indexOf('/event/') != -1) {
-			console.log("da simma");
-			
-			this.$store.commit('setCurrentEvent', this.blankEvent);
-		}
-		
 		let vm = this;
 		
 		this.$http.get(backendUrl + '/api/users/auth')
