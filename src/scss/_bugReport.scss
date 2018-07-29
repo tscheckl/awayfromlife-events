@@ -4,7 +4,6 @@
 	margin: 0 auto;
 	margin-bottom: 30px;
 	overflow: hidden;
-	background-color: $primaryLighten5;
 
 	
 	.router-link-active {
@@ -30,14 +29,36 @@
 		z-index: 0;
 	}
 
-	form {
+	.content {
 		position: relative;
 		margin: 10px 40px;
-		padding: 10px 40px;
+		padding: 10px 0;
 		background-color: $primaryLighten5;
 		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 		border-radius: 3px;
 		z-index: 2;
+
+		h2 {
+			padding: 0 40px;
+			cursor: pointer;
+
+			.md-icon {
+				float: right;
+				transition: transform .2s ease-out;
+			}
+		}
+
+		hr {
+			border: 0px solid black;
+			border-top: 1px solid $primaryLighten2;
+		}
+	}
+
+	form {
+		padding: 0 40px;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height .5s ease-out;
 	}
 
 	.function-ta {
@@ -59,5 +80,27 @@
 
 	.md-spinner {
 		margin-top: 10px;
+	}
+
+	.opened {
+		max-height: 1000px;
+
+		.md-icon {
+			transform: rotate(90deg);
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#bug_report {
+		padding-bottom: 10px;
+
+		h1 {
+			margin-left: 10px;
+		}
+
+		.content {
+			margin: 0;
+		}
 	}
 }

@@ -41,7 +41,7 @@
 
 				<h3><md-icon>queue_music</md-icon><span>Lineup</span></h3>
 				<ul>
-					<li v-for="band of event.bands" :key="band._id">{{band.name}}</li>
+					<li v-for="band of event.bands" :key="band._id"><router-link :to="`/band/${band._id}`"><span>{{band.name}}</span></router-link></li>
 				</ul>
 				
 				<hr>
