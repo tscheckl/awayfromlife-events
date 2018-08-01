@@ -225,6 +225,7 @@
 			width: 100%;
 			transition: all .4s ease-out;
 			z-index: 3;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 
 			.hamburger {
 				padding: 9px 3px;
@@ -257,6 +258,13 @@
 
 			.md-icon {
 				color: #232323;
+			}
+
+			img {
+				float: right;
+				height: 35px;
+				margin-top: 7px;
+				margin-right: 10px;
 			}
 		}
 	}

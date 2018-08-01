@@ -7,6 +7,7 @@
 						<span class="hamburger-inner"></span>
 					</span>
 				</button>
+				<a href="https://awayfromlife.com"><img src="static/Logo.png" alt="Away From Life Logo"></a>
 			</div>
 
 			<div class="menu-items-list">

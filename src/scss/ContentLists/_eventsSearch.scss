@@ -4,6 +4,17 @@
 	min-height: 100vh;
 	padding-bottom: 60px;
 
+	.logo-link {
+		position: absolute;
+		z-index: 2;
+
+		img {
+			margin-top: 10px;
+			margin-left: 15px;
+			height: 40px;
+		}
+	}
+
 	#follow_buttons {
 		a {
 			color: $primaryLighten5;
@@ -364,6 +375,10 @@
 		
 		width: 100%;
 		max-height: calc(100% - 49px);
+
+		.logo-link {
+			display: none;
+		}
 
 		.page-content {
 			transform: translateY(calc(50vh - 250px));

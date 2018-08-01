@@ -1,5 +1,6 @@
 <template>
   	<div id="events_search">
+		<a class="logo-link" href="https://awayfromlife.com"><img src="static/Logo.png" alt="Away From Life Logo"></a>
 		<follow-buttons></follow-buttons>
 		<div class="background-img"></div>
 		<div class="darken"></div>
