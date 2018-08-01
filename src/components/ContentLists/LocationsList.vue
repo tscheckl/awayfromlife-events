@@ -17,10 +17,8 @@
 			<div class="filters">
 				<h3>Locations from A to Z: </h3>
 				<ul class="starting-letter-filter">
-					<li v-for="i in 26" :key="i" 
-						:class="buildLetterCssClasses((i+9).toString(36).toUpperCase())"
-						v-on:click="filterCriteria.startWith.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''">
-						<span>
+					<li v-for="i in 26" :key="i" :class="buildLetterCssClasses((i+9).toString(36).toUpperCase())">
+						<span v-on:click="filterCriteria.startWith.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''">
 							{{(i+9).toString(36).toUpperCase()}}
 						</span>
 						<div v-on:click="clearStartLetter">
@@ -114,16 +112,16 @@
 
 			<div class="list-footer">
 				<div class="pages">
-					<span class="page-btn" v-on:click="currentPage > 1 ? getLocationsPage(currentPage-1): ''"><md-icon>keyboard_arrow_left</md-icon></span>
-					<span v-for="number in smallerPages()" :key="number" v-on:click="getLocationsPage(number)">{{number}}</span>
+					<span class="page-btn" v-on:click="currentPage > 1 ? changeCurrentPage(currentPage-1): ''"><md-icon>keyboard_arrow_left</md-icon></span>
+					<span v-for="number in smallerPages()" :key="number" v-on:click="changeCurrentPage(number)">{{number}}</span>
 					<span class="current-page">{{currentPage}}</span>
-					<span v-for="number in biggerPages()" :key="number" v-on:click="getLocationsPage(number)">{{number}}</span>
-					<span class="page-btn" v-on:click="(currentPage < availablePages)? getLocationsPage(currentPage+1): ''"><md-icon>keyboard_arrow_right</md-icon></span>
+					<span v-for="number in biggerPages()" :key="number" v-on:click="changeCurrentPage(number)">{{number}}</span>
+					<span class="page-btn" v-on:click="(currentPage < availablePages)? changeCurrentPage(currentPage+1): ''"><md-icon>keyboard_arrow_right</md-icon></span>
 				</div>
 				
 				<md-input-container>
 					<p>Items per Page</p>
-					<md-select name="itemsPerPage" v-model="itemsPerPage" v-on:selected="getLocationsPage(currentPage)">
+					<md-select name="itemsPerPage" v-model="itemsPerPage">
 						<md-option value="5">5</md-option>
 						<md-option value="10">10</md-option>
 						<md-option value="20">20</md-option>
@@ -177,9 +175,16 @@ export default {
 	watch: {
 		appliedFilters: {
 			handler(val){
+				this.buildUrl();
 				this.getLocationsPage(this.currentPage);
 			},
 			deep: true
+		},
+		$route(to, from) {
+			this.getLocationsPage(to.query.page);
+		},
+		itemsPerPage() {
+			this.buildUrl();
 		}
 	},
 	methods: {
@@ -200,18 +205,12 @@ export default {
 			}
 			//Assign the category to be sorted the negative value of its former value.
 			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
-			
-			//Call function for building the router-queries and pushing them.
-			this.buildUrl();
 
-			this.getLocationsPage(this.currentPage);
+			this.buildUrl();
 		},
 		getLocationsPage(page) {
 			this.loading = true;
-
-			this.currentPage = page;
-			//Call function for building the router-queries and pushing them.
-			this.buildUrl();
+			this.checkUrlParams();
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 			//Catch problem if the starting letter is # and convert it so the backend can parse it.
@@ -247,7 +246,7 @@ export default {
 		},
 		//Function for building the current route with all query-parameters.
 		buildUrl() {
-			this.$router.push({query: {
+			let query = {
 				page: this.currentPage, 
 				itemsPerPage: this.itemsPerPage, 
 				sortBy: this.currentlySorted, 
@@ -255,7 +254,11 @@ export default {
 				startWith: this.appliedFilters.startWith,
 				city: this.filterByCity ?this.appliedFilters.city :undefined,
 				country: !this.filterByCity ?this.appliedFilters.country :undefined
-			}});
+			};
+			console.log(query);
+
+			if(query != this.$route.query)
+				this.$router.push({query: query});
 		},
 		smallerPages() {
 			let smallerPages = [];
@@ -293,7 +296,6 @@ export default {
 
 			this.appliedFilters.startWith = letter;
 			document.getElementsByClassName('start-letter-' + letter)[0].classList.add('active-start-letter');
-			this.getLocationsPage(this.currentPage);
 		},
 		//Function for clearing the starting-letter-filter.
 		clearStartLetter() {
@@ -317,9 +319,47 @@ export default {
 		toggleFilters() {
 			document.getElementsByClassName('show-filters-button')[0].classList.toggle('opened');
 			document.getElementsByClassName('filters')[0].classList.toggle('show-filters');
+		},
+		changeCurrentPage(page) {
+			this.currentPage = page;
+			this.buildUrl();
+		},
+		checkUrlParams() {
+			if(this.$route.query.itemsPerPage) {
+				this.itemsPerPage = this.$route.query.itemsPerPage;
+			}
+			else {
+				this.itemsPerPage = 20;
+			}
+
+			if(this.$route.query.startWith) {
+				this.appliedFilters.startWith = this.$route.query.startWith;
+			}
+			else {
+				this.appliedFilters.startWith = '';	
+			}
+
+			if(this.$route.query.country) {
+				this.filterByCity = false;
+				this.appliedFilters.country = this.$route.query.country;
+			}
+			else {
+				this.appliedFilters.country = '';
+			}
+
+			if(this.$route.query.city) {
+				this.filterByCity = true;
+				this.appliedFilters.city = this.$route.query.city;
+			}
+			else {
+				this.filterByCity = false;
+				this.appliedFilters.city = '';
+			}
 		}
 	},
 	created() {
+		console.log("created");
+		
 		//Get all the filter information from the backend.
 		this.$http.get(backendUrl + '/api/locations/filters')
 			.then(response => { 
@@ -327,36 +367,19 @@ export default {
 			})
 			.catch(err => {	});
 
-		if(this.$router.currentRoute.query.page) {
-			this.currentPage = this.$router.currentRoute.query.page;
-		}
-
-		if(this.$route.query.itemsPerPage) {
-			this.itemsPerPage = this.$route.query.itemsPerPage;
-		}
-
-		if(this.$route.query.startWith) {
-			this.appliedFilters.startWith = this.$route.query.startWith;
-		}
-
-		if(this.$route.query.city) {
-			this.filterByCity = true;
-			this.appliedFilters.city = this.$route.query.city;
-		}
-
-		if(this.$route.query.country) {
-			this.filterByCity = false;
-			this.appliedFilters.country = this.$route.query.country;
+		if(this.$route.query.page) {
+			this.currentPage = this.$route.query.page;
 		}
 
 		if(this.$route.query.sortBy && this.$route.query.ascending) {
 			this.currentlySorted = this.$route.query.sortBy;
 			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
-			this.getLocationsPage(this.currentPage);
 		}
 		else {
 			this.sortingAsc.name = true;
 		}
+
+		this.getLocationsPage(this.currentPage);
 	}
 }
 </script>

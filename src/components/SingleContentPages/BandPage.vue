@@ -173,7 +173,7 @@ export default {
 			})
 			.catch(err => {});
 
-		if(this.$store.getters.currentBand.name == '') {
+		if(this.$store.getters.currentBand.name == ''  || this.$store.getters.currentBand._id != this.$route.params.id) {
 			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {

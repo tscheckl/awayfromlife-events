@@ -18,10 +18,8 @@
 			<div class="filters">
 				<h3>Events from A to Z: </h3>
 				<ul class="starting-letter-filter">
-					<li v-for="i in 26" :key="i" 
-						:class="buildLetterCssClasses((i+9).toString(36).toUpperCase())"
-						v-on:click="filterCriteria.startWith.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''">
-						<span>
+					<li v-for="i in 26" :key="i" :class="buildLetterCssClasses((i+9).toString(36).toUpperCase())">
+						<span v-on:click="filterCriteria.startWith.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''"> 
 							{{(i+9).toString(36).toUpperCase()}}
 						</span>
 						<div v-on:click="clearStartLetter">
@@ -147,16 +145,16 @@
 
 			<div class="list-footer">
 				<div class="pages">
-					<span class="page-btn" v-on:click="currentPage > 1 ? getEventsPage(currentPage-1): getEventsPage(currentPage)"><md-icon>keyboard_arrow_left</md-icon></span>
-					<span v-for="number in smallerPages()" :key="number" v-on:click="getEventsPage(number)">{{number}}</span>
+					<span class="page-btn" v-on:click="currentPage > 1 ? changeCurrentPage(currentPage-1): ''"><md-icon>keyboard_arrow_left</md-icon></span>
+					<span v-for="number in smallerPages()" :key="number" v-on:click="changeCurrentPage(number)">{{number}}</span>
 					<span class="current-page">{{currentPage}}</span>
-					<span v-for="number in biggerPages()" :key="number" v-on:click="getEventsPage(number)">{{number}}</span>
-					<span class="page-btn" v-on:click="(currentPage < availablePages)? getEventsPage(currentPage+1): getEventsPage(currentPage)"><md-icon>keyboard_arrow_right</md-icon></span>
+					<span v-for="number in biggerPages()" :key="number" v-on:click="changeCurrentPage(number)">{{number}}</span>
+					<span class="page-btn" v-on:click="(currentPage < availablePages)? changeCurrentPage(currentPage+1): ''"><md-icon>keyboard_arrow_right</md-icon></span>
 				</div>
 				
 				<md-input-container>
 					<p>Items per Page</p>
-					<md-select name="itemsPerPage" v-model="itemsPerPage" v-on:change="getEventsPage(currentPage)">
+					<md-select name="itemsPerPage" v-model="itemsPerPage">
 						<md-option value="5">5</md-option>
 						<md-option value="10">10</md-option>
 						<md-option value="20">20</md-option>
@@ -226,9 +224,16 @@ export default {
 	watch: {
 		appliedFilters: {
 			handler(val){
+				this.buildUrl();
 				this.getEventsPage(this.currentPage);
 			},
 			deep: true
+		},
+		$route(to, from) {
+				this.getEventsPage(to.query.page);		
+		},
+		itemsPerPage() {
+			this.buildUrl();
 		}
 	},
 	methods: {
@@ -266,16 +271,11 @@ export default {
 			this.sortingAsc[sortCrit] = !currentlySortedSortingAscTemp;
 
 			this.buildUrl();
-
-			this.getEventsPage(this.currentPage);
 		},
 		//Get all events for the given page number.
 		getEventsPage(page) {
 			this.loading = true;
-
-			this.currentPage = page;
-			//Call function for building the router-queries and pushing them.
-			this.buildUrl();
+			this.checkUrlParams();
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
 			//Check if you're currently on the archive page or not and change the backend-endpoint for the request accordingly.
@@ -322,7 +322,7 @@ export default {
 		},
 		//Function for building the current route with all query-parameters.
 		buildUrl() {
-			this.$router.push({query: {
+			let query = {
 				page: this.currentPage, 
 				itemsPerPage: this.itemsPerPage, 
 				sortBy: this.currentlySorted, 
@@ -333,7 +333,9 @@ export default {
 				lastDate: this.appliedFilters.lastDate.length > 0 ?this.appliedFilters.lastDate :undefined,
 				city: this.filterByCity ?this.appliedFilters.city :undefined,
 				country: !this.filterByCity ?this.appliedFilters.country :undefined
-			}});
+			};
+			if(query != this.$route.query)
+				this.$router.push({query: query});
 		},
 		//Function for getting all or the previous 3 smaller pages than the current one.
 		smallerPages() {
@@ -374,7 +376,6 @@ export default {
 
 			this.appliedFilters.startWith = letter;
 			document.getElementsByClassName('start-letter-' + letter)[0].classList.add('active-start-letter');
-			this.getEventsPage(this.currentPage);
 		},
 		//Function for clearing the starting-letter-filter.
 		clearStartLetter() {
@@ -401,6 +402,63 @@ export default {
 		toggleFilters() {
 			document.getElementsByClassName('show-filters-button')[0].classList.toggle('opened');
 			document.getElementsByClassName('filters')[0].classList.toggle('show-filters');
+		},
+		changeCurrentPage(page) {
+			this.currentPage = page;
+			this.buildUrl();
+		},
+		checkUrlParams() {
+			if(this.$route.query.itemsPerPage) {
+				this.itemsPerPage = this.$route.query.itemsPerPage;
+			}
+			else {
+				this.itemsPerPage = 20;
+			}
+
+			if(this.$route.query.startWith) {
+				this.appliedFilters.startWith = this.$route.query.startWith;
+			}
+			else {
+				this.appliedFilters.startWith = '';
+			}
+
+			if(this.$route.query.genre) {
+				this.appliedFilters.genre = this.$route.query.genre;
+			}
+			else {
+				this.appliedFilters.genre = '';
+			}
+
+			if(this.$route.query.firstDate) {
+				this.appliedFilters.firstDate = this.$route.query.firstDate;
+			}
+			else {
+				this.appliedFilters.firstDate = '';
+			}
+
+			if(this.$route.query.lastDate) {
+				this.appliedFilters.lastDate = this.$route.query.lastDate;
+			}
+			else {
+				this.appliedFilters.lastDate = '';
+			}
+
+			if(this.$route.query.country) {
+				this.filterByCity = false;
+				this.appliedFilters.country = this.$route.query.country;
+			}
+			else {
+				this.appliedFilters.country  = '';
+			}
+
+			if(this.$route.query.city) {
+				this.filterByCity = true;
+				this.appliedFilters.city = this.$route.query.city;
+			}
+			else {
+				this.filterByCity = false;
+				this.appliedFilters.city = '';
+			}
 		}
 	},
 	created() {
@@ -421,36 +479,6 @@ export default {
 		if(this.$router.currentRoute.query.page) {
 			this.currentPage = this.$router.currentRoute.query.page;
 		}
-
-		if(this.$route.query.itemsPerPage) {
-			this.itemsPerPage = this.$route.query.itemsPerPage;
-		}
-
-		if(this.$route.query.startWith) {
-			this.appliedFilters.startWith = this.$route.query.startWith;
-		}
-
-		if(this.$route.query.genre) {
-			this.appliedFilters.genre = this.$route.query.genre;
-		}
-
-		if(this.$route.query.firstDate) {
-			this.appliedFilters.firstDate = this.$route.query.firstDate;
-		}
-
-		if(this.$route.query.lastDate) {
-			this.appliedFilters.lastDate = this.$route.query.lastDate;
-		}
-
-		if(this.$route.query.city) {
-			this.filterByCity = true;
-			this.appliedFilters.city = this.$route.query.city;
-		}
-
-		if(this.$route.query.country) {
-			this.filterByCity = false;
-			this.appliedFilters.country = this.$route.query.country;
-		}
 		
 		if(this.$route.query.sortBy && this.$route.query.ascending) {
 			this.currentlySorted = this.$route.query.sortBy;
@@ -460,7 +488,7 @@ export default {
 			this.sortingAsc.startDate = true;
 		}
 		
-		
+		this.getEventsPage(this.currentPage);
 	},
 }
 </script>

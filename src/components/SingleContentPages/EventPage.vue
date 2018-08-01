@@ -131,19 +131,16 @@ export default {
 				this.isAuthenticated = true;
 			})
 			.catch(err => {});
-		
-		if(this.$store.getters.currentEvent.title == '') {
-			console.log("nix da");
 			
+		if(this.$store.getters.currentEvent.title == '' || this.$store.getters.currentEvent._id != this.$route.params.id) {
+
 			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byId/` + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentEvent', response.body.data);
 				}
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => { console.log(err); });
 		}
 			
 	}

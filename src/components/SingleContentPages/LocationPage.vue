@@ -166,7 +166,7 @@ export default {
 			})
 			.catch(err => {});
 
-		if(this.$store.getters.currentLocation.name == '') {
+		if(this.$store.getters.currentLocation.name == ''  || this.$store.getters.currentLocation._id != this.$route.params.id) {
 			console.log("nix da");
 			
 			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id)

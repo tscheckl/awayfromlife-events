@@ -63,6 +63,8 @@ let routerStack = [window.location.hash.substr(1)];
 
 router.beforeEach((to, from, next) => {
 	
+	window.scrollTo(0, 0);
+	
 	if(to.fullPath == routerStack[routerStack.length-2]) {
 		store.commit('setAnimation', 'slide-out');
 		routerStack.pop();
@@ -71,8 +73,6 @@ router.beforeEach((to, from, next) => {
 		store.commit('setAnimation', 'slide-in');
 		routerStack.push(to.fullPath);
 	}
-	
-	window.scrollTo(0, 0);
 
 	//Check if a 'Single-Page' is opened and give top-bar extra class to change color.
 	if(to.path.indexOf('/event/') != -1 || to.path.indexOf('/location/') != -1 || to.path.indexOf('/band/') != -1) {

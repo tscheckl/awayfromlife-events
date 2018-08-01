@@ -28,30 +28,32 @@
 	}
 
 	ul {
-		margin-top: 10px;
+		margin-top: -10px;
 		padding: 0;
 
 		li:nth-child(-n+4) {
-			// font-weight: bold;
 			font-size: 1.15em;
 		}
 
 		li:nth-child(-n+2) {
-			// font-weight: bold;
-			font-size: 1.3em;
+			font-size: 1.5em;
 		}
 
 		li {
-			width: 50%;
 			display: inline-block;
+			min-width: 50%;
+			margin-top: 40px;
 
 			span {
-				background-color: $accentAccent2;
-				padding: 10px 10px;
+				padding: 10px;
 				border-radius: 3px;
 				font-family: "Montserrat";
 				color: $primaryLighten5;
+				line-height: 40px;
+				background-color: $accentAccent2;
 				text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+				box-decoration-break: clone;
+				-webkit-box-decoration-break: clone;
 			}
 		}
 	}
