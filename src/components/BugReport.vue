@@ -7,7 +7,13 @@
 
 				<md-input-container>
 					<label>Your feedback or ideas on what we could add to the app</label>
-					<md-textarea class="description-ta" v-model="feedback"></md-textarea>
+					<md-textarea class="description-ta" v-model="feedback.text"></md-textarea>
+				</md-input-container>
+
+				<p>(Optional) Enter your Email address so we can contact you if we have any questions about your feedback.</p>
+				<md-input-container>
+					<label>Email address</label>
+					<md-input v-model="feedback.email"></md-input>
 				</md-input-container>
 
 				<md-button type="submit" class="md-raised md-accent" v-on:click="sendFeedback">Send</md-button>
@@ -28,7 +34,7 @@
 				
 				<md-input-container>
 					<label>What exactly doesn't work?</label>
-					<md-textarea class="function-ta" v-model="bug.function"></md-textarea>
+					<md-textarea class="error-ta" v-model="bug.error"></md-textarea>
 				</md-input-container>
 
 				<md-input-container>
@@ -43,12 +49,23 @@
 					<md-radio v-model="bug.loggedIn" md-value="2">Not sure</md-radio>
 				</div>
 
+				<p>(Optional) Enter your Email address so we can contact you if we have any questions about your report.</p>
+				<md-input-container>
+					<label>Email address</label>
+					<md-input v-model="bug.email"></md-input>
+				</md-input-container>
+
 				<md-button type="submit" class="md-raised md-accent" v-on:click="sendBugReport">Send</md-button>
 
 				<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 			</form>
 		</div>
 		<div class="color-block"></div>
+
+		<md-snackbar ref="snackbar">
+			<span >{{this.submitStatus}}</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
   	</div>
 </template>
 
@@ -60,12 +77,16 @@ export default {
 	data() {
 		return {
 			bug: {
-				function: '',
+				error: '',
 				description: '',
 				loggedIn: 2,
-				component: ''
+				component: '',
+				email: ''
 			},
-			feedback: '',
+			feedback: {
+				text: '',
+				email: ''
+			},
 			loading: false,
 			componentOptions: [
 				"Search/Start Page",
@@ -77,7 +98,8 @@ export default {
 				"Create new Band",
 				"Show Calender",
 				"Admin Console"
-			]
+			],
+			submitStatus: ''
 		}
 	},
 	methods: {
@@ -86,13 +108,18 @@ export default {
 
 			this.$http.post(backendUrl + '/api/bugs', this.bug)
 				.then(response => {
-					this.bug.function = '';
+					this.submitStatus = 'Thank you for reporting your bug!';
+					this.$refs.snackbar.open();
+					this.bug.error = '';
 					this.bug.description = '';
 					this.bug.loggedIn = 2;
+					this.bug.email = '';
 
 					this.loading = false;
 				})
 				.catch(err => {
+					this.submitStatus = 'An error occurred while trying to report your Bug. Please try again!';
+					this.$refs.snackbar.open();
 					this.loading = false;
 				});
 		},
@@ -100,7 +127,10 @@ export default {
 			this.loading = true;
 			this.$http.post(backendUrl + '/api/feedback', this.feedback)
 				.then(response => {
-					this.feedback = '';
+					this.submitStatus = 'Thank you for your feedback!';
+					this.$refs.snackbar.open();
+					this.feedback.text = '';
+					this.feedback.email = '';
 
 					this.loading = false;
 				})
