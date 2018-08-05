@@ -13,6 +13,16 @@
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
 					</md-button>
+					<md-menu md-direction="bottom left" md-size="5">
+						<md-button class="md-icon-button edit-button more-button" md-menu-trigger>
+							<md-icon>more_vert</md-icon>
+						</md-button>
+
+						<md-menu-content>
+							<md-menu-item>Report this event as cancelled</md-menu-item>
+							<md-menu-item>Report event</md-menu-item>
+						</md-menu-content>
+					</md-menu>
 				</div>
 			</div>
 		</div>

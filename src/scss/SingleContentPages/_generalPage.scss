@@ -30,6 +30,15 @@
 				color: $accentAccent2;
 				text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 			}
+
+			.more-button {
+				.md-icon {
+					margin-top: 6px;
+					width: 30px;
+					height: 30px;
+					font-size: 30px;
+				}
+			}
 		}
 	}
 
