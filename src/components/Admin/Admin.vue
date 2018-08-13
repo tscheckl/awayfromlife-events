@@ -17,45 +17,22 @@
 				<h1>Admin Console</h1>
 				
 				<md-input-container>
-					<md-select name="content-type" v-model="currentCategory" v-on:selected="categoryChange">
+					<md-select name="content-type" v-model="currentCategory" v-on:selected="getUnvalidatedData">
 						<md-option value="unverifiedEvents">Events</md-option>
 						<md-option value="unverifiedLocations">Locations</md-option>
 						<md-option value="unverifiedBands">Bands</md-option>
+						<md-option value="reports">Reported Content</md-option>
 					</md-select>
 				</md-input-container>
-				
-				<md-list v-if="currentCategory == 'unverifiedEvents'">
-					<div v-if="unverifiedEvents.length > 0">
-						<md-list-item v-for="(event, index) in unverifiedEvents" :key="event._id" @click="showEventInfo(event, index)">
-							<h4>{{event.title}}</h4>
-							<span>Event</span>
+
+				<md-list>
+					<div v-if="unverifiedContent.length > 0">
+						<md-list-item v-for="(data, index) in unverifiedContent" :key="data._id" @click="showInfo(unverifiedContent, index)">
+							<h4>{{data.title ?data.title :data.name}}</h4>
+							<span>{{currentCategory}}</span>
 						</md-list-item>		
 					</div>
-					<h4 class="nothing-found-msg" v-else>No unverified events available!</h4>
-					
-					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
-				</md-list>
-
-				<md-list v-if="currentCategory == 'unverifiedLocations'">
-					<div v-if="unverifiedLocations.length > 0">
-						<md-list-item v-for="(location, index) in unverifiedLocations" :key="location._id" @click="showLocationInfo(location, index)">
-							<h4>{{location.name}}</h4>
-							<span>Location</span>
-						</md-list-item>
-					</div>
-					<h4 class="nothing-found-msg" v-else>No unverified locations available!</h4>
-					
-					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
-				</md-list>
-
-				<md-list v-if="currentCategory == 'unverifiedBands'">
-					<div v-if="unverifiedBands.length > 0">
-						<md-list-item v-for="(band, index) in unverifiedBands" :key="band._id" @click="showBandInfo(band, index)">
-							<h4>{{band.name}}</h4>
-							<span>Band</span>
-						</md-list-item>
-					</div>
-					<h4 class="nothing-found-msg" v-else>No unverified bands available!</h4>
+					<h4 class="nothing-found-msg" v-else>No unverified {{currentCategory}}s available!</h4>
 					
 					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
@@ -67,17 +44,13 @@
 				</md-button>
 
 				<h1>Given data</h1>
+				<event-form v-if="currentCategory == 'unverifiedEvents' && unverifiedContent.length > 0" :event="verifyData" :edit="false"></event-form>
 
-				<event-form v-if="currentCategory == 'unverifiedEvents' && unverifiedEvents.length > 0" 
-					:data="verifyEvent" :edit="false" :selectedBands="selectedBands" :selectedLocation="selectedLocation"></event-form>
+				<location-form v-if="currentCategory == 'unverifiedLocations' && unverifiedContent.length > 0" :data="verifyData"></location-form>
 
-				<location-form v-if="currentCategory == 'unverifiedLocations' && unverifiedLocations.length > 0" :data="verifyLocation"></location-form>
-
-				<band-form v-if="currentCategory == 'unverifiedBands' && unverifiedBands.length > 0" :data="verifyBand"></band-form>
+				<band-form v-if="currentCategory == 'unverifiedBands' && unverifiedContent.length > 0" :data="verifyData"></band-form>
 				
-				<div v-if="currentCategory == 'unverifiedEvents' && unverifiedEvents.length > 0 
-						|| currentCategory == 'unverifiedLocations' && unverifiedLocations.length > 0
-						|| currentCategory == 'unverifiedBands' && unverifiedBands.length > 0" >
+				<div v-if="unverifiedContent.length > 0" >
 					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
 						<md-icon>check</md-icon>
 						<md-tooltip md-direction="top">Keep and activate entry</md-tooltip>
@@ -142,7 +115,8 @@ export default {
 			verifyIndex: Number,
 			unvalidatedRoute: '/api/unvalidated-events/',
 			validatedRoute: '/api/events',
-			verifyData: {}
+			verifyData: {},
+			unverifiedContent: []
 		}
 	},
 	methods: {
@@ -179,35 +153,21 @@ export default {
 				})
 				.catch(err => {});
 		},
-		showEventInfo(event, index) {
-			console.log(event);
+		showInfo(content, index) {			
+			document.getElementsByClassName('verify-info')[0].classList.add('show-info');	
 			
-			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
-			
-			this.verifyEvent = Object.assign({}, event);
+			if(this.currentCategory == 'unverifiedEvents') {
+				this.verifyData = Object.assign({}, content[index]);				
 
-			this.verifyEvent.bands.forEach(band => {
-				band.origin ?band.label = band.name + ' - ' + band.origin.country :'';
-			});
+				this.verifyData.bands.forEach(band => {
+					band.label = band.origin ?band.name + ' - ' + band.origin.country :'';
+				});
 
-			this.verifyEvent.location.address ?this.verifyEvent.location.label = this.verifyEvent.location.name + ' - ' + this.verifyEvent.location.address.city :'';
-			this.selectedLocation = Object.assign({}, event.location);
-			this.selectedBands = event.bands.slice();
-			
-			this.verifyData = this.verifyEvent;
-		},
-		showLocationInfo(location, index) {
-			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
-			
-			this.verifyLocation = location;
-			this.verifyData = this.verifyLocation;
-			this.verifyIndex = index;
-		},
-		showBandInfo(band, index) {
-			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
-			
-			this.verifyBand = band;
-			this.verifyData = this.verifyBand;
+				this.verifyData.location.label = this.verifyData.location.address ?this.verifyData.location.name + ' - ' + this.verifyData.location.address.city :'';				
+			}	
+			else {
+				this.verifyData = content[index];
+			}
 			this.verifyIndex = index;
 		},
 		openDialog(ref) {
@@ -217,48 +177,48 @@ export default {
 			this.$refs[ref].close();
 		},
 		//Function for setting the currently selected category in the verify-list and set all variables for handling data for the respective category
-		categoryChange() {
-			if(this.currentCategory == 'unverifiedEvents') {
+		categoryChange(category) {
+			
+			if(category == 'unverifiedEvents') {
 				this.unvalidatedRoute = '/api/unvalidated-events/';
 				this.validatedRoute = '/api/events';
-				this.verifyData = this.verifyEvent;
 			}
-			else if (this.currentCategory == 'unverifiedLocations') {
+			else if (category == 'unverifiedLocations') {
 				this.unvalidatedRoute = '/api/unvalidated-locations/';
 				this.validatedRoute = '/api/locations';
-				this.verifyData = this.verifyLocation;
+			}
+			else if (category == 'reports') {
+				this.unvalidatedRoute = '/api/reports';
+				this.validatedRoute = '';
 			}
 			else {
 				this.unvalidatedRoute = '/api/unvalidated-Bands/';
 				this.validatedRoute = '/api/bands';
-				this.verifyData = this.verifyBand;
 			}
 
-			//Get the unverified-data for the selected category
-			this.getUnvalidatedData();
 		},
 		//Function for getting the unvalidated data for the currently selected category
-		getUnvalidatedData() {
+		getUnvalidatedData(category) {
 			this.loading = true;
 
+			this.categoryChange(category);			
+			
 			this.$http.get(backendUrl + this.unvalidatedRoute)
 				.then(response => {
+					this.currentCategory = category;					
+
 					//Check if there is a message in the response (= error)
 					if(!response.body.message) {
 						//Set the array of unvalidated events for the currently selected category to the data from the reponse
-						this[this.currentCategory] = response.body.data;
+						this.unverifiedContent = response.body.data;
+						
 						this.loading= false;
 						//Display the first element of the array of unvalidated data for the currently selected category.
-						if(this.currentCategory == 'unverifiedEvents') 
-							this.showEventInfo(this.unverifiedEvents[0]);
-						else if(this.currentCategory == 'unverifiedLocations')
-							this.showLocationInfo(this.unverifiedLocations[0]);
-						else
-							this.showBandInfo(this.unverifiedBands[0]);
+						this.showInfo(this.unverifiedContent, 0);
 					}
 					else {
 						//If there was an error or no data was found, set the array of unvalidated data for the current category to an empty array.
-						this[this.currentCategory] = [];
+						this.unverifiedContent = [];
 						this.loading = false;
 					}
 				})
@@ -281,7 +241,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.categoryChange();
+		this.getUnvalidatedData(this.currentCategory);
 	}
 }
 </script>

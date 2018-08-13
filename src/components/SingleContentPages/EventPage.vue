@@ -5,15 +5,23 @@
 			<div class="left-container">
 
 				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newEventDialog')">
+					<md-button class="md-icon-button edit-button" v-on:click="openDialog('newEventDialog')">
 						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">Edit this event</md-tooltip>	
+						<md-tooltip md-direction="bottom">edit event</md-tooltip>	
 					</md-button>
 					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteEvent">
 						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete this event</md-tooltip>
+						<md-tooltip md-direction="bottom">delete event</md-tooltip>
 					</md-button>
-					<md-menu md-direction="bottom left" md-size="5">
+					<md-button class="md-icon-button edit-button" v-on:click="openDialog('cancelDialog')">
+						<md-icon>event_busy</md-icon>
+						<md-tooltip md-direction="bottom">report event as cancelled</md-tooltip>
+					</md-button>
+					<md-button class="md-icon-button edit-button" v-on:click="openDialog('reportDialog')">
+						<md-icon>report</md-icon>
+						<md-tooltip md-direction="bottom">report event</md-tooltip>
+					</md-button>	
+					<!-- <md-menu md-direction="bottom left" md-size="5">
 						<md-button class="md-icon-button edit-button more-button" md-menu-trigger>
 							<md-icon>more_vert</md-icon>
 						</md-button>
@@ -22,7 +30,7 @@
 							<md-menu-item>Report this event as cancelled</md-menu-item>
 							<md-menu-item>Report event</md-menu-item>
 						</md-menu-content>
-					</md-menu>
+					</md-menu> -->
 				</div>
 			</div>
 		</div>
@@ -68,15 +76,30 @@
 			<new-event v-on:close="handleEditClose" :edit="true"></new-event>
 		</md-dialog>
 
-		<md-snackbar ref="snackbar">
+		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
+
+		<md-dialog ref="reportDialog">
+			<report-dialog :contentType="backendEndpoint.slice(0,-1)" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
+		</md-dialog>
+
+		<md-dialog ref="cancelDialog">
+			<div class="cancel-dialog">
+				<h2>Do you really want to report this event as cancelled?</h2>
+				<md-icon class="yes-icon">check</md-icon>
+				<md-icon class="no-icon">clear</md-icon>
+				<md-button class="yes" v-on:click="reportCancel(true)">Yes</md-button>
+				<md-button class="no" v-on:click="reportCancel(false)">No</md-button>
+			</div>
+		</md-dialog>
 	</div>
 </template>
 
 <script>
 import NewEvent from '@/components/NewContent/NewEvent';
+import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 
 import {frontEndSecret, backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -84,7 +107,8 @@ import moment from 'moment';
 export default {
 	name: 'event-page-new',
 	components: {
-		NewEvent
+		NewEvent,
+		ReportDialog
 	},
 	computed: {
 		event() {
@@ -106,8 +130,6 @@ export default {
 			this.$http.delete(backendUrl + `/api/${this.backendEndpoint}/` + this.event._id)
 				.then(response => {
 					this.$router.go(-1);
-					this.submitStatus = 'Event successfully deleted!';
-					this.$refs.snackbar.open();
 				})
 				.catch(err => {
 					this.submitStatus = 'Error while deleting the event. Please try again!';
@@ -120,12 +142,42 @@ export default {
 			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byId/` + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
+					this.submitStatus = 'Event successfully updated!';
+					this.$refs.snackbar.open();
 					this.$store.commit('setCurrentEvent', response.body.data);
 				}
 			})
 			.catch(err => {
 				console.log(err);
 			});
+		},
+		handleDialogClose(message, dialogRef) {
+			this.$refs[dialogRef].close();
+			this.submitStatus = message;
+			this.$refs.snackbar.open();
+		},
+		reportCancel(accept) {
+			document.getElementsByClassName(accept ?'yes' :'no')[0].classList.add('selected');
+			document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.add('selected');
+			setTimeout(() => {
+				if(accept) {
+					this.$http.put(backendUrl + `/api/${this.backendEndpoint}/cancel/${this.event._id}`)
+					.then(response => {
+						console.log(response);
+						this.handleDialogClose('Thanks for your report, we will verify it before it is visible for everyone!', 'cancelDialog');
+					})
+					.catch(err => {this.handleDialogClose('Something went wrong while sending your report. Please try again!', 'cancelDialog')})
+				}
+
+				this.similarEventFound = false;
+				setTimeout(() => {
+					this.$refs.cancelDialog.close();
+					setTimeout(() => {
+						document.getElementsByClassName(accept ?'yes' :'no')[0].classList.remove('selected');
+						document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.remove('selected');
+					}, 200);
+				},200);
+			}, 500);
 		}
 	},
 	mounted() {

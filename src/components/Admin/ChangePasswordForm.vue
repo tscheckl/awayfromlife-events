@@ -21,7 +21,7 @@
 			<md-spinner md-indeterminate v-if="loading" class="md-accent"></md-spinner>
 		</form>
 
-		<md-snackbar md-position="bottom center" ref="snackbar" :md-duration="4000">
+		<md-snackbar md-position="bottom right" ref="snackbar" :md-duration="4000">
 			<span>{{snackbarMsg}}</span>
 	  	</md-snackbar>
   </div>

@@ -215,6 +215,10 @@
 		.md-toolbar {
 			padding-top: 10px;
 
+			.search {
+				margin-top: 15px;
+			}
+
 			.back-button {
 				position: absolute;
 				margin-left: 5px;
@@ -240,6 +244,10 @@
 @media screen and (max-width: 768px) {
 	#topbar {
 		.md-toolbar {
+			.search {
+				margin-top: 0;
+			}
+
 			img {
 				display: none;
 			}

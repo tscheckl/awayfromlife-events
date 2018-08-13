@@ -27,7 +27,7 @@
 		</div>
 
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-		<md-snackbar ref="snackbar">
+		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
@@ -171,7 +171,8 @@ export default {
 					location: this.$store.getters.currentEvent.location,
 					bands: eventBands,
 					startDate: this.$store.getters.currentEvent.startDate,
-					description: this.$store.getters.currentEvent.description
+					description: this.$store.getters.currentEvent.description,
+					canceled: this.$store.getters.currentEvent.canceled
 				}
 			}
 			else {
@@ -208,7 +209,8 @@ export default {
 				location: '',
 				bands: [''],
 				description: '',
-				startDate: ''
+				startDate: '',
+				canceled: 0
 			},
 			similarEventFound: false,
 			similarEvents: []
@@ -236,17 +238,12 @@ export default {
 				//Send new/updated event to the backend.
 				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent)
 				.then(response => {
-					
-					this.submitStatus = this.edit?'Event successfully updated' :'New event successfully created';
-					this.$refs.snackbar.open();
 					this.emitClose();
 					this.loading = false;
 
 					//Reset all fields
 					this.resetEventFields();
 				}).catch(err => {
-					// Error
-					console.log(err);
 					
 					this.submitStatus = this.edit ?'An error occurred while updating the Event. Please try again!'
 										:'An error occurred while creating the Event. Please try again!';
@@ -284,9 +281,7 @@ export default {
 							vm.loading = false;
 						});
 				}
-				
-				this.submitStatus = 'New Tour successfully created';
-				this.$refs.snackbar.open();
+
 				this.emitClose();
 				this.loading = false;
 

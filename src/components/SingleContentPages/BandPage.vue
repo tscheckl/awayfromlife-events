@@ -7,12 +7,16 @@
 				<div class="edit-buttons">
 					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newBandDialog')">
 						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">Edit this band</md-tooltip>	
+						<md-tooltip md-direction="bottom">edit band</md-tooltip>	
 					</md-button>
 					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteBand">
 						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete this band</md-tooltip>
+						<md-tooltip md-direction="bottom">delete band</md-tooltip>
 					</md-button>
+					<md-button class="md-icon-button edit-button" v-on:click="openDialog('reportDialog')">
+						<md-icon>report</md-icon>
+						<md-tooltip md-direction="bottom">report event</md-tooltip>
+					</md-button>	
 				</div>
 			</div>
 		</div>
@@ -34,7 +38,7 @@
 				<p v-if="band.origin"><span>Origin: </span> {{band.origin.value}}</p>
 				<p v-if="band.history" class="band-history"><span>History / Band description: <br></span> {{band.history}}</p>
 
-				<div class="releases" v-if="band.releases.length > 0 && band.releases[0].releaseName != ''">
+				<div class="releases" v-if="band.releases && band.releases.length > 0 && band.releases[0].releaseName != ''">
 					<hr>
 
 					<h3><md-icon>album</md-icon>Releases</h3>
@@ -74,7 +78,11 @@
 			<new-band v-on:close="handleEditClose" :edit="true"></new-band>
 		</md-dialog>
 
-		<md-snackbar ref="snackbar">
+		<md-dialog ref="reportDialog">
+			<report-dialog contentType="band" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
+		</md-dialog>
+
+		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
@@ -83,13 +91,16 @@
 
 <script>
 import NewBand from '@/Components/NewContent/NewBand';
+import ReportDialog from '@/components/SingleContentPages/ReportDialog';
+
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
 
 export default {
 	name: 'band-page',
 	components: {
-		NewBand
+		NewBand,
+		ReportDialog
 	},
 	computed: {
 		band() {
@@ -119,8 +130,6 @@ export default {
 			this.$http.delete(backendUrl + '/api/bands/' + this.band._id)
 				.then(response => {
 					this.$router.go(-1);
-					this.submitStatus = 'Band successfully deleted!';
-					this.$refs.snackbar.open();
 				})
 				.catch(err => {
 					this.submitStatus = 'Error while deleting the band. Please try again!';
@@ -133,12 +142,19 @@ export default {
 			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
+					this.submitStatus = 'Location successfully updated!';
+					this.$refs.snackbar.open();
 					this.$store.commit('setCurrentBand', response.body.data);
 				}
 			})
 			.catch(err => {
 				console.log(err);
 			});
+		},
+		handleDialogClose(message, dialogRef) {
+			this.$refs[dialogRef].close();
+			this.submitStatus = message;
+			this.$refs.snackbar.open();
 		},
 		getBandEvents() {
 			this.loading = true;

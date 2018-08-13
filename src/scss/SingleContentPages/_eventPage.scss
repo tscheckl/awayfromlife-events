@@ -58,3 +58,82 @@
 		}
 	}
 }
+
+.cancel-dialog {
+	width: 500px;
+	max-width: 100%;
+	display: block;
+	padding: 20px 50px;
+	overflow: hidden;
+	position: relative;
+
+	svg {
+		display: block;
+		margin: 0 auto;
+	}
+
+	h2 {
+		line-height: 1.3em;
+	}
+
+	button {
+		color: $primaryLighten4;
+		overflow: visible;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+		&:first-of-type {
+			background-color: #4CAF50;
+
+			&:hover {
+				background-color: #43A047 !important;
+			}
+
+			&:before {
+				background-color: #4CAF50;
+			}
+		}
+
+		&:last-of-type {
+			background-color: $accentAccent2;
+
+			&:hover {
+				background-color: $accent !important;
+			}
+
+			&:before {
+				background-color: $accentAccent2;
+			}
+		}
+
+		&:before {
+			content: "";
+			position: absolute;
+			height: 1200px;
+			width: 1200px;
+			transform: translateX(-50%)translateY(-50%)scale(0);
+			transition: transform .5s ease-out;
+			z-index: 20;
+			visibility: hidden;
+		}
+	}
+
+	.yes-icon, .no-icon {
+		position: absolute;
+		top: 45%;
+		right: 50%;
+		font-size: 55px;
+		color: $primaryLighten4;
+		opacity: 0;
+		transition: opacity .2s ease-out;
+		z-index: 22;
+	}
+
+	.selected {
+		&::before {
+			visibility: visible;
+			transform: translateX(-50%)translateY(-50%)scale(1);
+		}
+
+		opacity: 1;
+	}
+}

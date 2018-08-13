@@ -150,6 +150,11 @@
 		<md-dialog ref="newBandDialog">
 			<new-band v-on:close="handleDialogClose('newBandDialog')"></new-band>
 		</md-dialog>
+
+		<md-snackbar md-position="bottom right" ref="snackbar">
+			<span >New band successfully created!</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
 	</div>
 </template>
 
@@ -311,6 +316,7 @@ export default {
 		},
 		handleDialogClose(ref) {
 			this.$refs[ref].close();
+			this.$refs.snackbar.open();
 			this.getBandsPage(this.currentPage);
 		},
 		//Function for adding a starting-letter filter to the list.

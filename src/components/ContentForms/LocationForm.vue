@@ -92,6 +92,10 @@ export default {
 			this.value = e.suggestion.value ?e.suggestion.value :this.value;
 		});
 	},
+	updated() {
+		//Workaround for admin page.
+		if(!this.placesAutocomplete) this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
+	}
 	
 }
 </script>

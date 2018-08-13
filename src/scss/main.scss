@@ -62,6 +62,21 @@ a {
 	max-height: 90%;
 }
 
+.md-snackbar {
+	padding-bottom: 30px;
+	.md-snackbar-container {
+		padding: 20px;
+		background-color: $accentAccent2;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+		.md-snackbar-content {
+			button {
+				color: $primaryLighten4 !important;
+			}
+		}
+	}
+}
+
 .close-btn {
 	top: 15px;
 	right: 3%;

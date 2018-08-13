@@ -13,7 +13,8 @@
 		</div>
 		
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-		<md-snackbar ref="snackbar">
+		
+		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
@@ -196,8 +197,6 @@ export default {
 
 				this.$http[requestType](backendUrl + this.apiRoute + editBand, this.newBand)
 					.then(response => {	
-						vm.submitStatus = 'New Band successfully created';
-						this.$refs.snackbar.open();
 						this.emitClose();
 						vm.loading = false;
 						this.emptyFormFields();

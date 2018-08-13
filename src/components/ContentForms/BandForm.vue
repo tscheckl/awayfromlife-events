@@ -158,6 +158,10 @@ export default {
 			this.data.origin.value = e.suggestion.value;
 			this.value = e.suggestion.value;
 		});	
+	},
+	updated() {
+		//Workaround for admin page.
+		if(!this.placesAutocomplete) this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city'});		
 	}
 }
 </script>

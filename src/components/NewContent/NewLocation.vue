@@ -10,7 +10,8 @@
 
 		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">{{edit ?'Update Location' :'Add Location'}}</md-button>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-		<md-snackbar ref="snackbar">
+		
+		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
@@ -192,9 +193,7 @@ export default {
 				let editLocation = this.edit?'/' + this.newLocation._id: '';
 
 				this.$http[requestType](backendUrl + this.apiRoute + editLocation, this.newLocation)
-					.then(response => {	
-						vm.submitStatus = 'New Location successfully created';
-						this.$refs.snackbar.open();
+					.then(response => {
 						this.emitClose();
 						vm.loading = false;
 						this.emptyFormFields();

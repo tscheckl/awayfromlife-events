@@ -134,6 +134,11 @@
 		<md-dialog ref="newLocationDialog">
 			<new-location v-on:close="handleDialogClose('newLocationDialog')"></new-location>
 		</md-dialog>
+
+		<md-snackbar md-position="bottom right" ref="snackbar">
+			<span>New location successfully created!</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
 	</div>
 </template>
 
@@ -287,6 +292,7 @@ export default {
 		},
 		handleDialogClose(ref) {
 			this.$refs[ref].close();
+			this.$refs.snackbar.open();
 			this.getLocationsPage(this.currentPage);
 		},
 		//Function for adding a starting-letter filter to the list.

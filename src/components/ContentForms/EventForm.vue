@@ -89,8 +89,6 @@ export default {
 	},
 	watch: {
 		event() {
-			console.log("ÄNDERUNG");
-			
 			this.localBands = this.event.bands;
 		}
 	},
@@ -114,6 +112,7 @@ export default {
 		},
 	},
 	mounted() {
+		
 		this.$http.get(backendUrl + "/api/locations")
 			.then(response => {
 				this.locations = response.body.data;

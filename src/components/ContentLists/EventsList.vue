@@ -167,6 +167,11 @@
 		<md-dialog ref="newEventDialog">
 			<new-event v-on:close="handleDialogClose('newEventDialog')"></new-event>
 		</md-dialog>
+
+		<md-snackbar md-position="bottom right" ref="snackbar">
+			<span>New event successfully created!</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
 	</div>
 </template>
 
@@ -367,6 +372,7 @@ export default {
 		//Function for closing a dialog and refreshing the events.
 		handleDialogClose(ref) {
 			this.$refs[ref].close();
+			this.$refs.snackbar.open();
 			this.getEventsPage(this.currentPage);
 		},
 		//Function for adding a starting-letter filter to the list.

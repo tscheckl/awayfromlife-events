@@ -8,12 +8,16 @@
 				<div class="edit-buttons">
 					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newLocationDialog')">
 						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">Edit this location</md-tooltip>	
+						<md-tooltip md-direction="bottom">edit location</md-tooltip>	
 					</md-button>
 					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteLocation">
 						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete this location</md-tooltip>
+						<md-tooltip md-direction="bottom">delete location</md-tooltip>
 					</md-button>
+					<md-button class="md-icon-button edit-button" v-on:click="openDialog('reportDialog')">
+						<md-icon>report</md-icon>
+						<md-tooltip md-direction="bottom">report event</md-tooltip>
+					</md-button>	
 				</div>
 			</div>
 		</div>
@@ -68,7 +72,11 @@
 			<new-location v-on:close="handleEditClose" :edit="true"></new-location>
 		</md-dialog>
 
-		<md-snackbar ref="snackbar">
+		<md-dialog ref="reportDialog">
+			<report-dialog contentType="location" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
+		</md-dialog>
+
+		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
@@ -77,13 +85,16 @@
 
 <script>
 import NewLocation from '@/Components/NewContent/NewLocation';
+import ReportDialog from '@/components/SingleContentPages/ReportDialog';
+
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
 
 export default {
 	name: 'location-page',
 	components: {
-		NewLocation
+		NewLocation,
+		ReportDialog
 	},
 	computed: {
 		location() {
@@ -112,8 +123,6 @@ export default {
 			this.$http.delete(backendUrl + '/api/locations/' + this.location._id)
 				.then(response => {
 					this.$router.go(-1);
-					this.submitStatus = 'Location successfully deleted!';
-					this.$refs.snackbar.open();
 				})
 				.catch(err => {
 					this.submitStatus = 'Error while deleting the location. Please try again!';
@@ -126,12 +135,20 @@ export default {
 			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id)
 			.then(response => {
 				if(response.body.data) {
+					this.submitStatus = 'Location successfully updated!';
+					this.$refs.snackbar.open();
 					this.$store.commit('setCurrentLocation', response.body.data);
 				}
 			})
 			.catch(err => {
-				console.log(err);
+				this.submitStatus = 'Something went wrong while updating the location. Please try again!';
+				this.$refs.snackbar.open();
 			});
+		},
+		handleDialogClose(message, dialogRef) {
+			this.$refs[dialogRef].close();
+			this.submitStatus = message;
+			this.$refs.snackbar.open();
 		},
 		getLocationEvents() {
 			this.loading = true;
