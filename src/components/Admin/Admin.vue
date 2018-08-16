@@ -26,13 +26,19 @@
 				</md-input-container>
 
 				<md-list>
-					<div v-if="unverifiedContent.length > 0">
-						<md-list-item v-for="(data, index) in unverifiedContent" :key="data._id" @click="showInfo(unverifiedContent, index)">
+					<div v-if="unverifiedContent.length > 0 && currentCategory != 'reports'">
+						<md-list-item v-for="(data, index) in unverifiedContent" :key="index" @click="showInfo(unverifiedContent, index)">
 							<h4>{{data.title ?data.title :data.name}}</h4>
 							<span>{{currentCategory}}</span>
 						</md-list-item>		
 					</div>
-					<h4 class="nothing-found-msg" v-else>No unverified {{currentCategory}}s available!</h4>
+					<div v-if="unverifiedContent.length > 0 && currentCategory == 'reports'">
+						<md-list-item v-for="(data, index) in unverifiedContent" :key="index" @click="showInfo(unverifiedContent, index)">
+							<h4 v-if="data.item">{{data.item.title ?data.item.title :data.item.name}}</h4>
+							<span>{{data.category}}</span>
+						</md-list-item>		
+					</div>
+					<h4 class="nothing-found-msg" v-if="unverifiedContent.length == 0">No unverified {{currentCategory}}s available!</h4>
 					
 					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
@@ -49,8 +55,22 @@
 				<location-form v-if="currentCategory == 'unverifiedLocations' && unverifiedContent.length > 0" :data="verifyData"></location-form>
 
 				<band-form v-if="currentCategory == 'unverifiedBands' && unverifiedContent.length > 0" :data="verifyData"></band-form>
+
+				<div class="report-form" v-if="currentCategory == 'reports' && unverifiedContent.length > 0">
+					<h2>Reported {{verifyData.category}}</h2>
+					<div>
+						{{verifyData.item.title ?verifyData.item.title :verifyData.item.name}}
+					</div>
+					<h2>User's reason for report:</h2>
+					<p>{{verifyData.description}}</p>
+
+					<div class="control-buttons">
+						<button class="md-button md-raised dismiss-btn" v-on:click="handleVerify(true)">dismiss report</button>
+						<button class="md-button md-raised delete-btn" v-on:click="handleVerify(false)">delete {{verifyData.category}}</button>
+					</div>
+				</div>
 				
-				<div v-if="unverifiedContent.length > 0" >
+				<div v-if="unverifiedContent.length > 0 && currentCategory != 'reports'" >
 					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
 						<md-icon>check</md-icon>
 						<md-tooltip md-direction="top">Keep and activate entry</md-tooltip>
@@ -125,28 +145,23 @@ export default {
 			this.$http.delete(backendUrl + this.unvalidatedRoute + this.verifyData._id)
 				.then(response => {
 					//If the Admin chooses to unlock the data, send a post request to the respective route to unlock it for all users
-					if(keepData) {
+					if(keepData && this.currentCategory != 'reports') {
 						this.$http.post(backendUrl + this.validatedRoute,  this.verifyData)
+							.then(response => {})
+							.catch(err => {});
+					}
+					else if(this.currentCategory == 'reports' && !keepData) {
+						this.$http.delete(backendUrl + `/api/${this.verifyData.category}s/${this.verifyData.item._id}`)
 							.then(response => {})
 							.catch(err => {});
 					}
 					
 					//Delete the currently verified data-element from the array of unverified elements of the currently selected category.
-					this[this.currentCategory].splice(this.verifyIndex, 1);
-					//Reset all Object that are used for displaying the data
-					this.verifyEvent = {};
-					this.verifyLocation = {};
-					this.verifyBand = {};
-
+					this.unverifiedContent.splice(this.verifyIndex, 1);
+					
 					//If there are still unverified elements of the current category left, show the first one of them.
-					if(this[this.currentCategory][0]) {
-						//Call the respective show-function according to the current category
-						if(this.currentCategory == 'unverifiedEvents')
-							this.showEventInfo(this.unverifiedEvents[0]);
-						else if (this.currentCategory == 'unverifiedLocations')
-							this.showLocationInfo(this.unverifiedLocations[0]);
-						else
-							this.showBandInfo(this.unverifiedBands[0]);
+					if(this.unverifiedContent[0]) {
+						this.showInfo(this.unverifiedContent, 0)
 					}
 
 					document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
@@ -154,6 +169,7 @@ export default {
 				.catch(err => {});
 		},
 		showInfo(content, index) {			
+			
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');	
 			
 			if(this.currentCategory == 'unverifiedEvents') {
@@ -178,7 +194,6 @@ export default {
 		},
 		//Function for setting the currently selected category in the verify-list and set all variables for handling data for the respective category
 		categoryChange(category) {
-			
 			if(category == 'unverifiedEvents') {
 				this.unvalidatedRoute = '/api/unvalidated-events/';
 				this.validatedRoute = '/api/events';
@@ -188,8 +203,8 @@ export default {
 				this.validatedRoute = '/api/locations';
 			}
 			else if (category == 'reports') {
-				this.unvalidatedRoute = '/api/reports';
-				this.validatedRoute = '';
+				this.unvalidatedRoute = '/api/reports/';
+				this.validatedRoute = '/api/reports';
 			}
 			else {
 				this.unvalidatedRoute = '/api/unvalidated-Bands/';
@@ -200,18 +215,22 @@ export default {
 		//Function for getting the unvalidated data for the currently selected category
 		getUnvalidatedData(category) {
 			this.loading = true;
+			this.unverifiedContent = [];
 
 			this.categoryChange(category);			
 			
 			this.$http.get(backendUrl + this.unvalidatedRoute)
 				.then(response => {
+					
 					this.currentCategory = category;					
 
 					//Check if there is a message in the response (= error)
 					if(!response.body.message) {
 						//Set the array of unvalidated events for the currently selected category to the data from the reponse
 						this.unverifiedContent = response.body.data;
+						console.log("current unverifiedContent:", this.unverifiedContent);
 						
+
 						this.loading= false;
 						//Display the first element of the array of unvalidated data for the currently selected category.
 						this.showInfo(this.unverifiedContent, 0);

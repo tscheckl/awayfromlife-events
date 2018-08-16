@@ -140,6 +140,33 @@
 					border-radius: 50px;
 				}
 			}
+
+			.report-form {
+				.md-button {
+					margin-top: 0;
+					color: $primaryLighten4;
+				}
+
+				.control-buttons {
+					display: flex;
+				}
+
+				.dismiss-btn {
+					background-color: #4CAF50;
+
+					&:hover {
+						background-color: #43A047;
+					}
+				}
+
+				.delete-btn {
+					background-color: $accentAccent2;
+
+					&:hover {
+						background-color: $accent;
+					}
+				}
+			}
 		}
 	}
 }
