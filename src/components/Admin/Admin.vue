@@ -248,9 +248,7 @@ export default {
 
 			this.$http.put(backendUrl + `/api/events/${this.verifyData._id}`, this.verifyData)
 				.then(response => {
-					console.log("response:", response);
-					
-					// this.showNextItem();
+					this.showNextItem();
 				})
 				.catch(err => console.log(err));
 		},
