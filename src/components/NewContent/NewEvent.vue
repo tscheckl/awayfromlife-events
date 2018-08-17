@@ -330,7 +330,7 @@ export default {
 		},
 		getSimilar() {
 			this.similarEventFound = false;
-			if(this.newEvent.location && this.newEvent.startDate && this.$route.path.indexOf('/event/') == -1) {
+			if(this.newEvent.location && this.newEvent.startDate && this.$route.path.indexOf('/events') != -1) {
 				
 				this.$http.get(backendUrl + '/api/events/similar?location=' + this.newEvent.location._id + '&date=' + this.newEvent.startDate)
 				.then(response => {

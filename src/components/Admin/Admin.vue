@@ -18,27 +18,25 @@
 				
 				<md-input-container>
 					<md-select name="content-type" v-model="currentCategory" v-on:selected="getUnvalidatedData">
-						<md-option value="unverifiedEvents">Events</md-option>
-						<md-option value="unverifiedLocations">Locations</md-option>
-						<md-option value="unverifiedBands">Bands</md-option>
-						<md-option value="reports">Reported Content</md-option>
+						<md-option value="unverified Events">Events</md-option>
+						<md-option value="unverified Locations">Locations</md-option>
+						<md-option value="unverified Bands">Bands</md-option>
+						<md-option value="reports">Reported content</md-option>
+						<md-option value="cancellations">Cancelled events</md-option>
 					</md-select>
 				</md-input-container>
 
 				<md-list>
-					<div v-if="unverifiedContent.length > 0 && currentCategory != 'reports'">
+					<div v-if="unverifiedContent.length > 0">
 						<md-list-item v-for="(data, index) in unverifiedContent" :key="index" @click="showInfo(unverifiedContent, index)">
-							<h4>{{data.title ?data.title :data.name}}</h4>
-							<span>{{currentCategory}}</span>
+							<h4 v-if="currentCategory != 'reports'">{{data.title ?data.title :data.name}}</h4>
+							<span v-if="currentCategory != 'reports'">{{currentCategory}}</span>
+							
+							<h4 v-if="currentCategory == 'reports'">{{data.item.title ?data.item.title :data.item.name}}</h4>
+							<span v-if="currentCategory == 'reports'">{{data.category}}</span>
 						</md-list-item>		
 					</div>
-					<div v-if="unverifiedContent.length > 0 && currentCategory == 'reports'">
-						<md-list-item v-for="(data, index) in unverifiedContent" :key="index" @click="showInfo(unverifiedContent, index)">
-							<h4 v-if="data.item">{{data.item.title ?data.item.title :data.item.name}}</h4>
-							<span>{{data.category}}</span>
-						</md-list-item>		
-					</div>
-					<h4 class="nothing-found-msg" v-if="unverifiedContent.length == 0">No unverified {{currentCategory}}s available!</h4>
+					<h4 class="nothing-found-msg" v-if="unverifiedContent.length == 0">No {{currentCategory}} available!</h4>
 					
 					<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 				</md-list>
@@ -50,16 +48,19 @@
 				</md-button>
 
 				<h1>Given data</h1>
-				<event-form v-if="currentCategory == 'unverifiedEvents' && unverifiedContent.length > 0" :event="verifyData" :edit="false"></event-form>
+				<event-form v-if="currentCategory == 'unverified Events' && unverifiedContent.length > 0" :event="verifyData" :edit="false"></event-form>
 
-				<location-form v-if="currentCategory == 'unverifiedLocations' && unverifiedContent.length > 0" :data="verifyData"></location-form>
+				<location-form v-if="currentCategory == 'unverified Locations' && unverifiedContent.length > 0" :data="verifyData"></location-form>
 
-				<band-form v-if="currentCategory == 'unverifiedBands' && unverifiedContent.length > 0" :data="verifyData"></band-form>
+				<band-form v-if="currentCategory == 'unverified Bands' && unverifiedContent.length > 0" :data="verifyData"></band-form>
 
 				<div class="report-form" v-if="currentCategory == 'reports' && unverifiedContent.length > 0">
-					<h2>Reported {{verifyData.category}}</h2>
-					<div>
-						{{verifyData.item.title ?verifyData.item.title :verifyData.item.name}}
+					<h2>Reported {{verifyData.category}}:</h2>
+					<div class="report-target">
+						<a :href="`/#/${verifyData.category}/${verifyData.item._id}`" target="_blank">
+							{{verifyData.item.title ?verifyData.item.title :verifyData.item.name}} <md-icon>keyboard_arrow_right</md-icon>
+							<md-tooltip>open {{verifyData.category}}'s page in new tab</md-tooltip>
+						</a>
 					</div>
 					<h2>User's reason for report:</h2>
 					<p>{{verifyData.description}}</p>
@@ -69,8 +70,18 @@
 						<button class="md-button md-raised delete-btn" v-on:click="handleVerify(false)">delete {{verifyData.category}}</button>
 					</div>
 				</div>
+
+				<div class="cancellation-form" v-if="currentCategory == 'cancellations' && unverifiedContent.length > 0">
+					<h2>Event that was reported as cancelled:</h2>
+					
+					<event-page></event-page>
+					<div class="control-buttons">
+						<button class="md-button md-raised dismiss-btn" v-on:click="confirmCancellation(true)">confirm cancellation</button>
+						<button class="md-button md-raised delete-btn" v-on:click="confirmCancellation(false)">dismiss cancellation</button>
+					</div>
+				</div>
 				
-				<div v-if="unverifiedContent.length > 0 && currentCategory != 'reports'" >
+				<div v-if="unverifiedContent.length > 0 && currentCategory != 'reports' && currentCategory != 'cancellations'" >
 					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
 						<md-icon>check</md-icon>
 						<md-tooltip md-direction="top">Keep and activate entry</md-tooltip>
@@ -96,6 +107,7 @@ import moment from 'moment';
 import EventForm from '@/Components/ContentForms/EventForm';
 import LocationForm from '@/Components/ContentForms/LocationForm';
 import BandForm from '@/Components/ContentForms/BandForm';
+import EventPage from '@/Components/SingleContentPages/EventPage';
 import ChangePasswordForm from './ChangePasswordForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
@@ -106,6 +118,7 @@ export default {
 		EventForm,
 		LocationForm,
 		BandForm,
+		EventPage,
 		ChangePasswordForm
 	},
 	data() {
@@ -113,25 +126,7 @@ export default {
 			error: false,
 			errorMsg: '',
 			loading: false,
-			// isEvent: true,
-			currentCategory: 'unverifiedEvents',
-			unverifiedEvents: [],
-			verifyEvent: {
-				_id: '',
-				title: '',
-				description: '',
-				startDate: '',
-				time: '',
-				location: '',
-				bands: [],
-				endDate: ''
-			},
-			selectedLocation: {},
-			selectedBands: [],
-			unverifiedLocations: [],
-			verifyLocation: {},
-			unverifiedBands: [],
-			verifyBand: {},
+			currentCategory: 'unverified Events',
 			verifyIndex: Number,
 			unvalidatedRoute: '/api/unvalidated-events/',
 			validatedRoute: '/api/events',
@@ -144,6 +139,7 @@ export default {
 			//Delete the currently viewed data from the respective unvalidated-route.
 			this.$http.delete(backendUrl + this.unvalidatedRoute + this.verifyData._id)
 				.then(response => {
+					
 					//If the Admin chooses to unlock the data, send a post request to the respective route to unlock it for all users
 					if(keepData && this.currentCategory != 'reports') {
 						this.$http.post(backendUrl + this.validatedRoute,  this.verifyData)
@@ -156,23 +152,18 @@ export default {
 							.catch(err => {});
 					}
 					
-					//Delete the currently verified data-element from the array of unverified elements of the currently selected category.
-					this.unverifiedContent.splice(this.verifyIndex, 1);
-					
-					//If there are still unverified elements of the current category left, show the first one of them.
-					if(this.unverifiedContent[0]) {
-						this.showInfo(this.unverifiedContent, 0)
-					}
-
-					document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
+					this.showNextItem();
 				})
 				.catch(err => {});
 		},
 		showInfo(content, index) {			
 			
-			document.getElementsByClassName('verify-info')[0].classList.add('show-info');	
+			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
+
+			if(this.currentCategory == 'cancellations')
+				this.$store.commit('setCurrentEvent', content[index]);
 			
-			if(this.currentCategory == 'unverifiedEvents') {
+			if(this.currentCategory == 'unverified Events' || this.currentCategory == 'cancellations') {
 				this.verifyData = Object.assign({}, content[index]);				
 
 				this.verifyData.bands.forEach(band => {
@@ -194,17 +185,21 @@ export default {
 		},
 		//Function for setting the currently selected category in the verify-list and set all variables for handling data for the respective category
 		categoryChange(category) {
-			if(category == 'unverifiedEvents') {
+			if(category == 'unverified Events') {
 				this.unvalidatedRoute = '/api/unvalidated-events/';
 				this.validatedRoute = '/api/events';
 			}
-			else if (category == 'unverifiedLocations') {
+			else if (category == 'unverified Locations') {
 				this.unvalidatedRoute = '/api/unvalidated-locations/';
 				this.validatedRoute = '/api/locations';
 			}
 			else if (category == 'reports') {
 				this.unvalidatedRoute = '/api/reports/';
 				this.validatedRoute = '/api/reports';
+			}
+			else if(category == 'cancellations') {
+				this.unvalidatedRoute = '/api/events/canceled/';
+				this.validatedRoute = 'api/events/';
 			}
 			else {
 				this.unvalidatedRoute = '/api/unvalidated-Bands/';
@@ -244,6 +239,31 @@ export default {
 				.catch(err => {
 					this.loading = false;
 				});
+		},
+		confirmCancellation(keepData) {
+			if(keepData)
+				this.verifyData.canceled = 2;
+			else 
+				this.verifyData.canceled = 0;
+
+			this.$http.put(backendUrl + `/api/events/${this.verifyData._id}`, this.verifyData)
+				.then(response => {
+					console.log("response:", response);
+					
+					// this.showNextItem();
+				})
+				.catch(err => console.log(err));
+		},
+		showNextItem() {
+			//Delete the currently verified data-element from the array of unverified elements of the currently selected category.
+			this.unverifiedContent.splice(this.verifyIndex, 1);
+			
+			//If there are still unverified elements of the current category left, show the first one of them.
+			if(this.unverifiedContent[0]) {
+				this.showInfo(this.unverifiedContent, 0)
+			}
+
+			document.getElementsByClassName('verify-info')[0].classList.remove('show-info');
 		},
 		closeInfo() {
 			document.getElementsByClassName('verify-info')[0].classList.remove('show-info');

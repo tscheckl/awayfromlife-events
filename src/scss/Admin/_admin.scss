@@ -22,6 +22,7 @@
 
 	.admin-buttons {
 		position: absolute;
+		float: right;
 		top: 10px;
 		right: 30px;
 
@@ -142,13 +143,64 @@
 			}
 
 			.report-form {
+				padding: 5px 15px;
+
+				.report-target {
+					margin: 30px 0;
+					a {
+						padding: 10px;
+						font-size: 18px;
+						font-family: "Montserrat";
+						background-color: $accentAccent2;
+						color: $primaryLighten4;
+						border-radius: 3px;
+						text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+						.md-icon {
+							margin-top: -3px;
+						}
+					}
+				}
+
 				.md-button {
 					margin-top: 0;
 					color: $primaryLighten4;
 				}
 
 				.control-buttons {
-					display: flex;
+					margin-top: 40px;
+				}
+			}
+
+			.cancellation-form {
+				padding: 5px 15px;
+				.md-button {
+					margin-top: 0;
+					color: $primaryLighten4;
+				}
+
+				#event_page {
+					margin-bottom: 50px;
+					background-color: transparent;
+					.color-block, .page-header {
+						display: none;
+					}
+
+					.content {
+						margin: 0;
+						padding: 0;
+						background-color: transparent;
+						box-shadow: none;
+					}
+				}
+			}
+
+			.control-buttons {
+				display: flex;
+				flex-wrap: wrap;
+
+				.md-button:first-of-type {
+					margin-left: 0;
 				}
 
 				.dismiss-btn {
@@ -196,6 +248,27 @@
 
 				.close-btn {
 					display: block;
+				}
+
+				.control-buttons {
+					.md-button {
+						margin-left: 0;
+					}
+				}
+
+				.cancellation-form {
+					padding: 0;
+
+					#event_page {
+						margin-bottom: 0px;
+					}
+
+					.control-buttons {
+						margin-top: 10px;
+						.md-button {
+							margin-top: 5px;
+						}
+					}
 				}
 			}
 

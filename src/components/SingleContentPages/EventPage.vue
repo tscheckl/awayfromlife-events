@@ -13,7 +13,7 @@
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete event</md-tooltip>
 					</md-button>
-					<md-button class="md-icon-button edit-button" v-on:click="openDialog('cancelDialog')">
+					<md-button class="md-icon-button edit-button" v-if="event.canceled != 2" v-on:click="openDialog('cancelDialog')">
 						<md-icon>event_busy</md-icon>
 						<md-tooltip md-direction="bottom">report event as cancelled</md-tooltip>
 					</md-button>
@@ -36,6 +36,17 @@
 		</div>
 
 		<div class="content">
+			<h1 v-if="event.canceled == 2" class="cancelled-info">
+				<md-icon>warning</md-icon>
+				<span>THIS EVENT WAS CANCELLED</span>
+				<md-icon>warning</md-icon>
+			</h1>
+
+			<h3 v-if="event.canceled == 1 && $route.path.indexOf('/event/') != -1" class="unverified-cancelled-info">
+				<md-icon>warning</md-icon>
+				This event was reported as cancelled but the report is not verified yet! 
+			</h3>
+
 			<div class="title">
 				<h2>{{event.title?event.title.toUpperCase(): ''}}</h2>
 				<h4 class="date">{{event.formattedDate}}</h4>
@@ -64,9 +75,10 @@
 				
 				<hr>
 
-				<h3><md-icon>format_quote</md-icon><span>Description</span></h3>
-				<p>{{event.description}}
-				</p>
+				<div v-if="event.description">
+					<h3><md-icon>format_quote</md-icon><span>Description</span></h3>
+					<p>{{event.description}}</p>
+				</div>
 			</div>
 		</div>
 
@@ -181,7 +193,8 @@ export default {
 		}
 	},
 	mounted() {
-		document.getElementById('topbar').classList.add('single-page');
+		if(this.$route.path.indexOf('archived-event') != -1 || this.$route.path.indexOf('event') != -1)
+			document.getElementById('topbar').classList.add('single-page');
 		
 		if(this.$route.path.indexOf('archived-event') != -1) {
 			this.backendEndpoint = 'archived-events';

@@ -10,6 +10,28 @@
 		font-size: 1.1em;
 	}
 
+	.cancelled-info {
+		padding: 10px;
+		text-align: center;
+		color: $accentAccent2;
+		border-radius: 3px;
+
+		.md-icon {
+			width: 34px;
+			height: 34px;
+			font-size: 34px;
+		}
+	}
+
+	.unverified-cancelled-info {
+		font-size: 18px;
+		margin-bottom: 20px !important;
+		color: $accentAccent2 !important;
+		background-color: transparent !important;
+		display: block !important;
+		box-shadow: none !important; 
+	}
+
 	.event-location {
 		p {
 			margin: 0;
@@ -135,5 +157,21 @@
 		}
 
 		opacity: 1;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	#event_page {
+		.content {
+			.cancelled-info {
+				display: flex;
+				text-align: center;
+				justify-content: center;
+
+				.md-icon {
+					max-width: 34px !important;
+				}
+			}
+		}
 	}
 }
