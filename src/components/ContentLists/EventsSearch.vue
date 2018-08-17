@@ -267,7 +267,7 @@ export default {
 		},
 		showResult(result) {
 			this.$store.commit(('setCurrent' + result.category), result.data);
-			this.$router.push({path: `/${result.category}/${result.data._id}`});
+			this.$router.push({path: `/${result.category}/${result.data.url}`});
 		},
 		toggleResults(category, expand) {
 			this.resultLimiter.events = this.results.events.length>=3 ?3 :this.results.events.length;

@@ -21,7 +21,7 @@
 			</div>
 		</div>
 
-		<div class="content">
+		<div class="content" v-if="band._id">
 			<div class="content-header">
 				<h2 class="title">{{band.name?band.name.toUpperCase(): ''}}</h2>
 			</div>
@@ -79,7 +79,7 @@
 		</md-dialog>
 
 		<md-dialog ref="reportDialog">
-			<report-dialog contentType="band" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
+			<report-dialog :id="band._id" contentType="band" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -92,6 +92,7 @@
 <script>
 import NewBand from '@/Components/NewContent/NewBand';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
+import NotFound from '@/components/NotFound';
 
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -100,7 +101,8 @@ export default {
 	name: 'band-page',
 	components: {
 		NewBand,
-		ReportDialog
+		ReportDialog,
+		NotFound
 	},
 	computed: {
 		band() {
@@ -124,7 +126,7 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event) {
 			this.$store.commit('setCurrentEvent', event);
-			this.$router.push({path: `/event/${event._id}`});
+			this.$router.push({path: `/event/${event.url}`});
 		},
 		deleteBand() {
 			this.$http.delete(backendUrl + '/api/bands/' + this.band._id)
@@ -139,7 +141,7 @@ export default {
 		handleEditClose() {
 			this.$refs['newBandDialog'].close();
 			
-			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id)
+			this.$http.get(backendUrl + '/api/bands/byurl/' + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
 					this.submitStatus = 'Location successfully updated!';
@@ -189,17 +191,15 @@ export default {
 			})
 			.catch(err => {});
 
-		if(this.$store.getters.currentBand.name == ''  || this.$store.getters.currentBand._id != this.$route.params.id) {
-			this.$http.get(backendUrl + '/api/bands/byId/' + this.$route.params.id)
+		if(this.$store.getters.currentBand.name == ''  || this.$store.getters.currentBand.url != this.$route.params.url) {
+			this.$http.get(backendUrl + '/api/bands/byurl/' + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentBand', response.body.data);
 					this.getBandEvents();
 				}
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => this.$router.push('/not-found'));
 		}
 		else {
 			this.getBandEvents();

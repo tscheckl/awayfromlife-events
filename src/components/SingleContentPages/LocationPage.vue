@@ -23,7 +23,7 @@
 		</div>
 
 
-		<div class="content">
+		<div class="content" v-if="location._id">
 			<div class="content-header">
 				<h2 class="title">{{location.name}}</h2>
 			</div>
@@ -73,7 +73,7 @@
 		</md-dialog>
 
 		<md-dialog ref="reportDialog">
-			<report-dialog contentType="location" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
+			<report-dialog :id="location._id" contentType="location" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -86,6 +86,7 @@
 <script>
 import NewLocation from '@/Components/NewContent/NewLocation';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
+import NotFound from '@/components/NotFound';
 
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -94,7 +95,8 @@ export default {
 	name: 'location-page',
 	components: {
 		NewLocation,
-		ReportDialog
+		ReportDialog,
+		NotFound
 	},
 	computed: {
 		location() {
@@ -117,7 +119,7 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event) {
 			this.$store.commit('setCurrentEvent', event);
-			this.$router.push({path: `/event/${event._id}`});
+			this.$router.push({path: `/event/${event.url}`});
 		},
 		deleteLocation() {
 			this.$http.delete(backendUrl + '/api/locations/' + this.location._id)
@@ -132,7 +134,7 @@ export default {
 		handleEditClose() {
 			this.$refs['newLocationDialog'].close();
 			
-			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id)
+			this.$http.get(backendUrl + '/api/locations/byurl/' + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
 					this.submitStatus = 'Location successfully updated!';
@@ -183,19 +185,16 @@ export default {
 			})
 			.catch(err => {});
 
-		if(this.$store.getters.currentLocation.name == ''  || this.$store.getters.currentLocation._id != this.$route.params.id) {
-			console.log("nix da");
-			
-			this.$http.get(backendUrl + '/api/locations/byId/' + this.$route.params.id)
+		if(this.$store.getters.currentLocation.name == ''  || this.$store.getters.currentLocation.url != this.$route.params.url) {
+
+			this.$http.get(backendUrl + '/api/locations/byurl/' + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentLocation', response.body.data);
 					this.getLocationEvents();
 				}
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(err => this.$router.push('/not-found'));
 		}
 		else {
 			this.getLocationEvents();

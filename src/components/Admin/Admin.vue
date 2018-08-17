@@ -57,7 +57,7 @@
 				<div class="report-form" v-if="currentCategory == 'reports' && unverifiedContent.length > 0">
 					<h2>Reported {{verifyData.category}}:</h2>
 					<div class="report-target">
-						<a :href="`/#/${verifyData.category}/${verifyData.item._id}`" target="_blank">
+						<a :href="`/#/${verifyData.category}/${verifyData.item.url}`" target="_blank">
 							{{verifyData.item.title ?verifyData.item.title :verifyData.item.name}} <md-icon>keyboard_arrow_right</md-icon>
 							<md-tooltip>open {{verifyData.category}}'s page in new tab</md-tooltip>
 						</a>

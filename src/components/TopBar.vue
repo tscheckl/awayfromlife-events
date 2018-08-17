@@ -15,7 +15,7 @@
 				<button v-on:click="search(false)">Search</button>
 
 				<div class="results" v-if="searched && !loading && results.length > 0">
-					<router-link :to="'/' + result.category.toLowerCase() + '/' + result.data._id" class="result" v-for="(result, index) in results" :key="index">
+					<router-link :to="'/' + result.category.toLowerCase() + '/' + result.data.url" class="result" v-for="(result, index) in results" :key="index">
 						<div class="result-information">
 							<h4>{{result.data.title ?result.data.title :result.data.name}}</h4>
 							<p>Result found in: {{result.match.pretty}}</p>
@@ -74,9 +74,7 @@ export default {
 				this.searched = true;
 				
 				this.$http.get(backendUrl + '/api/search/simple/' + this.query)
-				.then(response => {
-					console.log(response.body.data);
-					
+				.then(response => {					
 					this.results = response.body.data;
 					this.loading = false;
 				})
@@ -84,7 +82,9 @@ export default {
 			}, setTimer ?700 :0);
 		},
 		isSinglePage() {
-			if(this.$route.path.indexOf('/event/') != -1 || this.$route.path.indexOf('/location/') != -1 || this.$route.path.indexOf('/band/') != -1) 
+			if(this.$route.path.indexOf('/event/') != -1 || 
+			   this.$route.path.indexOf('/location/') != -1 || 
+			   this.$route.path.indexOf('/band/') != -1) 
 				return true;
 			else
 				return false;

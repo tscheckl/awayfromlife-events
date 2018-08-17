@@ -106,7 +106,7 @@
 
 			<h3>There already is an event at happening at that location on the same date. Maybe you wanted to enter this one?</h3>
 			<div class="similar-event" v-for="event in similarEvents" :key="event._id">
-				<a :href="`/#/event/${event._id}`" target="_blank">
+				<a :href="`/#/event/${event.url}`" target="_blank">
 					<div class="similar-event-info">
 						<h3>{{event.title}} <span>{{event.formattedDate}}</span></h3>
 						<p>Location: <span>{{event.location.name}}</span></p>
@@ -167,6 +167,7 @@ export default {
 				
 				return {
 					_id: this.$store.getters.currentEvent._id,
+					url: this.$store.getters.currentEvent.url,
 					title: this.$store.getters.currentEvent.title,
 					location: this.$store.getters.currentEvent.location,
 					bands: eventBands,

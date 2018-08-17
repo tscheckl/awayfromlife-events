@@ -93,7 +93,7 @@
 
 			<h3>There already is a band with the same name from that country. Maybe you wanted to enter this one?</h3>
 			<div class="similar-event" v-for="band in similarBands" :key="band._id">
-				<a :href="`/#/band/${band._id}`" target="_blank">
+				<a :href="`/#/band/${band.url}`" target="_blank">
 					<div class="similar-event-info">
 						<h3>{{band.name}}</h3>
 						<p>Origin: <span>{{band.origin.country}}</span></p>

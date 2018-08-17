@@ -20,22 +20,12 @@
 					<md-button class="md-icon-button edit-button" v-on:click="openDialog('reportDialog')">
 						<md-icon>report</md-icon>
 						<md-tooltip md-direction="bottom">report event</md-tooltip>
-					</md-button>	
-					<!-- <md-menu md-direction="bottom left" md-size="5">
-						<md-button class="md-icon-button edit-button more-button" md-menu-trigger>
-							<md-icon>more_vert</md-icon>
-						</md-button>
-
-						<md-menu-content>
-							<md-menu-item>Report this event as cancelled</md-menu-item>
-							<md-menu-item>Report event</md-menu-item>
-						</md-menu-content>
-					</md-menu> -->
+					</md-button>
 				</div>
 			</div>
 		</div>
 
-		<div class="content">
+		<div class="content" v-if="event._id">
 			<h1 v-if="event.canceled == 2" class="cancelled-info">
 				<md-icon>warning</md-icon>
 				<span>THIS EVENT WAS CANCELLED</span>
@@ -70,7 +60,7 @@
 
 				<h3><md-icon>queue_music</md-icon><span>Lineup</span></h3>
 				<ul>
-					<li v-for="band of event.bands" :key="band._id"><router-link :to="`/band/${band._id}`"><span>{{band.name}}</span></router-link></li>
+					<li v-for="band of event.bands" :key="band._id"><router-link :to="`/band/${band.url}`"><span>{{band.name}}</span></router-link></li>
 				</ul>
 				
 				<hr>
@@ -94,7 +84,7 @@
 		</md-snackbar>
 
 		<md-dialog ref="reportDialog">
-			<report-dialog :contentType="backendEndpoint.slice(0,-1)" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
+			<report-dialog :id="event._id" :contentType="backendEndpoint.slice(0,-1)" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
 		</md-dialog>
 
 		<md-dialog ref="cancelDialog">
@@ -112,6 +102,7 @@
 <script>
 import NewEvent from '@/components/NewContent/NewEvent';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
+import NotFound from '@/components/NotFound';
 
 import {frontEndSecret, backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -120,7 +111,8 @@ export default {
 	name: 'event-page-new',
 	components: {
 		NewEvent,
-		ReportDialog
+		ReportDialog,
+		NotFound
 	},
 	computed: {
 		event() {
@@ -151,7 +143,7 @@ export default {
 		handleEditClose() {
 			this.$refs['newEventDialog'].close();
 			
-			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byId/` + this.$route.params.id)
+			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byurl/` + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
 					this.submitStatus = 'Event successfully updated!';
@@ -207,15 +199,15 @@ export default {
 			})
 			.catch(err => {});
 			
-		if(this.$store.getters.currentEvent.title == '' || this.$store.getters.currentEvent._id != this.$route.params.id) {
+		if(this.$store.getters.currentEvent.title == '' || this.$store.getters.currentEvent.url != this.$route.params.url) {
 
-			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byId/` + this.$route.params.id)
+			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byurl/` + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentEvent', response.body.data);
 				}
 			})
-			.catch(err => { console.log(err); });
+			.catch(err => this.$router.push('/not-found'));
 		}
 			
 	}

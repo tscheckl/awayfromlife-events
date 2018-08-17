@@ -15,7 +15,8 @@ import {frontEndSecret, backendUrl } from '@/secrets.js';
 export default {
     name: 'report-dialog',
     props: {
-        contentType: String
+        contentType: String,
+        id: String
     },
     data() {
         return {
@@ -27,7 +28,7 @@ export default {
             let report = {
                 description: this.reportDescription,
                 category: this.contentType,
-                item: this.$route.params.id
+                item: this.id
             }
             
             if(this.reportDescription.length > 0) {

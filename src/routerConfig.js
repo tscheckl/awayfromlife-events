@@ -12,6 +12,7 @@ import EventsSearch from '@/components/ContentLists/EventsSearch';
 import EventPage from '@/Components/SingleContentPages/EventPage';
 import LocationPage from '@/Components/SingleContentPages/LocationPage';
 import BandPage from '@/Components/SingleContentPages/BandPage';
+import NotFound from '@/components/NotFound';
 
 export default new Router({
   routes: [
@@ -32,11 +33,11 @@ export default new Router({
 		component: EventsArchive
 	},
 	{
-		path: '/event/:id',
+		path: '/event/:url',
 		component: EventPage
 	},
 	{
-		path: '/archived-event/:id',
+		path: '/archived-event/:url',
 		component: EventPage
 	},
 	{
@@ -44,7 +45,7 @@ export default new Router({
 		component: LocationsList
 	},
 	{
-		path: '/location/:id',
+		path: '/location/:url',
 		component: LocationPage
 	},
 	{
@@ -52,7 +53,7 @@ export default new Router({
 		component: BandsList
 	},
 	{
-		path: '/band/:id',
+		path: '/band/:url',
 		component: BandPage
 	},
 	{
@@ -74,6 +75,10 @@ export default new Router({
   {
     path: '/bug-report',
     component: BugReport
+  },
+  {
+	  path: '/not-found',
+	  component: NotFound
   }
   ]
 })

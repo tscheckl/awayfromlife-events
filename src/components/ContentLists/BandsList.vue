@@ -220,7 +220,7 @@ export default {
 		//Function for giving the Band-Event dialog the data of the clicked band and opening it.
 		showBand(band) {
 			this.$store.commit('setCurrentBand', band);
-			this.$router.push({path: `/band/${band._id}`});
+			this.$router.push({path: `/band/${band.url}`});
 		},
 		sortBy(sortCrit) {
 			

@@ -198,7 +198,7 @@ export default {
 		},
 		showLocation(location) {
 			this.$store.commit('setCurrentLocation', location);
-			this.$router.push({path: `/location/${location._id}`});
+			this.$router.push({path: `/location/${location.url}`});
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
