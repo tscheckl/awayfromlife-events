@@ -10,7 +10,10 @@
 
 <script>
 export default {
-    name: 'not-found'
+    name: 'not-found',
+    mounted() {
+        document.getElementById('topbar').classList.add('single-page');
+    }
 }
 </script>
 
