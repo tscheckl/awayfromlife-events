@@ -1,12 +1,13 @@
 @import "themeColors";
 
 #app-footer {
-	position: absolute;
+	position: relative;
 	left: 0;
 	bottom: 0;
-	height: 30px;
+	// height: 30px;
 	width: 100%;
 	background: #151515;
+	color: $primaryLighten5;
 	text-align: center;
 	line-height: 30px;
 	z-index: 6;
@@ -34,4 +35,20 @@
 			}
 		}
 	}
+
+	.icon-info{
+		font-size: 11px;
+
+		a {
+			margin: 0;
+		}
+	}
+ }
+
+ @media screen and (max-width: 425px) {
+	 #app-footer {
+		 .icon-info { 
+			font-size: 8px;
+		 }
+	 }
  }

@@ -12,9 +12,9 @@
 		position: fixed;
 		left: 0;
 		width: 80px;
+		overflow: hidden;
 		height: 100%;
 		padding: 10px 0px;
-		display: inline;
 		background-color: #232323;
 		z-index: 3;
 		transition: width .3s ease-out, padding .2s ease-out;
@@ -187,8 +187,7 @@
 				overflow: hidden;
 				background-color: #181818;
 				box-shadow: none;
-				transition: all 0s ease-out;
-				transition: max-height .2s ease-out;
+				transition: all .2s ease-out;
 				z-index: 7;
 
 				.indicator {
@@ -211,6 +210,7 @@
 			width: 0%;
 			padding: 0;
 			overflow: hidden;
+			overflow-y: scroll;
 		}
 
 		.toggle-menu-btn {
