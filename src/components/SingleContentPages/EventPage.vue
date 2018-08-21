@@ -54,7 +54,8 @@
 
 				<hr>
 
-				<h3 class="start-time"><md-icon>alarm</md-icon><span>Start</span></h3><span>{{event.formattedTime}} Uhr</span>
+				<h3 class="start-time"><md-icon>alarm</md-icon><span>Start</span></h3>
+				<span>{{event.formattedTime}} Uhr</span>
 
 				<hr>
 
@@ -64,6 +65,12 @@
 				</ul>
 				
 				<hr>
+
+				<div v-if="event.ticketLink" class="ticket-link">
+					<h3><md-icon>receipt</md-icon>Ticket Link</h3>
+					<a :href="event.ticketLink" target="_blank">{{event.ticketLink}}</a>
+					<hr>
+				</div>
 
 				<div v-if="event.description">
 					<h3><md-icon>format_quote</md-icon><span>Description</span></h3>

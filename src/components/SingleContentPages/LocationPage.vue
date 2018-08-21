@@ -29,7 +29,7 @@
 			</div>
 
 			<div class="content-body">
-				<div v-if="location.address">
+				<div v-if="location.address" class="address">
 					<h3><md-icon>directions</md-icon>Address</h3>
 					<p>{{location.address.street}}</p>
 					<p>{{location.address.postcode}} {{location.address.city}}</p>
@@ -38,11 +38,11 @@
 					<p>{{location.address.country}}</p>
 				</div>
 
-				<hr v-if="location.website || location.facebook_page_url">
+				<hr v-if="location.website || location.facebookUrl">
 
-				<h3 v-if="location.website || location.facebook_page_url"><md-icon>subject</md-icon>Additional Information</h3>
-				<p v-if="location.website" class="website">Website: <a :href="location.website">{{location.website}}</a></p>
-				<p v-if="location.facebook_page_url" class="facebook-page">Facebook Page: <a :href="location.facebook_page_url">{{location.facebook_page_url}}</a></p>
+				<h3 v-if="location.website || location.facebookUrl"><md-icon>subject</md-icon>Additional Information</h3>
+				<p v-if="location.website" class="website">Website: <a :href="location.website" target="_blank">{{location.website}}</a></p>
+				<p v-if="location.facebookUrl" class="facebook-page">Facebook Page: <a :href="location.facebookUrl" target="_blank">{{location.facebookUrl}}</a></p>
 
 				<hr v-if="location.information">
 

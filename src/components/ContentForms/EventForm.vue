@@ -46,6 +46,17 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
+						<h2>Additional Information</h2>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Ticket Link</label>
+							<md-input v-model="event.ticketLink"></md-input>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="100">
 						<md-input-container>
 							<label>Description</label>
 							<md-textarea v-model="event.description"></md-textarea>

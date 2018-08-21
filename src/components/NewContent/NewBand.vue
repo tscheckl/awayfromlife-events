@@ -239,10 +239,8 @@ export default {
 		},
 		getSimilar() {
 			this.similarBandFound = false;
-			console.log("fisch");
 			
-			if(this.newBand.name && this.newBand.origin.country && this.$route.path.indexOf('/band/') == -1) {
-				console.log("hat alles");
+			if(this.newBand.name && this.newBand.origin.country && this.$route.path.toLowerCase().indexOf('/band/') == -1) {
 				
 				this.$http.get(backendUrl + '/api/bands/similar?country=' + this.newBand.origin.country + '&name=' + this.newBand.name)
 				.then(response => {		

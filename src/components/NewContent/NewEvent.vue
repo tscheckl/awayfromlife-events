@@ -173,7 +173,8 @@ export default {
 					bands: eventBands,
 					startDate: this.$store.getters.currentEvent.startDate,
 					description: this.$store.getters.currentEvent.description,
-					canceled: this.$store.getters.currentEvent.canceled
+					canceled: this.$store.getters.currentEvent.canceled,
+					ticketLink: this.$store.getters.currentEvent.ticketLink
 				}
 			}
 			else {
@@ -193,6 +194,7 @@ export default {
 				title: '',
 				description: '',
 				bands: [''],
+				ticketLink: '',
 				tourStops: [{
 					location: '',
 					startDate: ''
@@ -211,7 +213,8 @@ export default {
 				bands: [''],
 				description: '',
 				startDate: '',
-				canceled: 0
+				canceled: 0,
+				ticketLink: ''
 			},
 			similarEventFound: false,
 			similarEvents: []
@@ -238,19 +241,19 @@ export default {
 				let editEvent = this.edit?'/' + this.newEvent._id: '';
 				//Send new/updated event to the backend.
 				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent)
-				.then(response => {
-					this.emitClose();
-					this.loading = false;
+					.then(response => {
+						this.emitClose();
+						this.loading = false;
 
-					//Reset all fields
-					this.resetEventFields();
-				}).catch(err => {
-					
-					this.submitStatus = this.edit ?'An error occurred while updating the Event. Please try again!'
-										:'An error occurred while creating the Event. Please try again!';
-					this.$refs.snackbar.open();
-					this.loading = false;
-				});
+						//Reset all fields
+						this.resetEventFields();
+					}).catch(err => {
+						
+						this.submitStatus = this.edit ?'An error occurred while updating the Event. Please try again!'
+											:'An error occurred while creating the Event. Please try again!';
+						this.$refs.snackbar.open();
+						this.loading = false;
+					});
 			}
 			else { // else show error message
 				this.submitStatus = 'All required input fields have to be filled out!';
@@ -270,11 +273,15 @@ export default {
 						description: this.newTour.description,
 						location: this.newTour.tourStops[tourstop].location,
 						bands: this.newTour.bands,
-						startDate: this.newTour.tourStops[tourstop].startDate
+						startDate: this.newTour.tourStops[tourstop].startDate,
+						ticketLink: this.newTour.ticketLink
 					}
 
 					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent)
-						.then(response => {})
+						.then(response => {	
+							this.emitClose();
+							this.loading = false;
+						})
 						.catch(err => {
 							// Error
 							vm.submitStatus = 'An error occurred while creating the Tour. Please try again!';
@@ -307,7 +314,8 @@ export default {
 				bands: [''],
 				startDate: '',
 				endDate: '',
-				time: ''
+				time: '',
+				ticketLink: ''
 			});
 
 			this.blankEvent = {
@@ -315,7 +323,8 @@ export default {
 				location: '',
 				bands: [''],
 				description: '',
-				startDate: ''
+				startDate: '',
+				ticketLink: ''
 			}
 	  	},
 		resetTourFields() {
@@ -327,11 +336,12 @@ export default {
 					location: '',
 					startDate: ''
 				}],
+				ticketLink: ''
 			}
 		},
 		getSimilar() {
 			this.similarEventFound = false;
-			if(this.newEvent.location && this.newEvent.startDate && this.$route.path.indexOf('/events') != -1) {
+			if(this.newEvent.location && this.newEvent.startDate && this.$route.path.toLowerCase().indexOf('/events') != -1) {
 				
 				this.$http.get(backendUrl + '/api/events/similar?location=' + this.newEvent.location._id + '&date=' + this.newEvent.startDate)
 				.then(response => {

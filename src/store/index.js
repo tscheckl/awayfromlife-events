@@ -18,7 +18,7 @@ export default new Vuex.Store({
 			name: '',
 			address: {},
 			website: '',
-			facebook_page_url: '',
+			facebookUrl: '',
 			information: ''
 		},
 		currentBand: {

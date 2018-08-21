@@ -173,7 +173,7 @@ export default {
 				},
 				information: '',
 				website: '',
-				facebook_page_url: ''
+				facebookUrl: ''
 			},
 			similarLocationFound: false,
 			similarLocations: []
@@ -230,13 +230,13 @@ export default {
 				},
 				information: '',
 				website: '',
-				facebook_page_url: ''
+				facebookUrl: ''
 			};
 			this.newLocationValue = '';
 		},
 		getSimilar() {
 			this.similarLocationFound = false;
-			if((this.newLocation.address.street || (this.newLocation.address.city && this.newLocation.name)) && this.$route.path.indexOf('/location/') == -1) {
+			if((this.newLocation.address.street || (this.newLocation.address.city && this.newLocation.name)) && this.$route.path.toLowerCase().indexOf('/location/') == -1) {
 				let requestParams = (this.newLocation.address.city && this.newLocation.name) 
 					?`city=${this.newLocation.address.city}&name=${this.newLocation.name}` 
 					:`address=${this.newLocation.address.street}`;

@@ -36,7 +36,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Facebook page</label>
-							<md-input v-model="data.facebook_page_url"></md-input>
+							<md-input v-model="data.facebookUrl"></md-input>
 						</md-input-container>
 					</md-layout>
 

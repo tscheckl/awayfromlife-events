@@ -3,6 +3,16 @@
 
 #location_page {
 
+	.address {
+		p {
+			margin: 0;
+
+			&:first-of-type {
+				margin-top: 5px;
+			}
+		}
+	}
+
 	.website, .facebook-page {
 		font-family: "OpenSansBold";
 
