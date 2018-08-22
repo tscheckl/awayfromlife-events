@@ -12,6 +12,7 @@ import VueRouter from 'vue-router'
 import router from './routerConfig'
 import Calendar from 'vuejs-datepicker';
 import vSelect from 'vue-select';
+import VueAnalytics from 'vue-analytics';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import store from '@/store/index.js';
 
@@ -19,6 +20,11 @@ Vue.use(VueRouter);
 Vue.use(VueMaterial);
 Vue.use(VueResource);
 Vue.use(Datetime);
+
+Vue.use(VueAnalytics, {
+	id: 'UA-124410591-1',
+	router
+})
 
 Vue.component('calendar', Calendar);
 Vue.component('v-select', vSelect)

@@ -92,6 +92,8 @@ export default {
 		getEvents() {
 			this.$http.get(backendUrl + '/api/events/date/' + moment(this.date).format('YYYY-MM'))
 			.then((response) => {
+				console.log("backend response:", response);
+				
 				this.events = {};
 				//Check if there are any events in the body. (no error message in the body)
 				if(!response.body.message) {
@@ -106,6 +108,8 @@ export default {
 						else { //Else push the found event to the array of the respective day.
 							this.events[gottenFormattedDate].push(gottenEvent);
 						}
+						console.log("got events:",this.events);
+						
 					});
 				}
 				//Display all events for the currently selected date.

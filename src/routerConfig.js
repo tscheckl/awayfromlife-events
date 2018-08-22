@@ -15,6 +15,7 @@ import BandPage from '@/Components/SingleContentPages/BandPage';
 import NotFound from '@/components/NotFound';
 
 export default new Router({
+	mode: 'history',
   routes: [
     {
       	path: '/',

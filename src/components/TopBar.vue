@@ -1,7 +1,7 @@
 <template>
 	<div id="topbar" v-if="$route.path != '/search' && $route.path != '/login' && $route.path != '/admin' && $route.path !='/'">
 		<md-toolbar>
-			<a class="logo-link" href="https://awayfromlife.com"><img src="static/Logo.png" alt="Away From Life Logo"></a>
+			<a class="logo-link" href="https://awayfromlife.com"><img src="/static/Logo.png" alt="Away From Life Logo"></a>
 			<follow-buttons></follow-buttons>
 
 			<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)" v-if="isSinglePage()">
