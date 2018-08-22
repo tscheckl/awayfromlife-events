@@ -11,8 +11,18 @@
 		width: 45%;
 	}
 
-	.band-genre, .band-origin {
-		width: 20%
+	.band-genres, .band-origin {
+		width: 20%;
+	}
+
+	.band-genre {
+		&:after {
+			content: ", ";
+		}
+
+		&:last-of-type:after {
+			content: "";
+		}
 	}
 
 	.list-item {
@@ -38,7 +48,7 @@
 			width: 60%;
 		}
 
-		.band-genre {
+		.band-genres {
 			width: 35%;
 		}
 

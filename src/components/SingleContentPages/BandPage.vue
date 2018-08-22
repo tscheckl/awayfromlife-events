@@ -28,7 +28,7 @@
 
 			<div class="content-body">
 				<h3><md-icon>info_outline</md-icon>General Information</h3>
-				<p><span>Genre: </span>{{band.genre}}</p>
+				<p><span>Genre: </span><span class="band-genre" v-for="genre in band.genre" :key="genre">{{genre}}</span></p>
 				<p v-if="band.recordLabel"><span>Label: </span>{{band.recordLabel}}</p>
 				
 				<hr>

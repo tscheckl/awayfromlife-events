@@ -105,7 +105,7 @@
 							<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p> 
-					<p class="band-genre" v-on:click="sortBy('genre')">
+					<p class="band-genres" v-on:click="sortBy('genre')">
 						<span>Genre 
 							<md-icon v-if="currentlySorted == 'genre'">{{!sortingAsc.genre? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
@@ -120,7 +120,7 @@
 
 				<div class="list-item" v-for="(band, index) in bands" :key="index" v-on:click="showBand(band)">
 					<h3 class="band-name">{{band.name}}</h3>
-					<p class="band-genre">{{band.genre}}</p>
+					<p class="band-genres"><span class="band-genre" v-for="genre in band.genre" :key="genre">{{genre}}</span></p>
 					<p class="band-origin"><span>{{band.origin.name}}</span> {{band.origin.country}}</p>
 					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 				</div>
