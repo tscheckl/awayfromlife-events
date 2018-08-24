@@ -1,10 +1,17 @@
 @import "../themeColors";
+@import "./generalForm";
 
 #band_form {
 	h2 {
 		padding-left: 15px;
 		margin-bottom: 0;
 		color: $primaryDarken2;
+	}
+
+	.genre-header {
+		p {
+			margin-top: 17px;
+		}
 	}
 
 	.form-content {
@@ -32,6 +39,11 @@
 		color: rgba(0, 0, 0, 0.87);
 	}
 
+	.add-genre-btn {
+		margin-top: 10px !important;
+	}
+
+
 	.single-release {
 		width: 100%;
 
@@ -52,18 +64,6 @@
 				position: relative;
 			}
 		}
-
-		.md-button {
-			float: left;
-			margin-left: 0;
-			margin-top: 12px;
-		}
-	}
-
-	.add-release-btn {
-		margin-top: -5px;
-		margin-bottom: 10px;
-		margin-left: 10px;
 	}
 
 	textarea {

@@ -69,7 +69,11 @@
 		<div class="color-block"></div>
 
 		<md-dialog ref="newLocationDialog" class="content-dialog">
-			<new-location v-on:close="handleEditClose" :edit="true"></new-location>
+			<new-location 
+						v-on:close="$refs['newLocationDialog'].close()"
+						v-on:success="handleEditClose" 
+						:edit="true">
+			</new-location>
 		</md-dialog>
 
 		<md-dialog ref="reportDialog">

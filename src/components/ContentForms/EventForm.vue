@@ -12,10 +12,11 @@
 
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
-							<v-select :options="locations"
-									:on-change="onSelectLocation"
-									v-model="event.location"
-									placeholder="Select event location*">
+							<v-select class="form-v-select"
+							 		  :options="locations"
+									  :on-change="onSelectLocation"
+									  v-model="event.location"
+									  placeholder="Select event location*">
 							</v-select>
 						</md-input-container>
 					</md-layout>
@@ -25,12 +26,13 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="single-band" v-for="(band, index) in localBands" :key="index">
+						<div class="single-form-field" v-for="(band, index) in localBands" :key="index">
 							<md-input-container>
-								<v-select :options="backendBands"
-											:on-change="(selected) => onSelectBand(selected, index)"
-											v-model="localBands[index]"
-											placeholder="Select event's bands*">
+								<v-select class="form-v-select"
+										  :options="backendBands"
+										  :on-change="(selected) => onSelectBand(selected, index)"
+										  v-model="localBands[index]"
+										  placeholder="Select event's bands*">
 								</v-select>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
@@ -39,7 +41,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="event.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
+						<md-button v-if="event.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another band</md-tooltip>
 						</md-button>

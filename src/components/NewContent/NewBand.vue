@@ -97,7 +97,9 @@
 					<div class="similar-event-info">
 						<h3>{{band.name}}</h3>
 						<p>Origin: <span>{{band.origin.country}}</span></p>
-						<p>Genre: <span>{{band.genre}}</span></p>
+						<p>Genre: 
+							<span class="band-genre" v-for="genre in band.genre" :key="genre">{{genre}}</span>
+						</p>
 					</div>
 					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 				</a>
@@ -158,7 +160,7 @@ export default {
 			apiRoute: '/api/unvalidated-bands',
 			blankBand: {
 				name: '',
-				genre: '',
+				genre: [''],
 				origin: {
 					city: '',
 					administrative: '',
@@ -190,14 +192,14 @@ export default {
 			
 			var vm = this;
 
-			if(this.newBand.name && this.newBand.genre && this.newBand.origin) {
+			if(this.newBand.name && this.newBand.genre[0] != '' && this.newBand.origin) {
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editBand = this.edit?'/' + this.newBand._id: '';
 
 				this.$http[requestType](backendUrl + this.apiRoute + editBand, this.newBand)
 					.then(response => {	
-						this.emitClose();
+						this.emitSuccess();
 						vm.loading = false;
 						this.emptyFormFields();
 
@@ -215,13 +217,16 @@ export default {
 				this.loading = false;
 			}
     	},
+		emitSuccess() {
+			this.$emit('success');
+		},
 		emitClose() {
 			this.$emit('close');
 		},
 	  	emptyFormFields() {
 			this.blankBand = {
 				name: '',
-				genre: '',
+				genre: [''],
 				origin: {},
 				history: '',
 				label: '',
@@ -257,7 +262,7 @@ export default {
 			document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.add('selected');
 			setTimeout(() => {
 				if(accept)
-					this.emitClose();
+					this.emitSuccess();
 
 				this.similarBandFound = false;
 				setTimeout(() => {

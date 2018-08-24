@@ -214,40 +214,6 @@
 				color: #232323;
 			}
 		}
-
-		.genre-select {
-			.v-select {
-				width: 100%;
-				position: relative;
-			}
-
-			.dropdown-toggle {
-				border: none;
-			}
-
-			.dropdown-menu {
-				height: 11em;
-				padding: 0;
-
-				.highlight {
-					a {
-						background-color: $accent;
-					}
-				}
-
-				li {
-					margin-top: 0;
-					line-height: 1em;
-
-					a {
-						width: 100%;
-						padding: 10px;
-						overflow: hidden;
-						color: #232323;
-					}
-				}
-			}
-		}
 	}
 
 	.hide-options {

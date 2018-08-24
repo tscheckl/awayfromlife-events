@@ -194,53 +194,6 @@
 					margin-top: -20px;
 				}
 
-				.v-select {
-					width: 100%;
-					position: relative;
-					font-family: "OpenSans";
-
-					.dropdown-toggle {
-						position: relative;
-						display: flex;
-						border: none;
-					}
-
-					input, .selected-tag {
-						font-size: 14px;
-					}
-
-					.selected-tag {
-						position: absolute;
-						margin-top: 2px;
-					}
-
-					.dropdown-menu {
-						position: absolute;
-						height: 11em;
-						padding: 0;
-						z-index: 5;
-		
-						.highlight {
-							a {
-								background-color: $accentAccent2;
-								color: $primaryLighten4;
-							}
-						}
-		
-						li {
-							margin-top: 0;
-							line-height: 1em;
-		
-							a {
-								width: 100%;
-								padding: 10px;
-								overflow: hidden;
-								color: #232323;
-							}
-						}
-					}
-				}
-
 				.vdatetime {
 					input {
 						padding-left: 10px;

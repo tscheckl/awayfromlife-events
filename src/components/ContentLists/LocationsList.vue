@@ -50,17 +50,19 @@
 
 						<md-input-container class="city-select" v-if="filterByCity">
 							<span class="input-label" v-if="appliedFilters.city && appliedFilters.city != ''">City</span>
-							<v-select :options="filterCriteria.cities"
-										v-model="appliedFilters.city"
-										placeholder="City">
+							<v-select class="form-v-select"
+									  :options="filterCriteria.cities"
+									  v-model="appliedFilters.city"
+									  placeholder="City">
 							</v-select>
 						</md-input-container>
 
 						<md-input-container class="country-select" v-if="!filterByCity">
 							<span class="input-label" v-if="appliedFilters.country && appliedFilters.country != ''">Country</span>
-							<v-select :options="filterCriteria.countries"
-										v-model="appliedFilters.country"
-										placeholder="Country">
+							<v-select class="form-v-select"
+									  :options="filterCriteria.countries"
+									  v-model="appliedFilters.country"
+									  placeholder="Country">
 							</v-select>
 						</md-input-container>
 					</div>
@@ -132,7 +134,10 @@
 		</div>
 
 		<md-dialog ref="newLocationDialog">
-			<new-location v-on:close="handleDialogClose('newLocationDialog')"></new-location>
+			<new-location 
+						v-on:close="$refs['newLocationDialog'].close()"
+						v-on:success="handleDialogClose('newLocationDialog')">
+			</new-location>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">

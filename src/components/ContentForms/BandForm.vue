@@ -3,17 +3,10 @@
 		<form v-on:submit.prevent >
 			<div class="form-content">
 				<md-layout md-gutter>
-					<md-layout md-flex="50" md-flex-small="100">
+					<md-layout md-flex="100" md-flex-small="100">
 						<md-input-container>
 							<label>Name of the band</label>
 							<md-input v-model="data.name" required></md-input>
-						</md-input-container>
-					</md-layout>
-
-					<md-layout md-flex="50" md-flex-small="100">
-						<md-input-container>
-							<label>Genre of the band</label>
-							<md-input v-model="data.genre" required></md-input>
 						</md-input-container>
 					</md-layout>
 
@@ -29,6 +22,33 @@
 							<label>Label the band is signed to</label>
 							<md-input v-model="data.recordLabel"></md-input>
 						</md-input-container>
+					</md-layout>
+
+					<md-layout class="genre-header" md-flex="100">
+						<h2>Genre</h2>
+						<p>(You can add up to 3)</p>
+					</md-layout>
+
+					<md-layout md-gutter md-flex="100">
+						<md-layout class="single-genre single-form-field" v-for="(genre, index) in data.genre" :key="index" md-flex="33" md-flex-small="100">
+							<md-input-container>
+								<v-select class="form-v-select"
+										  :options="backendGenres"
+										  v-model="data.genre[index]"
+										  placeholder="Select band's genre*">
+								</v-select>
+							</md-input-container>
+
+							<md-button v-if="data.genre.length > 1" v-on:click="removeFromArray(data.genre,index)" class="md-icon-button md-raised">
+								<md-icon>clear</md-icon>
+								<md-tooltip>Remove genre</md-tooltip>
+							</md-button>
+						</md-layout>
+
+						<md-button v-if="data.genre.length < 3" v-on:click="data.genre.push('')" class="md-icon-button md-raised md-accent add-field-btn add-genre-btn">
+							<md-icon>add</md-icon>
+							<md-tooltip md-direction="right">Add another genre</md-tooltip>
+						</md-button>
 					</md-layout>
 
 					<md-layout md-flex="100">
@@ -58,7 +78,7 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="single-release" v-for="(release, index) in data.releases" :key="index">
+						<div class="single-release single-form-field" v-for="(release, index) in data.releases" :key="index">
 							<div class="release-info">
 								<md-input-container class="release-name">
 									<label>Name</label>
@@ -71,13 +91,13 @@
 								</md-input-container>
 							</div>
 
-							<md-button v-on:click="removeRelease(index)" class="md-icon-button md-raised">
+							<md-button v-on:click="removeFromArray(data.releases,index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove release</md-tooltip>
 							</md-button>
 						</div>
 
-						<md-button v-if="data.releases != null" v-on:click="addRelease" class="md-icon-button md-raised md-accent add-release-btn">
+						<md-button v-if="data.releases != null" v-on:click="addRelease" class="md-icon-button md-raised md-accent add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another release</md-tooltip>
 						</md-button>
@@ -123,12 +143,18 @@
 
 <script>
 import places from 'places.js';
+import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {
 	name: 'band-form',
 	props: {
 		data: Object,
 		value: String
+	},
+	data() {
+		return {
+			backendGenres: []
+		}	
 	},
 	methods: {
 		addRelease() {
@@ -137,15 +163,21 @@ export default {
 				releaseYear: ''
 			});
 		},
-		removeRelease(index) {
-			this.data.releases.splice(index, 1);
+		removeFromArray(array, index) {
+			array.splice(index, 1);
 			
-			if(this.data.releases.length == 0) {
-				this.data.releases[0] = '';
+			if(array.length == 0) {
+				array[0] = '';
 			}
 		},
 	},
 	mounted() {
+		this.$http.get(backendUrl + '/api/bands/genres')
+			.then(response => {
+				this.backendGenres = response.body.data;
+			})
+			.catch(err => console.log("Error in BandForm:", err));
+		
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city'});
 		this.placesAutocomplete.on('change', e => {
 			

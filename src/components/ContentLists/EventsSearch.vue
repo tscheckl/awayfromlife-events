@@ -8,11 +8,6 @@
 			<div class="main-input">
 				<h1>Find Hardcore and Punk <br> Events, Locations and Bands</h1>
 				<div class="search-input">
-					<!-- <v-select :options="cities"
-								:on-change="onSelect"
-								v-model="selectedCity"
-								placeholder="Choose City">
-					</v-select> -->
 					<form v-on:submit.prevent>
 						<input class="search-bar" v-model="query" required placeholder="Enter what you are looking for (e.g. Berlin, Sick of it all, ..)">
 						<md-button type="submit" class="md-raised" v-on:click="search">
@@ -57,9 +52,10 @@
 
 						<h4>Only Show results with Genre: </h4>
 						<md-input-container class="genre-select">
-							<v-select :options="availableGenres"
-										v-model="searchOptions.genre"
-										placeholder="Select genre">
+							<v-select class="form-v-select"
+									  :options="availableGenres"
+									  v-model="searchOptions.genre"
+									  placeholder="Select genre">
 							</v-select>
 						</md-input-container>
 					</div>

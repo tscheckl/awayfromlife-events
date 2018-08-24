@@ -1,4 +1,5 @@
 @import "../themeColors";
+@import "./generalForm";
 
 #tour_form, #event_form {
 	.calendar-button {
@@ -22,81 +23,8 @@
 		margin-left: 15px;
 	}
 
-	.single-band {
-		width: 100%;
-
-		.md-input-container {
-			float: left;
-			width: calc(100% - 65px);
-		}
-
-		.md-button {
-			float: left;
-			margin-left: 0;
-			margin-top: 12px;
-		}
-	}
-
-	.add-band-btn {
-		margin-top: -5px;
-		margin-bottom: 10px;
-		margin-left: 10px;
-	}
-
 	textarea {
 		height: 135px !important;
-	}
-
-	.v-select {
-		width: 100%;
-		
-		.dropdown-toggle {
-			border: none;
-		}
-
-		.selected-tag {
-			position: absolute;
-			left: 0;
-			width: 100%;
-			padding-right: 20px;
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-		}
-
-		input {
-			display: block;
-			width: 100% !important;
-		}
-
-		.dropdown-menu {
-			li {
-				margin-top: 0;
-				line-height: 1.6em;
-
-				a {
-					width: 100%;
-					padding: 10px;
-					overflow: hidden;
-					color: $primaryDarken4;
-				}
-
-				&:hover {
-					background-color: $primaryLighten3;
-				}
-			}
-
-			.highlight{
-				a {
-					background-color: $accentDarken2 ;
-					color: $primaryLighten5;
-				}
-			}
-
-			.active {
-				background-color: $primaryLighten3;
-			}
-		}
 	}
 
 	.picker {

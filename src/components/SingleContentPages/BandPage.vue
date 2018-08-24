@@ -75,7 +75,11 @@
 		<div class="color-block"></div>
 
 		<md-dialog ref="newBandDialog" class="content-dialog">
-			<new-band v-on:close="handleEditClose" :edit="true"></new-band>
+			<new-band 
+					v-on:close="$refs['newBandDialog'].close()"
+					v-on:success="handleEditClose" 
+					:edit="true">
+			</new-band>
 		</md-dialog>
 
 		<md-dialog ref="reportDialog">

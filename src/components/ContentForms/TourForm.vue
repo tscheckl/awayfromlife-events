@@ -15,12 +15,13 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="single-band" v-for="(band, index) in data.bands" :key="index">
+						<div class="single-form-field" v-for="(band, index) in data.bands" :key="index">
 							<md-input-container>
-								<v-select :options="backendBands"
-											:on-change="(selected) => onSelectBand(selected, index)"
-											v-model="selectedBands[index]"
-											placeholder="Select event's bands*">
+								<v-select class="form-v-select"
+										  :options="backendBands"
+										  :on-change="(selected) => onSelectBand(selected, index)"
+										  v-model="selectedBands[index]"
+										  placeholder="Select event's bands*">
 								</v-select>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
@@ -29,7 +30,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="data.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-band-btn">
+						<md-button v-if="data.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another band</md-tooltip>
 						</md-button>
@@ -40,12 +41,13 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="tourstop" v-for="(tourstop, index) in data.tourStops" :key="index">
+						<div class="tourstop single-form-field" v-for="(tourstop, index) in data.tourStops" :key="index">
 							<md-input-container>
-								<v-select :options="locations"
-											:on-change="(selected) => selectionHandler(selected, index)"
-											v-model="selectedLocations[index]"
-											placeholder="Select event location*">
+								<v-select class="form-v-select"
+										  :options="locations"
+										  :on-change="(selected) => selectionHandler(selected, index)"
+										  v-model="selectedLocations[index]"
+										  placeholder="Select event location*">
 								</v-select>
 							</md-input-container>
 							<div class="picker">
@@ -58,7 +60,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="locations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-band-btn">
+						<md-button v-if="locations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another tourstop</md-tooltip>
 						</md-button>

@@ -242,7 +242,7 @@ export default {
 				//Send new/updated event to the backend.
 				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent)
 					.then(response => {
-						this.emitClose();
+						this.emitSuccess();
 						this.loading = false;
 
 						//Reset all fields
@@ -279,7 +279,6 @@ export default {
 
 					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent)
 						.then(response => {	
-							this.emitClose();
 							this.loading = false;
 						})
 						.catch(err => {
@@ -290,7 +289,7 @@ export default {
 						});
 				}
 
-				this.emitClose();
+				this.emitSuccess();
 				this.loading = false;
 
 				//Reset all fields
@@ -303,6 +302,9 @@ export default {
 				this.newEvent.startDate = '';
 			}
 	 	},
+		emitSuccess() {
+			this.$emit('success');
+		},
 		emitClose() {
 			this.$emit('close');
 		},
@@ -362,7 +364,7 @@ export default {
 			document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.add('selected');
 			setTimeout(() => {
 				if(accept)
-					this.emitClose();
+					this.emitSuccess();
 
 				this.similarEventFound = false;
 				setTimeout(() => {

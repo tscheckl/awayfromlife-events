@@ -40,7 +40,8 @@
 				<div class="additional-filters">
 					<md-input-container class="genre-select">
 						<span class="input-label" v-if="appliedFilters.genre && appliedFilters.genre != ''">Genre</span>
-						<v-select :options="filterCriteria.genres"
+						<v-select class="form-v-select"
+								  :options="filterCriteria.genres"
 								  v-model="appliedFilters.genre"
 								  placeholder="Genre">
 						</v-select>
@@ -83,17 +84,19 @@
 
 						<md-input-container class="city-select" v-if="filterByCity">
 							<span class="input-label" v-if="appliedFilters.city && appliedFilters.city != ''">City</span>
-							<v-select :options="filterCriteria.cities"
-										v-model="appliedFilters.city"
-										placeholder="City">
+							<v-select class="form-v-select"
+									  :options="filterCriteria.cities"
+									  v-model="appliedFilters.city"
+									  placeholder="City">
 							</v-select>
 						</md-input-container>
 
 						<md-input-container class="country-select" v-if="!filterByCity">
 							<span class="input-label" v-if="appliedFilters.country && appliedFilters.country != ''">Country</span>
-							<v-select :options="filterCriteria.countries"
-										v-model="appliedFilters.country"
-										placeholder="Country">
+							<v-select class="form-v-select"
+									  :options="filterCriteria.countries"
+									  v-model="appliedFilters.country"
+									  placeholder="Country">
 							</v-select>
 						</md-input-container>
 					</div>
@@ -165,7 +168,10 @@
 		</div>
 
 		<md-dialog ref="newEventDialog">
-			<new-event v-on:close="handleDialogClose('newEventDialog')"></new-event>
+			<new-event 
+					v-on:success="handleDialogClose('newEventDialog', true)" 
+					v-on:close="$refs['newEventDialog'].close();">
+			</new-event>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">

@@ -1,1 +1,13 @@
 @import "./newContent";
+
+#new_band {
+    .band-genre {
+		&:after {
+			content: ", ";
+		}
+
+		&:last-of-type:after {
+			content: "";
+		}
+	}
+}

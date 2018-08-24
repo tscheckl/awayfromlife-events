@@ -1,6 +1,6 @@
 <template>
 	<div id="new_location">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
+		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose()">
   			<md-icon>clear</md-icon>
 		</md-button>
 		
@@ -194,7 +194,7 @@ export default {
 
 				this.$http[requestType](backendUrl + this.apiRoute + editLocation, this.newLocation)
 					.then(response => {
-						this.emitClose();
+						this.emitSuccess();
 						vm.loading = false;
 						this.emptyFormFields();
 
@@ -212,6 +212,9 @@ export default {
 				this.loading = false;
 			}
     	},
+		emitSuccess() {
+			this.$emit('success');
+		},
 		emitClose() {
 			this.$emit('close');
 		},
@@ -256,7 +259,7 @@ export default {
 			document.getElementsByClassName(accept ?'yes-icon' :'no-icon')[0].classList.add('selected');
 			setTimeout(() => {
 				if(accept)
-					this.emitClose();
+					this.emitSuccess();
 
 				this.similarLocationFound = false;
 				setTimeout(() => {

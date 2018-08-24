@@ -82,7 +82,11 @@
 		<div class="color-block"></div>
 
 		<md-dialog ref="newEventDialog">
-			<new-event v-on:close="handleEditClose" :edit="true"></new-event>
+			<new-event 
+					v-on:success="handleEditClose" 
+					v-on:close="$refs['newEventDialog'].close();"
+					:edit="true">
+			</new-event>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">

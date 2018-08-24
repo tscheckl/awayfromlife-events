@@ -153,6 +153,61 @@ a {
 	}
 }
 
+.form-v-select {
+	width: 100%;
+	
+	.dropdown-toggle {
+		border: none;
+	}
+
+	.selected-tag {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		padding-right: 20px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	input {
+		display: block;
+		width: 100% !important;
+	}
+
+	.dropdown-menu {
+		li {
+			margin-top: 0;
+			line-height: 1.6em;
+
+			a {
+				width: 100%;
+				padding: 10px;
+				overflow: hidden;
+				color: $primaryDarken4;
+			}
+
+			&:hover {
+				color: $primaryLighten4;
+				background-color: $primaryLighten3;
+			}
+		}
+
+		.highlight{
+			color: $primaryLighten4;
+			a {
+				background-color: $accentDarken2 ;
+				color: $primaryLighten5;
+			}
+		}
+
+		.active {
+			color: $primaryLighten4;
+			background-color: $primaryLighten3;
+		}
+	}
+}
+
 @media screen and (max-width: 768px){
 	.router-view-container {
 		margin-left: 0;
