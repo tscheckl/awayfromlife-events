@@ -154,56 +154,56 @@ a {
 }
 
 .form-v-select {
-	width: 100%;
+	width: 100% !important;
 	
 	.dropdown-toggle {
-		border: none;
+		border: none !important;
 	}
 
 	.selected-tag {
-		position: absolute;
-		left: 0;
-		width: 100%;
-		padding-right: 20px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
+		position: absolute !important;
+		left: 0 !important;
+		width: 100% !important;
+		padding-right: 20px !important;
+		overflow: hidden !important;
+		white-space: nowrap !important;
+		text-overflow: ellipsis !important;
 	}
 
 	input {
-		display: block;
+		display: block !important;
 		width: 100% !important;
 	}
 
 	.dropdown-menu {
 		li {
-			margin-top: 0;
-			line-height: 1.6em;
+			margin-top: 0 !important;
+			line-height: 1.6em !important;
 
 			a {
-				width: 100%;
-				padding: 10px;
-				overflow: hidden;
-				color: $primaryDarken4;
+				width: 100% !important;
+				padding: 10px !important;
+				overflow: hidden !important;
+				color: $primaryDarken4 !important;
 			}
 
 			&:hover {
-				color: $primaryLighten4;
-				background-color: $primaryLighten3;
+				color: $primaryLighten4 !important;
+				background-color: $primaryLighten3 !important;
 			}
 		}
 
 		.highlight{
-			color: $primaryLighten4;
+			color: $primaryLighten4 !important;
 			a {
-				background-color: $accentDarken2 ;
-				color: $primaryLighten5;
+				background-color: $accentDarken2 !important;
+				color: $primaryLighten5 !important;
 			}
 		}
 
 		.active {
-			color: $primaryLighten4;
-			background-color: $primaryLighten3;
+			color: $primaryLighten4 !important;
+			background-color: $primaryLighten3 !important;
 		}
 	}
 }

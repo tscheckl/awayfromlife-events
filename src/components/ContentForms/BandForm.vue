@@ -33,6 +33,7 @@
 						<md-layout class="single-genre single-form-field" v-for="(genre, index) in data.genre" :key="index" md-flex="33" md-flex-small="100">
 							<md-input-container>
 								<v-select class="form-v-select"
+										  label="name"
 										  :options="backendGenres"
 										  v-model="data.genre[index]"
 										  placeholder="Select band's genre*">
@@ -172,8 +173,10 @@ export default {
 		},
 	},
 	mounted() {
-		this.$http.get(backendUrl + '/api/bands/genres')
+		this.$http.get(backendUrl + '/api/genres')
 			.then(response => {
+				console.log(response.body.data);
+				
 				this.backendGenres = response.body.data;
 			})
 			.catch(err => console.log("Error in BandForm:", err));

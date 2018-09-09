@@ -53,6 +53,7 @@
 						<h4>Only Show results with Genre: </h4>
 						<md-input-container class="genre-select">
 							<v-select class="form-v-select"
+									  label="name"
 									  :options="availableGenres"
 									  v-model="searchOptions.genre"
 									  placeholder="Select genre">
@@ -332,7 +333,7 @@ export default {
 			this.search();
 		}
 
-		this.$http.get(backendUrl + '/api/bands/genres')
+		this.$http.get(backendUrl + '/api/genres')
 			.then(response => {
 				this.availableGenres = response.body.data;
 			})

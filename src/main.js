@@ -22,7 +22,7 @@ Vue.use(VueResource);
 Vue.use(Datetime);
 
 Vue.use(VueAnalytics, {
-	id: 'UA-124410591-1',
+	id: ['UA-124410591-1', 'UA-124600417-1'],
 	router
 })
 
