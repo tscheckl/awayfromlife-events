@@ -198,7 +198,7 @@ export default {
 				this.results = response.body.data;
 				this.$router.push({query: {
 					query: this.query,
-					genre: this.searchOptions.genre.length > 0 ?this.searchOptions.genre :undefined,
+					genre: this.searchOptions.genre ?this.searchOptions.genre.name :undefined,
 					city: this.searchOptions.city.length > 0 && this.locationOption == 'city' ?this.searchOptions.city :undefined,
 					country: this.searchOptions.country.length > 0 && this.locationOption == 'country' ?this.searchOptions.country :undefined,
 					locations: this.searchOptions.includeCategories.locations,
@@ -243,8 +243,8 @@ export default {
 			if(this.searchOptions.country != '' && this.locationOption == 'country')
 				searchQuery += 'country=' + this.searchOptions.country + '&';
 
-			if(this.searchOptions.genre != '')
-				searchQuery += 'genre=' + this.searchOptions.genre + '&';
+			if(this.searchOptions.genre)
+				searchQuery += 'genre=' + this.searchOptions.genre.name + '&';
 
 			let categoriesString = '';
 
@@ -258,8 +258,8 @@ export default {
 
 			searchQuery += categoriesString + '&';
 
-			searchQuery = searchQuery.length > 1 ?'?' + searchQuery.substring(0, searchQuery.length-1) : ''
-
+			searchQuery = searchQuery.length > 1 ?'?' + searchQuery.substring(0, searchQuery.length-1) : '';
+			
 			return searchQuery;
 		},
 		showResult(result) {
