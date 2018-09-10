@@ -3,17 +3,6 @@
 #events_search {
 	padding-bottom: 60px;
 
-	.logo-link {
-		position: absolute;
-		z-index: 2;
-
-		img {
-			margin-top: 10px;
-			margin-left: 15px;
-			height: 40px;
-		}
-	}
-
 	#follow_buttons {
 		a {
 			color: $primaryLighten5;
@@ -60,18 +49,27 @@
 	.page-content {
 		position: relative;
 		width: 100%;
-		transform: translateY(calc(50vh - 200px));
+		min-height: 300px;
+		transform: translateY(calc(50vh - 250px));
 		transition: transform .4s ease-out;
+		overflow: auto;
 	}
 
 	.slide-up {
 		transform: translateY(0px);
 	}
 
+	.logo {
+		position: relative;
+		width: 300px;
+		margin-bottom: 5px;
+		margin-left: calc(50% - 170px);
+	}
+
 	h1 {
 		text-align: center;
-		color: $accentDarken1;
-		font-size: 3.5em;
+		color: $primaryLighten4;
+		font-size: 1.5em;
 		line-height: 0.9em;
 		text-shadow: 0 5px 6px rgba(0,0,0,0.12), 0 5px 6px rgba(0,0,0,0.24);
 	}
@@ -94,7 +92,7 @@
 		.md-button {
 			width: 20%;
 			min-width: 0;
-			height: 54px;
+			height: 45px;
 			float: left;
 			margin: 0;
 			background-color: $accentDarken1;
@@ -109,7 +107,7 @@
 	.search-bar {
 		width: 80%;
 		min-height: 0;
-		height: 54px;
+		height: 45px;
 		margin: 0;
 		padding: 0;
 		padding-left: 10px;
@@ -117,7 +115,7 @@
 		display: block;
 		font-family: 'OpenSans';
 		font-size: 16px;
-		line-height: 54px;
+		line-height: 45px;
 		background-color: $primaryLighten4;
 		border: none;
 		border-top-left-radius: 3px;
@@ -125,7 +123,7 @@
 		transition: font-size .1s ease-out;
 
 		&:focus {
-			font-size: 18px;
+			font-size: 17px;
 			outline: none;
 		}
 	}
@@ -339,15 +337,20 @@
 		width: 100%;
 		max-height: calc(100% - 49px);
 
-		.logo-link {
-			display: none;
-		}
-
 		.page-content {
-			transform: translateY(calc(50vh - 250px));
+			// transform: translateY(calc(50vh - 250px));
 			
 			h1 {
-				font-size: 2.5em;
+				font-size: 1.3em;
+			}
+
+			.logo {
+				width: 200px;
+				top: -20px;
+				position: relative;
+				margin-top: 20px;
+				margin-bottom: -20px;
+				margin-left: calc(50% - 110px);
 			}
 
 			.search-input {
@@ -356,7 +359,7 @@
 					font-size: 12px;
 
 					&:focus {
-						font-size: 14px;
+						font-size: 13px;
 					}
 				}
 
@@ -384,6 +387,7 @@
 		}
 
 		.slide-up {
+			// top: 100px;
 			transform: translateY(0px);
 		}
 

@@ -1,7 +1,7 @@
 <template>
 	<div id="topbar" v-if="$route.path != '/search' && $route.path != '/login' && $route.path != '/admin' && $route.path !='/'">
 		<md-toolbar>
-			<a class="logo-link" href="https://awayfromlife.com"><img src="/static/Logo.png" alt="Away From Life Logo"></a>
+			<router-link class="logo-link" to="/"><img :src="'/static/' + logoLink" alt="Away From Life Streets Logo"></router-link>
 			<follow-buttons></follow-buttons>
 
 			<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)" v-if="isSinglePage()">
@@ -56,13 +56,19 @@ export default {
 			query: '',
 			timeOut: undefined,
 			loading: false,
-			searched: false
+			searched: false,
+			logoLink: 'Logo.png'
 		}
 	},
 	watch: {
 		$route() {
 			this.hideResults();
 			this.query = '';
+			
+			if(this.isSinglePage())
+				this.logoLink = 'Logo-Red.png';
+			else 
+				this.logoLink = 'Logo.png'
 		}
 	},
 	methods: {
@@ -95,6 +101,7 @@ export default {
 	},
 	mounted() {
 		let context = this;
+
 		window.addEventListener('click', function(e){  
 			
 			if (document.getElementsByClassName('topbar-search')[0] && !document.getElementsByClassName('topbar-search')[0].contains(e.target)){

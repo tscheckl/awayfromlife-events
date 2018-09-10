@@ -153,6 +153,7 @@ a {
 	}
 }
 
+// All of this needs to be important as the plugin's default styles would overwrite these after building the app.
 .form-v-select {
 	width: 100% !important;
 	

@@ -1,12 +1,12 @@
 <template>
   	<div id="events_search">
-		<a class="logo-link" href="https://awayfromlife.com"><img src="/static/Logo.png" alt="Away From Life Logo"></a>
 		<follow-buttons></follow-buttons>
 		<div class="background-img"></div>
 		<div class="darken"></div>
 		<div class="page-content">
+			<img class="logo" src="/static/Logo-Big.png" alt="Away From Life Streets Logo">
 			<div class="main-input">
-				<h1>Find Hardcore and Punk <br> Events, Locations and Bands</h1>
+				<h1>Find Hardcore and Punk Events, Locations and Bands</h1>
 				<div class="search-input">
 					<form v-on:submit.prevent>
 						<input class="search-bar" v-model="query" required placeholder="Enter what you are looking for (e.g. Berlin, Sick of it all, ..)">

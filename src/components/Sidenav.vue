@@ -7,7 +7,7 @@
 						<span class="hamburger-inner"></span>
 					</span>
 				</button>
-				<a href="https://awayfromlife.com"><img src="/static/Logo.png" alt="Away From Life Logo"></a>
+				<router-link to="/"><img src="/static/Logo.png" alt="Away From Life Logo"></router-link>
 			</div>
 
 			<div class="menu-items-list">

@@ -159,7 +159,7 @@
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
-			<span >New band successfully created!</span>
+			<span >New band successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
 	</div>

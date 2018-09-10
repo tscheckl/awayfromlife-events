@@ -175,7 +175,7 @@
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
-			<span>New event successfully created!</span>
+			<span>New event successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
 	</div>
