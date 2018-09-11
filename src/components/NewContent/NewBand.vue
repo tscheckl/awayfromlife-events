@@ -193,8 +193,12 @@ export default {
 			var vm = this;
 
 			if(this.newBand.name && this.newBand.genre[0] != '' && this.newBand.origin) {
-				for(let genre in this.newBand.genre)
-					this.newBand.genre[genre] = this.newBand.genre[genre].name;
+				for(let genre in this.newBand.genre) {
+					if(this.newBand.genre[genre] == '') 
+						this.newBand.genre.splice(genre, 1);
+					else 
+						this.newBand.genre[genre] = this.newBand.genre[genre].name;
+				}
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
 				let editBand = this.edit?'/' + this.newBand._id: '';

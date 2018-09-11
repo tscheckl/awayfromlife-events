@@ -34,6 +34,7 @@
 							<md-input-container>
 								<v-select class="form-v-select"
 										  label="name"
+										  :on-change="(selected) => onSelectGenre(selected, index)"
 										  :options="backendGenres"
 										  v-model="data.genre[index]"
 										  placeholder="Select band's genre*">
@@ -164,6 +165,15 @@ export default {
 				releaseYear: ''
 			});
 		},
+		onSelectGenre(selected, index) {
+			this.data.genre[index] = selected;
+			if(selected != '') {
+				if(this.data.genre.reduce((acc, cur) => (acc != '' && cur != ''))) {
+					if(this.data.genre.length < 3)
+						this.data.genre.push('');
+				}
+			}
+		},
 		removeFromArray(array, index) {
 			array.splice(index, 1);
 			
@@ -172,11 +182,9 @@ export default {
 			}
 		},
 	},
-	mounted() {
+	mounted() {		
 		this.$http.get(backendUrl + '/api/genres')
-			.then(response => {
-				console.log(response.body.data);
-				
+			.then(response => {				
 				this.backendGenres = response.body.data;
 			})
 			.catch(err => console.log("Error in BandForm:", err));

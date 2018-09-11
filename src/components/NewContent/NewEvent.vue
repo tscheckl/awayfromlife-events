@@ -231,7 +231,10 @@ export default {
 			if(this.newEvent.title && this.newEvent.startDate && this.newEvent.location && this.newEvent.bands[0] != '') {
 				//Extract ids of selected bands for the event to send it to the backend.
 				for(let i in this.newEvent.bands) {
-					this.newEvent.bands[i] = this.newEvent.bands[i]._id
+					if(this.newEvent.bands[i] == '')
+						this.newEvent.bands.splice(i, 1);
+					else
+						this.newEvent.bands[i] = this.newEvent.bands[i]._id
 				}
 				//Extract id of selected location for the event to send it to the backend.
 				this.newEvent.location = this.newEvent.location._id;

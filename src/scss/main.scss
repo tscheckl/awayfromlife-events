@@ -194,6 +194,21 @@ a {
 			}
 		}
 
+		.no-options {
+			color: $primaryDarken4 !important;
+			&:hover {
+				color: $primaryDarken4 !important;
+				background-color: transparent !important;
+			}
+
+			b {
+				color: $accentDarken2;
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+
 		.highlight{
 			color: $primaryLighten4 !important;
 			a {
