@@ -22,6 +22,11 @@
 										  :on-change="(selected) => onSelectBand(selected, index)"
 										  v-model="selectedBands[index]"
 										  placeholder="Select event's bands*">
+
+										  	<span slot="no-options">
+												Looks like the band you're looking for doesn't exist yet. 
+												<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+											</span>
 								</v-select>
 							</md-input-container>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
@@ -48,6 +53,11 @@
 										  :on-change="(selected) => selectionHandler(selected, index)"
 										  v-model="selectedLocations[index]"
 										  placeholder="Select event location*">
+											
+											<span slot="no-options">
+												Looks like the location you're looking for doesn't exist yet. 
+												<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+											</span>
 								</v-select>
 							</md-input-container>
 							<div class="picker">
@@ -86,14 +96,39 @@
 				</md-layout>
 			</div>
 		</form>
+
+		<md-dialog ref="newBandDialog">
+			<new-band 
+					v-on:close="$refs['newBandDialog'].close()"
+					v-on:success="updateContent('newBandDialog')">
+			</new-band>
+		</md-dialog>
+
+		<md-dialog ref="newLocationDialog">
+			<new-location 
+					v-on:close="$refs['newLocationDialog'].close()"
+					v-on:success="updateContent('newLocationDialog')">
+			</new-location>
+		</md-dialog>
+
+		<md-snackbar md-position="bottom right" ref="snackbar">
+			<span>New {{createdContent}} successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
   	</div>
 </template>
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import NewBand from "@/Components/NewContent/NewBand";
+import NewLocation from "@/Components/NewContent/NewLocation";
 
 export default {
 	name: 'event-form',
+	components: {
+		NewBand,
+		NewLocation
+	},
 	props: {
 		data: Object,
 		selectedLocations: Array
@@ -102,7 +137,8 @@ export default {
 		return {
 			locations: [],
 			backendBands: [],
-			selectedBands: []
+			selectedBands: [],
+			createdContent: ''
 		}
 	},
 	methods: {
@@ -121,6 +157,11 @@ export default {
 			
 			if(selected._id) {
 				this.data.bands[index] = selected._id;
+			}
+
+			if(selected != '') {
+				if(this.selectedBands.reduce((acc, cur) => (acc != '' && cur != '')))
+					this.addBand();
 			}
 		},
 		addBand() {
@@ -154,25 +195,44 @@ export default {
 				this.selectedLocations[0] = '';
 			}
 		},
+		updateContent(dialog) {
+			this.$refs[dialog].close();
+
+			if(dialog == 'newBandDialog') {
+				this.createdContent = 'band';
+				this.getBandOptions();
+			}
+			else {
+				this.createdContent = 'location';
+				this.getLocationOptions();
+			}
+
+			this.$refs.snackbar.open();
+		},
+		getBandOptions() {
+			this.$http.get(backendUrl + "/api/bands")
+				.then(response => {
+					this.backendBands = response.body.data;
+					for(let band of this.backendBands) {
+						band.label = band.name + ' - ' + band.origin.country;
+					}
+				})
+				.catch(err => {});
+		},
+		getLocationOptions() {
+			this.$http.get(backendUrl + "/api/locations")
+				.then(response => {
+					this.locations = response.body.data;
+					for(let location of this.locations) {
+						location.label = location.name + ' - ' + location.address.city;
+					}
+				})
+				.catch(err => {});
+		}
 	},
 	mounted() {
-		this.$http.get(backendUrl + "/api/locations")
-			.then(response => {
-				this.locations = response.body.data;
-				for(let location of this.locations) {
-					location.label = location.name + ' - ' + location.address.city;
-				}
-			})
-			.catch(err => {});
-
-		this.$http.get(backendUrl + "/api/bands")
-			.then(response => {
-				this.backendBands = response.body.data;
-				for(let band of this.backendBands) {
-					band.label = band.name + ' - ' + band.origin.country;
-				}
-			})
-			.catch(err => {});
+		this.getLocationOptions();
+		this.getBandOptions();
 	},
 }
 </script>
