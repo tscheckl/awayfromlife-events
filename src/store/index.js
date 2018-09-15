@@ -12,7 +12,7 @@ export default new Vuex.Store({
 			location: '',
 			bands: [''],
 			description: '',
-			startDate: ''
+			date: ''
 		},
 		currentLocation: {
 			name: '',
@@ -39,8 +39,8 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		setCurrentEvent(state, event) {
-			event.formattedDate = moment(event.startDate).format('LL');
-			event.formattedTime = moment(event.startDate).format('HH:mm');
+			event.formattedDate = moment(event.date).format('LL');
+			event.formattedTime = moment(event.date).format('HH:mm');
 			if (event.location.address) {
 				event.location.label = event.location.name + ' - ' + event.location.address.city;
 			}

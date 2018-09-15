@@ -25,7 +25,7 @@ export default {
 	},
 	computed: {
 		formattedDate() {
-			return moment(this.data.startDate).format('YYYY-MM-DD');
+			return moment(this.data.date).format('YYYY-MM-DD');
 		}
 	}
 }

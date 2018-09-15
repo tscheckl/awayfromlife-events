@@ -50,7 +50,7 @@
 				<div v-on:click="expanded ?showSubMenu(showSubMenus['events-sub-menu'], 'events-sub-menu') :''" 
 					 v-on:mouseover="!expanded ?showSubMenu(true, 'events-sub-menu') :''" 
 					 v-on:mouseleave="!expanded ?showSubMenu(false, 'events-sub-menu') :''">
-					<router-link :to="!expanded ?'/events?page=1&itemsPerPage=20&sortBy=startDate&ascending=true' :''">
+					<router-link :to="!expanded ?'/events?page=1&itemsPerPage=20&sortBy=date&ascending=true' :''">
 						<div class="menu-item">
 							<svg width="40px" height="40px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
 								<path d="M462,31h-44V10.25c0-5.521-4.49-10-10-10s-10,4.479-10,10V31h-81.5V10c0-5.521-4.49-10-10-10s-10,4.479-10,10v21h-81V10     c0-5.521-4.49-10-10-10s-10,4.479-10,10v21h-81.41V10.25c0-5.521-4.49-10-10-10c-5.52,0-10,4.479-10,10V31H50     C22.43,31,0,53.43,0,81v381c0,27.57,22.43,50,50,50h412c27.57,0,50-22.43,50-50V81C512,53.43,489.57,31,462,31z M492,462     c0,16.542-13.458,30-30,30H50c-16.542,0-30-13.458-30-30V202h472V462z M492,182H20v-20h472V182z M492,142H20V81     c0-16.542,13.458-30,30-30h44.09v19.25c0,5.51,4.48,10,10,10c5.51,0,10-4.49,10-10V51h81.41v19c0,5.51,4.49,10,10,10     s10-4.49,10-10V51h81v19c0,5.51,4.49,10,10,10s10-4.49,10-10V51H398v19.25c0,5.51,4.49,10,10,10s10-4.49,10-10V51h44     c16.542,0,30,13.458,30,30V142z" fill="#ff5252"/>
@@ -67,7 +67,7 @@
 
 					<div class="sub-items events-sub-menu">
 						<md-icon class="indicator">arrow_left</md-icon>
-						<router-link to="/events?page=1&itemsPerPage=20&sortBy=startDate&ascending=true">
+						<router-link to="/events?page=1&itemsPerPage=20&sortBy=date&ascending=true">
 							<div class="sub-item" v-on:click="removeExpandedClass">
 								<svg width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
 									<path d="M462,31h-44V10.25c0-5.521-4.49-10-10-10s-10,4.479-10,10V31h-81.5V10c0-5.521-4.49-10-10-10s-10,4.479-10,10v21h-81V10     c0-5.521-4.49-10-10-10s-10,4.479-10,10v21h-81.41V10.25c0-5.521-4.49-10-10-10c-5.52,0-10,4.479-10,10V31H50     C22.43,31,0,53.43,0,81v381c0,27.57,22.43,50,50,50h412c27.57,0,50-22.43,50-50V81C512,53.43,489.57,31,462,31z M492,462     c0,16.542-13.458,30-30,30H50c-16.542,0-30-13.458-30-30V202h472V462z M492,182H20v-20h472V182z M492,142H20V81     c0-16.542,13.458-30,30-30h44.09v19.25c0,5.51,4.48,10,10,10c5.51,0,10-4.49,10-10V51h81.41v19c0,5.51,4.49,10,10,10     s10-4.49,10-10V51h81v19c0,5.51,4.49,10,10,10s10-4.49,10-10V51H398v19.25c0,5.51,4.49,10,10,10s10-4.49,10-10V51h44     c16.542,0,30,13.458,30,30V142z" fill="#ff5252"/>
@@ -82,7 +82,7 @@
 							</div>
 						</router-link>
 						
-						<router-link to="/archived-events?page=1&itemsPerPage=20&sortBy=startDate&ascending=true">
+						<router-link to="/archived-events?page=1&itemsPerPage=20&sortBy=date&ascending=true">
 							<div class="sub-item" v-on:click="removeExpandedClass">
 								<svg width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
 									<g>

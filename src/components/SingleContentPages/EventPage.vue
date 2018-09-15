@@ -9,7 +9,7 @@
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit event</md-tooltip>	
 					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteEvent">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('confirmDeletionDialog')">
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete event</md-tooltip>
 					</md-button>
@@ -107,11 +107,18 @@
 				<md-button class="no" v-on:click="reportCancel(false)">No</md-button>
 			</div>
 		</md-dialog>
+
+		<md-dialog ref="confirmDeletionDialog">
+			<confirm-dialog v-on:confirm="deleteEvent" v-on:close="$refs.confirmDeletionDialog.close()">
+				<h3 slot="headline">Do you really want to delete this event?</h3>
+			</confirm-dialog>
+		</md-dialog>
 	</div>
 </template>
 
 <script>
 import NewEvent from '@/components/NewContent/NewEvent';
+import ConfirmDialog from '@/Components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 
@@ -123,7 +130,8 @@ export default {
 	components: {
 		NewEvent,
 		ReportDialog,
-		NotFound
+		NotFound,
+		ConfirmDialog
 	},
 	computed: {
 		event() {
@@ -142,6 +150,8 @@ export default {
 			this.$refs[ref].open();
 		},
 		deleteEvent() {
+			this.$refs.confirmDeletionDialog.close();
+			
 			this.$http.delete(backendUrl + `/api/${this.backendEndpoint}/` + this.event._id)
 				.then(response => {
 					this.$router.go(-1);
@@ -220,6 +230,7 @@ export default {
 			})
 			.catch(err => this.$router.push('/not-found'));
 		}
+		
 			
 	}
 }

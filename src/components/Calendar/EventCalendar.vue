@@ -100,7 +100,7 @@ export default {
 					//Iterate through all respnse events and make their date the key in the events object.
 					//The events of one day are saved into an array of events.
 					response.body.data.forEach(gottenEvent => {
-						let gottenFormattedDate = moment(gottenEvent.startDate).format('YYYY-MM-DD');
+						let gottenFormattedDate = moment(gottenEvent.date).format('YYYY-MM-DD');
 						//If the day does not yet have any events, create a new Array for the day.
 						if(!this.events[gottenFormattedDate]) {
 							this.events[gottenFormattedDate] = [gottenEvent];

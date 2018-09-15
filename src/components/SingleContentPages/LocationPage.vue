@@ -10,7 +10,7 @@
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit location</md-tooltip>	
 					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteLocation">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('confirmDeletionDialog')">
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete location</md-tooltip>
 					</md-button>
@@ -84,11 +84,18 @@
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
+
+		<md-dialog ref="confirmDeletionDialog">
+			<confirm-dialog v-on:confirm="deleteLocation" v-on:close="$refs.confirmDeletionDialog.close()">
+				<h3 slot="headline">Do you really want to delete this location?</h3>
+			</confirm-dialog>
+		</md-dialog>
 	</div>
 </template>
 
 <script>
 import NewLocation from '@/Components/NewContent/NewLocation';
+import ConfirmDialog from '@/Components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 
@@ -100,7 +107,8 @@ export default {
 	components: {
 		NewLocation,
 		ReportDialog,
-		NotFound
+		NotFound,
+		ConfirmDialog
 	},
 	computed: {
 		location() {
@@ -126,6 +134,8 @@ export default {
 			this.$router.push({path: `/event/${event.url}`});
 		},
 		deleteLocation() {
+			this.$refs.confirmDeletionDialog.close();
+			
 			this.$http.delete(backendUrl + '/api/locations/' + this.location._id)
 				.then(response => {
 					this.$router.go(-1);
@@ -164,10 +174,12 @@ export default {
 			.then(response => {
 				if(!response.body.message) {
 					this.locationEvents = response.body.data;
+					console.log(this.locationEvents);
+					
 					if(this.locationEvents) {
 						for(let event of this.locationEvents) {
-							event.formattedDate = moment(event.startDate).format('LL');
-							event.formattedTime = moment(event.startDate).format('HH:mm');
+							event.formattedDate = moment(event.date).format('LL');
+							event.formattedTime = moment(event.date).format('HH:mm');
 						}
 					}
 

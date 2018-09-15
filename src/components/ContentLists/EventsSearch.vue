@@ -73,7 +73,7 @@
 					<div class="result" v-if="!loading" v-for="index in resultLimiter.events" :key="index" v-on:click="showResult(results.events[index-1])">
 						<div class="result-content">
 							<h3>{{results.events[index-1].data.title}}</h3>
-							<p>{{results.events[index-1].data.startDate}}</p>
+							<p>{{results.events[index-1].data.date}}</p>
 							<p>Result found in {{results.events[index-1].match.pretty}}: 
 								{{results.events[index-1].match.value.beforeMatch}}
 								<span class="result-match">{{results.events[index-1].match.value.match}}</span>
@@ -219,8 +219,8 @@ export default {
 							afterMatch: resultMatchValue.substring((resultMatchValueIndex + this.query.length), resultMatchValue.length)
 						};
 
-						if(result.data.startDate)
-							result.data.startDate = moment(result.data.startDate).format('LL');
+						if(result.data.date)
+							result.data.date = moment(result.data.date).format('LL');
 					}
 
 					this.resultLimiter[category] = this.results[category].length>=3 ?3 :this.results[category].length;

@@ -9,7 +9,7 @@
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit band</md-tooltip>	
 					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="deleteBand">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('confirmDeletionDialog')">
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete band</md-tooltip>
 					</md-button>
@@ -83,7 +83,14 @@
 		</md-dialog>
 
 		<md-dialog ref="reportDialog">
-			<report-dialog :id="band._id" contentType="band" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
+			<report-dialog :id="band._id" contentType="band" v-on:close="message => handleDialogClose(message, 'reportDialog')">
+			</report-dialog>
+		</md-dialog>
+
+		<md-dialog ref="confirmDeletionDialog">
+			<confirm-dialog v-on:confirm="deleteBand" v-on:close="$refs.confirmDeletionDialog.close()">
+				<h3 slot="headline">Do you really want to delete this band?</h3>
+			</confirm-dialog>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -95,6 +102,7 @@
 
 <script>
 import NewBand from '@/Components/NewContent/NewBand';
+import ConfirmDialog from '@/Components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 
@@ -105,6 +113,7 @@ export default {
 	name: 'band-page',
 	components: {
 		NewBand,
+		ConfirmDialog,
 		ReportDialog,
 		NotFound
 	},
@@ -133,6 +142,8 @@ export default {
 			this.$router.push({path: `/event/${event.url}`});
 		},
 		deleteBand() {
+			this.$refs.confirmDeletionDialog.close();
+
 			this.$http.delete(backendUrl + '/api/bands/' + this.band._id)
 				.then(response => {
 					this.$router.go(-1);
@@ -172,8 +183,8 @@ export default {
 					this.bandEvents = response.body.data;
 					if(this.bandEvents) {
 						for(let event of this.bandEvents) {
-							event.formattedDate = moment(event.startDate).format('LL');
-							event.formattedTime = moment(event.startDate).format('HH:mm');
+							event.formattedDate = moment(event.date).format('LL');
+							event.formattedTime = moment(event.date).format('HH:mm');
 						}
 					}
 

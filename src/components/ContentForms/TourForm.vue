@@ -62,7 +62,7 @@
 							</md-input-container>
 							<div class="picker">
 								<md-icon>date_range</md-icon>
-								<datetime v-model="tourstop.startDate" placeholder="Select date*" type="datetime"></datetime>
+								<datetime v-model="tourstop.date" placeholder="Select date*" type="datetime"></datetime>
 							</div>
 							<md-button v-on:click="removeTourStop(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -179,7 +179,7 @@ export default {
 		addTourStop() {
 			this.data.tourStops.push({
 				location: '',
-				startDate: ''
+				date: ''
 			});
 		},
 		removeTourStop(index) {
@@ -189,7 +189,7 @@ export default {
 			if(this.data.tourStops.length == 0) {
 				this.data.tourStops[0] = {
 					location: '',
-					startDate: ''
+					date: ''
 				};
 
 				this.selectedLocations[0] = '';

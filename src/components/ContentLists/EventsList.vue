@@ -120,9 +120,9 @@
 				<h3 class="no-items-title" v-if="events.length == 0">No Events found..</h3>
 
 				<div class="list-item-header" v-if="events.length > 0">
-					<p class="event-date" v-on:click="sortBy('startDate')">
+					<p class="event-date" v-on:click="sortBy('date')">
 						<span>When?
-							<md-icon v-if="currentlySorted == 'startDate'">{{!sortingAsc.startDate? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+							<md-icon v-if="currentlySorted == 'date'">{{!sortingAsc.date? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p> 
 					<p class="item-title" v-on:click="sortBy('title')">
@@ -202,11 +202,11 @@ export default {
 			events: [],
 			locations: [],
 			sortingAsc: {
-				startDate: false,
+				date: false,
 				title: false,
 				location: false
 			},
-			currentlySorted: 'startDate',
+			currentlySorted: 'date',
 			filterCriteria: {
 				startWith: [],
 				cities: undefined,
@@ -254,7 +254,7 @@ export default {
 				description: '',
 				location: '',
 				bands: [''],
-				startDate: '',
+				date: '',
 				endDate: '',
 				time: ''
 			});
@@ -298,7 +298,7 @@ export default {
 							'&order=' + sortingDirection + 
 							'&startWith=' + startingLetter + 
 							(this.appliedFilters.genre ?('&genre=' + this.appliedFilters.genre) :'') + 
-							(this.appliedFilters.firstDate ?('&startDate=' + this.appliedFilters.firstDate) :'') +
+							(this.appliedFilters.firstDate ?('&date=' + this.appliedFilters.firstDate) :'') +
 							(this.appliedFilters.lastDate ?('&endDate=' + this.appliedFilters.lastDate) :'') +
 							((this.filterByCity && this.appliedFilters.city) ?('&city=' + this.appliedFilters.city) :'') +
 							((!this.filterByCity && this.appliedFilters.country) ?('&country=' + this.appliedFilters.country) :''))
@@ -317,7 +317,7 @@ export default {
 
 				for(let event of this.events) {
 					//Add formatted date Attribute to each event for displaying the date in the list.
-					event.formattedDate = moment(event.startDate).format('LL');
+					event.formattedDate = moment(event.date).format('LL');
 				}
 				this.loading = false;
 
@@ -495,7 +495,7 @@ export default {
 			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
 		}
 		else {
-			this.sortingAsc.startDate = true;
+			this.sortingAsc.date = true;
 		}
 		
 		this.getEventsPage(this.currentPage);

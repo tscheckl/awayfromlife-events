@@ -40,8 +40,8 @@
 										  placeholder="Select event's bands*">
 
 										  	<span slot="no-options">
-											  Looks like the band you're looking for doesn't exist yet. 
-											  <b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+												Looks like the band you're looking for doesn't exist yet. 
+												<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
 											</span>
 								</v-select>
 							</md-input-container>
@@ -78,7 +78,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
 							<md-icon>date_range</md-icon>
-							<datetime v-if="!edit || edit && event.startDate" v-model="event.startDate" placeholder="Select date*" type="datetime"></datetime>
+							<datetime v-if="!edit || edit && event.date" v-model="event.date" placeholder="Select date*" type="datetime"></datetime>
 						</div>
 					</md-layout>
 				</md-layout>
