@@ -23,16 +23,27 @@ export default new Vuex.Store({
 		},
 		currentBand: {
 			name: '',
-			genre: '',
+			genre: [''],
 			foundingDate: '',
 			recordLabel: '',
 			origin: {},
 			history: '',
 			releases: [{}],
-			website: '',
+			websiteUrl: '',
 			facebookUrl: '',
 			bandcampUrl: '',
 			soundcloudUrl: ''
+		},
+		currentFestival: {
+			title: '',
+			url: '',
+			description: '',
+			genre: [''],
+			events: [''],
+			address: {},
+			ticketLink: '',
+			website: '',
+			facebookUrl: ''
 		},
 		animation: 'slide-in',
 		previousRoute: ''
@@ -63,6 +74,9 @@ export default new Vuex.Store({
 		setCurrentBand(state, band) {
 			state.currentBand = band;
 		},
+		setCurrentFestival(state, festival) {
+			state.currentFestival = festival;
+		},
 		setAnimation(state, animation) {
 			state.animation = animation;
 		},
@@ -73,6 +87,9 @@ export default new Vuex.Store({
 	getters: {
 		currentEvent: state => {
 			return state.currentEvent;
+		},
+		currentFestival: state => {
+			return state.currentFestival;
 		},
 		currentLocation: state => {
 			return state.currentLocation;

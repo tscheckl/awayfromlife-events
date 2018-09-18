@@ -7,6 +7,7 @@ import BugReport from '@/components/BugReport';
 import EventsList from '@/components/ContentLists/EventsList';
 import EventsArchive from '@/components/ContentLists/EventsArchive';
 import LocationsList from '@/components/ContentLists/LocationsList';
+import FestivalsList from '@/components/ContentLists/FestivalsList';
 import BandsList from '@/components/ContentLists/BandsList';
 import EventsSearch from '@/components/ContentLists/EventsSearch';
 import EventPage from '@/Components/SingleContentPages/EventPage';
@@ -40,6 +41,10 @@ export default new Router({
 	{
 		path: '/archived-event/:url',
 		component: EventPage
+	},
+	{
+		path: '/festivals',
+		component: FestivalsList
 	},
 	{
 		path: '/locations',

@@ -1,0 +1,30 @@
+@import "../themeColors";
+@import "./newContent";
+
+#new_festival {
+	padding: 0;
+
+	.close-btn {
+		color: $primaryDarken4;
+		right: 20px;
+	}
+
+	h1 {
+		padding-left: 40px;
+	}
+
+	.festival-form {
+		h3, .md-input-container {
+			margin-left: 15px;
+		}
+
+		textarea {
+			height: 135px !important;
+		}
+
+		.datepickers {
+			display: flex;
+			justify-content: space-evenly;
+		}
+	}
+}

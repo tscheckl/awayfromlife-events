@@ -1,12 +1,12 @@
 <template>
-	<div id="events_list">
+	<div id="festivals_list">
 		<div class="list-header">
 			<div class="header-line">	
 				<div class="left-container">
-					<h1>{{archive ?'Events Archive' :'All Events'}}</h1>
+					<h1>All Festivals</h1>
 				</div>
 
-				<md-button class="md-raised create-content-btn" v-on:click="openNewEvent"><md-icon>add</md-icon>Create new Event</md-button>
+				<md-button class="md-raised create-content-btn" v-on:click="$refs.newFestivalDialog.open()"><md-icon>add</md-icon>Create new Event</md-button>
 			</div>
 
 			
@@ -16,7 +16,7 @@
 				<md-icon>keyboard_arrow_right</md-icon>
 			</h3>
 			<div class="filters">
-				<h3>Events from A to Z: </h3>
+				<h3>Festivals from A to Z: </h3>
 				<ul class="starting-letter-filter">
 					<li v-for="i in 26" :key="i" :class="buildLetterCssClasses((i+9).toString(36).toUpperCase())">
 						<span v-on:click="filterCriteria.startWith.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''"> 
@@ -117,7 +117,7 @@
 			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 
 			<div class="list-content" v-if="!loading">
-				<h3 class="no-items-title" v-if="events.length == 0">No Events found..</h3>
+				<h3 class="no-items-title" v-if="events.length == 0">No Festivals found..</h3>
 
 				<div class="list-item-header" v-if="events.length > 0">
 					<p class="event-date" v-on:click="sortBy('date')">
@@ -167,15 +167,15 @@
 			</div>
 		</div>
 
-		<md-dialog ref="newEventDialog">
-			<new-event 
-					v-on:success="handleDialogClose('newEventDialog', true)" 
-					v-on:close="$refs['newEventDialog'].close();">
-			</new-event>
+		<md-dialog ref="newFestivalDialog">
+			<new-festival
+					v-on:success="handleDialogClose('newFestivalDialog', true)" 
+					v-on:close="$refs['newFestivalDialog'].close();">
+			</new-festival>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
-			<span>New event successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
+			<span>New festival successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
 	</div>
@@ -184,18 +184,12 @@
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
-import NewEvent from "@/components/NewContent/NewEvent";
+import NewFestival from "@/components/NewContent/NewFestival";
 
 export default {
-	name: 'events-list',
+	name: 'festivals-list',
 	components: {
-		NewEvent,
-	},
-	props: {
-		archive: {
-			type: Boolean,
-			default: false
-		}
+		NewFestival
 	},
 	data() {
 		return {
@@ -248,25 +242,10 @@ export default {
 		}
 	},
 	methods: {
-		openNewEvent() {
-			this.$store.commit('setCurrentEvent', {
-				title: '',
-				description: '',
-				location: '',
-				bands: [''],
-				date: '',
-				endDate: '',
-				time: ''
-			});
-			this.$refs['newEventDialog'].open();	
-		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
-		showEvent(event, index) {
-			this.$store.commit('setCurrentEvent', event);
-			if(!this.archive)
-				this.$router.push({path: `/event/${event.url}`});
-			else
-				this.$router.push({path: `/archived-event/${event.url}`});
+		showEvent(festival, index) {
+			this.$store.commit('setCurrentFestival', festival);
+			this.$router.push({path: `/festival/${festival.url}`});
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
@@ -287,12 +266,10 @@ export default {
 			this.checkUrlParams();
 
 			let sortingDirection = this.sortingAsc[this.currentlySorted] ? 1 : -1;
-			//Check if you're currently on the archive page or not and change the backend-endpoint for the request accordingly.
-			let endpoint = this.archive ?'archived-events' :'events';
 			//Catch problem if the starting letter is # and convert it so the backend can parse it.
 			let startingLetter = this.appliedFilters.startWith == '#' ?'%23' :this.appliedFilters.startWith;
 
-			this.$http.get(backendUrl + '/api/' + endpoint + '/page?page=' + page + 
+			this.$http.get(backendUrl + '/api/festivals/page?page=' + page + 
 							'&perPage=' + this.itemsPerPage + 
 							'&sortBy=' + this.currentlySorted + 
 							'&order=' + sortingDirection + 
@@ -472,10 +449,8 @@ export default {
 		}
 	},
 	created() {
-		//Check if you're currently on the archive page or not and change the backend-endpoint for the request accordingly. 
-		let endpoint = this.archive ?'archived-events' :'events';
 		//Get all the filter information from the backend.
-		this.$http.get(backendUrl + '/api/' + endpoint + '/filters')
+		this.$http.get(backendUrl + '/api/festivals/filters')
 			.then(response => { 
 				this.filterCriteria = response.body.data;
 				// this.appliedFilters.firstDate = response.body.data.firstDate;
@@ -504,5 +479,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/ContentLists/_eventsList.scss";
+	@import "src/scss/ContentLists/_festivalsList.scss";
 </style>

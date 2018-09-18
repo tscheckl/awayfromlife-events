@@ -154,6 +154,8 @@ export default {
 	},
 	methods: {
 		addEvent() {
+			console.log(this.newEvent);
+			return;
 			this.loading = true;
 			//Reset the error messages
 			this.submitStatus = '';

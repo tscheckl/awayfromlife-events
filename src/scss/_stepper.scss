@@ -1,0 +1,105 @@
+@import "./themeColors";
+
+#stepper {
+	overflow: hidden;
+	transition: height .3s ease-out;
+
+	.steps-header {
+		display: flex;
+		padding: 20px 30px;
+		padding-right: 70px;
+		text-align: center;
+		background-color: $accentAccent2;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+		.steps-header-number {
+			flex: 1;
+			display: flex;
+			text-align: center;
+
+			span {
+				// background-color: #232323;
+				color: $primaryLighten4;
+				height: 25px;
+				width: 25px;
+				border-radius: 50px;
+				padding-top: 2px;
+				cursor: pointer;
+				transition: background-color .2s ease-out;
+
+				&:hover {
+					background-color: $accentDarken1;
+				}
+			}
+
+			.active {
+				background-color: $primaryLighten4;
+				color: #232323;
+				
+
+				&:hover {
+					background-color: $primaryLighten2;
+				}
+			}
+
+			hr {
+				flex: 1;
+				height: 1px;
+				border: none;
+				border-bottom: 1px solid $primaryLighten4;
+				margin: 0 10px;
+				margin-top: 12px;
+			}
+
+			&:last-of-type {
+				flex: 0;
+			}
+		}
+	}
+
+	.stepper-body {
+		padding: 20px;
+	}
+
+	h1 {
+		padding-left: 0;
+	}
+
+	.step {
+		padding: 0 20px;
+	}
+
+	.next-btn {
+		color: $primaryLighten4;
+		background-color: $accentAccent2;
+	}
+
+	// steps transisitions
+	.slide-in-enter-active, .slide-in-leave-active, .slide-out-enter-active, .slide-out-leave-active {
+		transition: transform .3s ease-out;
+	}
+
+	.slide-in-enter {
+		position: absolute !important;
+		transform: translateX(100%);
+		opacity: 1;
+	}
+
+	.slide-in-leave-to {
+		position: absolute !important;
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+
+	.slide-out-enter {
+		position: absolute !important;
+		transform: translateX(-100%);
+		opacity: 1;
+	}
+
+	.slide-out-leave-to {
+		position: absolute !important;
+		transform: translateX(100%);
+		opacity: 0;
+	}
+}

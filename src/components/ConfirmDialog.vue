@@ -98,13 +98,7 @@ export default {
 				}, 200);
 			}, 600);
 		}
-	},
-	updated() {
-		// if(document.getElementsByClassName('yes')[0]) document.getElementsByClassName('yes')[0].classList.remove('selected');
-		// if(document.getElementsByClassName('no')[0]) document.getElementsByClassName('no')[0].classList.remove('selected');
-		// if(document.getElementsByClassName('yes-icon')[0]) document.getElementsByClassName('yes-icon')[0].classList.remove('selected');
-		// if(document.getElementsByClassName('no-icon')[0]) document.getElementsByClassName('no-icon')[0].classList.remove('selected');
-	},
+	}
 }
 </script>
 

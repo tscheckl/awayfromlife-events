@@ -1,7 +1,7 @@
 @import "../themeColors";
 @import "./similarDialog";
 
-#new_event, #new_band, #new_location {
+#new_event, #new_band, #new_location, #new_festival {
 	position: relative;
 	width: 900px;
 	max-width: 100%;
@@ -26,7 +26,7 @@
 }
 
 @media screen and (max-width: 768px){
-	#new_event, #new_band, #new_location {
+	#new_event, #new_band, #new_location, #new_festival {
 		padding: 20px;
 		height: 100%;
 
