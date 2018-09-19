@@ -147,7 +147,10 @@ export default {
 			this.event.location = selected;
 		},
 		onSelectBand(selected, index) {
-
+			console.log("fischisch", selected == '');
+			console.log("ab",index);
+			
+			
 			this.localBands[index] = selected;
 			if(selected != '') {
 				if(this.localBands.reduce((acc, cur) => (acc != '' && cur != '')))
