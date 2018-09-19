@@ -298,8 +298,8 @@ export default {
 							'&order=' + sortingDirection + 
 							'&startWith=' + startingLetter + 
 							(this.appliedFilters.genre ?('&genre=' + this.appliedFilters.genre) :'') + 
-							(this.appliedFilters.firstDate ?('&date=' + this.appliedFilters.firstDate) :'') +
-							(this.appliedFilters.lastDate ?('&endDate=' + this.appliedFilters.lastDate) :'') +
+							(this.appliedFilters.firstDate ?('&startDate=' + this.appliedFilters.firstDate) :'') +
+							(this.appliedFilters.lastDate ?('&endDate=' + this.aRppliedFilters.lastDate) :'') +
 							((this.filterByCity && this.appliedFilters.city) ?('&city=' + this.appliedFilters.city) :'') +
 							((!this.filterByCity && this.appliedFilters.country) ?('&country=' + this.appliedFilters.country) :''))
 			.then(response => {

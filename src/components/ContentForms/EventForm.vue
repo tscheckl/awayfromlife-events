@@ -78,7 +78,12 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<div class="picker">
 							<md-icon>date_range</md-icon>
-							<datetime v-if="!edit || edit && event.date" v-model="event.date" placeholder="Select date*" type="datetime"></datetime>
+							<datetime v-if="!edit || edit && event.date" v-model="event.date" placeholder="Select date*" type="date"></datetime>
+						</div>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100">
+						<div class="picker">
 						</div>
 					</md-layout>
 				</md-layout>
@@ -147,7 +152,10 @@ export default {
 			this.event.location = selected;
 		},
 		onSelectBand(selected, index) {
-
+			console.log("fischisch", selected == '');
+			console.log("ab",index);
+			
+			
 			this.localBands[index] = selected;
 			if(selected != '') {
 				if(this.localBands.reduce((acc, cur) => (acc != '' && cur != '')))
