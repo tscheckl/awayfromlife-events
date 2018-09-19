@@ -154,8 +154,6 @@ export default {
 	},
 	methods: {
 		addEvent() {
-			console.log(this.newEvent);
-			return;
 			this.loading = true;
 			//Reset the error messages
 			this.submitStatus = '';
@@ -204,6 +202,11 @@ export default {
 			this.submitStatus = '';
 
 			if(this.newTour.title && this.newTour.tourStops[0].location && this.newTour.tourStops[0].date) {
+				for(let i in this.newTour.bands) {
+					if(this.newTour.bands[i] == '')
+						this.newTour.bands.splice(i, 1);
+				}
+
 				for(let tourstop in this.newTour.tourStops) {
 					let singleTourStopEvent = {
 						title: this.newTour.title,

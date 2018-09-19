@@ -15,6 +15,42 @@
 							<md-input v-model="newFestival.title" required></md-input>
 						</md-input-container>
 					</md-layout>
+
+					<md-layout md-flex="100">
+						<h4>Address</h4>
+						<p>Always pick one of the suggested cities instead of only writing it into the input field. If the exact city you were looking for does not appear in the suggestions please always pick the closest match.</p>
+						<md-input-container>
+							<input type="search" ref="address_input" v-model="newFestival.address.value" placeholder="Address of the festival*" required/>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-gutter md-flex="100">
+						<md-layout md-flex="100">
+							<h4>Genre</h4>
+							<p>(You can add up to 3)</p>
+						</md-layout>
+						<md-layout class="single-genre single-form-field" v-for="(genre, index) in newFestival.genre" :key="index" md-flex="33" md-flex-small="100">
+							<md-input-container>
+								<v-select class="form-v-select"
+										  label="name"
+										  :on-change="(selected) => onSelectGenre(selected, index)"
+										  :options="backendGenres"
+										  v-model="newFestival.genre[index]"
+										  placeholder="Select band's genre*">
+								</v-select>
+							</md-input-container>
+
+							<md-button v-if="newFestival.genre.length > 1" v-on:click="removeFromArray(newFestival.genre,index)" class="md-icon-button md-raised">
+								<md-icon>clear</md-icon>
+								<md-tooltip>Remove genre</md-tooltip>
+							</md-button>
+						</md-layout>
+
+						<md-button v-if="newFestival.genre.length < 3" v-on:click="newFestival.genre.push('')" class="md-icon-button md-raised md-accent add-field-btn add-genre-btn">
+							<md-icon>add</md-icon>
+							<md-tooltip md-direction="right">Add another genre</md-tooltip>
+						</md-button>
+					</md-layout>
 				</md-layout>
 			</div>
 
@@ -38,12 +74,12 @@
 						<md-icon>clear</md-icon>
 						<md-tooltip>Remove band</md-tooltip>
 					</md-button>
-
-					<md-button v-if="newFestivalEvent.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-field-btn">
-						<md-icon>add</md-icon>
-						<md-tooltip md-direction="right">Add another band</md-tooltip>
-					</md-button>
 				</div>
+				
+				<md-button v-if="newFestivalEvent.bands != null" v-on:click="newFestivalEvent.bands.push('')" class="md-icon-button md-raised md-accent add-field-btn">
+					<md-icon>add</md-icon>
+					<md-tooltip md-direction="right">Add another band</md-tooltip>
+				</md-button>
 			</div>
 
 			<div slot="step-3">
@@ -98,6 +134,7 @@
 
 <script>
 import Datepicker from 'vuejs-datepicker';
+import places from 'places.js';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import Stepper from '@/Components/Stepper';
 
@@ -125,12 +162,36 @@ export default {
 				endDate: '',
 				bands: ['']
 			},
-			backendBands: []
+			backendBands: [],
+			backendGenres: []
 		}
 	},
 	methods: {
 		addFestival() {
 			console.log("juhu");
+		},
+		onSelectGenre(selected, index) {
+			this.newFestival.genre[index] = selected;
+			if(selected != '') {
+				if(this.newFestival.genre.reduce((acc, cur) => (acc != '' && cur != ''))) {
+					if(this.newFestival.genre.length < 3)
+						this.newFestival.genre.push('');
+				}
+			}
+		},
+		onSelectBand(selected, index) {			
+			this.newFestivalEvent.bands[index] = selected;
+			if(selected != '') {
+				if(this.newFestivalEvent.bands.reduce((acc, cur) => (acc != '' && cur != '')))
+					this.newFestivalEvent.bands.push('');
+			}
+		},
+		removeFromArray(array, index) {
+			array.splice(index, 1);
+			
+			if(array.length == 0) {
+				array[0] = '';
+			}
 		},
 		getBandOptions() {
 			this.$http.get(backendUrl + "/api/bands")
@@ -145,6 +206,25 @@ export default {
 	},
 	mounted() {
 		this.getBandOptions();
+
+		this.$http.get(backendUrl + '/api/genres')
+			.then(response => {				
+				this.backendGenres = response.body.data;
+			})
+			.catch(err => console.log("Error in BandForm:", err));
+
+		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
+		this.placesAutocomplete.on('change', e => {
+			this.data.address.street = e.suggestion.name;
+			this.data.address.city = e.suggestion.city;
+			this.data.address.administrative = e.suggestion.administrative;
+			this.data.address.country = e.suggestion.country;
+			this.data.address.postcode = e.suggestion.postcode;
+			this.data.address.lat = e.suggestion.latlng.lat;
+			this.data.address.lng = e.suggestion.latlng.lng;
+			this.data.address.value = e.suggestion.value;
+			this.value = e.suggestion.value ?e.suggestion.value :this.value;
+		});
 	}
 }
 </script>

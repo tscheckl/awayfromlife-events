@@ -146,11 +146,7 @@ export default {
 			//Set the new Event's location attribute to the ID of the selected location
 			this.event.location = selected;
 		},
-		onSelectBand(selected, index) {
-			console.log("fischisch", selected == '');
-			console.log("ab",index);
-			
-			
+		onSelectBand(selected, index) {			
 			this.localBands[index] = selected;
 			if(selected != '') {
 				if(this.localBands.reduce((acc, cur) => (acc != '' && cur != '')))

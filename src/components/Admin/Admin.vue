@@ -136,8 +136,8 @@ export default {
 	},
 	methods: {
 		handleVerify(keepData) {
-			let verifyDataBands = this.verifyData.bands.slice();
 			if(this.currentCategory == 'unverified Events') {
+				let verifyDataBands = this.verifyData.bands.slice();
 				this.verifyData.location = this.verifyData.location._id;
 				//I HATE JAVASCRIPT ARRAYS
 				for (let index in verifyDataBands) {
@@ -148,6 +148,15 @@ export default {
 				}
 				this.verifyData.bands = verifyDataBands.slice();
 			}
+			else if(this.currentCategory == 'unverified Bands') {
+				let verifyDataGenres = this.verifyData.genre.slice()
+				for(let index in verifyDataGenres) {
+					if(verifyDataGenres[index] == '')
+						verifyDataGenres.splice(index, 1);
+				}
+				this.verifyData.genre = verifyDataGenres.slice();
+			}
+
 			//Delete the currently viewed data from the respective unvalidated-route.
 			this.$http.delete(backendUrl + this.unvalidatedRoute + this.verifyData._id)
 				.then(response => {

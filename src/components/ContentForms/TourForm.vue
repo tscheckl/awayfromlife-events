@@ -62,7 +62,7 @@
 							</md-input-container>
 							<div class="picker">
 								<md-icon>date_range</md-icon>
-								<datetime v-model="tourstop.date" placeholder="Select date*" type="datetime"></datetime>
+								<datetime v-model="tourstop.date" placeholder="Select date*" type="date"></datetime>
 							</div>
 							<md-button v-on:click="removeTourStop(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
