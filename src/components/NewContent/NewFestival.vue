@@ -84,15 +84,47 @@
 
 			<div slot="step-3">
 				<h3>When does the festival happen?</h3>
-				<div class="datepickers">
+
+				<!-- <p class="date-select">{{newFestival.title}} 
+					<md-input-container>
+						<label>Year</label>
+						<md-input min="1960" max="3000" type="number" v-model="newFestival.description"></md-input>
+					</md-input-container>
+					is happening from
+					<datetime v-model="newFestivalEvent.startDate"></datetime>
+					to
+					<datetime v-model="newFestivalEvent.endDate"></datetime>
+				</p> -->
+				<!-- <div class="datepickers">
 					<div class="from-picker">
 						<p>From</p>
-						<datepicker :inline="true"></datepicker>
+						<datepicker v-model="newFestivalEvent.startDate"  :inline="true"></datepicker>
 					</div>
 					<div class="to-picker">
 						<p>To</p>
-						<datepicker :inline="true"></datepicker>
+						<datepicker v-model="newFestivalEvent.endDate" :inline="true" :disabledDates="disabledDates"></datepicker>
 					</div>
+				</div> -->
+
+				<div class="datepicker-trigger">
+					<input
+						type="text"
+						style="visibility:hidden;"
+						id="datepicker-trigger"
+						placeholder="Select dates"
+						:value="'fisch'"
+					>
+
+					<AirbnbStyleDatepicker
+						:trigger-element-id="'datepicker-trigger'"
+						:mode="'range'"
+						:inline="true"
+						:showActionButtons="false"
+						:date-one="newFestivalEvent.startDate"
+						:date-two="newFestivalEvent.endDate"
+						@date-one-selected="val => { newFestivalEvent.startDate = val }"
+						@date-two-selected="val => { newFestivalEvent.endDate = val }"
+					/>
 				</div>
 			</div>
 
@@ -135,6 +167,7 @@
 <script>
 import Datepicker from 'vuejs-datepicker';
 import places from 'places.js';
+import moment from 'moment';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import Stepper from '@/Components/Stepper';
 
@@ -150,7 +183,6 @@ export default {
 				title: '',
 				description: '',
 				genre: [''],
-				events: [''],
 				address: {},
 				ticketLink: '',
 				website: '',
@@ -163,12 +195,45 @@ export default {
 				bands: ['']
 			},
 			backendBands: [],
-			backendGenres: []
+			backendGenres: [],
+			festivalEventYear: '',
+			dateRange: [],
 		}
 	},
 	methods: {
 		addFestival() {
-			console.log("juhu");
+			console.log(this.newFestivalEvent);
+			return;
+			this.newFestivalEvent.title = this.newFestival.title + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
+
+			for (let index in this.newFestival.genre) {
+				if(this.newFestival.genre[index].name)
+					this.newFestival.genre[index] = this.newFestival.genre[index].name;
+				else
+					this.newFestival.genre.splice(index, 1);
+			}
+
+			for(let index in this.newFestivalEvent.bands) {
+				if(this.newFestivalEvent.bands[index]._id) 
+					this.newFestivalEvent.bands[index] = this.newFestivalEvent.bands[index]._id
+				else
+					this.newFestivalEvent.bands.splice(index, 1)
+			}
+
+			let requestBody = {
+				festival: this.newFestival,
+				event: this.newFestivalEvent
+			}			
+ 
+			this.$http.post(backendUrl + '/api/unvalidated-festivals', requestBody)
+				.then(response => {
+					console.log(response);
+					
+				})
+				.catch(err => {
+					console.log(err);
+					
+				})
 		},
 		onSelectGenre(selected, index) {
 			this.newFestival.genre[index] = selected;
@@ -203,6 +268,12 @@ export default {
 				})
 				.catch(err => {});
 		},
+		getDisabledDates() {
+			// disables every day of a month which is a multiple of 3
+            if (date.getDate() % 3 === 0) {
+              return true
+            }
+		}
 	},
 	mounted() {
 		this.getBandOptions();
@@ -215,15 +286,15 @@ export default {
 
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
 		this.placesAutocomplete.on('change', e => {
-			this.data.address.street = e.suggestion.name;
-			this.data.address.city = e.suggestion.city;
-			this.data.address.administrative = e.suggestion.administrative;
-			this.data.address.country = e.suggestion.country;
-			this.data.address.postcode = e.suggestion.postcode;
-			this.data.address.lat = e.suggestion.latlng.lat;
-			this.data.address.lng = e.suggestion.latlng.lng;
-			this.data.address.value = e.suggestion.value;
-			this.value = e.suggestion.value ?e.suggestion.value :this.value;
+			this.newFestival.address.street = e.suggestion.name;
+			this.newFestival.address.city = e.suggestion.city;
+			this.newFestival.address.administrative = e.suggestion.administrative;
+			this.newFestival.address.country = e.suggestion.country;
+			this.newFestival.address.postcode = e.suggestion.postcode;
+			this.newFestival.address.lat = e.suggestion.latlng.lat;
+			this.newFestival.address.lng = e.suggestion.latlng.lng;
+			this.newFestival.address.value = e.suggestion.value;
+			// this.value = e.suggestion.value ?e.suggestion.value :this.value;
 		});
 	}
 }

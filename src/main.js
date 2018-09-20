@@ -12,6 +12,8 @@ import VueRouter from 'vue-router'
 import router from './routerConfig'
 import Calendar from 'vuejs-datepicker';
 import vSelect from 'vue-select';
+import AirbnbStyleDatepicker from 'vue-airbnb-style-datepicker'
+import 'vue-airbnb-style-datepicker/dist/styles.css'
 import VueAnalytics from 'vue-analytics';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import store from '@/store/index.js';
@@ -19,6 +21,7 @@ import store from '@/store/index.js';
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
 Vue.use(VueResource);
+Vue.use(AirbnbStyleDatepicker);
 Vue.use(Datetime);
 
 Vue.use(VueAnalytics, {
