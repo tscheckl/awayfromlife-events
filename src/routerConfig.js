@@ -11,6 +11,7 @@ import FestivalsList from '@/components/ContentLists/FestivalsList';
 import BandsList from '@/components/ContentLists/BandsList';
 import EventsSearch from '@/components/ContentLists/EventsSearch';
 import EventPage from '@/Components/SingleContentPages/EventPage';
+import FestivalPage from '@/Components/SingleContentPages/FestivalPage';
 import LocationPage from '@/Components/SingleContentPages/LocationPage';
 import BandPage from '@/Components/SingleContentPages/BandPage';
 import NotFound from '@/components/NotFound';
@@ -45,6 +46,10 @@ export default new Router({
 	{
 		path: '/festivals',
 		component: FestivalsList
+	},
+	{
+		path: '/festival/:url',
+		component: FestivalPage
 	},
 	{
 		path: '/locations',

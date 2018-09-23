@@ -1,5 +1,23 @@
 @import "./generalList";
 
 #festivals_list {
-	
+	.festival-name {
+		width: 45%
+	}
+
+	.festival-country, .festival-city {
+		width: 25%;
+	}
+
+	.hidden-icon, .learn-more-icon {
+		width: 5%;
+	}
+
+	.list-item-header {
+		p {
+			span {
+				cursor: pointer;
+			}
+		}
+	}
 }

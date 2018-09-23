@@ -117,31 +117,31 @@
 			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
 
 			<div class="list-content" v-if="!loading">
-				<h3 class="no-items-title" v-if="events.length == 0">No Festivals found..</h3>
+				<h3 class="no-items-title" v-if="festivals.length == 0">No Festivals found..</h3>
 
-				<div class="list-item-header" v-if="events.length > 0">
-					<p class="event-date" v-on:click="sortBy('date')">
-						<span>When?
+				<div class="list-item-header" v-if="festivals.length > 0">
+					<p class="festival-name" v-on:click="sortBy('date')">
+						<span>Name
 							<md-icon v-if="currentlySorted == 'date'">{{!sortingAsc.date? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p> 
-					<p class="item-title" v-on:click="sortBy('title')">
-						<span>What? 
+					<p class="festival-city" v-on:click="sortBy('title')">
+						<span>City
 							<md-icon v-if="currentlySorted == 'title'">{{!sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
-					<p class="location-name" v-on:click="sortBy('location')">
-						<span>Where? 
+					<p class="festival-country" v-on:click="sortBy('location')">
+						<span>Country
 							<md-icon v-if="currentlySorted == 'location'">{{!sortingAsc.location? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
 					<md-icon class="hidden-icon"></md-icon>
 				</div>
 
-				<div class="list-item" v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
-					<p class="event-date">{{event.formattedDate}}</p>
-					<h3 class="item-title">{{event.title}}</h3>
-					<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
+				<div class="list-item" v-for="(festival, index) in festivals" :key="index" v-on:click="showFestival(festival, index)">
+					<h3 class="festival-name">{{festival.title}}</h3>
+					<p class="festival-city">{{festival.address.city}}</p>
+					<p class="festival-country" v-if="festival.address">{{festival.address.country}}</p>
 					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 				</div>
 			</div>
@@ -193,7 +193,7 @@ export default {
 	},
 	data() {
 		return {
-			events: [],
+			festivals: [],
 			locations: [],
 			sortingAsc: {
 				date: false,
@@ -242,8 +242,8 @@ export default {
 		}
 	},
 	methods: {
-		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
-		showEvent(festival, index) {
+		//Function for giving the Single-Event dialog the data of the clicked festival and opening it.
+		showFestival(festival, index) {
 			this.$store.commit('setCurrentFestival', festival);
 			this.$router.push({path: `/festival/${festival.url}`});
 		},
@@ -260,7 +260,7 @@ export default {
 
 			this.buildUrl();
 		},
-		//Get all events for the given page number.
+		//Get all festivals for the given page number.
 		getEventsPage(page) {
 			this.loading = true;
 			this.checkUrlParams();
@@ -282,19 +282,19 @@ export default {
 			.then(response => {
 				//Check if backend sent data, i.e. not sending an error message.
 				if(response.body.data) {
-					this.events = response.body.data;
+					this.festivals = response.body.data;
 				}
-				//If an error message is sent, set the events to be empty which will show a warning message in the list.
+				//If an error message is sent, set the festivals to be empty which will show a warning message in the list.
 				else {
-					this.events = [];
+					this.festivals = [];
 				}
 				this.availablePages = response.body.pages;
 				this.currentPage = response.body.current;
 				
 
-				for(let event of this.events) {
-					//Add formatted date Attribute to each event for displaying the date in the list.
-					event.formattedDate = moment(event.date).format('LL');
+				for(let festival of this.festivals) {
+					//Add formatted date Attribute to each festival for displaying the date in the list.
+					festival.formattedDate = moment(festival.date).format('LL');
 				}
 				this.loading = false;
 
@@ -350,7 +350,7 @@ export default {
 
 			return biggerPages.slice(0,3);
 		},
-		//Function for closing a dialog and refreshing the events.
+		//Function for closing a dialog and refreshing the festivals.
 		handleDialogClose(ref) {
 			this.$refs[ref].close();
 			this.$refs.snackbar.open();
@@ -383,7 +383,7 @@ export default {
 		//Function for returning the css classes of one letter of the starting-letters filter.
 		buildLetterCssClasses(letter) {
 			return 'start-letter-' + letter 
-					+ (this.filterCriteria.startWith.indexOf(letter) != -1 ?' available' :' ') //Check if there are events starting with that letter and add respective class.
+					+ (this.filterCriteria.startWith.indexOf(letter) != -1 ?' available' :' ') //Check if there are festivals starting with that letter and add respective class.
 					+ (this.$route.query.startWith == letter ?' active-start-letter' :''); //Check if the letter is currently selected and add respective class.
 		},
 		toggleFilters() {

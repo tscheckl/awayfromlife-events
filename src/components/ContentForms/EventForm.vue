@@ -159,9 +159,8 @@ export default {
 		removeBand(index) {
 			this.localBands.splice(index, 1);
 			
-			if(this.localBands.length == 0) {
+			if(this.localBands.length == 0)
 				this.localBands[0] = '';
-			}
 		},
 		updateContent(dialog) {
 			this.$refs[dialog].close();

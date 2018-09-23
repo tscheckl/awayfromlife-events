@@ -19,6 +19,7 @@
 				<md-input-container>
 					<md-select name="content-type" v-model="currentCategory" v-on:selected="getUnvalidatedData">
 						<md-option value="unverified Events">Events</md-option>
+						<md-option value="unverified Festivals">Festivals</md-option>
 						<md-option value="unverified Locations">Locations</md-option>
 						<md-option value="unverified Bands">Bands</md-option>
 						<md-option value="reports">Reported content</md-option>
@@ -209,6 +210,10 @@ export default {
 			if(category == 'unverified Events') {
 				this.unvalidatedRoute = '/api/unvalidated-events/';
 				this.validatedRoute = '/api/events';
+			}
+			else if (category == 'unverified Festivals') {
+				this.unvalidatedRoute = '/api/unvalidated-festivals/';
+				this.validatedRoute = '/api/festivals';
 			}
 			else if (category == 'unverified Locations') {
 				this.unvalidatedRoute = '/api/unvalidated-locations/';

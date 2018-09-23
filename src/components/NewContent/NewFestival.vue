@@ -4,9 +4,42 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 
-		<stepper class="festival-form" :steps="4" v-on:submit="addFestival">
-			<h1 slot="headline">New Festival</h1>
-			<div slot="step-1">
+		<div :class="'form-intro '  + (showStepper ?'hide' :'')">
+			<h1>New Festival</h1>
+			<div :class="(createExistingFestival ?'hide ' :'') + 'creation-prompt'">
+				<h3>Do you want to create a</h3>
+				<button class="md-button md-raised" v-on:click="showForm(true)">New Festival</button>
+				<h3>or a</h3>
+				<button class="md-button md-raised" v-on:click="showForm(false)">New Instance of an existing Festival</button>
+
+				<p class="not-sure-prompt">not sure? <span v-on:click="showFestivalList = !showFestivalList">check if the festival you want to create already exists <md-icon>{{showFestivalList ?'keyboard_arrow_down' :'keyboard_arrow_right'}}</md-icon></span></p>
+
+				<div :class="'festival-list ' + (!showFestivalList ?'hide' : '')">
+					<md-input-container>
+						<v-select class="form-v-select"
+									v-model="existingFestival"
+									:options="festivalList"
+									:on-change="checkSelection"
+									label="title"
+									placeholder="Enter the festival you're looking for*">
+						</v-select>
+					</md-input-container>
+				</div>
+			</div>
+
+			<div :class="(!createExistingFestival ?'hide ' :'') + 'create-existing'">
+				<md-icon class="big-check">check</md-icon>
+				<p>looks like the festival you're looking for already exists. So you probably want to</p>
+				<button class="md-button md-raised" v-on:click="showForm(false)">Create a new Instance of an existing Festival <md-icon>keyboard_arrow_right</md-icon></button>
+				<p class="check-again" v-on:click="createExistingFestival = false">or check again?</p>
+			</div>
+		</div>
+
+		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
+
+		<stepper :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?4 :3" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
+			<h1 slot="headline">New Festival {{!createExistingFestival ?' Instance' :''}}</h1>
+			<div slot="step-1" v-show="createFestival">
 				<h3>General information</h3>
 				<md-layout md-gutter>
 					<md-layout md-flex="50" md-flex-small="100">
@@ -54,6 +87,19 @@
 				</md-layout>
 			</div>
 
+			<div class="select-existing-festival" slot="step-1" v-if="!createFestival">
+				<h3>Select the festival you want to create a new instance of</h3>
+				<md-input-container>
+					<v-select class="form-v-select"
+								v-model="existingFestival"
+								:options="festivalList"
+								:on-change="checkSelection"
+								label="title"
+								placeholder="Enter the festival you're looking for*">
+					</v-select>
+				</md-input-container>
+			</div>
+
 			<div slot="step-2">
 				<h3>Lineup</h3>
 				<div class="single-form-field" v-for="(band, index) in newFestivalEvent.bands" :key="index">
@@ -70,7 +116,7 @@
 									</span>
 						</v-select>
 					</md-input-container>
-					<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
+					<md-button v-on:click="removeFromArray(newFestivalEvent.bands, index)" class="md-icon-button md-raised">
 						<md-icon>clear</md-icon>
 						<md-tooltip>Remove band</md-tooltip>
 					</md-button>
@@ -83,29 +129,8 @@
 			</div>
 
 			<div slot="step-3">
-				<h3>When does the festival happen?</h3>
-
-				<!-- <p class="date-select">{{newFestival.title}} 
-					<md-input-container>
-						<label>Year</label>
-						<md-input min="1960" max="3000" type="number" v-model="newFestival.description"></md-input>
-					</md-input-container>
-					is happening from
-					<datetime v-model="newFestivalEvent.startDate"></datetime>
-					to
-					<datetime v-model="newFestivalEvent.endDate"></datetime>
-				</p> -->
-				<!-- <div class="datepickers">
-					<div class="from-picker">
-						<p>From</p>
-						<datepicker v-model="newFestivalEvent.startDate"  :inline="true"></datepicker>
-					</div>
-					<div class="to-picker">
-						<p>To</p>
-						<datepicker v-model="newFestivalEvent.endDate" :inline="true" :disabledDates="disabledDates"></datepicker>
-					</div>
-				</div> -->
-
+				<h3>When does the festival happen? </h3>
+				<p class="heading-additional-info">(You can select a date range)</p>
 				<div class="datepicker-trigger">
 					<input
 						type="text"
@@ -128,7 +153,7 @@
 				</div>
 			</div>
 
-			<div slot="step-4">
+			<div slot="step-4" v-if="createFestival">
 				<h3>Additional information</h3>
 				<md-layout md-gutter>
 					<md-layout md-flex="100">
@@ -161,6 +186,16 @@
 				</md-layout>
 			</div>
 		</stepper>
+
+		<div class="loading" v-show="loading">
+			<div class="darken"></div>
+			<md-spinner md-indeterminate class="md-accent"></md-spinner>
+		</div>
+		
+		<md-snackbar md-position="bottom right" ref="snackbar">
+			<span >{{this.submitStatus}}</span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
 	</div>
 </template>
 
@@ -190,50 +225,104 @@ export default {
 			},
 			newFestivalEvent: {
 				title: '',
-				startDate: '',
-				endDate: '',
+				startDate: new Date().setDate(new Date().getDate()-1),
+				endDate: new Date().setDate(new Date().getDate()+1),
 				bands: ['']
 			},
+			authorized: false,
+			loading: false,
+			submitStatus: '',
 			backendBands: [],
 			backendGenres: [],
-			festivalEventYear: '',
-			dateRange: [],
+			showStepper: false,
+			createFestival: false,
+			showFestivalList: false,
+			festivalList: [],
+			createExistingFestival: false,
+			existingFestival: null
 		}
 	},
 	methods: {
 		addFestival() {
-			console.log(this.newFestivalEvent);
-			return;
-			this.newFestivalEvent.title = this.newFestival.title + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
+			this.loading = true;
+			
+			if(this.newFestival.title 
+			&& this.newFestival.address.value 
+			&& this.newFestival.genre[0] != '' 
+			&& this.newFestivalEvent.bands[0] != '' 
+			&& this.newFestivalEvent.startDate 
+			&& this.newFestivalEvent.endDate) {
+				this.newFestivalEvent.title = this.newFestival.title + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
 
-			for (let index in this.newFestival.genre) {
-				if(this.newFestival.genre[index].name)
-					this.newFestival.genre[index] = this.newFestival.genre[index].name;
-				else
-					this.newFestival.genre.splice(index, 1);
+				for (let index in this.newFestival.genre) {
+					if(this.newFestival.genre[index].name)
+						this.newFestival.genre[index] = this.newFestival.genre[index].name;
+					else
+						this.newFestival.genre.splice(index, 1);
+				}
+
+				for(let index in this.newFestivalEvent.bands) {
+					if(this.newFestivalEvent.bands[index]._id) 
+						this.newFestivalEvent.bands[index] = this.newFestivalEvent.bands[index]._id
+					else
+						this.newFestivalEvent.bands.splice(index, 1)
+				}
+
+				let requestBody = {
+					festival: this.newFestival,
+					event: this.newFestivalEvent
+				}
+				
+				let apiRoute = this.authorized ?'festivals' :'unvalidated-festivals';
+	
+				this.$http.post(`${backendUrl}/api/${apiRoute}`, requestBody)
+					.then(response => {
+						this.loading = false;
+						this.$emit('success');					
+					})
+					.catch(err => {
+						this.loading = false;
+						this.submitStatus = err.body.message;	
+						this.$refs.snackbar.open();				
+					});
 			}
-
-			for(let index in this.newFestivalEvent.bands) {
-				if(this.newFestivalEvent.bands[index]._id) 
-					this.newFestivalEvent.bands[index] = this.newFestivalEvent.bands[index]._id
-				else
-					this.newFestivalEvent.bands.splice(index, 1)
+			else {
+				this.loading = false;
+				this.submitStatus = 'All required form fields need to be filled out!';	
+				this.$refs.snackbar.open();	
 			}
+		},
+		addFestivalEvent() {
+			this.loading = true;
 
-			let requestBody = {
-				festival: this.newFestival,
-				event: this.newFestivalEvent
-			}			
- 
-			this.$http.post(backendUrl + '/api/unvalidated-festivals', requestBody)
-				.then(response => {
-					console.log(response);
-					
-				})
-				.catch(err => {
-					console.log(err);
-					
-				})
+			if(this.existingFestival && this.newFestivalEvent.bands[0] != '' && this.newFestivalEvent.startDate && this.newFestivalEvent.endDate) {
+				this.newFestivalEvent.title = this.existingFestival.title + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
+
+				for(let index in this.newFestivalEvent.bands) {
+					if(this.newFestivalEvent.bands[index]._id) 
+						this.newFestivalEvent.bands[index] = this.newFestivalEvent.bands[index]._id
+					else
+						this.newFestivalEvent.bands.splice(index, 1)
+				}
+
+				let apiRoute = this.authorized ?'festival-events' :'unvalidated-festival-events';
+
+				this.$http.post(`${backendUrl}/api/${apiRoute}` + this.existingFestival._id, this.newFestivalEvent)
+					.then(response => {
+						this.loading = false;
+						this.$emit('success');					
+					})
+					.catch(err => {
+						this.loading = false;
+						this.submitStatus = err.body.message;	
+						this.$refs.snackbar.open();				
+					});
+			}
+			else {
+				this.loading = false;
+				this.submitStatus = 'All required form fields need to be filled out!';	
+				this.$refs.snackbar.open();		
+			}
 		},
 		onSelectGenre(selected, index) {
 			this.newFestival.genre[index] = selected;
@@ -268,21 +357,40 @@ export default {
 				})
 				.catch(err => {});
 		},
-		getDisabledDates() {
-			// disables every day of a month which is a multiple of 3
-            if (date.getDate() % 3 === 0) {
-              return true
-            }
+		checkSelection(selection) {
+			if(selection != null) {
+				this.existingFestival = selection;
+				this.createExistingFestival = true;
+			}
+			else {
+				this.createExistingFestival = false;
+			}
+		},
+		showForm(createFestival) {
+			this.createFestival = createFestival;
+			this.showStepper = true;
 		}
 	},
 	mounted() {
 		this.getBandOptions();
 
+		this.$http.get(backendUrl + '/api/users/auth')
+			.then(response => {
+				this.authorized = true;
+			})
+			.catch(err => {});
+
 		this.$http.get(backendUrl + '/api/genres')
 			.then(response => {				
 				this.backendGenres = response.body.data;
 			})
-			.catch(err => console.log("Error in BandForm:", err));
+			.catch(err => console.log("Error in Festival Form:", err));
+
+		this.$http.get(backendUrl + '/api/festivals')
+			.then(response => {				
+				this.festivalList = response.body.data;
+			})
+			.catch(err => console.log("Error in Festival Form:", err));
 
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
 		this.placesAutocomplete.on('change', e => {

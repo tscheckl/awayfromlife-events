@@ -27,6 +27,7 @@
 		</div>
 
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
+		
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
