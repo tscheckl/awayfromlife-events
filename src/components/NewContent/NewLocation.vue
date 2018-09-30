@@ -69,7 +69,7 @@ export default {
 	computed: {
 		newLocation() {
 			if(this.edit) {
-				return Object.assign({},this.$store.getters.currentLocation);
+				return JSON.parse(JSON.stringify(this.$store.getters.currentLocation));
 			}
 			else {
 				return this.blankLocation

@@ -135,7 +135,7 @@ export default {
 	},
 	computed: {
 		event() {
-			return Object.assign({},this.$store.getters.currentEvent);
+			return JSON.parse(JSON.stringify(this.$store.getters.currentEvent));
 		}
 	},
 	data() {

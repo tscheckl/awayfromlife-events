@@ -28,7 +28,7 @@
 
 			<div class="content-body">
 				<h3><md-icon>info_outline</md-icon>General Information</h3>
-				<p><span>Genre: </span><span class="band-genre" v-for="genre in band.genre" :key="genre">{{genre}}</span></p>
+				<p><span>Genre: </span><span class="band-genre" v-for="(genre, index) in band.genre" :key="genre">{{genre + (index == band.genre.length-1 ?'' :', ')}}</span></p>
 				<p v-if="band.recordLabel"><span>Label: </span>{{band.recordLabel}}</p>
 				
 				<hr>
@@ -119,7 +119,7 @@ export default {
 	},
 	computed: {
 		band() {
-			return Object.assign({},this.$store.getters.currentBand);
+			return JSON.parse(JSON.stringify(this.$store.getters.currentBand));
 		}
 	},
 	data() {
@@ -210,7 +210,7 @@ export default {
 			this.$http.get(backendUrl + '/api/bands/byurl/' + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
-					this.$store.commit('setCurrentBand', response.body.data);
+					this.$store.commit('setCurrentBand', JSON.parse(JSON.stringify(response.body.data)));
 					this.getBandEvents();
 				}
 			})

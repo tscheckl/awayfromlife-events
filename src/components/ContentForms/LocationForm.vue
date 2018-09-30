@@ -17,7 +17,7 @@
 					<md-layout md-flex="100">
 						<p>Always pick one of the suggested addresses instead of only writing it into the input field. If the exact address you were looking for does not appear in the suggestions please always pick the closest match.</p>
 						<md-input-container>
-							<input type="search" ref="address_input" v-model="data.address.value" placeholder="Address of the location" required/>
+							<input type="search" ref="address_input" v-model="data.address.value" placeholder="Address of the location*" required/>
 						</md-input-container>
 					</md-layout>
 					
@@ -79,7 +79,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
+		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address', language: 'en'});
 		this.placesAutocomplete.on('change', e => {
 			this.data.address.street = e.suggestion.name;
 			this.data.address.city = e.suggestion.city;
@@ -94,7 +94,7 @@ export default {
 	},
 	updated() {
 		//Workaround for admin page.
-		if(!this.placesAutocomplete) this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
+		if(!this.placesAutocomplete) this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address', language: 'en'});
 	}
 	
 }

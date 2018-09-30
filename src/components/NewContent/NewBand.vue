@@ -73,7 +73,7 @@ export default {
 	computed: {
 		newBand() {
 			if(this.edit) {
-				return Object.assign({},this.$store.getters.currentBand);
+				return JSON.parse(JSON.stringify(this.$store.getters.currentBand));
 			}
 			else {
 				return this.blankBand

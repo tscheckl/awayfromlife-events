@@ -69,7 +69,7 @@
 										  :on-change="(selected) => onSelectGenre(selected, index)"
 										  :options="backendGenres"
 										  v-model="newFestival.genre[index]"
-										  placeholder="Select band's genre*">
+										  placeholder="Select festival's genre*">
 								</v-select>
 							</md-input-container>
 
@@ -204,7 +204,7 @@ import Datepicker from 'vuejs-datepicker';
 import places from 'places.js';
 import moment from 'moment';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
-import Stepper from '@/Components/Stepper';
+import Stepper from '@/components/Stepper';
 
 export default {
 	name: 'new-festival',
@@ -307,7 +307,7 @@ export default {
 
 				let apiRoute = this.authorized ?'festival-events' :'unvalidated-festival-events';
 
-				this.$http.post(`${backendUrl}/api/${apiRoute}` + this.existingFestival._id, this.newFestivalEvent)
+				this.$http.post(`${backendUrl}/api/${apiRoute}/` + this.existingFestival._id, this.newFestivalEvent)
 					.then(response => {
 						this.loading = false;
 						this.$emit('success');					
@@ -392,7 +392,7 @@ export default {
 			})
 			.catch(err => console.log("Error in Festival Form:", err));
 
-		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address'});
+		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address', language: 'en'});
 		this.placesAutocomplete.on('change', e => {
 			this.newFestival.address.street = e.suggestion.name;
 			this.newFestival.address.city = e.suggestion.city;

@@ -14,14 +14,6 @@
 		.band-genre {
 			font-family: "OpenSans";
 			margin-right: 5px;
-
-			&:after {
-				content: ", ";
-			}
-
-			&:last-of-type:after {
-				content: "";
-			}
 		}
 
 		.band-history {

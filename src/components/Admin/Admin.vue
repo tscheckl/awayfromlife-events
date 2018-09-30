@@ -30,8 +30,10 @@
 				<md-list>
 					<div v-if="unverifiedContent.length > 0">
 						<md-list-item v-for="(data, index) in unverifiedContent" :key="index" @click="showInfo(unverifiedContent, index)">
-							<h4 v-if="currentCategory != 'reports'">{{data.title ?data.title :data.name}}</h4>
-							<span v-if="currentCategory != 'reports'">{{currentCategory}}</span>
+							<h4 v-if="currentCategory != 'reports' && currentCategory != 'unverified Festivals'">{{data.title ?data.title :data.name}}</h4>
+							<h4 v-if="currentCategory == 'unverified Festivals'">{{data.event.title}}</h4>
+							<span v-if="currentCategory != 'reports' && currentCategory != 'unverified Festivals'">{{currentCategory}}</span>
+							<span v-if="currentCategory == 'unverified Festivals'">{{data.validated ?'unverified Festival Events' :'unverified Festivals'}}</span>
 							
 							<h4 v-if="currentCategory == 'reports'">{{data.item.title ?data.item.title :data.item.name}}</h4>
 							<span v-if="currentCategory == 'reports'">{{data.category}}</span>
@@ -51,6 +53,20 @@
 				<h1>Given data</h1>
 				<event-form v-if="currentCategory == 'unverified Events' && unverifiedContent.length > 0" :event="verifyData" :edit="false"></event-form>
 
+				<div class="verify-festival" v-if="currentCategory == 'unverified Festivals' && unverifiedContent.length > 0">
+					<h2 v-if="!verifyData.validated">Unvalidated Festival</h2>
+					<festival-form v-if="!verifyData.validated" :data="verifyData.festival"></festival-form>
+					<h2 v-if="verifyData.validated">Associated Festival</h2>
+					<div class="report-target" v-if="verifyData.validated">
+						<a :href="`/festivals/${verifyData.festival.url}`" target="_blank">
+							{{verifyData.festival.title}} <md-icon>keyboard_arrow_right</md-icon>
+							<md-tooltip>open festival's page in new tab</md-tooltip>
+						</a>
+					</div>
+					<h2>Unverified Festival Instance</h2>
+					<festival-event-form :data="verifyData.event"></festival-event-form>
+				</div>
+
 				<location-form v-if="currentCategory == 'unverified Locations' && unverifiedContent.length > 0" :data="verifyData"></location-form>
 
 				<band-form v-if="currentCategory == 'unverified Bands' && unverifiedContent.length > 0" :data="verifyData"></band-form>
@@ -58,7 +74,7 @@
 				<div class="report-form" v-if="currentCategory == 'reports' && unverifiedContent.length > 0">
 					<h2>Reported {{verifyData.category}}:</h2>
 					<div class="report-target">
-						<a :href="`/#/${verifyData.category}/${verifyData.item.url}`" target="_blank">
+						<a :href="`/${verifyData.category}/${verifyData.item.url}`" target="_blank">
 							{{verifyData.item.title ?verifyData.item.title :verifyData.item.name}} <md-icon>keyboard_arrow_right</md-icon>
 							<md-tooltip>open {{verifyData.category}}'s page in new tab</md-tooltip>
 						</a>
@@ -67,8 +83,8 @@
 					<p>{{verifyData.description}}</p>
 
 					<div class="control-buttons">
-						<button class="md-button md-raised dismiss-btn" v-on:click="handleVerify(true)">dismiss report</button>
-						<button class="md-button md-raised delete-btn" v-on:click="handleVerify(false)">delete {{verifyData.category}}</button>
+						<button class="md-button md-raised dismiss-btn" v-on:click="handleVerify(false)">dismiss report</button>
+						<button class="md-button md-raised delete-btn" v-on:click="handleVerify(true)">delete {{verifyData.category}}</button>
 					</div>
 				</div>
 
@@ -106,6 +122,8 @@
 import moment from 'moment';
 
 import EventForm from '@/Components/ContentForms/EventForm';
+import FestivalForm from '@/Components/ContentForms/FestivalForm';
+import FestivalEventForm from '@/Components/ContentForms/FestivalEventForm';
 import LocationForm from '@/Components/ContentForms/LocationForm';
 import BandForm from '@/Components/ContentForms/BandForm';
 import EventPage from '@/Components/SingleContentPages/EventPage';
@@ -117,6 +135,8 @@ export default {
 	name: 'admin',
 	components: {
 		EventForm,
+		FestivalForm,
+		FestivalEventForm,
 		LocationForm,
 		BandForm,
 		EventPage,
@@ -137,46 +157,55 @@ export default {
 	},
 	methods: {
 		handleVerify(keepData) {
-			if(this.currentCategory == 'unverified Events') {
-				let verifyDataBands = this.verifyData.bands.slice();
-				this.verifyData.location = this.verifyData.location._id;
-				//I HATE JAVASCRIPT ARRAYS
-				for (let index in verifyDataBands) {
-					if(verifyDataBands[index] != '')
-						verifyDataBands[index] = verifyDataBands[index]._id;
-					else 
-						verifyDataBands.splice(index, 1);
-				}
-				this.verifyData.bands = verifyDataBands.slice();
-			}
-			else if(this.currentCategory == 'unverified Bands') {
-				let verifyDataGenres = this.verifyData.genre.slice()
-				for(let index in verifyDataGenres) {
-					if(verifyDataGenres[index] == '')
-						verifyDataGenres.splice(index, 1);
-				}
-				this.verifyData.genre = verifyDataGenres.slice();
+			if(this.currentCategory != 'unverified Festivals')
+				this.removeEmptyObjectFields(this.verifyData);
+			else {
+				this.removeEmptyObjectFields(this.verifyData.festival);
+				this.removeEmptyObjectFields(this.verifyData.event);				
 			}
 
-			//Delete the currently viewed data from the respective unvalidated-route.
-			this.$http.delete(backendUrl + this.unvalidatedRoute + this.verifyData._id)
-				.then(response => {
-					
-					//If the Admin chooses to unlock the data, send a post request to the respective route to unlock it for all users
-					if(keepData && this.currentCategory != 'reports') {
-						this.$http.post(backendUrl + this.validatedRoute,  this.verifyData)
-							.then(response => {})
-							.catch(err => {});
-					}
-					else if(this.currentCategory == 'reports' && !keepData) {
-						this.$http.delete(backendUrl + `/api/${this.verifyData.category}s/${this.verifyData.item._id}`)
-							.then(response => {})
-							.catch(err => {});
-					}
-					
-					this.showNextItem();
-				})
-				.catch(err => {});
+
+			let requestID = this.verifyData._id;
+			let requestEndpoint = this.currentCategory == 'reports' ?'accept/' :'validate/';
+			let requestBody = this.verifyData;
+		
+			if(this.currentCategory == 'unverified Festivals') {
+				requestID = this.verifyData.festival._id + '/' + this.verifyData.event._id;
+				
+				if(this.verifyData.validated) {
+					this.unvalidatedRoute = '/api/unvalidated-festival-events/';
+					requestBody = JSON.parse(JSON.stringify(this.verifyData.event));
+				}
+				else
+					this.unvalidatedRoute = '/api/unvalidated-festivals/';
+			}
+
+			if(keepData) {				
+				this.$http.post(`${backendUrl}${this.unvalidatedRoute}${requestEndpoint}${requestID}`, requestBody)
+					.then(response => {
+						this.showNextItem();
+					})
+					.catch(err => console.log(err));
+			}
+			else {
+				//Delete the currently viewed data from the respective unvalidated-route.
+				this.$http.delete(`${backendUrl}${this.unvalidatedRoute}${requestID}`)
+					.then(response => {					
+						this.showNextItem();
+					})
+					.catch(err => {});
+			}
+		},
+		//Function that removes empty strings from all array-attributes of a given object.
+		removeEmptyObjectFields(object) {
+			for(let attrib in object) {					
+				if(Array.isArray(object[attrib])) {
+					for(let element in object[attrib])
+						if(object[attrib][element] == '') {
+							object[attrib].splice(element, 1);
+						}
+				}
+			}
 		},
 		showInfo(content, index) {			
 			
@@ -186,14 +215,21 @@ export default {
 				this.$store.commit('setCurrentEvent', content[index]);
 			
 			if(this.currentCategory == 'unverified Events' || this.currentCategory == 'cancellations') {
-				this.verifyData = Object.assign({}, content[index]);				
-
+				this.verifyData = JSON.parse(JSON.stringify(content[index]));
+				
 				this.verifyData.bands.forEach(band => {
 					band.label = band.origin ?band.name + ' - ' + band.origin.country :'';
 				});
 
 				this.verifyData.location.label = this.verifyData.location.address ?this.verifyData.location.name + ' - ' + this.verifyData.location.address.city :'';				
-			}	
+			}
+			else if(this.currentCategory == 'unverified Festivals') {
+				this.verifyData = JSON.parse(JSON.stringify(content[index]));
+				
+				this.verifyData.event.bands.forEach(band => {
+					band.label = band.origin ?band.name + ' - ' + band.origin.country :'';
+				});
+			}
 			else {
 				this.verifyData = content[index];
 			}
@@ -212,7 +248,7 @@ export default {
 				this.validatedRoute = '/api/events';
 			}
 			else if (category == 'unverified Festivals') {
-				this.unvalidatedRoute = '/api/unvalidated-festivals/';
+				this.unvalidatedRoute = '/api/unvalidated-festivals/unvalidated';
 				this.validatedRoute = '/api/festivals';
 			}
 			else if (category == 'unverified Locations') {

@@ -91,7 +91,7 @@ export default {
 				let eventBands = [];
 				if(this.$store.getters.currentEvent.bands[0] != '') {
 					for(let band of this.$store.getters.currentEvent.bands) {
-						eventBands.push(Object.assign({}, band));
+						eventBands.push(JSON.parse(JSON.stringify(band)));
 					}
 				}
 				else {

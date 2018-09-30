@@ -189,7 +189,7 @@ export default {
 			})
 			.catch(err => console.log("Error in BandForm:", err));
 		
-		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city'});
+		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city', language: 'en'});
 		this.placesAutocomplete.on('change', e => {
 			
 			this.data.origin.name = e.suggestion.name;
@@ -204,7 +204,7 @@ export default {
 	},
 	updated() {
 		//Workaround for admin page.
-		if(!this.placesAutocomplete) this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city'});		
+		if(!this.placesAutocomplete) this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city', language: 'en'});
 	}
 }
 </script>

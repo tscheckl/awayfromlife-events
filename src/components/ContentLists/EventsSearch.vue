@@ -340,12 +340,12 @@ export default {
 			.catch(err => {})
 
 		this.changeLocationOption(this.locationOption);
-		this.placesAutocomplete1 = places({container: this.$refs.city_input, type: 'city'});
+		this.placesAutocomplete1 = places({container: this.$refs.city_input, type: 'city', language: 'en'});
 		this.placesAutocomplete1.on('change', e => {
 			this.searchOptions[this.locationOption] = e.suggestion.name;
 		});	
 
-		this.placesAutocomplete2 = places({container: this.$refs.country_input, type: 'country'});
+		this.placesAutocomplete2 = places({container: this.$refs.country_input, type: 'country', language: 'en'});
 		this.placesAutocomplete2.on('change', e => {
 			this.searchOptions[this.locationOption] = e.suggestion.name;
 		});	

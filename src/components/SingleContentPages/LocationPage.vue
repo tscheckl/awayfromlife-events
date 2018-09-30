@@ -112,7 +112,7 @@ export default {
 	},
 	computed: {
 		location() {
-			return Object.assign({},this.$store.getters.currentLocation);
+			return JSON.parse(JSON.stringify(this.$store.getters.currentLocation));
 		}
 	},
 	data() {

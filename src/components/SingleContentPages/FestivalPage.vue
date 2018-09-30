@@ -29,21 +29,46 @@
 			</div>
 
 			<div class="content-body">
+				<span class="festival-genres">
+					<h3><md-icon>library_music</md-icon>Genre:</h3>
+					<p><span class="festival-genre" v-for="genre in festival.genre" :key="genre">{{genre}}</span></p>
+				</span>
+
+				<hr>
+
 				<div v-if="festival.address" class="festival-location">
 					<h3><md-icon>location_on</md-icon><span>Address</span></h3>
 					<p>{{festival.address.street}}</p>
 					<p>{{festival.address.postcode}} {{festival.address.city}}</p>
 					<p v-if="festival.address.county">{{festival.address.county}}</p>
 					<p>{{festival.address.country}}</p>
+
+					<hr>
 				</div>
 
-				<hr>
+				<h3><md-icon>timeline</md-icon><span>Festival History</span></h3>
 
-				<!-- <h3><md-icon>queue_music</md-icon><span>Lineup</span></h3>
-				<ul>
-					<li v-for="band of festival.bands" :key="band._id"><router-link :to="`/band/${band.url}`"><span>{{band.name}}</span></router-link></li>
-				</ul> -->
-				
+				<stepper
+					class="festivals-stepper"
+					:steps="festival.events.length"
+					infinite
+					:showHeader="false"
+					:selectableSteps="selectableSteps"
+					selectionLabel="Select Year">
+					
+					<div class="color-block"></div>
+					<div class="festival-instance" v-for="(festivalEvent, index) in festival.events" :key="index" :slot="'step-' + (index+1)">
+						<h1>{{festivalEvent.title}}</h1>
+						<h4>{{festivalEvent.startDate}} - {{festivalEvent.endDate}}</h4>
+						<div class="line-up">
+							<h3><md-icon>queue_music</md-icon><span>Lineup:</span></h3>
+							<ul>
+								<li v-for="(band, index) in festivalEvent.bands" :key="index"><router-link :to="`/band/${band.url}`"><span>{{band.name}}</span></router-link></li>
+							</ul>
+						</div>
+					</div>
+				</stepper>
+
 				<hr>
 
 				<div v-if="festival.ticketLink" class="ticket-link">
@@ -55,6 +80,14 @@
 				<div v-if="festival.description">
 					<h3><md-icon>format_quote</md-icon><span>Description</span></h3>
 					<p>{{festival.description}}</p>
+					<hr>
+				</div>
+
+				<div class="additional-info" v-if="festival.website || festival.facebookUrl">
+					<h3><md-icon>subject</md-icon>Additional Information</h3>
+					<p v-if="festival.website" class="website"><span>Website:</span> <a :href="festival.website" target="_blank">{{festival.website}}</a></p>
+					<p v-if="festival.facebookUrl" class="facebook-page"><span>Facebook Page:</span> <a :href="festival.facebookUrl" target="_blank">{{festival.facebookUrl}}</a></p>
+					<hr>
 				</div>
 			</div>
 		</div>
@@ -89,6 +122,7 @@
 </template>
 
 <script>
+import Stepper from '@/components/Stepper';
 import ConfirmDialog from '@/Components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
@@ -98,13 +132,23 @@ import moment from 'moment';
 export default {
 	name: 'festival-page',
 	components: {
+		Stepper,
 		ConfirmDialog,
 		ReportDialog,
 		NotFound
 	},
 	computed: {
 		festival() {
-			return Object.assign({},this.$store.getters.currentFestival);
+			return JSON.parse(JSON.stringify(this.$store.getters.currentFestival));
+		},
+		selectableSteps() {
+			let selectableSteps = [];
+
+			this.festival.events.forEach(festivalEvent => {
+				selectableSteps.push(moment(festivalEvent.startDate).format('YYYY'));
+			});
+
+			return selectableSteps;
 		}
 	},
 	data() {
@@ -164,10 +208,11 @@ export default {
 			
 		if(this.$store.getters.currentFestival.title == '' || this.$store.getters.currentFestival.url != this.$route.params.url) {
 			
-			this.$http.get(backendUrl + `/api/festival/byurl/` + this.$route.params.url)
+			this.$http.get(backendUrl + `/api/festivals/byurl/` + this.$route.params.url)
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentFestival', response.body.data);
+					console.log(this.festival);
 				}
 			})
 			.catch(err => this.$router.push('/not-found'));

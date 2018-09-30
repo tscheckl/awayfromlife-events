@@ -61,7 +61,7 @@ export default new Vuex.Store({
 					band.label = band.name + ' - ' + band.origin.country;
 				})
 			}
-			state.currentEvent = Object.assign({},event);
+			state.currentEvent = JSON.parse(JSON.stringify(event));
 			
 		},
 		setCurrentLocation(state, location) {
@@ -71,7 +71,7 @@ export default new Vuex.Store({
 			
 			state.currentLocation = location;
 		},
-		setCurrentBand(state, band) {
+		setCurrentBand(state, band) {			
 			state.currentBand = band;
 		},
 		setCurrentFestival(state, festival) {

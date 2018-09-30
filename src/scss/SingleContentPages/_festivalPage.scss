@@ -1,5 +1,174 @@
 @import "./generalPage";
 
 #festival_page {
+	.festival-genres {
+		display: block;
+		margin-top: 20px;
 
+		h3, p {
+			display: inline;
+		}
+
+		p {
+			margin-left: 10px;
+		}
+	}
+
+	span.festival-genre {
+		font-family: "OpenSans";
+		margin-right: 5px;
+
+		&:after {
+			content: ", ";
+		}
+
+		&:last-of-type:after {
+			content: " ";
+		}
+	}
+
+	.website, .facebook-page {
+		span {
+			font-weight: bold;
+		}
+	}
+
+	.festivals-stepper {
+		overflow: visible;
+
+		.selectable-steps {
+			margin-top: 20px;
+			margin-left: 40px;
+		}
+
+		.steps {
+			color: $primaryLighten5;
+			background-color: $accentAccent2;
+			
+			padding: 20px 40px;
+			padding-top: 10px;
+			position: relative;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			border-radius: 5px;
+			overflow: hidden;
+
+			.color-block {
+				height: 110px;
+				box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			}
+
+			h1, h4 {
+				position: relative;
+			}
+		}
+
+		.infinite-controls {
+			.md-icon {
+				color: $primaryDarken4;
+			}
+		}
+	}
+
+	.line-up {
+		h3 {
+			font-size: 18px;
+			margin-bottom: -20px;
+			background-color: transparent !important;
+			box-shadow: none !important;	
+
+			.md-icon {
+				color: $primaryLighten5;
+			}
+		}
+
+		ul {
+			margin-top: -10px;
+			padding: 0 20px;
+
+			li:nth-child(-n+4) {
+				font-size: 1.15em;
+			}
+
+			li:nth-child(-n+2) {
+				font-size: 1.5em;
+			}
+
+			li {
+				display: inline-block;
+				min-width: 49%;
+				margin-top: 40px;
+
+				span {
+					position: relative;
+					padding: 10px 17px;
+					border-radius: 3px;
+					font-family: "Montserrat";
+					color: $primaryLighten5;
+					line-height: 40px;
+					background-color: $primaryDarken4;
+					text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+					box-decoration-break: clone;
+					-webkit-box-decoration-break: clone;
+					transition: all .2s ease-out;
+
+					&:after {
+						content: "keyboard_arrow_right";
+						position: absolute;
+						opacity: 0;  
+						// top: 3px;
+						font-family: "Material Icons";
+						color: $accentAccent2;
+						font-size: 25px;
+						transition: all .2s ease-out;
+					}
+
+					&:hover {
+						padding-left: 10px;
+						padding-right: 25px;
+
+						&:after {
+							opacity: 1 !important;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#festival_page {
+		.festivals-stepper {
+			.selectable-steps {
+				margin: 0 auto;
+				margin-top: 20px;
+			}
+
+			.stepper-body {
+				padding: 10px 0;
+
+				.steps {
+					padding: 20px;
+
+					.step {
+						padding: 0;
+					}
+				}
+			}
+
+			.infinite-controls {
+				button {
+					top: 10px !important;
+
+					&:first-of-type {
+						left: 0px;
+					}
+
+					&:last-of-type {
+						right: -20px;
+					}
+				}
+			}
+		}
+	}
 }
