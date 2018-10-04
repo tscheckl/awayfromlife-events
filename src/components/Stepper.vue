@@ -59,6 +59,11 @@ export default {
 		selectionLabel: String,
 		selectableSteps: Array
 	},
+	watch: {
+		steps() {
+			this.currentStep = 1;
+		}
+	},
 	data() {
 		return {
 			currentStep: 1,

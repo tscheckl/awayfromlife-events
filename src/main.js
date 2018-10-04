@@ -86,7 +86,7 @@ router.beforeEach((to, from, next) => {
 		next('/not-found');
 	} else {
 		//Check if a 'Single-Page' is opened and give top-bar extra class to change color.
-		if(to.path.indexOf('/event/') != -1 || to.path.indexOf('/location/') != -1 || to.path.indexOf('/band/') != -1) {
+		if(to.path.indexOf('/event/') != -1 || to.path.indexOf('/location/') != -1 || to.path.indexOf('/band/') != -1 || to.path.indexOf('/festival/') != -1) {
 			
 			document.getElementById('topbar').classList.add('single-page');
 		}

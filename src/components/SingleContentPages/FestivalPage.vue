@@ -5,11 +5,11 @@
 			<div class="left-container">
 
 				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-on:click="openDialog('newFestivalDialog')">
+					<md-button class="md-icon-button edit-button" v-on:click="openDialog('editFestivalDialog')">
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit festival</md-tooltip>	
 					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('confirmDeletionDialog')">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="confirmDeletion('festival')">
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete festival</md-tooltip>
 					</md-button>
@@ -30,7 +30,7 @@
 
 			<div class="content-body">
 				<span class="festival-genres">
-					<h3><md-icon>library_music</md-icon>Genre:</h3>
+					<h3><md-icon>library_music</md-icon>Genre</h3>
 					<p><span class="festival-genre" v-for="genre in festival.genre" :key="genre">{{genre}}</span></p>
 				</span>
 
@@ -58,8 +58,20 @@
 					
 					<div class="color-block"></div>
 					<div class="festival-instance" v-for="(festivalEvent, index) in festival.events" :key="index" :slot="'step-' + (index+1)">
+						<div class="edit-buttons">
+							<md-button class="md-icon-button edit-button" v-on:click="editFestivalEvent(festivalEvent)">
+								<md-icon>edit</md-icon>
+								<md-tooltip md-direction="bottom">edit festival event</md-tooltip>	
+							</md-button>
+
+							<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="confirmDeletion('event', festivalEvent)">
+								<md-icon>delete</md-icon>
+								<md-tooltip md-direction="bottom">delete festival event</md-tooltip>
+							</md-button>
+						</div>
+
 						<h1>{{festivalEvent.title}}</h1>
-						<h4>{{festivalEvent.startDate}} - {{festivalEvent.endDate}}</h4>
+						<h4>{{formatDate(festivalEvent.startDate)}} - {{formatDate(festivalEvent.endDate)}}</h4>
 						<div class="line-up">
 							<h3><md-icon>queue_music</md-icon><span>Lineup:</span></h3>
 							<ul>
@@ -89,6 +101,11 @@
 					<p v-if="festival.facebookUrl" class="facebook-page"><span>Facebook Page:</span> <a :href="festival.facebookUrl" target="_blank">{{festival.facebookUrl}}</a></p>
 					<hr>
 				</div>
+
+				<div class="loading" v-show="loading">
+					<div class="darken"></div>
+					<md-spinner md-indeterminate class="md-accent"></md-spinner>
+				</div>
 			</div>
 		</div>
 
@@ -103,20 +120,22 @@
 			<report-dialog :id="festival._id" contentType="festival" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
 		</md-dialog>
 
-		<md-dialog ref="cancelDialog">
-			<div class="cancel-dialog">
-				<h2>Do you really want to report this festival as cancelled?</h2>
-				<md-icon class="yes-icon">check</md-icon>
-				<md-icon class="no-icon">clear</md-icon>
-				<md-button class="yes" v-on:click="reportCancel(true)">Yes</md-button>
-				<md-button class="no" v-on:click="reportCancel(false)">No</md-button>
-			</div>
+		<md-dialog ref="confirmDeletionDialog">
+			<confirm-dialog v-on:confirm="toBeDeleted == 'festival' ?deleteFestival() :deleteFestivalEvent()" v-on:close="$refs.confirmDeletionDialog.close()">
+				<h3 slot="headline">Do you really want to delete this festival {{toBeDeleted == 'event' ?'event' :'' }}?</h3>
+			</confirm-dialog>
 		</md-dialog>
 
-		<md-dialog ref="confirmDeletionDialog">
-			<confirm-dialog v-on:confirm="deleteEvent" v-on:close="$refs.confirmDeletionDialog.close()">
-				<h3 slot="headline">Do you really want to delete this festival?</h3>
-			</confirm-dialog>
+		<md-dialog ref="editFestivalDialog">
+			<festival-form :data="JSON.parse(JSON.stringify(festival))" canSubmit v-on:submit="updateFestival">
+				<h1 slot="headline">Edit Festival</h1>
+			</festival-form>
+		</md-dialog>
+
+		<md-dialog ref="editFestivalEventDialog">
+			<festival-event-form :data="currentFestivalEvent" canSubmit v-on:submit="updateFestivalEvent">
+				<h1 slot="headline">Edit Festival Event</h1>
+			</festival-event-form>
 		</md-dialog>
 	</div>
 </template>
@@ -126,6 +145,8 @@ import Stepper from '@/components/Stepper';
 import ConfirmDialog from '@/Components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
+import FestivalForm from '@/components/ContentForms/FestivalForm';
+import FestivalEventForm from '@/components/ContentForms/FestivalEventForm';
 
 import {frontEndSecret, backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -135,7 +156,9 @@ export default {
 		Stepper,
 		ConfirmDialog,
 		ReportDialog,
-		NotFound
+		NotFound,
+		FestivalForm,
+		FestivalEventForm
 	},
 	computed: {
 		festival() {
@@ -154,46 +177,136 @@ export default {
 	data() {
 		return {
 			isAuthenticated: false,
+			loading: false,
 			submitStatus: '',
-
+			currentFestivalEvent: {},
+			toBeDeleted: 'festival'
 		}
 	},
 	methods: {
 		openDialog(ref) {
 			this.$refs[ref].open();
 		},
-		deleteEvent() {
+		confirmDeletion(contentType, data = undefined) {
+			if(data) this.currentFestivalEvent = data;
+
+			this.toBeDeleted = contentType;
+			this.openDialog('confirmDeletionDialog');
+		},
+		formatDate(date) {
+			return moment(date).format('LL');
+		},
+		editFestivalEvent(event) {
+			this.currentFestivalEvent = JSON.parse(JSON.stringify(event));
+			this.openDialog('editFestivalEventDialog');
+		},
+		getCurrentFestival(message = '') {
+			this.loading = true;
+
+			this.$http.get(backendUrl + `/api/festivals/byid/` + this.festival._id)
+				.then(response => {
+					this.loading = false;
+					if(response.body.data) {
+						if(message != '') {
+							this.submitStatus = message;
+							this.$refs.snackbar.open();
+						}
+
+						this.$store.commit('setCurrentFestival', response.body.data);
+						this.addBandLabels();
+						this.$router.push({path: `/festival/${response.body.data.url}`});
+					}
+				})
+				.catch(err => {
+					this.loading = false;
+
+					this.submitStatus = err;
+					this.$refs.snackbar.open();
+				});
+		},
+		deleteFestivalEvent() {
 			this.$refs.confirmDeletionDialog.close();
 			
+			this.loading = true;
+
+			this.$http.delete(backendUrl + `/api/festival-events/` + this.currentFestivalEvent._id)
+				.then(response => {
+					this.getCurrentFestival('Festival event successfully deleted!');
+				})
+				.catch(err => {
+					this.submitStatus = err;
+					this.$refs.snackbar.open();
+				});
+		},
+		deleteFestival() {
+			this.$refs.confirmDeletionDialog.close();
+			
+			this.loading = true;
+
 			this.$http.delete(backendUrl + `/api/festivals/` + this.festival._id)
 				.then(response => {
 					this.$router.go(-1);
 				})
 				.catch(err => {
-					this.submitStatus = 'Error while deleting the festival. Please try again!';
+					this.submitStatus = err;
 					this.$refs.snackbar.open();
-				})
+				});
 		},
-		handleEditClose() {
+		updateFestival(data) {
 			this.$refs['editFestivalDialog'].close();
 			
-			this.$http.get(backendUrl + `/api/festivals/byurl/` + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.submitStatus = 'Event successfully updated!';
+			this.loading = true;
+			
+			this.removeEmptyObjectFields(data);
+			
+			this.$http.put(backendUrl + `/api/festivals/${data._id}`, data)
+				.then(response => {
+					this.getCurrentFestival('Festival successfully updated!');
+				})
+				.catch(err =>  {
+					this.submitStatus = err;
 					this.$refs.snackbar.open();
-					this.$store.commit('setCurrentFestival', response.body.data);
+				});
+		},
+		updateFestivalEvent(data) {
+			this.$refs['editFestivalEventDialog'].close();
+			
+			this.loading = true;
+			
+			this.removeEmptyObjectFields(data);
+			
+			this.$http.put(backendUrl + `/api/festival-events/${data._id}`, data)
+				.then(response => {
+					this.getCurrentFestival('Event successfully updated!');
+				})
+				.catch(err =>  {
+					this.submitStatus = err;
+					this.$refs.snackbar.open();
+				});
+		},		
+		//Function that removes empty strings from all array-attributes of a given object.
+		removeEmptyObjectFields(object) {
+			for(let attrib in object) {					
+				if(Array.isArray(object[attrib])) {
+					for(let element in object[attrib])
+						if(object[attrib][element] == '') {
+							object[attrib].splice(element, 1);
+						}
 				}
-			})
-			.catch(err => {
-				console.log(err);
-			});
+			}
 		},
 		handleDialogClose(message, dialogRef) {
 			this.$refs[dialogRef].close();
 			this.submitStatus = message;
 			this.$refs.snackbar.open();
 		},
+		addBandLabels() {
+			this.festival.events.forEach(event => {
+				event.bands.forEach(band => {
+					band.label = band.name + ' - ' + band.origin.country;
+				})
+			});
+		}
 	},
 	mounted() {
 		if(this.$route.path.indexOf('festival') != -1)
@@ -212,10 +325,13 @@ export default {
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentFestival', response.body.data);
-					console.log(this.festival);
+					this.addBandLabels();
 				}
 			})
 			.catch(err => this.$router.push('/not-found'));
+		}
+		else {
+			this.addBandLabels();
 		}
 		
 			

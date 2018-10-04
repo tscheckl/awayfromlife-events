@@ -191,6 +191,13 @@
 			<div class="darken"></div>
 			<md-spinner md-indeterminate class="md-accent"></md-spinner>
 		</div>
+
+		<md-dialog ref="newBandDialog">
+			<new-band 
+					v-on:close="$refs['newBandDialog'].close()"
+					v-on:success="updateContent('newBandDialog')">
+			</new-band>
+		</md-dialog>
 		
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -205,12 +212,14 @@ import places from 'places.js';
 import moment from 'moment';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import Stepper from '@/components/Stepper';
+import NewBand from "@/Components/NewContent/NewBand";
 
 export default {
 	name: 'new-festival',
 	components: {
 		Stepper,
-		Datepicker
+		Datepicker,
+		NewBand
 	},
 	data() {
 		return {
@@ -346,6 +355,14 @@ export default {
 			if(array.length == 0) {
 				array[0] = '';
 			}
+		},
+		updateContent(dialog) {
+			this.$refs[dialog].close();
+
+			this.submitStatus = `New Band successfully created! \nIt will be visible for everyone after it was verified by us.`;
+			this.getBandOptions();
+
+			this.$refs.snackbar.open();
 		},
 		getBandOptions() {
 			this.$http.get(backendUrl + "/api/bands")

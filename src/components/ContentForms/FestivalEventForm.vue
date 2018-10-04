@@ -1,5 +1,7 @@
 <template>
 	<div id="festival_event_form">
+		<slot name="headline"></slot>
+		
 		<form class="new-festival-event-form" v-on:submit.prevent>
 			<div class="form-content">
 				<md-layout md-gutter>
@@ -70,6 +72,8 @@
 					</md-layout>
 				</md-layout>
 			</div>
+
+			<md-button v-if="canSubmit" type="submit" v-on:click="$emit('submit', data)" class="md-raised md-accent submit-button">Update Festival Event</md-button>
 		</form>
 
 		<md-dialog ref="newBandDialog">
@@ -96,7 +100,11 @@ export default {
 		NewBand
 	},
 	props: {
-		data: Object
+		data: Object,
+		canSubmit: {
+			type: Boolean,
+			default: false
+		}
 	},
 	data() {
 		return {

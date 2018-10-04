@@ -1,6 +1,35 @@
 @import "./generalPage";
 
 #festival_page {
+	.loading {
+		position: fixed;
+		width: 100%;
+		top: 0;
+		left: 0;
+		height: 100%;
+		z-index: 20;
+
+		.darken {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: #232323;
+			opacity: 0.6;
+		}
+
+		.md-spinner {
+			position: absolute;
+			top: calc(50% - 25px);
+			left: calc(50% - 25px);
+			display: block;
+			margin: 0 auto;
+		}
+	}
+
+	.content {
+		position: relative;
+	}
+
 	.festival-genres {
 		display: block;
 		margin-top: 20px;
@@ -59,6 +88,14 @@
 
 			h1, h4 {
 				position: relative;
+			}
+
+			.step {
+				.edit-buttons {
+					position: absolute;
+					right: 10px;
+					z-index: 2;
+				}
 			}
 		}
 
@@ -136,6 +173,45 @@
 	}
 }
 
+
+.md-dialog {
+	overflow: auto !important;
+
+	#festival_event_form, #festival_form {
+		padding: 40px;
+		max-width: 1000px;
+		background-color: $primaryLighten4 !important;
+	}
+
+
+	h1 {
+		margin-top: 15px;
+		margin-left: 15px;
+		font-size: 3em;
+		text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+	}
+
+	h2 {
+		margin-top: 30px;
+	}
+
+	.submit-button {
+		margin-top: 20px;
+	}
+
+	#festival_event_form {
+		.submit-button {
+			margin-left: calc(100% - 210px);
+		}
+	}
+
+	#festival_form {
+		.submit-button {
+			margin-left: calc(100% - 160px);
+		}
+	}
+}
+
 @media screen and (max-width: 768px) {
 	#festival_page {
 		.festivals-stepper {
@@ -170,5 +246,9 @@
 				}
 			}
 		}
+	}
+
+	.md-dialog {
+		padding: 10px;
 	}
 }
