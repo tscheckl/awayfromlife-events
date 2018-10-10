@@ -38,7 +38,7 @@
 		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
 
 		<stepper :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?4 :3" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
-			<h1 slot="headline">New Festival {{!createExistingFestival ?' Instance' :''}}</h1>
+			<h1 slot="headline">New Festival {{createFestival ?' ' :' Instance'}}</h1>
 			<div slot="step-1" v-show="createFestival">
 				<h3>General information</h3>
 				<md-layout md-gutter>

@@ -2,7 +2,7 @@
 @import "./newContent";
 
 #new_festival {
-	padding: 0;
+	padding: 0 !important; 
 	position: relative;
 	width: auto !important;
 	background-color: #fff;
@@ -131,6 +131,7 @@
 	.back-to-selection-btn {
 		position: absolute;
 		top: 55px;
+		z-index: 2;
 	}
 
 	.festival-form {
@@ -288,6 +289,7 @@
 @media screen and (max-width: 768px) {
 	#new_festival {
 		min-height: 100vh;
+		padding: 0 !important;
 
 		div {
 			transition: max-height 0s ease-out !important;
