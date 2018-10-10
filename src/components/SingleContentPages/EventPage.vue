@@ -54,11 +54,6 @@
 
 				<hr>
 
-				<h3 class="start-time"><md-icon>alarm</md-icon><span>Start</span></h3>
-				<span>{{event.formattedTime}} Uhr</span>
-
-				<hr>
-
 				<h3><md-icon>queue_music</md-icon><span>Lineup</span></h3>
 				<ul>
 					<li v-for="band of event.bands" :key="band._id"><router-link :to="`/band/${band.url}`"><span>{{band.name}}</span></router-link></li>

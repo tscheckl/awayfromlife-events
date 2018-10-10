@@ -122,8 +122,8 @@
 import moment from 'moment';
 
 import EventForm from '@/Components/ContentForms/EventForm';
-import FestivalForm from '@/Components/ContentForms/FestivalForm';
-import FestivalEventForm from '@/Components/ContentForms/FestivalEventForm';
+import FestivalForm from '@/components/ContentForms/FestivalForm';
+import FestivalEventForm from '@/components/ContentForms/FestivalEventForm';
 import LocationForm from '@/Components/ContentForms/LocationForm';
 import BandForm from '@/Components/ContentForms/BandForm';
 import EventPage from '@/Components/SingleContentPages/EventPage';
