@@ -220,6 +220,11 @@
 			margin-bottom: 0;
 			padding: 10px;
 			border-radius: 0;
+
+			.title {
+				max-width: 100%;
+				font-size: 0.8em;
+			}
 		}
 
 		.content-body {
