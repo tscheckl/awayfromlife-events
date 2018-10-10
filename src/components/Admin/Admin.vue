@@ -157,6 +157,7 @@ export default {
 	},
 	methods: {
 		handleVerify(keepData) {
+			//Remove empty strings from unverified data arrays.
 			if(this.currentCategory != 'unverified Festivals')
 				this.removeEmptyObjectFields(this.verifyData);
 			else {
@@ -164,14 +165,20 @@ export default {
 				this.removeEmptyObjectFields(this.verifyData.event);				
 			}
 
-
+			//Variable for the id that will be sent in the verification-request
 			let requestID = this.verifyData._id;
+			//Variable for the verification backend-endpoint, reports needs special treatment here
 			let requestEndpoint = this.currentCategory == 'reports' ?'accept/' :'validate/';
+			//Data that will be sent in the body of the verification request
 			let requestBody = this.verifyData;
-		
+
+			//Special adjustments for festivals.
 			if(this.currentCategory == 'unverified Festivals') {
+				//request ID needs to be put together from the festival ID and the festival-event ID
 				requestID = this.verifyData.festival._id + '/' + this.verifyData.event._id;
 				
+				//If only the festival-event needs to be verified, set the respective unvalidated-route 
+				//and put only the festival-event into the request-body instead of both the festival and the event.
 				if(this.verifyData.validated) {
 					this.unvalidatedRoute = '/api/unvalidated-festival-events/';
 					requestBody = JSON.parse(JSON.stringify(this.verifyData.event));
