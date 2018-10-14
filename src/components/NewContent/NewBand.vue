@@ -45,10 +45,11 @@
 </template>
 
 <script>
+import {backendUrl} from '@/secrets.js';
+
 import BandForm from '@/Components/ContentForms/BandForm';
 import ConfirmDialog from '@/Components/ConfirmDialog';
-
-import {backendUrl} from '@/secrets.js';
+import Stepper from '@/components/Stepper';
 
 export default {
 	name: 'new-band',
@@ -110,7 +111,7 @@ export default {
 					releaseYear: ''
 				}],
 				foundingDate: '',
-				websiteUrl: '',
+				website: '',
 				bandcampUrl: '',
 				soundcloudUrl: '',
 				facebookUrl: ''
@@ -175,7 +176,7 @@ export default {
 					releaseYear: ''
 				}],
 				foundingDate: '',
-				websiteUrl: '',
+				website: '',
 				bandcampUrl: '',
 				soundcloudUrl: '',
 				facebookUrl: ''

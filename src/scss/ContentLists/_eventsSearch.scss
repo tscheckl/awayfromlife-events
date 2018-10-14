@@ -52,7 +52,7 @@
 		min-height: 300px;
 		transform: translateY(calc(50vh - 250px));
 		transition: transform .4s ease-out;
-		overflow: auto;
+		overflow: visible;
 	}
 
 	.slide-up {

@@ -72,7 +72,7 @@
 					<h2>Event Results: </h2>
 					<div class="result" v-if="!loading" v-for="index in resultLimiter.events" :key="index" v-on:click="showResult(results.events[index-1])">
 						<div class="result-content">
-							<h3>{{results.events[index-1].data.title}}</h3>
+							<h3>{{results.events[index-1].data.name}}</h3>
 							<p>{{results.events[index-1].data.date}}</p>
 							<p>Result found in {{results.events[index-1].match.pretty}}: 
 								{{results.events[index-1].match.value.beforeMatch}}

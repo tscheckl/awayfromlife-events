@@ -38,16 +38,18 @@
 </template>
 
 <script>
+import {backendUrl} from '@/secrets.js';
+
 import ConfirmDialog from '@/Components/ConfirmDialog';
 import LocationForm from '@/Components/ContentForms/LocationForm';
-
-import {backendUrl} from '@/secrets.js';
+import Stepper from '@/components/Stepper';
 
 export default {
 	name: 'new-location',
 	components: {
 		LocationForm,
-		ConfirmDialog
+		ConfirmDialog,
+		Stepper
 	},
 	props: {
 		edit: {

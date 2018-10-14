@@ -113,7 +113,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Website</label>
-							<md-input v-model="data.websiteUrl"></md-input>
+							<md-input v-model="data.website"></md-input>
 						</md-input-container>
 					</md-layout>
 

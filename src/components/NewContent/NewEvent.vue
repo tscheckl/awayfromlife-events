@@ -42,7 +42,7 @@
 				<div slot="additional-information" class="similar-event" v-for="event in similarEvents" :key="event._id">
 					<a :href="`/#/event/${event.url}`" target="_blank">
 						<div class="similar-event-info">
-							<h3>{{event.title}} <span>{{event.formattedDate}}</span></h3>
+							<h3>{{event.name}} <span>{{event.formattedDate}}</span></h3>
 							<p>Location: <span>{{event.location.name}}</span></p>
 							<p class="bands">Lineup: <span v-for="band in event.bands" :key="band._id">{{band.name}}</span></p>
 						</div>
@@ -57,18 +57,20 @@
 <script>
 import moment from 'moment';
 
+import {frontEndSecret, backendUrl} from '@/secrets.js';
+
 import ConfirmDialog from '@/Components/ConfirmDialog';
 import EventForm from '@/Components/ContentForms/EventForm';
 import TourForm from '@/Components/ContentForms/TourForm';
-
-import {frontEndSecret, backendUrl} from '@/secrets.js';
+import Stepper from '@/components/Stepper';
 
 export default {
 	name: 'new-event',
 	components: {
 		ConfirmDialog,
 		EventForm,
-		TourForm
+		TourForm,
+		Stepper
 	},
 	props: {
 		data: Object,
@@ -101,7 +103,7 @@ export default {
 				return {
 					_id: this.$store.getters.currentEvent._id,
 					url: this.$store.getters.currentEvent.url,
-					title: this.$store.getters.currentEvent.title,
+					name: this.$store.getters.currentEvent.name,
 					location: this.$store.getters.currentEvent.location,
 					bands: eventBands,
 					date: this.$store.getters.currentEvent.date,
@@ -124,7 +126,7 @@ export default {
 	data() {
 		return {
 			newTour: {
-				title: '',
+				name: '',
 				description: '',
 				bands: [''],
 				ticketLink: '',
@@ -141,7 +143,7 @@ export default {
 			apiRoute: '/api/unvalidated-events',
 			createEvent: true,
 			blankEvent: {
-				title: '',
+				name: '',
 				location: '',
 				bands: [''],
 				description: '',
@@ -161,7 +163,7 @@ export default {
 			var vm = this;
 			
 			//Only go on if all required fields are filled out
-			if(this.newEvent.title && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
+			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
 				//Extract ids of selected bands for the event to send it to the backend.
 				for(let i in this.newEvent.bands) {
 					if(this.newEvent.bands[i] == '')
@@ -202,7 +204,7 @@ export default {
 
 			this.submitStatus = '';
 
-			if(this.newTour.title && this.newTour.tourStops[0].location && this.newTour.tourStops[0].date) {
+			if(this.newTour.name && this.newTour.tourStops[0].location && this.newTour.tourStops[0].date) {
 				for(let i in this.newTour.bands) {
 					if(this.newTour.bands[i] == '')
 						this.newTour.bands.splice(i, 1);
@@ -210,7 +212,7 @@ export default {
 
 				for(let tourstop in this.newTour.tourStops) {
 					let singleTourStopEvent = {
-						title: this.newTour.title,
+						name: this.newTour.name,
 						description: this.newTour.description,
 						location: this.newTour.tourStops[tourstop].location,
 						bands: this.newTour.bands,
@@ -251,7 +253,7 @@ export default {
 		},
 	 	resetEventFields() {			 
 			this.$store.commit('setCurrentEvent', {
-				title: '',
+				name: '',
 				description: '',
 				location: {label: ''},
 				bands: [''],
@@ -262,7 +264,7 @@ export default {
 			});
 
 			this.blankEvent = {
-				title: '',
+				name: '',
 				location: '',
 				bands: [''],
 				description: '',
@@ -272,7 +274,7 @@ export default {
 	  	},
 		resetTourFields() {
 			this.newTour = {
-				title: '',
+				name: '',
 				description: '',
 				bands: [''],
 				tourStops: [{

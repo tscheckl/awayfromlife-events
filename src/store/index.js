@@ -8,7 +8,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
 		currentEvent: {
-			title: '',
+			name: '',
 			location: '',
 			bands: [''],
 			description: '',
@@ -29,13 +29,13 @@ export default new Vuex.Store({
 			origin: {},
 			history: '',
 			releases: [{}],
-			websiteUrl: '',
+			website: '',
 			facebookUrl: '',
 			bandcampUrl: '',
 			soundcloudUrl: ''
 		},
 		currentFestival: {
-			title: '',
+			name: '',
 			url: '',
 			description: '',
 			genre: [''],

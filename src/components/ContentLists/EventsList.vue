@@ -125,9 +125,9 @@
 							<md-icon v-if="currentlySorted == 'date'">{{!sortingAsc.date? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p> 
-					<p class="item-title" v-on:click="sortBy('title')">
+					<p class="item-title" v-on:click="sortBy('name')">
 						<span>What? 
-							<md-icon v-if="currentlySorted == 'title'">{{!sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+							<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
 					<p class="location-name" v-on:click="sortBy('location')">
@@ -140,7 +140,7 @@
 
 				<div class="list-item" v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
 					<p class="event-date">{{event.formattedDate}}</p>
-					<h3 class="item-title">{{event.title}}</h3>
+					<h3 class="item-title">{{event.name}}</h3>
 					<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
 					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 				</div>
@@ -203,7 +203,7 @@ export default {
 			locations: [],
 			sortingAsc: {
 				date: false,
-				title: false,
+				name: false,
 				location: false
 			},
 			currentlySorted: 'date',
@@ -250,7 +250,7 @@ export default {
 	methods: {
 		openNewEvent() {
 			this.$store.commit('setCurrentEvent', {
-				title: '',
+				name: '',
 				description: '',
 				location: '',
 				bands: [''],

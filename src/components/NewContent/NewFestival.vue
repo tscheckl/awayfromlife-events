@@ -20,7 +20,7 @@
 									v-model="existingFestival"
 									:options="festivalList"
 									:on-change="checkSelection"
-									label="title"
+									label="name"
 									placeholder="Enter the festival you're looking for*">
 						</v-select>
 					</md-input-container>
@@ -45,7 +45,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Name of the festival</label>
-							<md-input v-model="newFestival.title" required></md-input>
+							<md-input v-model="newFestival.name" required></md-input>
 						</md-input-container>
 					</md-layout>
 
@@ -94,7 +94,7 @@
 								v-model="existingFestival"
 								:options="festivalList"
 								:on-change="checkSelection"
-								label="title"
+								label="name"
 								placeholder="Enter the festival you're looking for*">
 					</v-select>
 				</md-input-container>
@@ -173,7 +173,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Website</label>
-							<md-input v-model="newFestival.websiteUrl"></md-input>
+							<md-input v-model="newFestival.website"></md-input>
 						</md-input-container>
 					</md-layout>
 
@@ -219,12 +219,13 @@ export default {
 	components: {
 		Stepper,
 		Datepicker,
-		NewBand
+		NewBand,
+		Stepper
 	},
 	data() {
 		return {
 			newFestival: {
-				title: '',
+				name: '',
 				description: '',
 				genre: [''],
 				address: {},
@@ -233,7 +234,7 @@ export default {
 				facebookUrl: ''
 			},
 			newFestivalEvent: {
-				title: '',
+				name: '',
 				startDate: new Date().setDate(new Date().getDate()-1),
 				endDate: new Date().setDate(new Date().getDate()+1),
 				bands: ['']
@@ -255,13 +256,13 @@ export default {
 		addFestival() {
 			this.loading = true;
 			
-			if(this.newFestival.title 
+			if(this.newFestival.name 
 			&& this.newFestival.address.value 
 			&& this.newFestival.genre[0] != '' 
 			&& this.newFestivalEvent.bands[0] != '' 
 			&& this.newFestivalEvent.startDate 
 			&& this.newFestivalEvent.endDate) {
-				this.newFestivalEvent.title = this.newFestival.title + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
+				this.newFestivalEvent.name = this.newFestival.name + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
 
 				for (let index in this.newFestival.genre) {
 					if(this.newFestival.genre[index].name)
@@ -305,7 +306,7 @@ export default {
 			this.loading = true;
 
 			if(this.existingFestival && this.newFestivalEvent.bands[0] != '' && this.newFestivalEvent.startDate && this.newFestivalEvent.endDate) {
-				this.newFestivalEvent.title = this.existingFestival.title + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
+				this.newFestivalEvent.name = this.existingFestival.name + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
 
 				for(let index in this.newFestivalEvent.bands) {
 					if(this.newFestivalEvent.bands[index]._id) 

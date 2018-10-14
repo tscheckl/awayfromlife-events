@@ -25,7 +25,7 @@
 		<div class="content" v-if="festival._id">
 
 			<div class="title">
-				<h2>{{festival.title?festival.title.toUpperCase(): ''}}</h2>
+				<h2>{{festival.name?festival.name.toUpperCase(): ''}}</h2>
 			</div>
 
 			<div class="content-body">
@@ -70,7 +70,7 @@
 							</md-button>
 						</div>
 
-						<h1>{{festivalEvent.title}}</h1>
+						<h1>{{festivalEvent.name}}</h1>
 						<h4>{{formatDate(festivalEvent.startDate)}} - {{formatDate(festivalEvent.endDate)}}</h4>
 						<div class="line-up">
 							<h3><md-icon>queue_music</md-icon><span>Lineup:</span></h3>
@@ -319,7 +319,7 @@ export default {
 			})
 			.catch(err => {});
 			
-		if(this.$store.getters.currentFestival.title == '' || this.$store.getters.currentFestival.url != this.$route.params.url) {
+		if(this.$store.getters.currentFestival.name == '' || this.$store.getters.currentFestival.url != this.$route.params.url) {
 			
 			this.$http.get(backendUrl + `/api/festivals/byurl/` + this.$route.params.url)
 			.then(response => {

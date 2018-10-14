@@ -125,9 +125,9 @@
 							<md-icon v-if="currentlySorted == 'date'">{{!sortingAsc.date? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p> 
-					<p class="festival-city" v-on:click="sortBy('title')">
+					<p class="festival-city" v-on:click="sortBy('name')">
 						<span>City
-							<md-icon v-if="currentlySorted == 'title'">{{!sortingAsc.title? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+							<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
 					<p class="festival-country" v-on:click="sortBy('location')">
@@ -139,7 +139,7 @@
 				</div>
 
 				<div class="list-item" v-for="(festival, index) in festivals" :key="index" v-on:click="showFestival(festival, index)">
-					<h3 class="festival-name">{{festival.title}}</h3>
+					<h3 class="festival-name">{{festival.name}}</h3>
 					<p class="festival-city">{{festival.address.city}}</p>
 					<p class="festival-country" v-if="festival.address">{{festival.address.country}}</p>
 					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
@@ -197,7 +197,7 @@ export default {
 			locations: [],
 			sortingAsc: {
 				date: false,
-				title: false,
+				name: false,
 				location: false
 			},
 			currentlySorted: 'date',

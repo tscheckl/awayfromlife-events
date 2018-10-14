@@ -59,7 +59,7 @@
 					<h3><md-icon>date_range</md-icon>Next Shows:</h3>
 					<div class="event" v-for="index in eventLimiter" :key="index" v-on:click="showEvent(bandEvents[index-1])">
 						<div class="event-information">
-							<p>{{bandEvents[index-1].title}}</p>
+							<p>{{bandEvents[index-1].name}}</p>
 							<p>{{bandEvents[index-1].formattedDate}}, {{bandEvents[index-1].formattedTime}}</p>
 							<p>Lineup: <span v-for="band in bandEvents[index-1].bands" :key="band._id" class="event-band">{{band.name}}</span></p>
 						</div>

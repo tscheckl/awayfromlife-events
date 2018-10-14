@@ -30,12 +30,12 @@
 				<md-list>
 					<div v-if="unverifiedContent.length > 0">
 						<md-list-item v-for="(data, index) in unverifiedContent" :key="index" @click="showInfo(unverifiedContent, index)">
-							<h4 v-if="currentCategory != 'reports' && currentCategory != 'unverified Festivals'">{{data.title ?data.title :data.name}}</h4>
-							<h4 v-if="currentCategory == 'unverified Festivals'">{{data.event.title}}</h4>
+							<h4 v-if="currentCategory != 'reports' && currentCategory != 'unverified Festivals'">{{data.name}}</h4>
+							<h4 v-if="currentCategory == 'unverified Festivals'">{{data.event.name}}</h4>
 							<span v-if="currentCategory != 'reports' && currentCategory != 'unverified Festivals'">{{currentCategory}}</span>
 							<span v-if="currentCategory == 'unverified Festivals'">{{data.validated ?'unverified Festival Events' :'unverified Festivals'}}</span>
 							
-							<h4 v-if="currentCategory == 'reports'">{{data.item.title ?data.item.title :data.item.name}}</h4>
+							<h4 v-if="currentCategory == 'reports'">{{data.item.name}}</h4>
 							<span v-if="currentCategory == 'reports'">{{data.category}}</span>
 						</md-list-item>		
 					</div>
@@ -59,7 +59,7 @@
 					<h2 v-if="verifyData.validated">Associated Festival</h2>
 					<div class="report-target" v-if="verifyData.validated">
 						<a :href="`/festivals/${verifyData.festival.url}`" target="_blank">
-							{{verifyData.festival.title}} <md-icon>keyboard_arrow_right</md-icon>
+							{{verifyData.festival.name}} <md-icon>keyboard_arrow_right</md-icon>
 							<md-tooltip>open festival's page in new tab</md-tooltip>
 						</a>
 					</div>
@@ -75,7 +75,7 @@
 					<h2>Reported {{verifyData.category}}:</h2>
 					<div class="report-target">
 						<a :href="`/${verifyData.category}/${verifyData.item.url}`" target="_blank">
-							{{verifyData.item.title ?verifyData.item.title :verifyData.item.name}} <md-icon>keyboard_arrow_right</md-icon>
+							{{verifyData.item.name}} <md-icon>keyboard_arrow_right</md-icon>
 							<md-tooltip>open {{verifyData.category}}'s page in new tab</md-tooltip>
 						</a>
 					</div>

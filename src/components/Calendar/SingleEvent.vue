@@ -1,11 +1,11 @@
 <template>
 	<div id="single_event">
 		<div class="upper-information">
-			<h3 class="event-title">{{data.title}}</h3>
+			<h3 class="event-title">{{data.name}}</h3>
 			<span class="event-date">{{formattedDate}}</span>
 		</div>
 		<div class="event-location"><span><md-icon>location_on</md-icon></span> {{data.location.name}}, {{data.location.address.city}}</div>
-		<p class="event-description"><span><md-icon>format_quote</md-icon></span> {{data.description}}</p>
+		<!-- <p class="event-description"><span><md-icon>format_quote</md-icon></span> {{data.description}}</p> -->
  	 </div>
 </template>
 

@@ -17,7 +17,7 @@
 				<div class="results" v-if="searched && !loading && results.length > 0">
 					<router-link :to="'/' + result.category.toLowerCase() + '/' + result.data.url" class="result" v-for="(result, index) in results" :key="index">
 						<div class="result-information">
-							<h4>{{result.data.title ?result.data.title :result.data.name}}</h4>
+							<h4>{{result.data.name}}</h4>
 							<p>Result found in: {{result.match.pretty}}</p>
 						</div>
 						<p>{{result.category}}</p>

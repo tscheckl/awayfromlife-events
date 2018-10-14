@@ -38,7 +38,7 @@
 			</h3>
 
 			<div class="title">
-				<h2>{{event.title?event.title.toUpperCase(): ''}}</h2>
+				<h2>{{event.name?event.name.toUpperCase(): ''}}</h2>
 				<h4 class="date">{{event.formattedDate}}</h4>
 			</div>
 
@@ -215,7 +215,7 @@ export default {
 			})
 			.catch(err => {});
 			
-		if(this.$store.getters.currentEvent.title == '' || this.$store.getters.currentEvent.url != this.$route.params.url) {
+		if(this.$store.getters.currentEvent.name == '' || this.$store.getters.currentEvent.url != this.$route.params.url) {
 
 			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byurl/` + this.$route.params.url)
 			.then(response => {
