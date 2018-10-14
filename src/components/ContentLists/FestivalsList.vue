@@ -120,19 +120,19 @@
 				<h3 class="no-items-title" v-if="festivals.length == 0">No Festivals found..</h3>
 
 				<div class="list-item-header" v-if="festivals.length > 0">
-					<p class="festival-name" v-on:click="sortBy('date')">
+					<p class="festival-name" v-on:click="sortBy('name')">
 						<span>Name
-							<md-icon v-if="currentlySorted == 'date'">{{!sortingAsc.date? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
-						</span>
-					</p> 
-					<p class="festival-city" v-on:click="sortBy('name')">
-						<span>City
 							<md-icon v-if="currentlySorted == 'name'">{{!sortingAsc.name? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
+					</p> 
+					<p class="festival-city" v-on:click="sortBy('city')">
+						<span>City
+							<md-icon v-if="currentlySorted == 'city'">{{!sortingAsc.city? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+						</span>
 					</p>
-					<p class="festival-country" v-on:click="sortBy('location')">
+					<p class="festival-country" v-on:click="sortBy('country')">
 						<span>Country
-							<md-icon v-if="currentlySorted == 'location'">{{!sortingAsc.location? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+							<md-icon v-if="currentlySorted == 'country'">{{!sortingAsc.country? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
 					<md-icon class="hidden-icon"></md-icon>
@@ -200,7 +200,7 @@ export default {
 				name: false,
 				location: false
 			},
-			currentlySorted: 'date',
+			currentlySorted: 'name',
 			filterCriteria: {
 				startWith: [],
 				cities: undefined,
@@ -235,7 +235,7 @@ export default {
 			deep: true
 		},
 		$route(to, from) {
-				this.getEventsPage(to.query.page);		
+			this.getEventsPage(to.query.page);		
 		},
 		itemsPerPage() {
 			this.buildUrl();

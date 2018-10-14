@@ -1,16 +1,28 @@
 @import "../themeColors";
 @import "./similarDialog";
+@import "../ContentForms/generalForm";
 
 #new_event, #new_band, #new_location, #new_festival {
 	position: relative;
-	width: 900px;
+	width: auto;
 	max-width: 100%;
 	margin: 0 auto;
-	padding: 40px;
+	// padding: 40px;
 	background-color: $primaryLighten4;
 	color: $primaryDarken3;
-	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	overflow: auto;
+
+	.close-btn {
+		color: $primaryDarken4;
+		right: 20px;
+	}
+
+	.hide {
+		overflow: hidden;
+		width: 0 !important;
+		max-height: 0 !important;
+		padding: 0 !important;
+	}
 
 	h1 {
 		margin-top: 15px;
@@ -18,10 +30,80 @@
 		font-size: 3em;
 		text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 	}
+
+	.form-intro {
+		width: 500px;
+		max-width: 100%;
+		text-align: center;
+		padding: 30px;
+		transition: max-height .5s ease-out;
+
+		h1 {
+			margin-left: 0;
+			padding-left: 0;
+		}
+
+		h3 {
+			margin: 0;
+		}
+
+		div {
+			position: relative;
+			transition: max-height .5s ease-out;
+		}
+
+		.md-button {
+			margin: 6px auto;
+			margin-top: 20px;
+			color: $primaryLighten4;
+			background-color: $accentAccent2;
+		}
+	}
 	
 	.md-button {
 		margin-top: 20px;
 		margin-left: 15px;
+	}
+
+	.back-to-selection-btn {
+		position: absolute;
+		top: 55px;
+		z-index: 2;
+	}
+
+	.event-form, .tour-form, .festival-form, .festival-event-form {
+		
+		.stepper-body {
+			margin-top: 30px;
+			overflow: visible;
+		}
+	}
+
+	.event-form, .festival-form, .festival-event-form, .band-form, .location-form, .tour-form {
+		width: 900px;
+		max-width: 100%;
+		transition: width .4s ease-out;
+	
+		.single-form-field {
+			width: 100%;
+	
+			.md-input-container {
+				float: left;
+				width: calc(100% - 65px);
+			}
+	
+			.md-button {
+				float: left;
+				margin-left: 0;
+				margin-top: 12px;
+			}
+		}
+	
+		.add-field-btn {
+			margin-top: -5px;
+			margin-bottom: 10px;
+			margin-left: 10px;
+		}
 	}
 }
 

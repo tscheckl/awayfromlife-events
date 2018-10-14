@@ -1,30 +1,136 @@
 <template>
   	<div id="new_event">
-		<md-button-toggle v-if="!edit" class="event-type-switch" md-single>
-			<md-button v-on:click="createEvent=true" :class="createEvent? 'active' : ''">
-				Single Event
-			</md-button>
-			<md-button v-on:click="createEvent=false" :class="!createEvent? 'active' : ''">
-				Tour
-			</md-button>
-		</md-button-toggle>
-
 		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
 			<md-icon>clear</md-icon>
 		</md-button>
 
-		<div v-if="createEvent" class="content">
-			<h1>{{edit?'EDIT EVENT' :'NEW EVENT'}}</h1>
-			<event-form :event="newEvent" :edit="edit"></event-form>
-			<md-button type="submit" v-on:click="addEvent" class="md-raised md-accent">{{edit?'Update Event' :'Add Event'}}</md-button>
+		<div :class="'form-intro '  + (showStepper ?'hide' :'')">
+			<h1>New Event</h1>
+			<h3>Do you want to create a</h3>
+			<button class="md-button md-raised" v-on:click="showForm(true)">Single Event</button>
+			<h3>or a</h3>
+			<button class="md-button md-raised" v-on:click="showForm(false)">Tour</button>
 		</div>
-		
-		<div v-else class="content">
-			<h1>NEW TOUR</h1>
-			<tour-form :data="newTour" :selectedLocations="[]"></tour-form>
 
-			<md-button type="submit" v-on:click="addTour" class="md-raised md-accent">Add Tour</md-button>
-		</div>
+		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
+
+		<stepper :class="(createEvent ?'event-form ' :'tour-form ') + (!showStepper ?'hide' :'')" :steps="3" v-on:submit="createEvent ?addEvent() :addTour()">
+			<h1 slot="headline">New {{createEvent ?'Event' :'Tour'}}</h1>
+			<div slot="step-1">
+				<md-layout md-gutter>
+					<md-layout md-flex="50" md-flex-small="100">
+						<md-input-container>
+							<label>Title</label>
+							<md-input v-model="currentObject.name" required></md-input>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100" v-if="createEvent">
+						<md-input-container>
+							<v-select class="form-v-select"
+							 		  :options="backendLocations"
+									  :on-change="onSelectLocation"
+									  v-model="currentObject.location"
+									  placeholder="Select event location*">
+
+									  	<span slot="no-options">
+											Looks like the location you're looking for doesn't exist yet. 
+											<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+										</span>
+							</v-select>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="100" v-if="!createEvent">
+						<div class="tourstop single-form-field" v-for="(tourstop, index) in currentObject.tourStops" :key="index">
+							<md-input-container>
+								<v-select class="form-v-select"
+										  :options="backendLocations"
+										  :on-change="(selected) => onSelectTourLocation(selected, index)"
+										  v-model="currentObject.tourstops[index].location"
+										  placeholder="Select event location*">
+											
+											<span slot="no-options">
+												Looks like the location you're looking for doesn't exist yet. 
+												<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+											</span>
+								</v-select>
+							</md-input-container>
+							<div class="picker">
+								<md-icon>date_range</md-icon>
+								<datetime v-model="tourstop.date" placeholder="Select date*" type="date"></datetime>
+							</div>
+							<md-button v-on:click="removeTourStop(index)" class="md-icon-button md-raised">
+								<md-icon>clear</md-icon>
+								<md-tooltip>Remove tourstop</md-tooltip>
+							</md-button>
+						</div>
+
+						<md-button v-if="locations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-field-btn">
+							<md-icon>add</md-icon>
+							<md-tooltip md-direction="right">Add another tourstop</md-tooltip>
+						</md-button>
+					</md-layout>
+				</md-layout>
+			</div>
+
+			<div slot="step-2">
+				<md-layout md-gutter>
+					<md-layout md-flex="100">
+						<h2>Lineup for this event</h2>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<div class="single-form-field" v-for="(band, index) in currentObject.bands" :key="index">
+							<md-input-container>
+								<v-select class="form-v-select"
+											:options="backendBands"
+											:on-change="(selected) => onSelectBand(selected, index)"
+											v-model="currentObject.bands[index]"
+											placeholder="Select event's bands*">
+
+											<span slot="no-options">
+												Looks like the band you're looking for doesn't exist yet. 
+												<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+											</span>
+								</v-select>
+							</md-input-container>
+							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
+								<md-icon>clear</md-icon>
+								<md-tooltip>Remove band</md-tooltip>
+							</md-button>
+						</div>
+
+						<md-button v-if="currentObject.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-field-btn">
+							<md-icon>add</md-icon>
+							<md-tooltip md-direction="right">Add another band</md-tooltip>
+						</md-button>
+					</md-layout>
+				</md-layout>
+			</div>
+
+			<div slot="step-3">
+				<md-layout md-gutter>
+					<md-layout md-flex="100">
+						<h2>Additional Information</h2>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Ticket Link</label>
+							<md-input v-model="currentObject.ticketLink"></md-input>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Description</label>
+							<md-textarea v-model="currentObject.description"></md-textarea>
+						</md-input-container>
+					</md-layout>
+				</md-layout>
+			</div>
+		</stepper>
 
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		
@@ -152,7 +258,11 @@ export default {
 				ticketLink: ''
 			},
 			similarEventFound: false,
-			similarEvents: []
+			similarEvents: [],
+			showStepper: false,
+			currentObject: {},
+			backendBands: [],
+			backendLocations: []
 		}
 	},
 	methods: {
@@ -308,6 +418,73 @@ export default {
 
 			this.similarEventFound = false;
 			this.$refs.similarEventDialog.close();
+		},
+		showForm(createEvent) {
+			this.createEvent = createEvent;
+			this.showStepper = true;
+			this.currentObject = createEvent
+						? this.newEvent
+						: this.newTour;
+		},
+		onSelectLocation(selected) {
+			//Set the new Event's location attribute to the ID of the selected location
+			this.newEvent.location = selected;
+		},
+		onSelectTourLocation(selected, index) {
+			//Set the value for the item that will be displayed in the search select input
+			this.currentObject.tourStops[index].location = selected;
+		},
+		onSelectBand(selected, index) {			
+			this.currentObject.bands[index] = selected;
+			if(selected != '') {
+				if(this.currentObject.bands.reduce((acc, cur) => (acc != '' && cur != '')))
+					this.addBand();
+			}
+		},
+		addTourStop() {
+			this.newTour.tourStops.push({
+				location: '',
+				date: ''
+			});
+		},
+		removeTourStop(index) {
+			this.newTour.tourStops.splice(index, 1);
+
+			if(this.newTour.tourStops.length == 0) {
+				this.newTour.tourStops[0] = {
+					location: '',
+					date: ''
+				};
+			}
+		},
+		addBand() {
+			this.currentObject.bands.push('');
+		},
+		removeBand(index) {
+			this.currentObject.bands.splice(index, 1);
+			
+			if(this.currentObject.bands.length == 0)
+				this.currentObject.bands[0] = '';
+		},
+		getBandOptions() {
+			this.$http.get(backendUrl + "/api/bands")
+				.then(response => {
+					this.backendBands = response.body.data;
+					for(let band of this.backendBands) {
+						band.label = band.name + ' - ' + band.origin.country;
+					}
+				})
+				.catch(err => {});
+		},
+		getLocationOptions() {
+			this.$http.get(backendUrl + "/api/locations")
+				.then(response => {
+					this.backendLocations = response.body.data;
+					for(let location of this.backendLocations) {
+						location.label = location.name + ' - ' + location.address.city;
+					}
+				})
+				.catch(err => {});
 		}
 	},
 	mounted() {
@@ -318,6 +495,11 @@ export default {
 				vm.apiRoute = '/api/events';
 			})
 			.catch(err => {});
+
+		this.currentObject = this.newEvent;
+
+		this.getBandOptions();
+		this.getLocationOptions();
 	}
 }
 </script>

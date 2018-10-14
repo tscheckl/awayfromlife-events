@@ -195,6 +195,7 @@ export default {
 			this.data.origin.name = e.suggestion.name;
 			this.data.origin.administrative = e.suggestion.administrative;
 			this.data.origin.country = e.suggestion.country;
+			this.data.origin.countryCode = e.suggestion.countryCode;
 			this.data.origin.postcode = e.suggestion.postcode;
 			this.data.origin.lat = e.suggestion.latlng.lat;
 			this.data.origin.lng = e.suggestion.latlng.lng;

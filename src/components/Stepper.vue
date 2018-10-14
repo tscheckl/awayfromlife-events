@@ -21,7 +21,7 @@
 				<slot></slot>
 				<div v-for="step in steps" :key="step">
 					<transition :name="stepTransisition">
-							<div class="step" v-if="step == currentStep">
+							<div class="step" v-show="step == currentStep">
 								<slot :name="'step-' + step"></slot>
 							</div>
 					</transition>

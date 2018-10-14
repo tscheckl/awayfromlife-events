@@ -154,7 +154,7 @@
 					</div>
 				</div>
 
-				<router-link to="/festivals">
+				<router-link to="/festivals?page=1&itemsPerPage=20&sortBy=name&ascending=true&startWith=&genre=&country=">
 					<div class="menu-item" v-on:click="removeExpandedClass">
 						<svg width="40px" height="40px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
 							<g>

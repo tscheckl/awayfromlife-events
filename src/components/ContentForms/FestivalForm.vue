@@ -151,9 +151,20 @@ export default {
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address', language: 'en'});
 		this.placesAutocomplete.on('change', e => {
 			this.data.address.street = e.suggestion.name;
-			this.data.address.city = e.suggestion.city;
+			
+			if(e.suggestion.city)
+				this.data.address.city = e.suggestion.city;
+			else if(e.suggestion.county)
+				this.data.address.city = e.suggestion.county;
+			else if(e.suggestion.administrative)
+				this.data.address.city = e.suggestion.administrative;
+			else 
+				this.data.address.city = '';
+
 			this.data.address.administrative = e.suggestion.administrative;
+			this.data.address.county = e.suggestion.county;
 			this.data.address.country = e.suggestion.country;
+			this.data.address.countryCode = e.suggestion.countryCode;
 			this.data.address.postcode = e.suggestion.postcode;
 			this.data.address.lat = e.suggestion.latlng.lat;
 			this.data.address.lng = e.suggestion.latlng.lng;

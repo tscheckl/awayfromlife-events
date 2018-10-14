@@ -1,0 +1,1 @@
+//TODO: Getter functions from the backend that only return data. e.g. get location/band options for v-select components.

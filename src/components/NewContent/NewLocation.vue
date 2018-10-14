@@ -4,11 +4,62 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<h1>{{edit ?'EDIT LOCATION' :'NEW LOCATION'}}</h1>
+		<!-- <h1>{{edit ?'EDIT LOCATION' :'NEW LOCATION'}}</h1>
 		
-		<location-form :data="newLocation" :value="newLocationValue"></location-form>
+		<location-form :data="newLocation" :value="newLocationValue"></location-form> -->
+		<stepper class="location-form" :steps="2" v-on:submit="addLocation">
+			<h1 slot="headline">New Location</h1>
+			<div slot="step-1">
+				<md-layout md-gutter>
+					<md-layout md-flex="50" md-flex-small="100">
+						<md-input-container>
+							<label>Name of the location</label>
+							<md-input v-model="newLocation.name" required></md-input>
+						</md-input-container>
+					</md-layout>
 
-		<md-button type="submit" v-on:click="addLocation" class="md-raised md-accent">{{edit ?'Update Location' :'Add Location'}}</md-button>
+					<md-layout md-flex="100">
+						<h2>Address</h2>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<p>Always pick one of the suggested addresses instead of only writing it into the input field. If the exact address you were looking for does not appear in the suggestions please always pick the closest match.</p>
+						<md-input-container>
+							<input type="search" ref="address_input" v-model="newLocation.address.value" placeholder="Address of the location*" required/>
+						</md-input-container>
+					</md-layout>
+				</md-layout>
+			</div>
+
+			<div slot="step-2">
+				<md-layout md-gutter>
+					<md-layout md-flex="100">
+						<h2>Additional information</h2>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100">
+						<md-input-container>
+							<label>Website</label>
+							<md-input v-model="newLocation.website"></md-input>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100">
+						<md-input-container>
+							<label>Facebook page</label>
+							<md-input v-model="newLocation.facebookUrl"></md-input>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Additional information</label>
+							<md-textarea v-model="newLocation.information"></md-textarea>
+						</md-input-container>
+					</md-layout>
+				</md-layout>
+			</div>
+		</stepper>
 		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 		
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -38,6 +89,8 @@
 </template>
 
 <script>
+import places from 'places.js';
+
 import {backendUrl} from '@/secrets.js';
 
 import ConfirmDialog from '@/Components/ConfirmDialog';
@@ -100,6 +153,8 @@ export default {
 					city: '',
 					administrative: '',
 					country: '',
+					county: '',
+					countryCode: '',
 					postcode: '',
 					lat: 0,
 					lng: 0,
@@ -160,6 +215,8 @@ export default {
 					city: '',
 					administrative: '',
 					country: '',
+					counry: '',
+					countryCode: '',
 					postcode: '',
 					lat: 0,
 					lng: 0,
@@ -203,6 +260,31 @@ export default {
 			})
 			.catch(err => {
 			});
+			
+		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address', language: 'en'});
+		this.placesAutocomplete.on('change', e => {
+			this.newLocation.address.street = e.suggestion.name;
+			this.newLocation.address.city = e.suggestion.city ?e.suggestion.city :'';
+
+			if(e.suggestion.city)
+				this.newLocation.address.city = e.suggestion.city;
+			else if(e.suggestion.county)
+				this.danewLocationta.address.city = e.suggestion.county;
+			else if(e.suggestion.administrative)
+				this.newLocation.address.city = e.suggestion.administrative;
+			else 
+				this.newLocation.address.city = '';
+
+			this.newLocation.address.administrative = e.suggestion.administrative;
+			this.newLocation.address.county = e.suggestion.county;
+			this.newLocation.address.country = e.suggestion.country;
+			this.newLocation.address.countryCode = e.suggestion.countryCode;
+			this.newLocation.address.postcode = e.suggestion.postcode;
+			this.newLocation.address.lat = e.suggestion.latlng.lat;
+			this.newLocation.address.lng = e.suggestion.latlng.lng;
+			this.newLocation.address.value = e.suggestion.value;
+			this.value = e.suggestion.value ?e.suggestion.value :this.value;
+		});
 	}
 }
 </script>
