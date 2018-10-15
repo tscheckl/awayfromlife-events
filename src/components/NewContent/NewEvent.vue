@@ -164,6 +164,7 @@
 import moment from 'moment';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
 
 import ConfirmDialog from '@/Components/ConfirmDialog';
 import EventForm from '@/Components/ContentForms/EventForm';
@@ -466,26 +467,6 @@ export default {
 			if(this.currentObject.bands.length == 0)
 				this.currentObject.bands[0] = '';
 		},
-		getBandOptions() {
-			this.$http.get(backendUrl + "/api/bands")
-				.then(response => {
-					this.backendBands = response.body.data;
-					for(let band of this.backendBands) {
-						band.label = band.name + ' - ' + band.origin.country;
-					}
-				})
-				.catch(err => {});
-		},
-		getLocationOptions() {
-			this.$http.get(backendUrl + "/api/locations")
-				.then(response => {
-					this.backendLocations = response.body.data;
-					for(let location of this.backendLocations) {
-						location.label = location.name + ' - ' + location.address.city;
-					}
-				})
-				.catch(err => {});
-		}
 	},
 	mounted() {
 		let vm = this;
@@ -498,8 +479,13 @@ export default {
 
 		this.currentObject = this.newEvent;
 
-		this.getBandOptions();
-		this.getLocationOptions();
+		getBandOptions()
+			.then(data => this.backendBands = data)
+			.catch(err => console.log(err));
+
+		getLocationOptions()
+			.then(data => this.backendLocations = data)
+			.catch(err => console.log(err));
 	}
 }
 </script>

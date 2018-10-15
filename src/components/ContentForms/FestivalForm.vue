@@ -93,7 +93,9 @@
 
 <script>
 import places from 'places.js';
+
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { getBandOptions } from '@/helpers/backend-getters.js';
 
 export default {
 	name: 'festival-form',
@@ -128,19 +130,11 @@ export default {
 				array[0] = '';
 			}
 		},
-		getBandOptions() {
-			this.$http.get(backendUrl + "/api/bands")
-				.then(response => {
-					this.backendBands = response.body.data;
-					for(let band of this.backendBands) {
-						band.label = band.name + ' - ' + band.origin.country;
-					}
-				})
-				.catch(err => {});
-		},
 	},
 	mounted() {
-		this.getBandOptions();
+		getBandOptions()
+			.then(data => this.backendBands = data)
+			.catch(err => console.log(err));
 
 		this.$http.get(backendUrl + '/api/genres')
 			.then(response => {				

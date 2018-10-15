@@ -13,7 +13,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<v-select class="form-v-select"
-							 		  :options="locations"
+							 		  :options="backendLocations"
 									  :on-change="onSelectLocation"
 									  v-model="event.location"
 									  placeholder="Select event location*">
@@ -108,6 +108,8 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
+
 import NewBand from "@/Components/NewContent/NewBand";
 import NewLocation from "@/Components/NewContent/NewLocation";
 
@@ -130,7 +132,7 @@ export default {
 	},
 	data() {
 		return {
-			locations: [],
+			backendLocations: [],
 			backendBands: [],
 			localBands: [],
 			createdContent: ''
@@ -167,39 +169,28 @@ export default {
 
 			if(dialog == 'newBandDialog') {
 				this.createdContent = 'band';
-				this.getBandOptions();
+				getBandOptions()
+					.then(data => this.backendBands = data)
+					.catch(err => console.log(err));
 			}
 			else {
 				this.createdContent = 'location';
-				this.getLocationOptions();
+				getLocationOptions()
+					.then(data => this.backendLocations = data)
+					.catch(err => console.log(err));
 			}
 
 			this.$refs.snackbar.open();
 		},
-		getBandOptions() {
-			this.$http.get(backendUrl + "/api/bands")
-				.then(response => {
-					this.backendBands = response.body.data;
-					for(let band of this.backendBands) {
-						band.label = band.name + ' - ' + band.origin.country;
-					}
-				})
-				.catch(err => {});
-		},
-		getLocationOptions() {
-			this.$http.get(backendUrl + "/api/locations")
-				.then(response => {
-					this.locations = response.body.data;
-					for(let location of this.locations) {
-						location.label = location.name + ' - ' + location.address.city;
-					}
-				})
-				.catch(err => {});
-		}
 	},
 	mounted() {
-		this.getLocationOptions();
-		this.getBandOptions();
+		getLocationOptions()
+			.then(data => this.backendLocations = data)
+			.catch(err => console.log(err));
+		
+		getBandOptions()
+				.then(data => this.backendBands = data)
+				.catch(err => console.log(err));
 
 		this.localBands = this.event.bands;
 	}

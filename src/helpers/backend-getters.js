@@ -2,29 +2,33 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 function getBandOptions(object) {	
-	fetch(backendUrl + "/api/bands")
-		.then(response => {
-			return response.json();
-		})
-		.then(data => {
-			console.log(data);
-			
-			for(let band of data.data) {
-				band.label = band.name + ' - ' + band.origin.country;
-			}
-			return data.data;
-		});
+	return new Promise((resolve, reject) => {
+		fetch(backendUrl + "/api/bands")
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				
+				for(let band of data.data) {
+					band.label = band.name + ' - ' + band.origin.country;
+				}
+				resolve(data.data);
+			})
+			.catch(err => reject(err));
+	})
 }
 
 function getLocationOptions() {
-	fetch(backendUrl + "/api/locations")
-		.then(response => {
-			for(let location of response.body.data) {
-				location.label = location.name + ' - ' + location.address.city;
-			}
-			return response.body.data;
-		})
-		.catch(err => {});
+	return new Promise((resolve, reject) => {
+		fetch(backendUrl + "/api/locations")
+			.then(response => response.json())
+			.then(data => {
+				for(let location of data.data) {
+					location.label = location.name + ' - ' + location.address.city;
+				}
+				resolve(data.data);
+			})
+			.catch(err => reject(err));
+	})
 }
 
 export {getBandOptions, getLocationOptions};

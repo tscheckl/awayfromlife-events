@@ -49,7 +49,7 @@
 						<div class="tourstop single-form-field" v-for="(tourstop, index) in data.tourStops" :key="index">
 							<md-input-container>
 								<v-select class="form-v-select"
-										  :options="locations"
+										  :options="backendLocations"
 										  :on-change="(selected) => selectionHandler(selected, index)"
 										  v-model="selectedLocations[index]"
 										  placeholder="Select event location*">
@@ -70,7 +70,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="locations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-field-btn">
+						<md-button v-if="backendLocations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another tourstop</md-tooltip>
 						</md-button>
@@ -120,6 +120,8 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
+
 import NewBand from "@/Components/NewContent/NewBand";
 import NewLocation from "@/Components/NewContent/NewLocation";
 
@@ -135,7 +137,7 @@ export default {
 	},
 	data() {
 		return {
-			locations: [],
+			backendLocations: [],
 			backendBands: [],
 			selectedBands: [],
 			createdContent: ''
@@ -200,30 +202,24 @@ export default {
 
 			if(dialog == 'newBandDialog') {
 				this.createdContent = 'band';
-				this.getBandOptions();
+				getBandOptions()
+					.then(data => this.backendBands = data)
+					.catch(err => console.log(err));
 			}
 			else {
 				this.createdContent = 'location';
-				this.getLocationOptions();
+				getLocationOptions()
+					.then(data => this.backendLocations = data)
+					.catch(err => console.log(err));
 			}
 
 			this.$refs.snackbar.open();
 		},
-		getBandOptions() {
-			this.$http.get(backendUrl + "/api/bands")
-				.then(response => {
-					this.backendBands = response.body.data;
-					for(let band of this.backendBands) {
-						band.label = band.name + ' - ' + band.origin.country;
-					}
-				})
-				.catch(err => {});
-		},
 		getLocationOptions() {
 			this.$http.get(backendUrl + "/api/locations")
 				.then(response => {
-					this.locations = response.body.data;
-					for(let location of this.locations) {
+					this.backendLocations = response.body.data;
+					for(let location of this.backendLocations) {
 						location.label = location.name + ' - ' + location.address.city;
 					}
 				})
@@ -231,8 +227,13 @@ export default {
 		}
 	},
 	mounted() {
-		this.getLocationOptions();
-		this.getBandOptions();
+		getLocationOptions()
+			.then(data => this.backendLocations = data)
+			.catch(err => console.log(err));
+		
+		getBandOptions()
+			.then(data => this.backendBands = data)
+			.catch(err => console.log(err));
 	},
 }
 </script>

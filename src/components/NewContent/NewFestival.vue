@@ -210,7 +210,10 @@
 import Datepicker from 'vuejs-datepicker';
 import places from 'places.js';
 import moment from 'moment';
+
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { getBandOptions } from '@/helpers/backend-getters.js';
+
 import Stepper from '@/components/Stepper';
 import NewBand from "@/Components/NewContent/NewBand";
 
@@ -361,19 +364,11 @@ export default {
 			this.$refs[dialog].close();
 
 			this.submitStatus = `New Band successfully created! \nIt will be visible for everyone after it was verified by us.`;
-			this.getBandOptions();
+			getBandOptions()
+				.then(data => this.backendBands = data)
+				.catch(err => console.log(err));
 
 			this.$refs.snackbar.open();
-		},
-		getBandOptions() {
-			this.$http.get(backendUrl + "/api/bands")
-				.then(response => {
-					this.backendBands = response.body.data;
-					for(let band of this.backendBands) {
-						band.label = band.name + ' - ' + band.origin.country;
-					}
-				})
-				.catch(err => {});
 		},
 		checkSelection(selection) {
 			if(selection != null) {
@@ -390,7 +385,9 @@ export default {
 		}
 	},
 	mounted() {
-		this.getBandOptions();
+		getBandOptions()
+			.then(data => this.backendBands = data)
+			.catch(err => console.log(err));
 
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {

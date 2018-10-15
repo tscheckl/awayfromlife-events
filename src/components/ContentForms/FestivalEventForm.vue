@@ -92,6 +92,8 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { getBandOptions } from '@/helpers/backend-getters.js';
+
 import NewBand from "@/Components/NewContent/NewBand";
 
 export default {
@@ -128,26 +130,20 @@ export default {
 			if(this.localBands.length == 0)
 				this.localBands[0] = '';
 		},
-		getBandOptions() {
-			this.$http.get(backendUrl + "/api/bands")
-				.then(response => {
-					this.backendBands = response.body.data;
-					for(let band of this.backendBands) {
-						band.label = band.name + ' - ' + band.origin.country;
-					}
-				})
-				.catch(err => {});
-		},
 		updateContent(dialog) {
 			this.$refs[dialog].close();
 		
-			this.getBandOptions();
+			getBandOptions()
+				.then(data => this.backendBands = data)
+				.catch(err => console.log(err));
 
 			this.$refs.snackbar.open();
 		},
 	},
 	mounted() {
-		this.getBandOptions();
+		getBandOptions()
+			.then(data => this.backendBands = data)
+			.catch(err => console.log(err));
 	}
 }
 </script>
