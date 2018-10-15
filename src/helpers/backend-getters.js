@@ -5,9 +5,7 @@ function getBandOptions(object) {
 	return new Promise((resolve, reject) => {
 		fetch(backendUrl + "/api/bands")
 			.then(response => response.json())
-			.then(data => {
-				console.log(data);
-				
+			.then(data => {				
 				for(let band of data.data) {
 					band.label = band.name + ' - ' + band.origin.country;
 				}

@@ -18,11 +18,19 @@
 			<h1 slot="headline">New {{createEvent ?'Event' :'Tour'}}</h1>
 			<div slot="step-1">
 				<md-layout md-gutter>
+					<md-layout md-flex="100">
+						<h2>Title</h2>
+					</md-layout>
+
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Title</label>
 							<md-input v-model="currentObject.name" required></md-input>
 						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="100" v-if="createEvent">
+						<h2>Location of the event</h2>
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100" v-if="createEvent">
@@ -41,13 +49,28 @@
 						</md-input-container>
 					</md-layout>
 
+					<md-layout md-flex="100" v-if="createEvent">
+						<h2>Date of the event</h2>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100" v-if="createEvent">
+						<div class="picker">
+							<md-icon>date_range</md-icon>
+							<datetime v-if="!edit || edit && event.date" v-model="currentObject.date" placeholder="Select date*" type="date"></datetime>
+						</div>
+					</md-layout>
+
+					<md-layout md-flex="100" v-if="!createEvent">
+						<h2>Tourstops</h2>
+					</md-layout>
+
 					<md-layout md-flex="100" v-if="!createEvent">
 						<div class="tourstop single-form-field" v-for="(tourstop, index) in currentObject.tourStops" :key="index">
 							<md-input-container>
 								<v-select class="form-v-select"
 										  :options="backendLocations"
 										  :on-change="(selected) => onSelectTourLocation(selected, index)"
-										  v-model="currentObject.tourstops[index].location"
+										  v-model="tourstop.location"
 										  placeholder="Select event location*">
 											
 											<span slot="no-options">
@@ -66,7 +89,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="locations != null" v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-field-btn">
+						<md-button v-on:click="addTourStop" class="md-icon-button md-raised md-accent add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another tourstop</md-tooltip>
 						</md-button>
@@ -196,32 +219,7 @@ export default {
 	},
 	computed: {
 		newEvent() {
-			if(this.edit) {
-				let eventBands = [];
-				if(this.$store.getters.currentEvent.bands[0] != '') {
-					for(let band of this.$store.getters.currentEvent.bands) {
-						eventBands.push(JSON.parse(JSON.stringify(band)));
-					}
-				}
-				else {
-					eventBands = this.$store.getters.currentEvent.bands;
-				}
-				
-				return {
-					_id: this.$store.getters.currentEvent._id,
-					url: this.$store.getters.currentEvent.url,
-					name: this.$store.getters.currentEvent.name,
-					location: this.$store.getters.currentEvent.location,
-					bands: eventBands,
-					date: this.$store.getters.currentEvent.date,
-					description: this.$store.getters.currentEvent.description,
-					canceled: this.$store.getters.currentEvent.canceled,
-					ticketLink: this.$store.getters.currentEvent.ticketLink
-				}
-			}
-			else {
-				return this.blankEvent;
-			}
+			return JSON.parse(JSON.stringify(this.$store.getters.currentEvent));
 		},
 		newEventDate() {
 			return this.newEvent.date
@@ -426,6 +424,9 @@ export default {
 			this.currentObject = createEvent
 						? this.newEvent
 						: this.newTour;
+
+			console.log(this.currentObject);
+			
 		},
 		onSelectLocation(selected) {
 			//Set the new Event's location attribute to the ID of the selected location

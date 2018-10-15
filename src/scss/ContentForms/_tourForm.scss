@@ -7,7 +7,7 @@
 		width: 100%;
 
 		.md-input-container, .picker {
-			width: 40%;
+			width: 40% !important;
 			margin-top: 0;
 			min-height: 0;
 			padding-top: 0;
@@ -15,23 +15,23 @@
 		}
 
 		.picker {
-			margin-left: 3%;
+			margin-left: 3% !important;
 			height: 32px;
 			padding-bottom: 0;
 
 			.vdatetime {
-				width: 100%;
+				width: 100% !important;
 			}
 
 			.vdatetime input{
-				width: 80%;
+				width: 80% !important;
 				height: 32px;
 				margin: 0;
 			}
 		}
 
 		.md-button {
-			margin: 0;
+			margin: 0 !important;
 		}
 	}
 }
