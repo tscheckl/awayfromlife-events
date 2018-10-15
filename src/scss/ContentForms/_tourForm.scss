@@ -4,9 +4,15 @@
 
 #tour_form, .tour-form {
 	.tourstop {
+		margin-top: 20px;
 		width: 100%;
 
-		.md-input-container, .picker {
+
+		label {
+			margin-top: -16px;
+		}
+
+		.md-input-container, .datepicker-trigger {
 			width: 40% !important;
 			margin-top: 0;
 			min-height: 0;
@@ -14,19 +20,27 @@
 			float: left;
 		}
 
-		.picker {
-			margin-left: 3% !important;
-			height: 32px;
-			padding-bottom: 0;
+		.datepicker-trigger {
+			.md-input-container {
+				width: 90% !important;
 
-			.vdatetime {
-				width: 100% !important;
+				input {
+					font-size: 14px;
+				}
+			}
+		}
+
+		.location-select {
+			margin-top: -3px;
+
+			.selected-tag {
+				font-size: 14px !important;
+				margin-left: 0;
+				padding-left: 0;
 			}
 
-			.vdatetime input{
-				width: 80% !important;
-				height: 32px;
-				margin: 0;
+			input {
+				padding-left: 0;
 			}
 		}
 
@@ -37,17 +51,28 @@
 }
 
 @media screen and (max-width: 768px) {
-	#tour_form {
+	#tour_form, .tour-form {
 		.tourstop {
 			position: relative;
 			margin-bottom: 30px;
 
-			.md-input-container, .picker {
-				width: 75%;
+			.md-input-container, .datepicker-trigger {
+				width: 75% !important;
 				margin-top: 0;
 				min-height: 0;
 				padding-top: 0;
 				float: left;
+			}
+
+			.datepicker-trigger {
+				margin-bottom: 20px;
+
+				label {
+					margin-left: 8px;
+				}
+				.md-input-container {
+					width: 100% !important;
+				}
 			}
 
 			.md-input-container {

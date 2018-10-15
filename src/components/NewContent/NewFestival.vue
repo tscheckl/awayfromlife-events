@@ -207,7 +207,6 @@
 </template>
 
 <script>
-import Datepicker from 'vuejs-datepicker';
 import places from 'places.js';
 import moment from 'moment';
 
@@ -221,7 +220,6 @@ export default {
 	name: 'new-festival',
 	components: {
 		Stepper,
-		Datepicker,
 		NewBand,
 		Stepper
 	},

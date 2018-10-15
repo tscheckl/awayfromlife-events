@@ -18,46 +18,63 @@
 			<h1 slot="headline">New {{createEvent ?'Event' :'Tour'}}</h1>
 			<div slot="step-1">
 				<md-layout md-gutter>
-					<md-layout md-flex="100">
-						<h2>Title</h2>
-					</md-layout>
-
 					<md-layout md-flex="50" md-flex-small="100">
-						<md-input-container>
-							<label>Title</label>
-							<md-input v-model="currentObject.name" required></md-input>
-						</md-input-container>
-					</md-layout>
+						<md-layout md-flex="100">
+							<h2>Title</h2>
+						</md-layout>
 
-					<md-layout md-flex="100" v-if="createEvent">
-						<h2>Location of the event</h2>
-					</md-layout>
-
-					<md-layout md-flex="50" md-flex-small="100" v-if="createEvent">
-						<md-input-container>
-							<v-select class="form-v-select"
-							 		  :options="backendLocations"
-									  :on-change="onSelectLocation"
-									  v-model="currentObject.location"
-									  placeholder="Select event location*">
-
-									  	<span slot="no-options">
-											Looks like the location you're looking for doesn't exist yet. 
-											<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
-										</span>
-							</v-select>
-						</md-input-container>
-					</md-layout>
-
-					<md-layout md-flex="100" v-if="createEvent">
-						<h2>Date of the event</h2>
+						<md-layout md-flex="100" md-flex-small="100">
+							<md-input-container>
+								<label>Title</label>
+								<md-input v-model="currentObject.name" required></md-input>
+							</md-input-container>
+						</md-layout>
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100" v-if="createEvent">
-						<div class="picker">
-							<md-icon>date_range</md-icon>
-							<datetime v-if="!edit || edit && event.date" v-model="currentObject.date" placeholder="Select date*" type="date"></datetime>
-						</div>
+						<md-layout md-flex="100">
+							<h2>Location of the event</h2>
+						</md-layout>
+
+						<md-layout md-flex="100">
+							<md-input-container>
+								<v-select class="form-v-select"
+										:options="backendLocations"
+										:on-change="onSelectLocation"
+										v-model="currentObject.location"
+										placeholder="Select event location*">
+
+											<span slot="no-options">
+												Looks like the location you're looking for doesn't exist yet. 
+												<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+											</span>
+								</v-select>
+							</md-input-container>
+						</md-layout>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100" v-if="createEvent">
+						<md-layout md-flex="100" v-if="createEvent">
+							<h2>Date of the event</h2>
+						</md-layout>
+
+						<md-layout md-flex="100" v-if="createEvent">
+							<div class="datepicker-trigger">
+								<md-input-container>
+									<label>Date</label>
+									<md-input id="datepicker-trigger" v-model="currentObject.date" required></md-input>
+								</md-input-container>
+
+								<AirbnbStyleDatepicker
+									:trigger-element-id="'datepicker-trigger'"
+									:offsetY="-300"
+									:mode="'single'"
+									:showActionButtons="false"
+									:date-one="currentObject.date"
+									@date-one-selected="val => { currentObject.date = val }"
+								/>
+							</div>
+						</md-layout>
 					</md-layout>
 
 					<md-layout md-flex="100" v-if="!createEvent">
@@ -66,7 +83,22 @@
 
 					<md-layout md-flex="100" v-if="!createEvent">
 						<div class="tourstop single-form-field" v-for="(tourstop, index) in currentObject.tourStops" :key="index">
-							<md-input-container>
+							<div class="datepicker-trigger">
+								<md-input-container>
+									<label>Date</label>
+									<md-input :id="'datepicker-trigger-'+index" v-model="tourstop.date" required></md-input>
+								</md-input-container>
+
+								<AirbnbStyleDatepicker
+									:trigger-element-id="'datepicker-trigger-' + index"
+									:offsetY="-300"
+									:mode="'single'"
+									:showActionButtons="false"
+									:date-one="tourstop.date"
+									@date-one-selected="val => { tourstop.date = val }"
+								/>
+							</div>
+							<md-input-container class="location-select">
 								<v-select class="form-v-select"
 										  :options="backendLocations"
 										  :on-change="(selected) => onSelectTourLocation(selected, index)"
@@ -79,10 +111,6 @@
 											</span>
 								</v-select>
 							</md-input-container>
-							<div class="picker">
-								<md-icon>date_range</md-icon>
-								<datetime v-model="tourstop.date" placeholder="Select date*" type="date"></datetime>
-							</div>
 							<md-button v-on:click="removeTourStop(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove tourstop</md-tooltip>
