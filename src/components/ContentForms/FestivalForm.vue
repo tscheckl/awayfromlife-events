@@ -1,5 +1,9 @@
 <template>
 	<div id="festival_form">
+		<md-button v-if="canSubmit" class="md-icon-button md-accent close-btn" v-on:click="$emit('close')">
+			<md-icon>clear</md-icon>
+		</md-button>
+		
 		<slot name="headline"></slot>
 		
 		<form class="new-festival-form" v-on:submit.prevent>
@@ -8,7 +12,7 @@
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Title</label>
-							<md-input v-model="data.name" required></md-input>
+							<md-input v-model="myData.name" required></md-input>
 						</md-input-container>
 					</md-layout>
 
@@ -18,24 +22,24 @@
 					</md-layout>
 
 					<md-layout md-gutter md-flex="100">
-						<md-layout class="single-genre single-form-field" v-for="(genre, index) in data.genre" :key="index" md-flex="33" md-flex-small="100">
+						<md-layout class="single-genre single-form-field" v-for="(genre, index) in myData.genre" :key="index" md-flex="33" md-flex-small="100">
 							<md-input-container>
 								<v-select class="form-v-select"
 										  label="name"
 										  :on-change="(selected) => onSelectGenre(selected, index)"
 										  :options="backendGenres"
-										  v-model="data.genre[index]"
+										  v-model="myData.genre[index]"
 										  placeholder="Select festival's genre*">
 								</v-select>
 							</md-input-container>
 
-							<md-button v-if="data.genre.length > 1" v-on:click="removeFromArray(data.genre,index)" class="md-icon-button md-raised">
+							<md-button v-if="myData.genre.length > 1" v-on:click="removeFromArray(myData.genre,index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove genre</md-tooltip>
 							</md-button>
 						</md-layout>
 
-						<md-button v-if="data.genre.length < 3" v-on:click="data.genre.push('')" class="md-icon-button md-raised md-accent add-field-btn add-genre-btn">
+						<md-button v-if="myData.genre.length < 3" v-on:click="myData.genre.push('')" class="md-icon-button md-raised md-accent add-field-btn add-genre-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another genre</md-tooltip>
 						</md-button>
@@ -49,7 +53,7 @@
 				<md-layout md-flex="100">
 					<p>Always pick one of the suggested addresses instead of only writing it into the input field. If the exact address you were looking for does not appear in the suggestions please always pick the closest match.</p>
 					<md-input-container>
-						<input type="search" ref="address_input" v-model="data.address.value" placeholder="Address of the location*" required/>
+						<input type="search" ref="address_input" v-model="myData.address.value" placeholder="Address of the location*" required/>
 					</md-input-container>
 				</md-layout>
 
@@ -60,33 +64,33 @@
 				<md-layout md-flex="100">
 					<md-input-container>
 						<label>Description</label>
-						<md-textarea v-model="data.description"></md-textarea>
+						<md-textarea v-model="myData.description"></md-textarea>
 					</md-input-container>
 				</md-layout>
 				
 				<md-layout md-flex="100">
 					<md-input-container>
 						<label>Ticket Link</label>
-						<md-input v-model="data.ticketLink"></md-input>
+						<md-input v-model="myData.ticketLink"></md-input>
 					</md-input-container>
 				</md-layout>
 
 				<md-layout md-flex="50" md-flex-small="100">
 					<md-input-container>
 						<label>Website</label>
-						<md-input v-model="data.website"></md-input>
+						<md-input v-model="myData.website"></md-input>
 					</md-input-container>
 				</md-layout>
 
 				<md-layout md-flex="50" md-flex-small="100">
 					<md-input-container>
 						<label>Facebook page</label>
-						<md-input v-model="data.facebookUrl"></md-input>
+						<md-input v-model="myData.facebookUrl"></md-input>
 					</md-input-container>
 				</md-layout>
 			</div>
 
-			<md-button v-if="canSubmit" type="submit" v-on:click="$emit('submit', data)" class="md-raised md-accent submit-button">Update Festival</md-button>
+			<md-button v-if="canSubmit" type="submit" v-on:click="$emit('submit', myData)" class="md-raised md-accent submit-button">Update Festival</md-button>
 		</form>
 	</div>
 </template>
@@ -109,17 +113,18 @@ export default {
 	},
 	data() {
 		return {
+			myData: this.data,
 			backendGenres: [],
 			backendBands: [],
 		}
 	},
 	methods: {
 		onSelectGenre(selected, index) {
-			this.data.genre[index] = selected;
+			this.myData.genre[index] = selected;
 			if(selected != '') {
-				if(this.data.genre.reduce((acc, cur) => (acc != '' && cur != ''))) {
-					if(this.data.genre.length < 3)
-						this.data.genre.push('');
+				if(this.myData.genre.reduce((acc, cur) => (acc != '' && cur != ''))) {
+					if(this.myData.genre.length < 3)
+						this.myData.genre.push('');
 				}
 			}
 		},
@@ -144,25 +149,25 @@ export default {
 
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address', language: 'en'});
 		this.placesAutocomplete.on('change', e => {
-			this.data.address.street = e.suggestion.name;
+			this.myData.address.street = e.suggestion.name;
 			
 			if(e.suggestion.city)
-				this.data.address.city = e.suggestion.city;
+				this.myData.address.city = e.suggestion.city;
 			else if(e.suggestion.county)
-				this.data.address.city = e.suggestion.county;
+				this.myData.address.city = e.suggestion.county;
 			else if(e.suggestion.administrative)
-				this.data.address.city = e.suggestion.administrative;
+				this.myData.address.city = e.suggestion.administrative;
 			else 
-				this.data.address.city = '';
+				this.myData.address.city = '';
 
-			this.data.address.administrative = e.suggestion.administrative;
-			this.data.address.county = e.suggestion.county;
-			this.data.address.country = e.suggestion.country;
-			this.data.address.countryCode = e.suggestion.countryCode;
-			this.data.address.postcode = e.suggestion.postcode;
-			this.data.address.lat = e.suggestion.latlng.lat;
-			this.data.address.lng = e.suggestion.latlng.lng;
-			this.data.address.value = e.suggestion.value;
+			this.myData.address.administrative = e.suggestion.administrative;
+			this.myData.address.county = e.suggestion.county;
+			this.myData.address.country = e.suggestion.country;
+			this.myData.address.countryCode = e.suggestion.countryCode;
+			this.myData.address.postcode = e.suggestion.postcode;
+			this.myData.address.lat = e.suggestion.latlng.lat;
+			this.myData.address.lng = e.suggestion.latlng.lng;
+			this.myData.address.value = e.suggestion.value;
 			this.value = e.suggestion.value;
 		});
 	},

@@ -214,7 +214,7 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions } from '@/helpers/backend-getters.js';
 
 import Stepper from '@/components/Stepper';
-import NewBand from "@/Components/NewContent/NewBand";
+import NewBand from "@/components/NewContent/NewBand";
 
 export default {
 	name: 'new-festival',

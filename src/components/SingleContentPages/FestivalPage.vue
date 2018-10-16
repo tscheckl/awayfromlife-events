@@ -127,13 +127,13 @@
 		</md-dialog>
 
 		<md-dialog ref="editFestivalDialog">
-			<festival-form :data="JSON.parse(JSON.stringify(festival))" canSubmit v-on:submit="updateFestival">
+			<festival-form :data="JSON.parse(JSON.stringify(festival))" canSubmit v-on:submit="updateFestival" v-on:close="$refs.editFestivalDialog.close()">
 				<h1 slot="headline">Edit Festival</h1>
 			</festival-form>
 		</md-dialog>
 
 		<md-dialog ref="editFestivalEventDialog">
-			<festival-event-form :data="currentFestivalEvent" canSubmit v-on:submit="updateFestivalEvent">
+			<festival-event-form :data="currentFestivalEvent" canSubmit v-on:submit="updateFestivalEvent" v-on:close="$refs.editFestivalEventDialog.close()">
 				<h1 slot="headline">Edit Festival Event</h1>
 			</festival-event-form>
 		</md-dialog>
@@ -142,14 +142,17 @@
 
 <script>
 import Stepper from '@/components/Stepper';
-import ConfirmDialog from '@/Components/ConfirmDialog';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 import FestivalForm from '@/components/ContentForms/FestivalForm';
 import FestivalEventForm from '@/components/ContentForms/FestivalEventForm';
 
 import {frontEndSecret, backendUrl } from '@/secrets.js';
+import { removeEmptyObjectFields, addBandLabels } from '@/helpers/array-object-helpers.js';
+
 import moment from 'moment';
+
 export default {
 	name: 'festival-page',
 	components: {
@@ -213,7 +216,9 @@ export default {
 						}
 
 						this.$store.commit('setCurrentFestival', response.body.data);
-						this.addBandLabels();
+						this.festival.events.forEach(event => {
+							addBandLabels(event);
+						});
 						this.$router.push({path: `/festival/${response.body.data.url}`});
 					}
 				})
@@ -257,7 +262,7 @@ export default {
 			
 			this.loading = true;
 			
-			this.removeEmptyObjectFields(data);
+			removeEmptyObjectFields(data);
 			
 			this.$http.put(backendUrl + `/api/festivals/${data._id}`, data)
 				.then(response => {
@@ -273,7 +278,7 @@ export default {
 			
 			this.loading = true;
 			
-			this.removeEmptyObjectFields(data);
+			removeEmptyObjectFields(data);
 			
 			this.$http.put(backendUrl + `/api/festival-events/${data._id}`, data)
 				.then(response => {
@@ -283,30 +288,12 @@ export default {
 					this.submitStatus = err;
 					this.$refs.snackbar.open();
 				});
-		},		
-		//Function that removes empty strings from all array-attributes of a given object.
-		removeEmptyObjectFields(object) {
-			for(let attrib in object) {					
-				if(Array.isArray(object[attrib])) {
-					for(let element in object[attrib])
-						if(object[attrib][element] == '') {
-							object[attrib].splice(element, 1);
-						}
-				}
-			}
 		},
 		handleDialogClose(message, dialogRef) {
 			this.$refs[dialogRef].close();
 			this.submitStatus = message;
 			this.$refs.snackbar.open();
 		},
-		addBandLabels() {
-			this.festival.events.forEach(event => {
-				event.bands.forEach(band => {
-					band.label = band.name + ' - ' + band.origin.country;
-				})
-			});
-		}
 	},
 	mounted() {
 		if(this.$route.path.indexOf('festival') != -1)
@@ -325,13 +312,18 @@ export default {
 			.then(response => {
 				if(response.body.data) {
 					this.$store.commit('setCurrentFestival', response.body.data);
-					this.addBandLabels();
+
+					this.festival.events.forEach(event => {
+						addBandLabels(event);
+					});
 				}
 			})
 			.catch(err => this.$router.push('/not-found'));
 		}
 		else {
-			this.addBandLabels();
+			this.festival.events.forEach(event => {
+				addBandLabels(event);
+			});
 		}
 		
 			

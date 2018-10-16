@@ -1,6 +1,12 @@
 <template>
   <div id="event_form">
-	  <form class="new-event-form" v-on:submit.prevent>
+		<md-button v-if="canSubmit" class="md-icon-button md-accent close-btn" v-on:click="$emit('close')">
+			<md-icon>clear</md-icon>
+		</md-button>
+
+		<slot name="headline"></slot>
+		
+	  	<form class="new-event-form" v-on:submit.prevent>
 			<div class="form-content">
 				<md-layout md-gutter>
 					<md-layout md-flex="50" md-flex-small="100">
@@ -85,6 +91,8 @@
 			</div>
 		</form>
 
+		<md-button v-if="canSubmit" type="submit" v-on:click="$emit('submit', event)" class="md-raised md-accent submit-button">Update event</md-button>
+
 		<md-dialog ref="newBandDialog">
 			<new-band 
 					v-on:close="$refs['newBandDialog'].close()"
@@ -110,8 +118,8 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
 
-import NewBand from "@/Components/NewContent/NewBand";
-import NewLocation from "@/Components/NewContent/NewLocation";
+import NewBand from "@/components/NewContent/NewBand";
+import NewLocation from "@/components/NewContent/NewLocation";
 
 export default {
 	name: 'event-form',
@@ -126,6 +134,10 @@ export default {
 			default: false
 		},
 		resetForm: {
+			type: Boolean,
+			default: false
+		},
+		canSubmit: {
 			type: Boolean,
 			default: false
 		}

@@ -183,7 +183,10 @@
 			</div>
 		</stepper>
 
-		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
+		<div class="loading" v-show="loading">
+			<div class="darken"></div>
+			<md-spinner md-indeterminate class="md-accent"></md-spinner>
+		</div>
 		
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -217,9 +220,9 @@ import moment from 'moment';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
 
-import ConfirmDialog from '@/Components/ConfirmDialog';
-import EventForm from '@/Components/ContentForms/EventForm';
-import TourForm from '@/Components/ContentForms/TourForm';
+import ConfirmDialog from '@/components/ConfirmDialog';
+import EventForm from '@/components/ContentForms/EventForm';
+import TourForm from '@/components/ContentForms/TourForm';
 import Stepper from '@/components/Stepper';
 
 export default {

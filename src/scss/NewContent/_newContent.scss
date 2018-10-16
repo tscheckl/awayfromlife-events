@@ -16,7 +16,7 @@
 		color: $primaryDarken4;
 		right: 20px;
 	}
-
+	
 	.hide {
 		overflow: hidden;
 		width: 0 !important;
@@ -25,9 +25,8 @@
 	}
 
 	h1 {
-		margin-top: 15px;
 		margin-left: 15px;
-		font-size: 3em;
+		font-size: 2.5em;
 		text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 	}
 
@@ -127,6 +126,7 @@
 		width: 900px;
 		max-width: 100%;
 		transition: width .4s ease-out;
+		padding: 0px !important;
 	
 		.single-form-field {
 			width: 100%;
@@ -157,6 +157,14 @@
 
 		h1 {
 			font-size: 2em;
+		}
+
+		.step {
+			padding: 0;
+		}
+
+		.md-input-container, h2, p {
+			margin-left: 0;
 		}
 	}
 }

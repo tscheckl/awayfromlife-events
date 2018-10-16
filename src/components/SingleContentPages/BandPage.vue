@@ -5,7 +5,7 @@
 			<div class="left-container">
 
 				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newBandDialog')">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('editBandDialog')">
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit band</md-tooltip>	
 					</md-button>
@@ -28,7 +28,11 @@
 
 			<div class="content-body">
 				<h3><md-icon>info_outline</md-icon>General Information</h3>
-				<p><span>Genre: </span><span class="band-genre" v-for="(genre, index) in band.genre" :key="genre">{{genre + (index == band.genre.length-1 ?'' :', ')}}</span></p>
+				<p>
+					<span>Genre: </span>
+					<span class="band-genre" v-for="(genre, index) in band.genre" :key="genre">{{genre + (index == band.genre.length-1 ?'' :', ')}}</span>
+				</p>
+
 				<p v-if="band.recordLabel"><span>Label: </span>{{band.recordLabel}}</p>
 				
 				<hr>
@@ -69,17 +73,18 @@
 				</div>
 			</div>
 
-			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
+			<div class="loading" v-show="loading">
+				<div class="darken"></div>
+				<md-spinner md-indeterminate class="md-accent"></md-spinner>
+			</div>
 		</div>
 
 		<div class="color-block"></div>
 
-		<md-dialog ref="newBandDialog" class="content-dialog">
-			<new-band 
-					v-on:close="$refs['newBandDialog'].close()"
-					v-on:success="handleEditClose" 
-					:edit="true">
-			</new-band>
+		<md-dialog ref="editBandDialog">
+			<band-form :data="JSON.parse(JSON.stringify(band))" canSubmit v-on:submit="updateBand" v-on:close="$refs.editBandDialog.close()">
+				<h1 slot="headline">Edit Band</h1>
+			</band-form>
 		</md-dialog>
 
 		<md-dialog ref="reportDialog">
@@ -101,8 +106,10 @@
 </template>
 
 <script>
-import NewBand from '@/Components/NewContent/NewBand';
-import ConfirmDialog from '@/Components/ConfirmDialog';
+import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
+
+import BandForm from '@/components/ContentForms/BandForm';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 
@@ -112,7 +119,7 @@ import moment from 'moment';
 export default {
 	name: 'band-page',
 	components: {
-		NewBand,
+		BandForm,
 		ConfirmDialog,
 		ReportDialog,
 		NotFound
@@ -153,20 +160,44 @@ export default {
 					this.$refs.snackbar.open();
 				})
 		},
-		handleEditClose() {
-			this.$refs['newBandDialog'].close();
-			
-			this.$http.get(backendUrl + '/api/bands/byurl/' + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.submitStatus = 'Location successfully updated!';
+		updateBand(data) {
+			this.$refs.editBandDialog.close();
+
+			this.loading = true;
+
+			removeEmptyObjectFields(data);
+
+			this.$http.put(backendUrl + `/api/bands/${data._id}`, data)
+				.then(response => {
+					this.getCurrentBand('Band successfully updated!');
+				})
+				.catch(err =>  {
+					this.submitStatus = err;
 					this.$refs.snackbar.open();
-					this.$store.commit('setCurrentBand', response.body.data);
-				}
-			})
-			.catch(err => {
-				console.log(err);
-			});
+				});
+		},
+		getCurrentBand(message = '') {
+			this.loading = true;
+
+			this.$http.get(backendUrl + `/api/bands/byid/` + this.band._id)
+				.then(response => {
+					this.loading = false;
+					if(response.body.data) {
+						if(message != '') {
+							this.submitStatus = message;
+							this.$refs.snackbar.open();
+						}
+
+						this.$store.commit('setCurrentBand', response.body.data);
+						this.$router.push({path: `/band/${response.body.data.url}`});
+					}
+				})
+				.catch(err => {
+					this.loading = false;
+
+					this.submitStatus = err;
+					this.$refs.snackbar.open();
+				});
 		},
 		handleDialogClose(message, dialogRef) {
 			this.$refs[dialogRef].close();

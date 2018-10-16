@@ -6,7 +6,7 @@
 			<div class="left-container">
 
 				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('newLocationDialog')">
+					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('editLocationDialog')">
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit location</md-tooltip>	
 					</md-button>
@@ -63,17 +63,18 @@
 				</div>
 			</div>
 
-			<md-spinner v-if="loading" md-indeterminate class="md-accent"></md-spinner>
+			<div class="loading" v-show="loading">
+				<div class="darken"></div>
+				<md-spinner md-indeterminate class="md-accent"></md-spinner>
+			</div>
 		</div>
 
 		<div class="color-block"></div>
 
-		<md-dialog ref="newLocationDialog" class="content-dialog">
-			<new-location 
-						v-on:close="$refs['newLocationDialog'].close()"
-						v-on:success="handleEditClose" 
-						:edit="true">
-			</new-location>
+		<md-dialog ref="editLocationDialog">
+			<location-form :data="JSON.parse(JSON.stringify(location))" canSubmit v-on:submit="updateLocation" v-on:close="$refs.editLocationDialog.close()">
+				<h1 slot="headline">Edit Location</h1>
+			</location-form>
 		</md-dialog>
 
 		<md-dialog ref="reportDialog">
@@ -94,18 +95,19 @@
 </template>
 
 <script>
-import NewLocation from '@/Components/NewContent/NewLocation';
-import ConfirmDialog from '@/Components/ConfirmDialog';
+import LocationForm from '@/components/ContentForms/LocationForm';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 
 import { backendUrl } from '@/secrets.js';
+import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import moment from 'moment';
 
 export default {
 	name: 'location-page',
 	components: {
-		NewLocation,
+		LocationForm,
 		ReportDialog,
 		NotFound,
 		ConfirmDialog
@@ -145,21 +147,44 @@ export default {
 					this.$refs.snackbar.open();
 				})
 		},
-		handleEditClose() {
-			this.$refs['newLocationDialog'].close();
-			
-			this.$http.get(backendUrl + '/api/locations/byurl/' + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.submitStatus = 'Location successfully updated!';
+		updateLocation(data) {
+			this.$refs.editLocationDialog.close();
+
+			this.loading = true;
+
+			removeEmptyObjectFields(data);
+
+			this.$http.put(backendUrl + `/api/locations/${data._id}`, data)
+				.then(response => {
+					this.getCurrentLocation('Location successfully updated!');
+				})
+				.catch(err =>  {
+					this.submitStatus = err;
 					this.$refs.snackbar.open();
-					this.$store.commit('setCurrentLocation', response.body.data);
-				}
-			})
-			.catch(err => {
-				this.submitStatus = 'Something went wrong while updating the location. Please try again!';
-				this.$refs.snackbar.open();
-			});
+				});
+		},
+		getCurrentLocation(message = '') {
+			this.loading = true;
+
+			this.$http.get(backendUrl + `/api/locations/byid/` + this.location._id)
+				.then(response => {
+					this.loading = false;
+					if(response.body.data) {
+						if(message != '') {
+							this.submitStatus = message;
+							this.$refs.snackbar.open();
+						}
+
+						this.$store.commit('setCurrentLocation', response.body.data);
+						this.$router.push({path: `/location/${response.body.data.url}`});
+					}
+				})
+				.catch(err => {
+					this.loading = false;
+
+					this.submitStatus = err;
+					this.$refs.snackbar.open();
+				});
 		},
 		handleDialogClose(message, dialogRef) {
 			this.$refs[dialogRef].close();

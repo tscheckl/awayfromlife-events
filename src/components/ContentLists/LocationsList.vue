@@ -149,7 +149,7 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
-import NewLocation from "@/Components/NewContent/NewLocation";
+import NewLocation from "@/components/NewContent/NewLocation";
 
 export default {
 	name: 'locations-list',

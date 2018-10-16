@@ -122,8 +122,8 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
 
-import NewBand from "@/Components/NewContent/NewBand";
-import NewLocation from "@/Components/NewContent/NewLocation";
+import NewBand from "@/components/NewContent/NewBand";
+import NewLocation from "@/components/NewContent/NewLocation";
 
 export default {
 	name: 'event-form',

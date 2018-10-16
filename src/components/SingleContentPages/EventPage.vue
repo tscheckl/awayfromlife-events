@@ -5,7 +5,7 @@
 			<div class="left-container">
 
 				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-on:click="openDialog('newEventDialog')">
+					<md-button class="md-icon-button edit-button" v-on:click="openDialog('editEventDialog')">
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit event</md-tooltip>	
 					</md-button>
@@ -71,17 +71,20 @@
 					<h3><md-icon>format_quote</md-icon><span>Description</span></h3>
 					<p>{{event.description}}</p>
 				</div>
+
+				<div class="loading" v-show="loading">
+					<div class="darken"></div>
+					<md-spinner md-indeterminate class="md-accent"></md-spinner>
+				</div>
 			</div>
 		</div>
 
 		<div class="color-block"></div>
 
-		<md-dialog ref="newEventDialog">
-			<new-event 
-					v-on:success="handleEditClose" 
-					v-on:close="$refs['newEventDialog'].close();"
-					:edit="true">
-			</new-event>
+		<md-dialog ref="editEventDialog">
+			<event-form :event="JSON.parse(JSON.stringify(event))" canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
+				<h1 slot="headline">Edit Event</h1>
+			</event-form>
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -112,8 +115,10 @@
 </template>
 
 <script>
-import NewEvent from '@/components/NewContent/NewEvent';
-import ConfirmDialog from '@/Components/ConfirmDialog';
+import { removeEmptyObjectFields, addBandLabels } from '@/helpers/array-object-helpers.js';
+
+import EventForm from '@/components/ContentForms/EventForm';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 
@@ -123,7 +128,7 @@ import moment from 'moment';
 export default {
 	name: 'event-page-new',
 	components: {
-		NewEvent,
+		EventForm,
 		ReportDialog,
 		NotFound,
 		ConfirmDialog
@@ -137,7 +142,8 @@ export default {
 		return {
 			submitStatus: '',
 			isAuthenticated: false,
-			backendEndpoint: 'events'
+			backendEndpoint: 'events',
+			loading: false
 		}
 	},
 	methods: {
@@ -156,20 +162,45 @@ export default {
 					this.$refs.snackbar.open();
 				})
 		},
-		handleEditClose() {
-			this.$refs['newEventDialog'].close();
-			
-			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byurl/` + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.submitStatus = 'Event successfully updated!';
+		updateEvent(data) {
+			this.$refs.editEventDialog.close();
+
+			this.loading = true;
+
+			removeEmptyObjectFields(data);
+
+			this.$http.put(backendUrl + `/api/events/${data._id}`, data)
+				.then(response => {
+					this.getCurrentEvent('Event successfully updated!');
+				})
+				.catch(err =>  {
+					this.submitStatus = err;
 					this.$refs.snackbar.open();
-					this.$store.commit('setCurrentEvent', response.body.data);
-				}
-			})
-			.catch(err => {
-				console.log(err);
-			});
+				});
+		},
+		getCurrentEvent(message = '') {
+			this.loading = true;
+
+			this.$http.get(backendUrl + `/api/events/byid/` + this.event._id)
+				.then(response => {
+					this.loading = false;
+					if(response.body.data) {
+						if(message != '') {
+							this.submitStatus = message;
+							this.$refs.snackbar.open();
+						}
+
+						this.$store.commit('setCurrentEvent', response.body.data);
+						addBandLabels(this.event);
+						this.$router.push({path: `/event/${response.body.data.url}`});
+					}
+				})
+				.catch(err => {
+					this.loading = false;
+
+					this.submitStatus = err;
+					this.$refs.snackbar.open();
+				});
 		},
 		handleDialogClose(message, dialogRef) {
 			this.$refs[dialogRef].close();

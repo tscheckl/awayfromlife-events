@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import FollowButtons from '@/Components/FollowButtons';
+import FollowButtons from '@/components/FollowButtons';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 export default {

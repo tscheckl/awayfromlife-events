@@ -168,7 +168,7 @@
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import moment from 'moment';
-import NewBand from "@/Components/NewContent/NewBand";
+import NewBand from "@/components/NewContent/NewBand";
 
 export default {
 	name: 'bands-list',

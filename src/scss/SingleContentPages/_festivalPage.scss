@@ -1,31 +1,6 @@
 @import "./generalPage";
 
 #festival_page {
-	.loading {
-		position: fixed;
-		width: 100%;
-		top: 0;
-		left: 0;
-		height: 100%;
-		z-index: 20;
-
-		.darken {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			background-color: #232323;
-			opacity: 0.6;
-		}
-
-		.md-spinner {
-			position: absolute;
-			top: calc(50% - 25px);
-			left: calc(50% - 25px);
-			display: block;
-			margin: 0 auto;
-		}
-	}
-
 	.content {
 		position: relative;
 	}

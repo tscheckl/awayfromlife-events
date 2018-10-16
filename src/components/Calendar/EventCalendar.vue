@@ -25,9 +25,9 @@
 
 <script>
 import moment from 'moment';
-import Sidenav from '@/Components/Sidenav';
+import Sidenav from '@/components/Sidenav';
 import SingleEvent from './SingleEvent';
-import EventPage from '@/Components/SingleContentPages/EventPage';
+import EventPage from '@/components/SingleContentPages/EventPage';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 

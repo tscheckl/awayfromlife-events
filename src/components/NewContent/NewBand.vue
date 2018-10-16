@@ -161,7 +161,10 @@
 			</stepper>
 		</div>
 		
-		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
+		<div class="loading" v-show="loading">
+			<div class="darken"></div>
+			<md-spinner md-indeterminate class="md-accent"></md-spinner>
+		</div>
 		
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -198,8 +201,8 @@ import places from 'places.js';
 
 import {backendUrl} from '@/secrets.js';
 
-import BandForm from '@/Components/ContentForms/BandForm';
-import ConfirmDialog from '@/Components/ConfirmDialog';
+import BandForm from '@/components/ContentForms/BandForm';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import Stepper from '@/components/Stepper';
 
 export default {

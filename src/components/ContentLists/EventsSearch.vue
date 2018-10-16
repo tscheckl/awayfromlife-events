@@ -135,7 +135,7 @@
 import moment from 'moment';
 import places from 'places.js';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
-import FollowButtons from '@/Components/FollowButtons';
+import FollowButtons from '@/components/FollowButtons';
 
 export default {
 	name: 'events-search',

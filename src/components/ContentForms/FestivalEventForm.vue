@@ -1,5 +1,9 @@
 <template>
 	<div id="festival_event_form">
+		<md-button v-if="canSubmit" class="md-icon-button md-accent close-btn" v-on:click="$emit('close')">
+			<md-icon>clear</md-icon>
+		</md-button>
+		
 		<slot name="headline"></slot>
 		
 		<form class="new-festival-event-form" v-on:submit.prevent>
@@ -94,7 +98,7 @@
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions } from '@/helpers/backend-getters.js';
 
-import NewBand from "@/Components/NewContent/NewBand";
+import NewBand from "@/components/NewContent/NewBand";
 
 export default {
 	name: 'festival-event-form',

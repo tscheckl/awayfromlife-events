@@ -104,6 +104,14 @@
 			background-color: $primaryLighten5;
 			z-index: 0;
 
+			#event_form, #festival_form, #festival_event_form, #band_form, #location_form, #tour_form {
+				padding: 5px;
+
+				.form-content {
+					margin-top: 10px;
+				}
+			}
+
 			.close-btn {
 				display: none;
 				position: absolute;

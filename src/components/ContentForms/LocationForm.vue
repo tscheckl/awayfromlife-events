@@ -1,5 +1,11 @@
 <template>
   	<div id="location_form">
+		<md-button v-if="canSubmit" class="md-icon-button md-accent close-btn" v-on:click="$emit('close')">
+			<md-icon>clear</md-icon>
+		</md-button>
+
+		<slot name="headline"></slot>
+		
 	  	<form v-on:submit.prevent >
 			<div class="form-content">
 				<md-layout md-gutter>
@@ -49,6 +55,8 @@
 				</md-layout>
 			</div>
 		</form>
+
+		<md-button v-if="canSubmit" type="submit" v-on:click="$emit('submit', data)" class="md-raised md-accent submit-button">Update location</md-button>
   	</div>
 </template>
 
@@ -62,7 +70,11 @@ export default {
 	},
 	props: {
 		data: Object,
-		value: String
+		value: String,
+		canSubmit: {
+			type: Boolean,
+			default: false
+		}
 	},
 	watch: {
 		data() {

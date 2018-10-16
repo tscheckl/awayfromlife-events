@@ -60,7 +60,11 @@
 				</md-layout>
 			</div>
 		</stepper>
-		<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
+
+		<div class="loading" v-show="loading">
+			<div class="darken"></div>
+			<md-spinner md-indeterminate class="md-accent"></md-spinner>
+		</div>
 		
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{this.submitStatus}}</span>
@@ -93,8 +97,8 @@ import places from 'places.js';
 
 import {backendUrl} from '@/secrets.js';
 
-import ConfirmDialog from '@/Components/ConfirmDialog';
-import LocationForm from '@/Components/ContentForms/LocationForm';
+import ConfirmDialog from '@/components/ConfirmDialog';
+import LocationForm from '@/components/ContentForms/LocationForm';
 import Stepper from '@/components/Stepper';
 
 export default {

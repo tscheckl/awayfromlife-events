@@ -121,15 +121,16 @@
 <script>
 import moment from 'moment';
 
-import EventForm from '@/Components/ContentForms/EventForm';
+import EventForm from '@/components/ContentForms/EventForm';
 import FestivalForm from '@/components/ContentForms/FestivalForm';
 import FestivalEventForm from '@/components/ContentForms/FestivalEventForm';
-import LocationForm from '@/Components/ContentForms/LocationForm';
-import BandForm from '@/Components/ContentForms/BandForm';
-import EventPage from '@/Components/SingleContentPages/EventPage';
+import LocationForm from '@/components/ContentForms/LocationForm';
+import BandForm from '@/components/ContentForms/BandForm';
+import EventPage from '@/components/SingleContentPages/EventPage';
 import ChangePasswordForm from './ChangePasswordForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 
 export default {
 	name: 'admin',
@@ -159,10 +160,10 @@ export default {
 		handleVerify(keepData) {
 			//Remove empty strings from unverified data arrays.
 			if(this.currentCategory != 'unverified Festivals')
-				this.removeEmptyObjectFields(this.verifyData);
+				removeEmptyObjectFields(this.verifyData);
 			else {
-				this.removeEmptyObjectFields(this.verifyData.festival);
-				this.removeEmptyObjectFields(this.verifyData.event);				
+				removeEmptyObjectFields(this.verifyData.festival);
+				removeEmptyObjectFields(this.verifyData.event);				
 			}
 
 			//Variable for the id that will be sent in the verification-request
@@ -201,17 +202,6 @@ export default {
 						this.showNextItem();
 					})
 					.catch(err => {});
-			}
-		},
-		//Function that removes empty strings from all array-attributes of a given object.
-		removeEmptyObjectFields(object) {
-			for(let attrib in object) {					
-				if(Array.isArray(object[attrib])) {
-					for(let element in object[attrib])
-						if(object[attrib][element] == '') {
-							object[attrib].splice(element, 1);
-						}
-				}
 			}
 		},
 		showInfo(content, index) {			
