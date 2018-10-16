@@ -290,6 +290,7 @@ export default {
 					.then(response => {
 						this.loading = false;
 						this.$emit('success');					
+						this.resetFormFields();
 					})
 					.catch(err => {
 						this.loading = false;
@@ -322,6 +323,7 @@ export default {
 					.then(response => {
 						this.loading = false;
 						this.$emit('success');					
+						this.resetFormFields();
 					})
 					.catch(err => {
 						this.loading = false;
@@ -334,6 +336,24 @@ export default {
 				this.submitStatus = 'All required form fields need to be filled out!';	
 				this.$refs.snackbar.open();		
 			}
+		},
+		resetFormFields() {
+			this.newFestival = {
+				name: '',
+				description: '',
+				genre: [''],
+				address: {},
+				ticketLink: '',
+				website: '',
+				facebookUrl: ''
+			};
+
+			this.newFestivalEvent = {
+				name: '',
+				startDate: new Date().setDate(new Date().getDate()-1),
+				endDate: new Date().setDate(new Date().getDate()+1),
+				bands: ['']
+			};
 		},
 		onSelectGenre(selected, index) {
 			this.newFestival.genre[index] = selected;
@@ -391,7 +411,7 @@ export default {
 			.then(response => {
 				this.authorized = true;
 			})
-			.catch(err => {});
+			.catch(err => console.log(err));
 
 		this.$http.get(backendUrl + '/api/genres')
 			.then(response => {				
@@ -415,7 +435,6 @@ export default {
 			this.newFestival.address.lat = e.suggestion.latlng.lat;
 			this.newFestival.address.lng = e.suggestion.latlng.lng;
 			this.newFestival.address.value = e.suggestion.value;
-			// this.value = e.suggestion.value ?e.suggestion.value :this.value;
 		});
 	}
 }

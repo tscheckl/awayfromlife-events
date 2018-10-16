@@ -201,7 +201,7 @@ export default {
 					.then(response => {					
 						this.showNextItem();
 					})
-					.catch(err => {});
+					.catch(err => console.log(err));
 			}
 		},
 		showInfo(content, index) {			

@@ -223,7 +223,7 @@ export default {
 						location.label = location.name + ' - ' + location.address.city;
 					}
 				})
-				.catch(err => {});
+				.catch(err => console.log(err));
 		}
 	},
 	mounted() {

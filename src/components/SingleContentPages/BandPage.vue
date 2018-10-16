@@ -156,7 +156,7 @@ export default {
 					this.$router.go(-1);
 				})
 				.catch(err => {
-					this.submitStatus = 'Error while deleting the band. Please try again!';
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				})
 		},
@@ -172,7 +172,7 @@ export default {
 					this.getCurrentBand('Band successfully updated!');
 				})
 				.catch(err =>  {
-					this.submitStatus = err;
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				});
 		},
@@ -194,8 +194,7 @@ export default {
 				})
 				.catch(err => {
 					this.loading = false;
-
-					this.submitStatus = err;
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				});
 		},
@@ -235,7 +234,7 @@ export default {
 			.then(response => {
 				this.isAuthenticated = true;
 			})
-			.catch(err => {});
+			.catch(err => console.log(err));
 
 		if(this.$store.getters.currentBand.name == ''  || this.$store.getters.currentBand.url != this.$route.params.url) {
 			this.$http.get(backendUrl + '/api/bands/byurl/' + this.$route.params.url)

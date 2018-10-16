@@ -303,6 +303,7 @@ export default {
 				document.getElementsByClassName('filters')[0].classList.remove('show-filters');
 			})
 			.catch(err => {
+				console.log(err);
 				this.loading = false;
 			});
 		},
@@ -456,7 +457,7 @@ export default {
 				// this.appliedFilters.firstDate = response.body.data.firstDate;
 				// this.appliedFilters.lastDate = response.body.data.lastDate;
 			})
-			.catch(err => {	});
+			.catch(err => console.log(err));
 
 
 		/*CHECK ALL THE PARAMETERS OF THE CURRENT ROUTE AND SET THE RESPECTIVE VARIABLES */

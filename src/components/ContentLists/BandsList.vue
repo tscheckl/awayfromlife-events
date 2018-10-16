@@ -404,7 +404,7 @@ export default {
 			.then(response => { 
 				this.filterCriteria = response.body.data;
 			})
-			.catch(err => {	});
+			.catch(err => console.log(err));
 
 		if(this.$router.currentRoute.query.page) {
 			this.currentPage = this.$router.currentRoute.query.page;

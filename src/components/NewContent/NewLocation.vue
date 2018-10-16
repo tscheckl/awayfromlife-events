@@ -1,12 +1,9 @@
 <template>
 	<div id="new_location">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose()">
+		<md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close');">
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<!-- <h1>{{edit ?'EDIT LOCATION' :'NEW LOCATION'}}</h1>
-		
-		<location-form :data="newLocation" :value="newLocationValue"></location-form> -->
 		<stepper class="location-form" :steps="2" v-on:submit="addLocation">
 			<h1 slot="headline">New Location</h1>
 			<div slot="step-1">
@@ -108,12 +105,6 @@ export default {
 		ConfirmDialog,
 		Stepper
 	},
-	props: {
-		edit: {
-			type: Boolean,
-			default: false
-		}
-	},
 	watch: {
 		newLocationAddress() {
 			this.getSimilar();
@@ -127,12 +118,7 @@ export default {
 	},
 	computed: {
 		newLocation() {
-			if(this.edit) {
-				return JSON.parse(JSON.stringify(this.$store.getters.currentLocation));
-			}
-			else {
-				return this.blankLocation
-			}
+			return this.$store.getters.currentLocation;
 		},
 		newLocationAddress() {
 			return this.newLocation.address.street;
@@ -146,7 +132,6 @@ export default {
 	},
 	data() {
 		return {
-			newLocationValue: 'wdwadaw',
 			submitStatus: '',
 			loading: false,
 			apiRoute: '/api/unvalidated-locations',
@@ -177,25 +162,18 @@ export default {
 		addLocation() {
 			this.loading = true;
 			this.submitStatus = '';
-			
-			var vm = this;
 
 			if(this.newLocation.name && this.newLocation.address) {
-				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
-				let requestType = this.edit?'put':'post'
-				let editLocation = this.edit?'/' + this.newLocation._id: '';
-
-				this.$http[requestType](backendUrl + this.apiRoute + editLocation, this.newLocation)
+				this.$http.post(backendUrl + this.apiRoute, this.newLocation)
 					.then(response => {
-						this.emitSuccess();
-						vm.loading = false;
+						this.$emit('success');
+						this.loading = false;
 						this.emptyFormFields();
 
 					})
 					.catch(err => {
 						this.loading = false;
-						this.submitStatus = this.edit ?'An error occurred while updating the Location. Please try again!'
-										:'An error occurred while creating the Location. Please try again!';
+						this.submitStatus = err.body.message;
 						this.$refs.snackbar.open();
 					});
 			}
@@ -205,32 +183,8 @@ export default {
 				this.loading = false;
 			}
     	},
-		emitSuccess() {
-			this.$emit('success');
-		},
-		emitClose() {
-			this.$emit('close');
-		},
 	  	emptyFormFields() {
-			this.blankLocation = {
-				name: '',
-				address: {
-					street: '',
-					city: '',
-					administrative: '',
-					country: '',
-					counry: '',
-					countryCode: '',
-					postcode: '',
-					lat: 0,
-					lng: 0,
-					value: '',
-				},
-				information: '',
-				website: '',
-				facebookUrl: ''
-			};
-			this.newLocationValue = '';
+			this.$store.commit('setCurrentLocation', JSON.parse(JSON.stringify(this.blankLocation)));
 		},
 		getSimilar() {
 			this.similarLocationFound = false;
@@ -246,24 +200,25 @@ export default {
 						this.similarLocationFound = true;
 						this.$refs.similarLocationDialog.open()
 					}
-				}).catch(err => {console.log(err);});
+				}).catch(err => console.log(err));
 			}
 		},
 		checkSimilar(accept) {
 			if(accept)
-				this.emitClose();
+				this.$emit('close');
 
 			this.similarLocationFound = false;
 			this.$refs.similarLocationDialog.close();
 		}
 	},
 	mounted() {
+		this.emptyFormFields();
+
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.apiRoute = '/api/locations';
 			})
-			.catch(err => {
-			});
+			.catch(err => console.log(err));
 			
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'address', language: 'en'});
 		this.placesAutocomplete.on('change', e => {

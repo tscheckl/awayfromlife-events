@@ -84,7 +84,7 @@ export default {
 					this.results = response.body.data;
 					this.loading = false;
 				})
-				.catch(err => {});			
+				.catch(err => console.log(err));			
 			}, setTimer ?700 :0);
 		},
 		isSinglePage() {

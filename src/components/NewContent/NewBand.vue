@@ -228,12 +228,7 @@ export default {
 	},
 	computed: {
 		newBand() {
-			if(this.edit) {
-				return JSON.parse(JSON.stringify(this.$store.getters.currentBand));
-			}
-			else {
-				return this.blankBand
-			}
+			return this.$store.getters.currentBand;
 		},
 		newBandCountry() {
 			return this.newBand.origin.country;
@@ -304,8 +299,7 @@ export default {
 					})
 					.catch(err => {
 						this.loading = false;
-						this.submitStatus = this.edit ?'An error occurred while updating the Band. Please try again!'
-										:'An error occurred while creating the Band. Please try again!';
+						this.submitStatus = err.body.message;
 						this.$refs.snackbar.open();
 					});
 			}
@@ -322,23 +316,7 @@ export default {
 			this.$emit('close');
 		},
 	  	emptyFormFields() {
-			this.blankBand = {
-				name: '',
-				genre: [''],
-				origin: {},
-				history: '',
-				label: '',
-				releases: [{
-					releaseName: '',
-					releaseYear: ''
-				}],
-				foundingDate: '',
-				website: '',
-				bandcampUrl: '',
-				soundcloudUrl: '',
-				facebookUrl: ''
-			};
-			this.newBandValue = '';
+			this.$store.commit('setCurrentBand', JSON.parse(JSON.stringify(this.blankBand)));
 		},
 		getSimilar() {
 			this.similarBandFound = false;
@@ -353,7 +331,7 @@ export default {
 						this.similarBandFound = true;
 						this.$refs.similarBandDialog.open()
 					}
-				}).catch(err => {console.log(err);});
+				}).catch(err => console.log(err));
 			}
 		},
 		checkSimilar(accept) {
@@ -387,11 +365,13 @@ export default {
 		},
 	},
 	mounted() {
+		this.emptyFormFields();
+
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.apiRoute = '/api/bands';
 			})
-			.catch(err => {});
+			.catch(err => console.log(err));
 
 		this.$http.get(backendUrl + '/api/genres')
 		.then(response => {				

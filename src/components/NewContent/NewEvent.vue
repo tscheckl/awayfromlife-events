@@ -1,6 +1,6 @@
 <template>
   	<div id="new_event">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
+		<md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close');">
 			<md-icon>clear</md-icon>
 		</md-button>
 
@@ -40,7 +40,6 @@
 							<md-input-container>
 								<v-select class="form-v-select"
 										:options="backendLocations"
-										:on-change="onSelectLocation"
 										v-model="currentObject.location"
 										placeholder="Select event location*">
 
@@ -152,7 +151,7 @@
 							</md-button>
 						</div>
 
-						<md-button v-if="currentObject.bands != null" v-on:click="addBand" class="md-icon-button md-raised md-accent add-field-btn">
+						<md-button v-if="currentObject.bands != null" v-on:click="currentObject.bands.push('');" class="md-icon-button md-raised md-accent add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another band</md-tooltip>
 						</md-button>
@@ -218,6 +217,7 @@
 import moment from 'moment';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
 
 import ConfirmDialog from '@/components/ConfirmDialog';
@@ -250,7 +250,7 @@ export default {
 	},
 	computed: {
 		newEvent() {
-			return JSON.parse(JSON.stringify(this.$store.getters.currentEvent));
+			return this.$store.getters.currentEvent;
 		},
 		newEventDate() {
 			return this.newEvent.date
@@ -271,22 +271,22 @@ export default {
 					date: ''
 				}],
 			},
+			blankEvent: {
+				name: '',
+				description: '',
+				location: '',
+				bands: [''],
+				date: '',
+				endDate: '',
+				time: '',
+				ticketLink: ''
+			},
 			//Message that will display a status afer sending the new event
 			submitStatus: '',
-			success: false,
 			loading: false,
 			//Variable for the api route according to if the user is authenticated or not
 			apiRoute: '/api/unvalidated-events',
 			createEvent: true,
-			blankEvent: {
-				name: '',
-				location: '',
-				bands: [''],
-				description: '',
-				date: '',
-				canceled: 0,
-				ticketLink: ''
-			},
 			similarEventFound: false,
 			similarEvents: [],
 			showStepper: false,
@@ -298,37 +298,21 @@ export default {
 	methods: {
 		addEvent() {
 			this.loading = true;
-			//Reset the error messages
-			this.submitStatus = '';
-			var vm = this;
 			
 			//Only go on if all required fields are filled out
 			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
-				//Extract ids of selected bands for the event to send it to the backend.
-				for(let i in this.newEvent.bands) {
-					if(this.newEvent.bands[i] == '')
-						this.newEvent.bands.splice(i, 1);
-					else
-						this.newEvent.bands[i] = this.newEvent.bands[i]._id
-				}
-				//Extract id of selected location for the event to send it to the backend.
-				this.newEvent.location = this.newEvent.location._id;
+				removeEmptyObjectFields(this.newEvent);
 
-				//Check if an event is currently edited or a new one is created and update the request routes + parameters accordingly.
-				let requestType = this.edit?'put':'post'
-				let editEvent = this.edit?'/' + this.newEvent._id: '';
 				//Send new/updated event to the backend.
-				this.$http[requestType](backendUrl + this.apiRoute + editEvent, this.newEvent)
+				this.$http.post(backendUrl + this.apiRoute, this.newEvent)
 					.then(response => {
-						this.emitSuccess();
+						this.$emit('success');
 						this.loading = false;
 
 						//Reset all fields
 						this.resetEventFields();
-					}).catch(err => {
-						
-						this.submitStatus = this.edit ?'An error occurred while updating the Event. Please try again!'
-											:'An error occurred while creating the Event. Please try again!';
+					}).catch(err => {						
+						this.submitStatus = err.body.message;
 						this.$refs.snackbar.open();
 						this.loading = false;
 					});
@@ -342,13 +326,10 @@ export default {
 	  	addTour() {
 		  	this.loading = true;
 
-			this.submitStatus = '';
-
 			if(this.newTour.name && this.newTour.tourStops[0].location && this.newTour.tourStops[0].date) {
-				for(let i in this.newTour.bands) {
-					if(this.newTour.bands[i] == '')
-						this.newTour.bands.splice(i, 1);
-				}
+				removeEmptyObjectFields(this.newTour);
+
+				let fullEvents = [];
 
 				for(let tourstop in this.newTour.tourStops) {
 					let singleTourStopEvent = {
@@ -360,23 +341,22 @@ export default {
 						ticketLink: this.newTour.ticketLink
 					}
 
-					this.$http.post(backendUrl + this.apiRoute, singleTourStopEvent)
-						.then(response => {	
-							this.loading = false;
-						})
-						.catch(err => {
-							// Error
-							vm.submitStatus = 'An error occurred while creating the Tour. Please try again!';
-							this.$refs.snackbar.open();
-							vm.loading = false;
-						});
+					fullEvents.push(singleTourStopEvent);
 				}
 
-				this.emitSuccess();
-				this.loading = false;
-
-				//Reset all fields
-				this.resetTourFields();
+				this.$http.post(backendUrl + this.apiRoute + '/multiple', {list: fullEvents})
+					.then(response => {	
+						this.loading = false;
+						this.$emit('success');
+						//Reset all fields
+						this.resetTourFields();
+					})
+					.catch(err => {
+						// Error
+						this.submitStatus = err.body.message;
+						this.$refs.snackbar.open();
+						this.loading = false;
+					});
 			}
 			else { // else show error message
 				this.submitStatus = 'All required input fields have to be filled out!';
@@ -385,32 +365,9 @@ export default {
 				this.newEvent.date = '';
 			}
 	 	},
-		emitSuccess() {
-			this.$emit('success');
-		},
-		emitClose() {
-			this.$emit('close');
-		},
 	 	resetEventFields() {			 
-			this.$store.commit('setCurrentEvent', {
-				name: '',
-				description: '',
-				location: {label: ''},
-				bands: [''],
-				date: '',
-				endDate: '',
-				time: '',
-				ticketLink: ''
-			});
-
-			this.blankEvent = {
-				name: '',
-				location: '',
-				bands: [''],
-				description: '',
-				date: '',
-				ticketLink: ''
-			}
+			this.$store.commit('setCurrentEvent', JSON.parse(JSON.stringify(this.blankEvent)));			
+			this.currentObject = this.newEvent;
 	  	},
 		resetTourFields() {
 			this.newTour = {
@@ -422,7 +379,8 @@ export default {
 					date: ''
 				}],
 				ticketLink: ''
-			}
+			}			
+			this.currentObject = this.newTour;
 		},
 		getSimilar() {
 			this.similarEventFound = false;
@@ -439,12 +397,12 @@ export default {
 						this.similarEventFound = true;
 						this.$refs.similarEventDialog.open()
 					}
-				}).catch(err => {console.log(err);});
+				}).catch(err => console.log(err));
 			}
 		},
 		checkSimilar(accept) {
 			if(accept)
-				this.emitClose();
+				this.$emit('close');
 
 			this.similarEventFound = false;
 			this.$refs.similarEventDialog.close();
@@ -454,14 +412,7 @@ export default {
 			this.showStepper = true;
 			this.currentObject = createEvent
 						? this.newEvent
-						: this.newTour;
-
-			console.log(this.currentObject);
-			
-		},
-		onSelectLocation(selected) {
-			//Set the new Event's location attribute to the ID of the selected location
-			this.newEvent.location = selected;
+						: this.newTour;			
 		},
 		onSelectTourLocation(selected, index) {
 			//Set the value for the item that will be displayed in the search select input
@@ -471,7 +422,7 @@ export default {
 			this.currentObject.bands[index] = selected;
 			if(selected != '') {
 				if(this.currentObject.bands.reduce((acc, cur) => (acc != '' && cur != '')))
-					this.addBand();
+					this.currentObject.bands.push('');
 			}
 		},
 		addTourStop() {
@@ -490,9 +441,6 @@ export default {
 				};
 			}
 		},
-		addBand() {
-			this.currentObject.bands.push('');
-		},
 		removeBand(index) {
 			this.currentObject.bands.splice(index, 1);
 			
@@ -500,14 +448,14 @@ export default {
 				this.currentObject.bands[0] = '';
 		},
 	},
-	mounted() {
-		let vm = this;
-		
+	mounted() {	
+		this.resetEventFields();
+
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
-				vm.apiRoute = '/api/events';
+				this.apiRoute = '/api/events';
 			})
-			.catch(err => {});
+			.catch(err => console.log(err));
 
 		this.currentObject = this.newEvent;
 

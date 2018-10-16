@@ -6,7 +6,7 @@
 					<h1>{{archive ?'Events Archive' :'All Events'}}</h1>
 				</div>
 
-				<md-button class="md-raised create-content-btn" v-on:click="openNewEvent"><md-icon>add</md-icon>Create new Event</md-button>
+				<md-button class="md-raised create-content-btn" v-on:click="$refs.newEventDialog.open();	"><md-icon>add</md-icon>Create new Event</md-button>
 			</div>
 
 			
@@ -175,7 +175,7 @@
 		</md-dialog>
 
 		<md-snackbar md-position="bottom right" ref="snackbar">
-			<span>New event successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
+			<span>New event(s) successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
 		</md-snackbar>
 	</div>
@@ -248,18 +248,6 @@ export default {
 		}
 	},
 	methods: {
-		openNewEvent() {
-			this.$store.commit('setCurrentEvent', {
-				name: '',
-				description: '',
-				location: '',
-				bands: [''],
-				date: '',
-				endDate: '',
-				time: ''
-			});
-			this.$refs['newEventDialog'].open();	
-		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event, index) {
 			this.$store.commit('setCurrentEvent', event);
@@ -481,7 +469,7 @@ export default {
 				// this.appliedFilters.firstDate = response.body.data.firstDate;
 				// this.appliedFilters.lastDate = response.body.data.lastDate;
 			})
-			.catch(err => {	});
+			.catch(err => console.log(err));
 
 
 		/*CHECK ALL THE PARAMETERS OF THE CURRENT ROUTE AND SET THE RESPECTIVE VARIABLES */

@@ -231,6 +231,7 @@ export default {
 				this.loading = false;
 			})
 			.catch(err => {
+				console.log(err);
 				this.loading = false;
 			});
 		},
@@ -337,7 +338,7 @@ export default {
 			.then(response => {
 				this.availableGenres = response.body.data;
 			})
-			.catch(err => {})
+			.catch(err => console.log(err));
 
 		this.changeLocationOption(this.locationOption);
 		this.placesAutocomplete1 = places({container: this.$refs.city_input, type: 'city', language: 'en'});

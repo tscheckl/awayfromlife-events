@@ -118,7 +118,7 @@ export default {
 					this.loading = false;
 				})
 				.catch(err => {
-					this.submitStatus = 'An error occurred while trying to report your Bug. Please try again!';
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 					this.loading = false;
 				});
@@ -135,6 +135,8 @@ export default {
 					this.loading = false;
 				})
 				.catch(err => {
+					this.submitStatus = err.body.message;
+					this.$refs.snackbar.open();
 					this.loading = false;
 				});
 		},

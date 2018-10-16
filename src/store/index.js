@@ -66,7 +66,8 @@ export default new Vuex.Store({
 		},
 		setCurrentLocation(state, location) {
 			if(!location.address.value) {
-				location.address.value = location.address.street + ', ' + location.address.city;
+				if(location.address.street && location.address.city)
+					location.address.value = location.address.street + ', ' + location.address.city;
 			}
 			
 			state.currentLocation = location;

@@ -224,8 +224,7 @@ export default {
 				})
 				.catch(err => {
 					this.loading = false;
-
-					this.submitStatus = err;
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				});
 		},
@@ -239,7 +238,7 @@ export default {
 					this.getCurrentFestival('Festival event successfully deleted!');
 				})
 				.catch(err => {
-					this.submitStatus = err;
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				});
 		},
@@ -253,7 +252,7 @@ export default {
 					this.$router.go(-1);
 				})
 				.catch(err => {
-					this.submitStatus = err;
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				});
 		},
@@ -269,7 +268,7 @@ export default {
 					this.getCurrentFestival('Festival successfully updated!');
 				})
 				.catch(err =>  {
-					this.submitStatus = err;
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				});
 		},
@@ -285,7 +284,7 @@ export default {
 					this.getCurrentFestival('Event successfully updated!');
 				})
 				.catch(err =>  {
-					this.submitStatus = err;
+					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				});
 		},
@@ -304,7 +303,7 @@ export default {
 			.then(response => {
 				this.isAuthenticated = true;
 			})
-			.catch(err => {});
+			.catch(err => console.log(err));
 			
 		if(this.$store.getters.currentFestival.name == '' || this.$store.getters.currentFestival.url != this.$route.params.url) {
 			
