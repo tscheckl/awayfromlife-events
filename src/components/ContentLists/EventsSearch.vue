@@ -9,7 +9,7 @@
 				<h1>Find Hardcore and Punk Events, Locations and Bands</h1>
 				<div class="search-input">
 					<form v-on:submit.prevent>
-						<input class="search-bar" v-model="query" required placeholder="Enter what you are looking for (e.g. Berlin, Sick of it all, ..)">
+						<input class="search-bar" v-model="query" required placeholder="Enter what you are looking for (e.g. Berlin, Sick of it all, ...)">
 						<md-button type="submit" class="md-raised" v-on:click="search">
 								Search
 						</md-button>
@@ -26,6 +26,7 @@
 						<h4>Include Categories: </h4>
 						<div class="include-cate">
 							<md-checkbox v-model="searchOptions.includeCategories.events">Events</md-checkbox>
+							<md-checkbox v-model="searchOptions.includeCategories.festivals">Festivals</md-checkbox>
 							<md-checkbox v-model="searchOptions.includeCategories.locations">Locations</md-checkbox>
 							<md-checkbox v-model="searchOptions.includeCategories.bands">Bands</md-checkbox>
 						</div>
@@ -84,6 +85,24 @@
 					</div>
 					<p class="more-results-btn" v-if="resultLimiter.events!=results.events.length" @click="toggleResults('events', true)">Show more Results<md-icon>keyboard_arrow_down</md-icon></p>
 					<p class="more-results-btn" v-if="resultLimiter.events==results.events.length && results.events.length > 3" @click="toggleResults('events', false)">Show less Results<md-icon>keyboard_arrow_up</md-icon></p>
+				</div>
+
+				<div class="result-category column-category result-festivals"  v-if="results.festivals.length > 0">
+					<h2>Festival Results: </h2>
+					<div class="result" v-if="!loading" v-for="index in resultLimiter.festivals" :key="index" v-on:click="showResult(results.festivals[index-1])">
+						<div class="result-content">
+							<h3>{{results.festivals[index-1].data.name}}</h3>
+							<p>{{results.festivals[index-1].data.address.city}}</p>
+							<p>Result found in {{results.festivals[index-1].match.pretty}}: 
+								{{results.festivals[index-1].match.value.beforeMatch}}
+								<span class="result-match">{{results.festivals[index-1].match.value.match}}</span>
+								{{results.festivals[index-1].match.value.afterMatch}}
+							</p>
+						</div>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+					</div>
+					<p class="more-results-btn" v-if="resultLimiter.festivals!=results.festivals.length" @click="toggleResults('festivals', true)">Show more Results<md-icon>keyboard_arrow_down</md-icon></p>
+					<p class="more-results-btn" v-if="resultLimiter.festivals==results.festivals.length && results.festivals.length > 3" @click="toggleResults('festivals', false)">Show less Results<md-icon>keyboard_arrow_up</md-icon></p>
 				</div>
 
 				<div class="result-category column-category result-locations" v-if="results.locations.length > 0">
@@ -149,12 +168,14 @@ export default {
 			query: '',
 			results: {
 				events: [],
+				festivals: [],
 				locations: [],
 				bands: []
 			},
 			loading: false,
 			resultLimiter: {
 				events: 3,
+				festivals: 3,
 				locations: 3,
 				bands: 3
 			},
@@ -162,6 +183,7 @@ export default {
 			searchOptions: {
 				includeCategories: {
 					events: true,
+					festivals: true,
 					locations: true,
 					bands: true
 				},
@@ -180,6 +202,7 @@ export default {
 		emptyResults() {
 			this.results = {
 				events: [],
+				festivals: [],
 				locations: [],
 				bands: []
 			};
@@ -194,6 +217,8 @@ export default {
 			
 			this.$http.get(backendUrl + '/api/search/' + this.query + this.buildSearchQuery())
 			.then(response => {
+				console.log(response.body.data);
+				
 				this.searched = true;
 				this.results = response.body.data;
 				this.$router.push({query: {
@@ -203,6 +228,7 @@ export default {
 					country: this.searchOptions.country.length > 0 && this.locationOption == 'country' ?this.searchOptions.country :undefined,
 					locations: this.searchOptions.includeCategories.locations,
 					events: this.searchOptions.includeCategories.events,
+					festivals: this.searchOptions.includeCategories.festivals,
 					bands: this.searchOptions.includeCategories.bands
 				}});
 
@@ -269,6 +295,7 @@ export default {
 		},
 		toggleResults(category, expand) {
 			this.resultLimiter.events = this.results.events.length>=3 ?3 :this.results.events.length;
+			this.resultLimiter.festivals = this.results.festivals.length>=3 ?3 :this.results.festivals.length;
 			this.resultLimiter.locations = this.results.locations.length>=3 ?3 :this.results.locations.length;
 			this.resultLimiter.bands = this.results.bands.length>=3 ?3 :this.results.bands.length;
 			
@@ -322,6 +349,7 @@ export default {
 			genre: this.$route.query.genre ?this.$route.query.genre :'',
 			includeCategories: {
 				events: this.$route.query.events == 'false' ?false :true,
+				festivals: this.$route.query.festivals == 'false' ?false :true,
 				locations: this.$route.query.locations == 'false' ?false :true,
 				bands: this.$route.query.bands == 'false' ?false :true,
 			}
