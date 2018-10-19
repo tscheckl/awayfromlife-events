@@ -23,7 +23,6 @@
 		</div>
 
 		<div class="content" v-if="festival._id">
-
 			<div class="title">
 				<h2>{{festival.name?festival.name.toUpperCase(): ''}}</h2>
 			</div>
@@ -53,7 +52,7 @@
 					:steps="festival.events.length"
 					infinite
 					:showHeader="false"
-					:selectableSteps="selectableSteps"
+					:selectableSteps="festival.events"
 					selectionLabel="Select Year">
 					
 					<div class="color-block"></div>
@@ -141,7 +140,8 @@
 </template>
 
 <script>
-import Stepper from '@/components/Stepper';
+import Stepper from '@/components/Utilities/Stepper';
+import Selector from '@/components/Utilities/Selector';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
@@ -157,6 +157,7 @@ export default {
 	name: 'festival-page',
 	components: {
 		Stepper,
+		Selector,
 		ConfirmDialog,
 		ReportDialog,
 		NotFound,
@@ -183,7 +184,8 @@ export default {
 			loading: false,
 			submitStatus: '',
 			currentFestivalEvent: {},
-			toBeDeleted: 'festival'
+			toBeDeleted: 'festival',
+			dummy: ''
 		}
 	},
 	methods: {

@@ -27,7 +27,7 @@
 						<div class="include-cate">
 							<md-checkbox v-model="searchOptions.includeCategories.events">Events</md-checkbox>
 							<md-checkbox v-model="searchOptions.includeCategories.festivals">Festivals</md-checkbox>
-							<md-checkbox v-model="searchOptions.includeCategories.locations">Locations</md-checkbox>
+							<md-checkbox :disabled="disableLocations" v-model="searchOptions.includeCategories.locations">Locations</md-checkbox>
 							<md-checkbox v-model="searchOptions.includeCategories.bands">Bands</md-checkbox>
 						</div>
 						<h4>Only show results in one City or Country: </h4>
@@ -55,11 +55,17 @@
 						<md-input-container class="genre-select">
 							<v-select class="form-v-select"
 									  label="name"
+									  :on-change="onSelectGenre"
 									  :options="availableGenres"
 									  v-model="searchOptions.genre"
 									  placeholder="Select genre">
 							</v-select>
 						</md-input-container>
+
+						<md-button v-if="showResetButton()" v-on:click="searchOptions = resetFilters()">
+							<md-icon>restore</md-icon>
+							Reset Filters
+						</md-button>
 					</div>
 				</div>
 			</div>
@@ -68,80 +74,19 @@
 
 			<div class="results">
 				<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
-				
-				<div class="result-category column-category result-events"  v-if="results.events.length > 0">
-					<h2>Event Results: </h2>
-					<div class="result" v-if="!loading" v-for="index in resultLimiter.events" :key="index" v-on:click="showResult(results.events[index-1])">
-						<div class="result-content">
-							<h3>{{results.events[index-1].data.name}}</h3>
-							<p>{{results.events[index-1].data.date}}</p>
-							<p>Result found in {{results.events[index-1].match.pretty}}: 
-								{{results.events[index-1].match.value.beforeMatch}}
-								<span class="result-match">{{results.events[index-1].match.value.match}}</span>
-								{{results.events[index-1].match.value.afterMatch}}
-							</p>
-						</div>
-						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
-					</div>
-					<p class="more-results-btn" v-if="resultLimiter.events!=results.events.length" @click="toggleResults('events', true)">Show more Results<md-icon>keyboard_arrow_down</md-icon></p>
-					<p class="more-results-btn" v-if="resultLimiter.events==results.events.length && results.events.length > 3" @click="toggleResults('events', false)">Show less Results<md-icon>keyboard_arrow_up</md-icon></p>
-				</div>
 
-				<div class="result-category column-category result-festivals"  v-if="results.festivals.length > 0">
-					<h2>Festival Results: </h2>
-					<div class="result" v-if="!loading" v-for="index in resultLimiter.festivals" :key="index" v-on:click="showResult(results.festivals[index-1])">
-						<div class="result-content">
-							<h3>{{results.festivals[index-1].data.name}}</h3>
-							<p>{{results.festivals[index-1].data.address.city}}</p>
-							<p>Result found in {{results.festivals[index-1].match.pretty}}: 
-								{{results.festivals[index-1].match.value.beforeMatch}}
-								<span class="result-match">{{results.festivals[index-1].match.value.match}}</span>
-								{{results.festivals[index-1].match.value.afterMatch}}
-							</p>
-						</div>
-						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
-					</div>
-					<p class="more-results-btn" v-if="resultLimiter.festivals!=results.festivals.length" @click="toggleResults('festivals', true)">Show more Results<md-icon>keyboard_arrow_down</md-icon></p>
-					<p class="more-results-btn" v-if="resultLimiter.festivals==results.festivals.length && results.festivals.length > 3" @click="toggleResults('festivals', false)">Show less Results<md-icon>keyboard_arrow_up</md-icon></p>
-				</div>
+				<result-category 
+					v-for="(category, index) in Object.keys(results)" :key="index"
+					v-if="results[category].length > 0"
+					:ref="'result-' + category"
+					:class="'result-category column-category result-' + category" 
+					:title="category"
+					:content="results[category]"
+					:attribToBeDisplayed="specialAttributes[category]"
+					v-on:expanded="minifyCategories(category)">
+				</result-category>
 
-				<div class="result-category column-category result-locations" v-if="results.locations.length > 0">
-					<h2>Location Results: </h2>
-					<div class="result" v-if="!loading" v-for="index in resultLimiter.locations" :key="index" v-on:click="showResult(results.locations[index-1])">
-						<div class="result-content">
-							<h3>{{results.locations[index-1].data.name}}</h3>
-							<p>{{results.locations[index-1].data.address.city}}</p>
-							<p>Result found in {{results.locations[index-1].match.pretty}}: 
-								{{results.locations[index-1].match.value.beforeMatch}}
-								<span class="result-match">{{results.locations[index-1].match.value.match}}</span>
-								{{results.locations[index-1].match.value.afterMatch}}
-							</p>
-						</div>
-						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
-					</div>
-					<p class="more-results-btn" v-if="resultLimiter.locations!=results.locations.length" @click="toggleResults('locations', true)">Show more Results<md-icon>keyboard_arrow_down</md-icon></p>
-					<p class="more-results-btn" v-if="resultLimiter.locations==results.locations.length && results.locations.length > 3" @click="toggleResults('locations', false)">Show less Results<md-icon>keyboard_arrow_up</md-icon></p>
-				</div>
-				
-				<div class="result-category column-category result-bands" v-if="results.bands.length > 0">
-					<h2>Band Results: </h2>
-					<div class="result" v-if="!loading" v-for="index in resultLimiter.bands" :key="index" v-on:click="showResult(results.bands[index-1])">
-						<div class="result-content">
-							<h3>{{results.bands[index-1].data.name}}</h3>
-							<p>{{results.bands[index-1].data.origin.name}}</p>
-							<p>Result found in {{results.bands[index-1].match.pretty}}: 
-								{{results.bands[index-1].match.value.beforeMatch}}
-								<span class="result-match">{{results.bands[index-1].match.value.match}}</span>
-								{{results.bands[index-1].match.value.afterMatch}}
-							</p>
-						</div>
-						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
-					</div>
-					<p class="more-results-btn" v-if="resultLimiter.bands!=results.bands.length" @click="toggleResults('bands', true)">Show more Results<md-icon>keyboard_arrow_down</md-icon></p>
-					<p class="more-results-btn" v-if="resultLimiter.bands==results.bands.length && results.bands.length > 3" @click="toggleResults('locations', false)">Show less Results<md-icon>keyboard_arrow_up</md-icon></p>
-				</div>
-
-				<div class="no-results" v-if="!loading && searched && results.events.length == 0 && results.locations.length == 0 && results.bands.length == 0 ">
+				<div class="no-results" v-if="!loading && searched && results.events.length == 0 && results.locations.length == 0 && results.bands.length == 0 && results.festivals.length == 0">
 					<h3><md-icon>warning</md-icon></h3>
 					<h3>No results found...</h3>
 				</div>
@@ -153,13 +98,17 @@
 <script>
 import moment from 'moment';
 import places from 'places.js';
+
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+
 import FollowButtons from '@/components/FollowButtons';
+import ResultCategory from '@/components/Search/ResultCategory';
 
 export default {
 	name: 'events-search',
 	components: {
-		FollowButtons
+		FollowButtons,
+		ResultCategory
 	},
 	data() {
 		return {
@@ -172,13 +121,13 @@ export default {
 				locations: [],
 				bands: []
 			},
-			loading: false,
-			resultLimiter: {
-				events: 3,
-				festivals: 3,
-				locations: 3,
-				bands: 3
+			specialAttributes: {
+				events: 'date',
+				festivals: 'address.city',
+				locations: 'address.city',
+				bands: 'origin.name'
 			},
+			loading: false,
 			searched: false,
 			searchOptions: {
 				includeCategories: {
@@ -191,6 +140,7 @@ export default {
 				country: '',
 				genre: ''
 			},
+			disableLocations: false,
 			locationOption: 'city',
 			placesAutocomplete1: {},
 			placesAutocomplete2: {},
@@ -217,8 +167,6 @@ export default {
 			
 			this.$http.get(backendUrl + '/api/search/' + this.query + this.buildSearchQuery())
 			.then(response => {
-				console.log(response.body.data);
-				
 				this.searched = true;
 				this.results = response.body.data;
 				this.$router.push({query: {
@@ -231,26 +179,6 @@ export default {
 					festivals: this.searchOptions.includeCategories.festivals,
 					bands: this.searchOptions.includeCategories.bands
 				}});
-
-				for(let category in this.results) {
-					for(let result of this.results[category]) {
-						//Get Index of the result-match-value string at which the entered query starts.
-						let resultMatchValueIndex = result.match.value.toLowerCase().indexOf(this.query.toLowerCase());
-
-						//Split the result-match-value string into 3 parts: before the exact match, the exact match, after the exact match.
-						let resultMatchValue = result.match.value;
-						result.match.value = {
-							beforeMatch: resultMatchValue.substring(0, resultMatchValueIndex),
-							match: resultMatchValue.substring(resultMatchValueIndex, (resultMatchValueIndex + this.query.length)),
-							afterMatch: resultMatchValue.substring((resultMatchValueIndex + this.query.length), resultMatchValue.length)
-						};
-
-						if(result.data.date)
-							result.data.date = moment(result.data.date).format('LL');
-					}
-
-					this.resultLimiter[category] = this.results[category].length>=3 ?3 :this.results[category].length;
-				}
 
 				document.getElementsByClassName('page-content')[0].classList.add('slide-up');
 
@@ -289,38 +217,11 @@ export default {
 			
 			return searchQuery;
 		},
-		showResult(result) {
-			this.$store.commit(('setCurrent' + result.category), result.data);
-			this.$router.push({path: `/${result.category}/${result.data.url}`});
-		},
-		toggleResults(category, expand) {
-			this.resultLimiter.events = this.results.events.length>=3 ?3 :this.results.events.length;
-			this.resultLimiter.festivals = this.results.festivals.length>=3 ?3 :this.results.festivals.length;
-			this.resultLimiter.locations = this.results.locations.length>=3 ?3 :this.results.locations.length;
-			this.resultLimiter.bands = this.results.bands.length>=3 ?3 :this.results.bands.length;
-			
-			//Get result-category-div HTML-Elements
-			let categories = document.getElementsByClassName('result-category');
-			//Reset all results-categorie's classes to columns
-			[].forEach.call(categories, category => {
-				category.classList.remove('expanded-category');
-				category.classList.add('column-category');
-			});
-
-			//
-			if(expand) {
-				let categoryElement = document.getElementsByClassName('result-' + category)[0];
-				categoryElement.classList.remove('column-category');
-				categoryElement.classList.add('expanded-category');
-
-				this.resultLimiter[category]= this.results[category].length;
+		minifyCategories(excluded) {
+			for(let category of Object.keys(this.results)) {
+				if(category != excluded)
+					this.$refs['result-' + category][0].toggleResults(false);
 			}
-
-			document.getElementsByClassName('result-' + category)[0].scrollIntoView({ 
-				behavior: 'smooth',
-				block: 'start',
-				inline: 'start' 
-			});
 		},
 		changeLocationOption(option) {
 			this.locationOption = option;
@@ -340,9 +241,41 @@ export default {
 				if(!this.searched)
 					document.getElementsByClassName('page-content')[0].classList.remove('slide-up');
 			}
+		},
+		onSelectGenre(selected) {
+			this.searchOptions.genre = selected;
+			if(selected) {
+				this.searchOptions.includeCategories.locations = false;
+				this.disableLocations = true;
+			}
+			else {
+				this.disableLocations = false;
+			}
+		},
+		resetFilters() {
+			return {
+				includeCategories: {
+					events: true,
+					festivals: true,
+					locations: true,
+					bands: true
+				},
+				city: '',
+				country: '',
+				genre: ''
+			};
+		},
+		showResetButton() {
+			let blankOptions = this.resetFilters();
+
+			return !(
+				this.searchOptions.city === blankOptions.city &&
+				this.searchOptions.country === blankOptions.country &&
+				this.searchOptions.genre === blankOptions.genre &&
+				JSON.stringify(this.searchOptions.includeCategories) === JSON.stringify(blankOptions.includeCategories));
 		}
 	},
-	mounted() {
+	mounted() {		
 		this.searchOptions = {
 			country: this.$route.query.country ?this.$route.query.country :'',
 			city: this.$route.query.city ?this.$route.query.city :'',
@@ -383,5 +316,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/ContentLists/_eventsSearch.scss";
+	@import "src/scss/Search/_eventsSearch.scss";
 </style>

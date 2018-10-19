@@ -9,10 +9,13 @@
 
 		<md-input-container class="selectable-steps" v-if="selectableSteps">
 			<label>{{selectionLabel}}</label>
+			<!-- <h1 v-for="(item, index) in selectableSteps" :key="index">{{item.name}}</h1> -->
 			<md-select v-model="currentStep">
-				<md-option v-for="(item, index) in selectableSteps" :key="index" :value="index+1">{{item}}</md-option>
+				<md-option v-for="(item, index) in selectOptions" :key="index" :value="index+1">{{item.name}}</md-option>
 			</md-select>
 		</md-input-container>
+		<selector v-model="currentStep" :options="selectOptions">
+		</selector>
 
 		<div class="stepper-body">
 			<slot name="headline"></slot>
@@ -44,8 +47,13 @@
 </template>
 
 <script>
+import Selector from '@/components/Utilities/Selector';
+
 export default {
 	name: 'stepper',
+	components: {
+		Selector
+	},
 	props: {
 		steps: Number,
 		infinite: {
@@ -62,6 +70,15 @@ export default {
 	watch: {
 		steps() {
 			this.currentStep = 1;
+		},
+		selectableSteps() {
+			console.log("change of steps", this.selectableSteps);
+			
+		}
+	},
+	computed: {
+		selectOptions() {
+			return this.selectableSteps;
 		}
 	},
 	data() {
@@ -88,10 +105,15 @@ export default {
 			else
 				this.currentStep = step;
 		}
-	}
+	},
+	mounted() {
+		this.currentStep = 1;
+		// console.log(this.selectableSteps);
+		
+	},
 }
 </script>
 
 <style lang="scss">
-	@import "src/scss/_stepper.scss";
+	@import "src/scss/Utilities/_stepper.scss";
 </style>

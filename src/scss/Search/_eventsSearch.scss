@@ -50,6 +50,7 @@
 		position: relative;
 		width: 100%;
 		min-height: 300px;
+		padding-bottom: 40px;
 		transform: translateY(calc(50vh - 250px));
 		transition: transform .4s ease-out;
 		overflow: visible;
@@ -227,55 +228,13 @@
 
 	.results {
 		max-width: 90%;
+		justify-content: center;
 		// width: 1200px;
 		display: flex;
 		flex-wrap: wrap;
 		margin: 0 auto;
+
 		margin-top: 20px;
-
-		.result-category {
-			margin: 0 10px;
-			transition: height .3s ease-out;
-			transition: width .5s ease-out;
-
-			h2 {
-				color: $accentDarken1;
-				font-family: "Montserrat";
-				font-size: 24px;
-				text-shadow: 0 5px 6px rgba(0,0,0,0.12), 0 5px 6px rgba(0,0,0,0.24);
-			}
-
-			.result {			
-				background-color: $primaryLighten4;
-				margin: 0;
-				padding: 10px 20px;
-				display: flex;
-
-				&:hover {
-					background-color: $primaryLighten2;
-					cursor: pointer;
-				}
-
-				.result-content {
-					flex: 1;
-
-					h3 {
-						margin-bottom: 0;
-					}
-
-					p:first-of-type {
-						margin-top: 0;
-					}
-
-					.result-match {
-						background-color: $accentAccent2;
-						color: $primaryLighten4;
-						padding: 0 1px;
-						margin: 0 -2px;
-					}
-				}
-			}
-		}
 
 		.column-category {
 			flex: 1;
@@ -283,6 +242,8 @@
 		}
 
 		.expanded-category {
+			min-width: 320px;
+			max-width: none;
 			width: 100%;
 			order: 1;
 		}
@@ -332,8 +293,7 @@
 
 @media screen and (max-width:768px) {
 	#events_search {
-		background-position: center;
-		
+		background-position: center;		
 		width: 100%;
 		max-height: calc(100% - 49px);
 
@@ -392,13 +352,6 @@
 		}
 
 		.results {
-			display: block;
-			max-width: 95%;
-
-			.result-category {
-				width: auto;
-			}
-
 			.expanded-category {
 				width: auto;
 				flex: 1;

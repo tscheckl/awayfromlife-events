@@ -9,7 +9,7 @@ import EventsArchive from '@/components/ContentLists/EventsArchive';
 import LocationsList from '@/components/ContentLists/LocationsList';
 import FestivalsList from '@/components/ContentLists/FestivalsList';
 import BandsList from '@/components/ContentLists/BandsList';
-import EventsSearch from '@/components/ContentLists/EventsSearch';
+import EventsSearch from '@/components/Search/EventsSearch';
 import EventPage from '@/components/SingleContentPages/EventPage';
 import FestivalPage from '@/components/SingleContentPages/FestivalPage';
 import LocationPage from '@/components/SingleContentPages/LocationPage';

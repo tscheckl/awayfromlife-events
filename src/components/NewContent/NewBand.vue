@@ -203,7 +203,7 @@ import {backendUrl} from '@/secrets.js';
 
 import BandForm from '@/components/ContentForms/BandForm';
 import ConfirmDialog from '@/components/ConfirmDialog';
-import Stepper from '@/components/Stepper';
+import Stepper from '@/components/Utilities/Stepper';
 
 export default {
 	name: 'new-band',

@@ -223,7 +223,7 @@ import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js
 import ConfirmDialog from '@/components/ConfirmDialog';
 import EventForm from '@/components/ContentForms/EventForm';
 import TourForm from '@/components/ContentForms/TourForm';
-import Stepper from '@/components/Stepper';
+import Stepper from '@/components/Utilities/Stepper';
 
 export default {
 	name: 'new-event',
@@ -302,7 +302,7 @@ export default {
 			//Only go on if all required fields are filled out
 			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
 				removeEmptyObjectFields(this.newEvent);
-
+				
 				//Send new/updated event to the backend.
 				this.$http.post(backendUrl + this.apiRoute, this.newEvent)
 					.then(response => {

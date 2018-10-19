@@ -96,7 +96,7 @@ import {backendUrl} from '@/secrets.js';
 
 import ConfirmDialog from '@/components/ConfirmDialog';
 import LocationForm from '@/components/ContentForms/LocationForm';
-import Stepper from '@/components/Stepper';
+import Stepper from '@/components/Utilities/Stepper';
 
 export default {
 	name: 'new-location',

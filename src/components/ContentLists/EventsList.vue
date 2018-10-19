@@ -251,10 +251,15 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event, index) {
 			this.$store.commit('setCurrentEvent', event);
-			if(!this.archive)
-				this.$router.push({path: `/event/${event.url}`});
-			else
+			if(!this.archive) {
+				if(!event.isFestival)
+					this.$router.push({path: `/event/${event.url}`});
+				else
+					this.$router.push({path: `/festival/${event.url}`});
+			}
+			else {
 				this.$router.push({path: `/archived-event/${event.url}`});
+			}
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;
@@ -285,6 +290,7 @@ export default {
 							'&sortBy=' + this.currentlySorted + 
 							'&order=' + sortingDirection + 
 							'&startWith=' + startingLetter + 
+							'&includeFestivals=true' + 
 							(this.appliedFilters.genre ?('&genre=' + this.appliedFilters.genre) :'') + 
 							(this.appliedFilters.firstDate ?('&startDate=' + this.appliedFilters.firstDate) :'') +
 							(this.appliedFilters.lastDate ?('&endDate=' + this.appliedFilters.lastDate) :'') +
@@ -463,7 +469,7 @@ export default {
 		//Check if you're currently on the archive page or not and change the backend-endpoint for the request accordingly. 
 		let endpoint = this.archive ?'archived-events' :'events';
 		//Get all the filter information from the backend.
-		this.$http.get(backendUrl + '/api/' + endpoint + '/filters')
+		this.$http.get(backendUrl + '/api/' + endpoint + '/filters?includeFestivals=true')
 			.then(response => { 
 				this.filterCriteria = response.body.data;
 				// this.appliedFilters.firstDate = response.body.data.firstDate;
