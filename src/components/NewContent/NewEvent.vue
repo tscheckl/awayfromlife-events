@@ -220,7 +220,7 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
 
-import ConfirmDialog from '@/components/ConfirmDialog';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import EventForm from '@/components/ContentForms/EventForm';
 import TourForm from '@/components/ContentForms/TourForm';
 import Stepper from '@/components/Utilities/Stepper';

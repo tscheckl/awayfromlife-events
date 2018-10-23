@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import Sidenav from '@/components/Sidenav';
-import TopBar from '@/components/TopBar';
-import AppFooter from '@/components/App-Footer';
+import Sidenav from '@/components/GeneralLayout/Sidenav';
+import TopBar from '@/components/GeneralLayout/TopBar';
+import AppFooter from '@/components/GeneralLayout/App-Footer';
 
 export default {
 	components: {

@@ -25,7 +25,6 @@
 
 <script>
 import moment from 'moment';
-import Sidenav from '@/components/Sidenav';
 import SingleEvent from './SingleEvent';
 import EventPage from '@/components/SingleContentPages/EventPage';
 

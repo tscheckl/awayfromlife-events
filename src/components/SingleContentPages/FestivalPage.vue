@@ -142,7 +142,7 @@
 <script>
 import Stepper from '@/components/Utilities/Stepper';
 import Selector from '@/components/Utilities/Selector';
-import ConfirmDialog from '@/components/ConfirmDialog';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 import FestivalForm from '@/components/ContentForms/FestivalForm';

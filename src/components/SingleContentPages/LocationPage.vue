@@ -96,7 +96,7 @@
 
 <script>
 import LocationForm from '@/components/ContentForms/LocationForm';
-import ConfirmDialog from '@/components/ConfirmDialog';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 

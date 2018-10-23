@@ -94,7 +94,7 @@ import places from 'places.js';
 
 import {backendUrl} from '@/secrets.js';
 
-import ConfirmDialog from '@/components/ConfirmDialog';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import LocationForm from '@/components/ContentForms/LocationForm';
 import Stepper from '@/components/Utilities/Stepper';
 

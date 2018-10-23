@@ -103,5 +103,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_confirmDialog.scss";
+	@import "src/scss/Utilities/_confirmDialog.scss";
 </style>

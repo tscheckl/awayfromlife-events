@@ -15,5 +15,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/_footer.scss";
+	@import "src/scss/GeneralLayout/_footer.scss";
 </style>

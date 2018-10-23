@@ -109,7 +109,7 @@
 import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 
 import BandForm from '@/components/ContentForms/BandForm';
-import ConfirmDialog from '@/components/ConfirmDialog';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 

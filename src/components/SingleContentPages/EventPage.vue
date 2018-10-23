@@ -118,7 +118,7 @@
 import { removeEmptyObjectFields, addBandLabels } from '@/helpers/array-object-helpers.js';
 
 import EventForm from '@/components/ContentForms/EventForm';
-import ConfirmDialog from '@/components/ConfirmDialog';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import NotFound from '@/components/NotFound';
 
