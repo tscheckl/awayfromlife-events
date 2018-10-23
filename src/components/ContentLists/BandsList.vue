@@ -114,19 +114,21 @@
 							<md-icon v-if="currentlySorted == 'genre'">{{!sortingAsc.genre? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
-					<p class="band-origin" v-on:click="sortBy('origin.name')">
+					<p class="band-origin" v-on:click="sortBy('origin.city')">
 						<span>Origin 
-							<md-icon v-if="currentlySorted == 'origin.name'">{{!sortingAsc['origin.name']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+							<md-icon v-if="currentlySorted == 'origin.city'">{{!sortingAsc['origin.city']? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
 					<md-icon class="hidden-icon"></md-icon>
 				</div>
 
-				<div class="list-item" v-for="(band, index) in bands" :key="index" v-on:click="showBand(band)">
-					<h3 class="band-name">{{band.name}}</h3>
-					<p class="band-genres"><span class="band-genre" v-for="genre in band.genre" :key="genre">{{genre}}</span></p>
-					<p class="band-origin"><span>{{band.origin.name}}</span> {{band.origin.country}}</p>
-					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				<div v-for="(band, index) in bands" :key="index" v-on:click="showBand(band)">
+					<router-link :to="`/band/${band.url}`" class="list-item" >
+						<h3 class="band-name">{{band.name}}</h3>
+						<p class="band-genres"><span class="band-genre" v-for="genre in band.genre" :key="genre">{{genre}}</span></p>
+						<p class="band-origin"><span>{{band.origin.city}}</span> {{band.origin.country}}</p>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+					</router-link>
 				</div>
 			</div>
 
@@ -138,16 +140,12 @@
 					<span v-for="number in biggerPages()" :key="number" v-on:click="changeCurrentPage(number)">{{number}}</span>
 					<span class="page-btn" v-on:click="(currentPage < availablePages)? changeCurrentPage(currentPage+1): ''"><md-icon>keyboard_arrow_right</md-icon></span>
 				</div>
-				
-				<md-input-container>
-					<p>Items per Page</p>
-					<md-select name="itemsPerPage" v-model="itemsPerPage">
-						<md-option value="5">5</md-option>
-						<md-option value="10">10</md-option>
-						<md-option value="20">20</md-option>
-						<md-option value="50">50</md-option>
-					</md-select>
-				</md-input-container>
+
+				<selector
+					v-model="itemsPerPage"
+					selectLabel="Items per Page"
+					:options="[5,10,20,50]">
+				</selector>
 			</div>
 		</div>
 
@@ -167,13 +165,17 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+
 import moment from 'moment';
-import NewBand from "@/components/NewContent/NewBand";
+
+import NewBand from '@/components/NewContent/NewBand';
+import Selector from '@/components/Utilities/Selector';
 
 export default {
 	name: 'bands-list',
 	components: {
-		NewBand
+		NewBand,
+		Selector
 	},
 	data() {
 		return {
@@ -181,7 +183,7 @@ export default {
 			sortingAsc: {
 				name: false,
 				genre: false,
-				'origin.name': false
+				'origin.city': false
 			},
 			currentlySorted: 'name',
 			filterCriteria: {
@@ -201,7 +203,7 @@ export default {
 			filterByCity: false,
 			currentPage: 1,
 			availablePages: 1,
-			itemsPerPage: '20',
+			itemsPerPage: 20,
 			loading: false
 		}
 	},

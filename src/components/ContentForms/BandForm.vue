@@ -209,7 +209,7 @@ export default {
 		this.placesAutocomplete = places({container: this.$refs.address_input, type: 'city', language: 'en'});
 		this.placesAutocomplete.on('change', e => {
 			
-			this.myData.origin.name = e.suggestion.name;
+			this.myData.origin.city = e.suggestion.name;
 			this.myData.origin.administrative = e.suggestion.administrative;
 			this.myData.origin.country = e.suggestion.country;
 			this.myData.origin.countryCode = e.suggestion.countryCode;

@@ -3,10 +3,10 @@
 		<div class="admin-content">
 			<div class="verify-list">
 				<div class="admin-buttons">
-					<md-button v-on:click="openDialog('changePwdDialog')">
+					<!-- <md-button v-on:click="openDialog('changePwdDialog')">
 						<md-icon>lock_outline</md-icon>
 						<md-tooltip md-direction="bottom">Change password</md-tooltip>
-					</md-button>
+					</md-button> -->
 
 					<md-button v-on:click="logout">
 						<md-icon>exit_to_app</md-icon>

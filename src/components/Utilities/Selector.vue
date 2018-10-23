@@ -1,9 +1,10 @@
 <template>
 	<div id="selector">
-		<input id="selector-input" type="text" :value="currentlySelected" v-on:click="showList = !showList">
-		<span class="input-indicator">⯆</span>
+		<label for="selector-input">{{selectLabel}}</label>
+		<div id="selector-input" v-on:click="showList = !showList">{{currentlySelected[label] ?currentlySelected[label] :currentlySelected }}</div>
+
 		<ul class="options" v-if="showList">
-			<li v-on:click="updateSelection(item)" v-for="(item, index) in options" :key="index">{{item.name}}</li>
+			<li :class="item == currentlySelected ?'active' :''" v-on:click="selectItem(emitIndex ?(index+1) :item)" v-for="(item, index) in options" :key="index">{{item[label] ?item[label] :item}}</li>
 		</ul>
 	</div>
 </template>
@@ -12,27 +13,70 @@
 export default {
 	name: 'selector',
 	props: {
-		options: Array
+		value: undefined,
+		options: Array,
+		label: {
+			type: String,
+			default: 'name'
+		},
+		emitIndex: {
+			type: Boolean,
+			default: false
+		},
+		selectLabel: {
+			type: String,
+			default: 'Select'
+		},
+	},
+	watch: {
+		options() {
+			this.updateSelection();
+		},
+		value() {
+			this.updateSelection();
+		}
 	},
 	data() {
 		return {
-			currentlySelected: 'Select Year',
+			currentlySelected: '',
 			showList: false
 		}
 	},
 	methods: {
-		updateSelection(data) {
-			this.currentlySelected = data.name;
-			this.$emit('input', data.name)
+		selectItem(data) {
+			this.currentlySelected = this.emitIndex 
+				? this.options[data-1]
+				: (data[this.label]
+					? data[this.label]
+					: data
+				);
+			
+			this.$emit('input', data);
+		},
+		updateSelection() {						
+			if(this.emitIndex)
+				this.currentlySelected = this.options[this.value-1];
+			else 
+				this.currentlySelected = this.value;			
+		},
+		toggleList() {
+			this.showList = !this.showList;
 		}
 	},
 	mounted() {
+		this.updateSelection();
+
+		if(this.displayDirection != 'top') {			
+			document.getElementById('selector').classList.add(this.displayDirection);
+		}
+
 		document.addEventListener('click', (e) => {
-			const exceptTarget = document.getElementById('selector-input');
-			if(e.target !== exceptTarget)
+			const exceptTarget = document.getElementById('input-wrapper');
+			if(e.target !== exceptTarget) {
 				this.showList = false;
-		});
-	}
+			}
+		}, true);
+	},
 }
 </script>
 

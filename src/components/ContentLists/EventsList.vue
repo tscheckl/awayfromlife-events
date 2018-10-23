@@ -138,11 +138,13 @@
 					<md-icon class="hidden-icon"></md-icon>
 				</div>
 
-				<div class="list-item" v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
-					<p class="event-date">{{event.formattedDate}}</p>
-					<h3 class="item-title">{{event.name}}</h3>
-					<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
-					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				<div v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
+					<router-link :to="`/${archive ?'archived-event' :(event.isFestival ?'festival' :'event')}/${event.url}`" class="list-item">
+						<p class="event-date">{{event.formattedDate}}</p>
+						<h3 class="item-title">{{event.name}}</h3>
+						<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+					</router-link>
 				</div>
 			</div>
 
@@ -155,15 +157,11 @@
 					<span class="page-btn" v-on:click="(currentPage < availablePages)? changeCurrentPage(currentPage+1): ''"><md-icon>keyboard_arrow_right</md-icon></span>
 				</div>
 				
-				<md-input-container>
-					<p>Items per Page</p>
-					<md-select name="itemsPerPage" v-model="itemsPerPage">
-						<md-option value="5">5</md-option>
-						<md-option value="10">10</md-option>
-						<md-option value="20">20</md-option>
-						<md-option value="50">50</md-option>
-					</md-select>
-				</md-input-container>
+				<selector
+					v-model="itemsPerPage"
+					selectLabel="Items per Page"
+					:options="[5,10,20,50]">
+				</selector>
 			</div>
 		</div>
 
@@ -183,13 +181,18 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+
 import moment from 'moment';
+
 import NewEvent from "@/components/NewContent/NewEvent";
+import Selector from '@/components/Utilities/Selector';
+
 
 export default {
 	name: 'events-list',
 	components: {
 		NewEvent,
+		Selector
 	},
 	props: {
 		archive: {

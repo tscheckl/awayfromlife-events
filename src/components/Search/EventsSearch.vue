@@ -125,7 +125,7 @@ export default {
 				events: 'date',
 				festivals: 'address.city',
 				locations: 'address.city',
-				bands: 'origin.name'
+				bands: 'origin.city'
 			},
 			loading: false,
 			searched: false,

@@ -39,7 +39,7 @@
 
 				<h3><md-icon>timeline</md-icon>History and Origin</h3>
 				<p v-if="band.foundingDate"><span>Founded: </span>{{band.foundingDate}}</p>
-				<p v-if="band.origin"><span>Origin: </span> {{band.origin.value}}</p>
+				<p v-if="band.origin"><span>Origin: </span>{{band.origin.city + ', ' + (band.origin.administrative ? (band.origin.administrative + ', ') :'') + band.origin.country}}</p>
 				<p v-if="band.history" class="band-history"><span>History / Band description: <br></span> {{band.history}}</p>
 
 				<div class="releases" v-if="band.releases && band.releases.length > 0 && band.releases[0].releaseName != ''">

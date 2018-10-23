@@ -71,7 +71,7 @@
 				<md-button v-if="appliedFilters.startWith || appliedFilters.country || appliedFilters.city" 
 						   class="clear-filters-button" 
 						   v-on:click="clearFilters">
-						   		<md-icon>restore</md-icon> Reset Filters
+							<md-icon>restore</md-icon> Reset Filters
 				</md-button>
 			</div>
 		</div>
@@ -104,11 +104,13 @@
 					<md-icon class="hidden-icon"></md-icon>
 				</div>
 
-				<div class="list-item" v-for="(location, index) in locations" :key="index" v-on:click="showLocation(location)">
-					<h3 class="item-title">{{location.name}}</h3>
-					<p class="location-address">{{location.address.street}}</p>
-					<p class="location-city">{{location.address.city}}</p>
-					<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+				<div v-for="(location, index) in locations" :key="index" v-on:click="showLocation(location)">
+					<router-link :to="`/location/${location.url}`" class="list-item" >
+						<h3 class="item-title">{{location.name}}</h3>
+						<p class="location-address">{{location.address.street}}</p>
+						<p class="location-city">{{location.address.city}}</p>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+					</router-link>
 				</div>
 			</div>
 
@@ -121,15 +123,11 @@
 					<span class="page-btn" v-on:click="(currentPage < availablePages)? changeCurrentPage(currentPage+1): ''"><md-icon>keyboard_arrow_right</md-icon></span>
 				</div>
 				
-				<md-input-container>
-					<p>Items per Page</p>
-					<md-select name="itemsPerPage" v-model="itemsPerPage">
-						<md-option value="5">5</md-option>
-						<md-option value="10">10</md-option>
-						<md-option value="20">20</md-option>
-						<md-option value="50">50</md-option>
-					</md-select>
-				</md-input-container>
+				<selector
+					v-model="itemsPerPage"
+					selectLabel="Items per Page"
+					:options="[5,10,20,50]">
+				</selector>
 			</div>
 		</div>
 
@@ -149,12 +147,15 @@
 
 <script>
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+
 import NewLocation from "@/components/NewContent/NewLocation";
+import Selector from '@/components/Utilities/Selector';
 
 export default {
 	name: 'locations-list',
 	components: {
-		NewLocation
+		NewLocation,
+		Selector
 	},
 	data() {
 		return {

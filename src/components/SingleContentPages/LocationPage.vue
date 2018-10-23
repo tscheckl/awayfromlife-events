@@ -228,6 +228,8 @@ export default {
 			.catch(err => console.log(err));
 
 		if(this.$store.getters.currentLocation.name == ''  || this.$store.getters.currentLocation.url != this.$route.params.url) {
+			console.log("muss holen");
+			
 
 			this.$http.get(backendUrl + '/api/locations/byurl/' + this.$route.params.url)
 			.then(response => {
