@@ -197,9 +197,9 @@
 				   :md-click-outside-to-close="false" 
 				   :md-esc-to-close="false">
 			<confirm-dialog v-on:close="checkSimilar(false)" v-on:confirm="checkSimilar(true)">
-				<h3 slot="headline">There already is an event at happening at that location on the same date. Maybe you wanted to enter this one?</h3>
+				<h3 slot="headline">There already is an event happening at that location on the same date. Maybe you wanted to enter this one?</h3>
 				<div slot="additional-information" class="similar-event" v-for="event in similarEvents" :key="event._id">
-					<a :href="`/#/event/${event.url}`" target="_blank">
+					<a :href="`/event/${event.url}`" target="_blank">
 						<div class="similar-event-info">
 							<h3>{{event.name}} <span>{{event.formattedDate}}</span></h3>
 							<p>Location: <span>{{event.location.name}}</span></p>
@@ -210,6 +210,25 @@
 				</div>
 			</confirm-dialog>
 		</md-dialog>
+
+		<md-dialog ref="newBandDialog">
+			<new-band 
+					v-on:close="$refs['newBandDialog'].close()"
+					v-on:success="updateContent('newBandDialog')">
+			</new-band>
+		</md-dialog>
+
+		<md-dialog ref="newLocationDialog">
+			<new-location 
+					v-on:close="$refs['newLocationDialog'].close()"
+					v-on:success="updateContent('newLocationDialog')">
+			</new-location>
+		</md-dialog>
+
+		<md-snackbar md-position="bottom right" ref="snackbar">
+			<span>New {{createdContent}} successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
+			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
+		</md-snackbar>
   	</div>
 </template>
 
@@ -221,17 +240,17 @@ import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
 
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
-import EventForm from '@/components/ContentForms/EventForm';
-import TourForm from '@/components/ContentForms/TourForm';
 import Stepper from '@/components/Utilities/Stepper';
+import NewBand from "@/components/NewContent/NewBand";
+import NewLocation from "@/components/NewContent/NewLocation";
 
 export default {
 	name: 'new-event',
 	components: {
 		ConfirmDialog,
-		EventForm,
-		TourForm,
-		Stepper
+		Stepper,
+		NewBand,
+		NewLocation
 	},
 	props: {
 		data: Object,
@@ -292,7 +311,8 @@ export default {
 			showStepper: false,
 			currentObject: {},
 			backendBands: [],
-			backendLocations: []
+			backendLocations: [],
+			createdContent: ''
 		}
 	},
 	methods: {
@@ -406,6 +426,24 @@ export default {
 
 			this.similarEventFound = false;
 			this.$refs.similarEventDialog.close();
+		},
+		updateContent(dialog) {
+			this.$refs[dialog].close();
+
+			if(dialog == 'newBandDialog') {
+				this.createdContent = 'band';
+				getBandOptions()
+					.then(data => this.backendBands = data)
+					.catch(err => console.log(err));
+			}
+			else {
+				this.createdContent = 'location';
+				getLocationOptions()
+					.then(data => this.backendLocations = data)
+					.catch(err => console.log(err));
+			}
+
+			this.$refs.snackbar.open();
 		},
 		showForm(createEvent) {
 			this.createEvent = createEvent;

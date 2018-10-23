@@ -111,6 +111,11 @@ export default {
 			default: false
 		}
 	},
+	watch: {
+		data() {
+			this.myData = this.data;
+		}
+	},
 	data() {
 		return {
 			myData: this.data,

@@ -226,6 +226,9 @@ export default {
 				this.verifyData.event.bands.forEach(band => {
 					band.label = band.origin ?band.name + ' - ' + band.origin.country :'';
 				});
+
+				console.log("currentFestival", this.verifyData);
+				
 			}
 			else {
 				this.verifyData = content[index];

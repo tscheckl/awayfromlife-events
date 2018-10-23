@@ -194,9 +194,33 @@
 
 		<md-dialog ref="newBandDialog">
 			<new-band 
-					v-on:close="$refs['newBandDialog'].close()"
-					v-on:success="updateContent('newBandDialog')">
+				v-on:close="$refs['newBandDialog'].close()"
+				v-on:success="updateContent('newBandDialog')">
 			</new-band>
+		</md-dialog>
+
+		<md-dialog class="similar-dialog" 
+				   ref="similarFestivalDialog"
+				   :md-click-outside-to-close="false" 
+				   :md-esc-to-close="false">
+			<confirm-dialog v-on:close="checkSimilar(false)" v-on:confirm="checkSimilar(true)">
+				<h3 slot="headline">{{checkForSimilarFestivalEvent
+					? 'There already is an event for this festival at that date. Maybe you wanted to enter this one?'
+					:'There already is a festival with that name in that city. Maybe you wanted to enter this one?'}}</h3>
+				<div 
+					slot="additional-information" 
+					class="similar-event"
+					v-for="festival in similarFestivals" 
+					:key="festival._id">
+					<a :href="`/festival/${festival.url}`" target="_blank">
+						<div class="similar-event-info">
+							<h3>{{festival.name}}</h3>
+							<p> City: <span>{{festival.address.city}}</span></p>
+						</div>
+						<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
+					</a>
+				</div>
+			</confirm-dialog>
 		</md-dialog>
 		
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -211,9 +235,11 @@ import places from 'places.js';
 import moment from 'moment';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
+import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import { getBandOptions } from '@/helpers/backend-getters.js';
 
 import Stepper from '@/components/Utilities/Stepper';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import NewBand from "@/components/NewContent/NewBand";
 
 export default {
@@ -221,7 +247,23 @@ export default {
 	components: {
 		Stepper,
 		NewBand,
-		Stepper
+		Stepper,
+		ConfirmDialog
+	},
+	watch: {
+		newFestivalName() {			
+			this.getSimilarFestivals();
+		},
+		newFestivalCity() {
+			this.getSimilarFestivals();
+		},
+		newFestivalEventStartDate() { this.getSimilarFestivalEvents() },
+		newFestivalEventEndDate(){ this.getSimilarFestivalEvents() }
+	},
+	computed: {
+		newFestivalName() { return this.newFestival.name },
+		newFestivalEventStartDate() { return this.newFestivalEvent.startDate },
+		newFestivalEventEndDate() { return this.newFestivalEvent.endDate }
 	},
 	data() {
 		return {
@@ -234,6 +276,7 @@ export default {
 				website: '',
 				facebookUrl: ''
 			},
+			newFestivalCity: '',
 			newFestivalEvent: {
 				name: '',
 				startDate: new Date().setDate(new Date().getDate()-1),
@@ -250,7 +293,10 @@ export default {
 			showFestivalList: false,
 			festivalList: [],
 			createExistingFestival: false,
-			existingFestival: null
+			existingFestival: null,
+			similarFestivals: [],
+			similarFestivalFound: false,
+			checkForSimilarFestivalEvent: false
 		}
 	},
 	methods: {
@@ -265,19 +311,8 @@ export default {
 			&& this.newFestivalEvent.endDate) {
 				this.newFestivalEvent.name = this.newFestival.name + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
 
-				for (let index in this.newFestival.genre) {
-					if(this.newFestival.genre[index].name)
-						this.newFestival.genre[index] = this.newFestival.genre[index].name;
-					else
-						this.newFestival.genre.splice(index, 1);
-				}
-
-				for(let index in this.newFestivalEvent.bands) {
-					if(this.newFestivalEvent.bands[index]._id) 
-						this.newFestivalEvent.bands[index] = this.newFestivalEvent.bands[index]._id
-					else
-						this.newFestivalEvent.bands.splice(index, 1)
-				}
+				removeEmptyObjectFields(this.newFestival);
+				removeEmptyObjectFields(this.newFestivalEvent);
 
 				let requestBody = {
 					festival: this.newFestival,
@@ -337,6 +372,52 @@ export default {
 				this.$refs.snackbar.open();		
 			}
 		},
+		getSimilarFestivals() {
+			this.similarFestivalFound = false;
+			if(this.newFestival.name && this.newFestival.address.city) {				
+				this.$http.get(`${backendUrl}/api/festivals/similar?name=${this.newFestival.name}&city=${this.newFestival.address.city}`)
+				.then(response => {
+					if (response.body.data) {
+						this.similarFestivals = response.body.data;
+						this.similarFestivalFound = true;
+						this.$refs.similarFestivalDialog.open()
+					}
+				}).catch(err => console.log(err));
+			}
+		},
+		getSimilarFestivalEvents() {
+			this.similarFestivalFound = false;
+
+			if(this.existingFestival && this.newFestivalEvent.startDate && this.newFestivalEvent.endDate) {				
+				this.$http.get(`${backendUrl}/api/festival-events/similar?festival=${this.existingFestival._id}&startDate=${this.newFestivalEvent.startDate}&endDate=${this.newFestivalEvent.endDate}`)
+				.then(response => {
+					if (response.body.data) {
+						//Give the similar Festival Event some additional attributes of the existing festival that is currently selected for displaying it in the dialog.
+						response.body.data._id = this.existingFestival._id;
+						response.body.data.address = {
+							city: this.existingFestival.address.city
+						};
+						response.body.data.url = this.existingFestival.url;
+						this.checkForSimilarFestivalEvent = true;
+
+						//As only one event is returned it needs to be wrapped in an array to be displayed correctly.
+						this.similarFestivals = [response.body.data];
+						this.similarFestivalFound = true;
+						this.$refs.similarFestivalDialog.open()
+					}
+				}).catch(err => console.log(err));
+			}
+		},
+		checkSimilar(accept) {
+			if(accept) {
+				this.resetFormFields();
+				this.showStepper = false;
+				this.$emit('close');
+			}
+
+			this.similarFestivalFound = false;
+			this.$refs.similarFestivalDialog.close();
+		},
 		resetFormFields() {
 			this.newFestival = {
 				name: '',
@@ -347,6 +428,8 @@ export default {
 				website: '',
 				facebookUrl: ''
 			};
+
+			this.existingFestival = null;
 
 			this.newFestivalEvent = {
 				name: '',
@@ -431,10 +514,12 @@ export default {
 			this.newFestival.address.city = e.suggestion.city;
 			this.newFestival.address.administrative = e.suggestion.administrative;
 			this.newFestival.address.country = e.suggestion.country;
+			this.newFestival.address.countryCode = e.suggestion.countryCode;
 			this.newFestival.address.postcode = e.suggestion.postcode;
 			this.newFestival.address.lat = e.suggestion.latlng.lat;
 			this.newFestival.address.lng = e.suggestion.latlng.lng;
 			this.newFestival.address.value = e.suggestion.value;
+			this.newFestivalCity = e.suggestion.city;
 		});
 	}
 }

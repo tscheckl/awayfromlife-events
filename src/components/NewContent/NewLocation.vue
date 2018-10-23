@@ -75,7 +75,7 @@
 			<confirm-dialog v-on:close="checkSimilar(false)" v-on:confirm="checkSimilar(true)">
 				<h3 slot="headline">There already is a location at this address. Maybe you wanted to enter this one?</h3>
 				<div slot="additional-information" class="similar-event" v-for="location in similarLocations" :key="location._id">
-					<a :href="`/#/location/${location.url}`" target="_blank">
+					<a :href="`/location/${location.url}`" target="_blank">
 						<div class="similar-event-info">
 							<h3>{{location.name}}</h3>
 							<p>Address: <span>{{location.address.street}}</span></p>
