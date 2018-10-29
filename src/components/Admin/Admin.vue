@@ -29,7 +29,10 @@
 
 				<md-list>
 					<div v-if="unverifiedContent.length > 0">
-						<md-list-item v-for="(data, index) in unverifiedContent" :key="index" @click="showInfo(unverifiedContent, index)">
+						<md-list-item 
+							v-for="(data, index) in unverifiedContent" 
+							:key="index" 
+							@click="showInfo(unverifiedContent, index)">
 							<h4 v-if="currentCategory != 'reports' && currentCategory != 'unverified Festivals'">{{data.name}}</h4>
 							<h4 v-if="currentCategory == 'unverified Festivals'">{{data.event.name}}</h4>
 							<span v-if="currentCategory != 'reports' && currentCategory != 'unverified Festivals'">{{currentCategory}}</span>
@@ -204,7 +207,9 @@ export default {
 					.catch(err => console.log(err));
 			}
 		},
-		showInfo(content, index) {			
+		showInfo(content, index) {	
+			console.log("content clicked:", content[index].name);
+					
 			
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
 
