@@ -164,6 +164,12 @@ export default {
 		FestivalForm,
 		FestivalEventForm
 	},
+	watch: {
+		$route() {
+			if(this.$route.params.url != this.festival.url)
+				this.getFestivalByUrl();
+		}
+	},
 	computed: {
 		festival() {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentFestival));
@@ -295,6 +301,22 @@ export default {
 			this.submitStatus = message;
 			this.$refs.snackbar.open();
 		},
+		getFestivalByUrl() {
+			this.loading = true;
+
+			this.$http.get(backendUrl + `/api/festivals/byurl/` + this.$route.params.url)
+			.then(response => {
+				if(response.body.data) {
+					this.loading = false;
+					this.$store.commit('setCurrentFestival', response.body.data);
+
+					this.festival.events.forEach(event => {
+						addBandLabels(event);
+					});
+				}
+			})
+			.catch(err => this.$router.push('/not-found'));
+		}
 	},
 	mounted() {
 		if(this.$route.path.indexOf('festival') != -1)
@@ -308,18 +330,7 @@ export default {
 			.catch(err => console.log(err));
 			
 		if(this.$store.getters.currentFestival.name == '' || this.$store.getters.currentFestival.url != this.$route.params.url) {
-			
-			this.$http.get(backendUrl + `/api/festivals/byurl/` + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.$store.commit('setCurrentFestival', response.body.data);
-
-					this.festival.events.forEach(event => {
-						addBandLabels(event);
-					});
-				}
-			})
-			.catch(err => this.$router.push('/not-found'));
+			this.getFestivalByUrl();
 		}
 		else {
 			this.festival.events.forEach(event => {

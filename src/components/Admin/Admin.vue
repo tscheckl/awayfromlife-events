@@ -345,7 +345,13 @@ export default {
 		},
 	},
 	mounted() {
-		this.getUnvalidatedData(this.currentCategory);
+		this.$http.get(backendUrl + '/api/users/auth')
+				.then(response => {
+					this.getUnvalidatedData(this.currentCategory);
+				})
+				.catch(err => {
+					this.$router.push('/login');
+				})
 	}
 }
 </script>

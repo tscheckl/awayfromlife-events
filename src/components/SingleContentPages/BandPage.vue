@@ -124,6 +124,12 @@ export default {
 		ReportDialog,
 		NotFound
 	},
+	watch: {
+		$route() {
+			if(this.$route.params.url != this.band.url)
+				this.getBandByUrl();
+		}
+	},
 	computed: {
 		band() {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentBand));
@@ -225,6 +231,19 @@ export default {
 			.catch(err => {
 				this.loading = false;
 			});
+		},
+		getBandByUrl() {
+			this.loading = true;
+
+			this.$http.get(backendUrl + '/api/bands/byurl/' + this.$route.params.url)
+				.then(response => {
+					if(response.body.data) {
+						this.loading = false;
+						this.$store.commit('setCurrentBand', JSON.parse(JSON.stringify(response.body.data)));
+						this.getBandEvents();
+					}
+				})
+				.catch(err => this.$router.push('/not-found'));
 		}
 	},
 	mounted() {
@@ -237,14 +256,7 @@ export default {
 			.catch(err => console.log(err));
 
 		if(this.$store.getters.currentBand.name == ''  || this.$store.getters.currentBand.url != this.$route.params.url) {
-			this.$http.get(backendUrl + '/api/bands/byurl/' + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.$store.commit('setCurrentBand', JSON.parse(JSON.stringify(response.body.data)));
-					this.getBandEvents();
-				}
-			})
-			.catch(err => this.$router.push('/not-found'));
+			this.getBandByUrl();
 		}
 		else {
 			this.getBandEvents();

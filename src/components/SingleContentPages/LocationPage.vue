@@ -112,6 +112,12 @@ export default {
 		NotFound,
 		ConfirmDialog
 	},
+	watch: {
+		$route() {
+			if(this.$route.params.url != this.location.url)
+				this.getLocationByUrl();
+		}
+	},
 	computed: {
 		location() {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentLocation));
@@ -216,6 +222,19 @@ export default {
 				console.log(err);
 				this.loading = false;
 			});
+		},
+		getLocationByUrl() {
+			this.loading = true;
+
+			this.$http.get(backendUrl + '/api/locations/byurl/' + this.$route.params.url)
+			.then(response => {
+				if(response.body.data) {
+					this.loading = false;
+					this.$store.commit('setCurrentLocation', response.body.data);
+					this.getLocationEvents();
+				}
+			})
+			.catch(err => this.$router.push('/not-found'));
 		}
 	},
 	mounted() {
@@ -227,18 +246,8 @@ export default {
 			})
 			.catch(err => console.log(err));
 
-		if(this.$store.getters.currentLocation.name == ''  || this.$store.getters.currentLocation.url != this.$route.params.url) {
-			console.log("muss holen");
-			
-
-			this.$http.get(backendUrl + '/api/locations/byurl/' + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.$store.commit('setCurrentLocation', response.body.data);
-					this.getLocationEvents();
-				}
-			})
-			.catch(err => this.$router.push('/not-found'));
+		if(this.$store.getters.currentLocation.name == ''  || this.$store.getters.currentLocation.url != this.$route.params.url) {		
+			this.getLocationByUrl();
 		}
 		else {
 			this.getLocationEvents();

@@ -133,6 +133,12 @@ export default {
 		NotFound,
 		ConfirmDialog
 	},
+	watch: {
+		$route() {
+			if(this.$route.params.url != this.event.url)
+				this.getEventByUrl();
+		}
+	},
 	computed: {
 		event() {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentEvent));
@@ -228,6 +234,18 @@ export default {
 					}, 200);
 				},200);
 			}, 500);
+		},
+		getEventByUrl() {
+			this.loading = true;
+
+			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byurl/` + this.$route.params.url)
+			.then(response => {
+				if(response.body.data) {
+					this.loading = false;
+					this.$store.commit('setCurrentEvent', response.body.data);
+				}
+			})
+			.catch(err => this.$router.push('/not-found'));
 		}
 	},
 	mounted() {
@@ -238,23 +256,14 @@ export default {
 			this.backendEndpoint = 'archived-events';
 		}
 		
-		
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
 				this.isAuthenticated = true;
 			})
 			.catch(err => console.log(err));
 			
-		if(this.$store.getters.currentEvent.name == '' || this.$store.getters.currentEvent.url != this.$route.params.url) {
-
-			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byurl/` + this.$route.params.url)
-			.then(response => {
-				if(response.body.data) {
-					this.$store.commit('setCurrentEvent', response.body.data);
-				}
-			})
-			.catch(err => this.$router.push('/not-found'));
-		}
+		if(this.$store.getters.currentEvent.name == '' || this.$store.getters.currentEvent.url != this.$route.params.url)
+			this.getEventByUrl();
 		
 			
 	}
