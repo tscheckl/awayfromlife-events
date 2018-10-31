@@ -1,32 +1,15 @@
 <template>
 	<div id="band_page">
-		<div class="page-header">
+		<detail-page
+			contentType="band"
+			:id="band._id"
+			:loading="loading"
+			:submitStatus="submitStatus"
+			v-on:edit="openDialog('editBandDialog')"
+			v-on:delete="deleteBand">
+			<h2 slot="title" class="title" v-if="band.name">{{band.name.toUpperCase()}}</h2>
 
-			<div class="left-container">
-
-				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('editBandDialog')">
-						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">edit band</md-tooltip>	
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('confirmDeletionDialog')">
-						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete band</md-tooltip>
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-on:click="openDialog('reportDialog')">
-						<md-icon>report</md-icon>
-						<md-tooltip md-direction="bottom">report event</md-tooltip>
-					</md-button>	
-				</div>
-			</div>
-		</div>
-
-		<div class="content" v-if="band._id">
-			<div class="content-header">
-				<h2 class="title">{{band.name?band.name.toUpperCase(): ''}}</h2>
-			</div>
-
-			<div class="content-body">
+			<div v-if="band._id">
 				<h3><md-icon>info_outline</md-icon>General Information</h3>
 				<p>
 					<span>Genre: </span>
@@ -73,35 +56,12 @@
 				</div>
 			</div>
 
-			<div class="loading" v-show="loading">
-				<div class="darken"></div>
-				<md-spinner md-indeterminate class="md-accent"></md-spinner>
-			</div>
-		</div>
-
-		<div class="color-block"></div>
-
-		<md-dialog ref="editBandDialog">
-			<band-form :data="JSON.parse(JSON.stringify(band))" canSubmit v-on:submit="updateBand" v-on:close="$refs.editBandDialog.close()">
-				<h1 slot="headline">Edit Band</h1>
-			</band-form>
-		</md-dialog>
-
-		<md-dialog ref="reportDialog">
-			<report-dialog :id="band._id" contentType="band" v-on:close="message => handleDialogClose(message, 'reportDialog')">
-			</report-dialog>
-		</md-dialog>
-
-		<md-dialog ref="confirmDeletionDialog">
-			<confirm-dialog v-on:confirm="deleteBand" v-on:close="$refs.confirmDeletionDialog.close()">
-				<h3 slot="headline">Do you really want to delete this band?</h3>
-			</confirm-dialog>
-		</md-dialog>
-
-		<md-snackbar md-position="bottom right" ref="snackbar">
-			<span >{{this.submitStatus}}</span>
-			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
-		</md-snackbar>
+			<md-dialog ref="editBandDialog" slot="edit-dialogs">
+				<band-form :data="JSON.parse(JSON.stringify(band))" canSubmit v-on:submit="updateBand" v-on:close="$refs.editBandDialog.close()">
+					<h1 slot="headline">Edit Band</h1>
+				</band-form>
+			</md-dialog>
+		</detail-page>
 	</div>
 </template>
 
@@ -111,7 +71,7 @@ import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import BandForm from '@/components/ContentForms/BandForm';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
-import NotFound from '@/components/NotFound';
+import DetailPage from '@/components/SingleContentPages/DetailPage';
 
 import { backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -122,7 +82,7 @@ export default {
 		BandForm,
 		ConfirmDialog,
 		ReportDialog,
-		NotFound
+		DetailPage
 	},
 	watch: {
 		$route() {
@@ -151,20 +111,13 @@ export default {
 		},
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event) {
-			this.$store.commit('setCurrentEvent', event);
-			this.$router.push({path: `/event/${event.url}`});
-		},
-		deleteBand() {
-			this.$refs.confirmDeletionDialog.close();
-
-			this.$http.delete(backendUrl + '/api/bands/' + this.band._id)
-				.then(response => {
-					this.$router.go(-1);
-				})
-				.catch(err => {
-					this.submitStatus = err.body.message;
-					this.$refs.snackbar.open();
-				})
+			if(!event.isFestival) {
+				this.$store.commit('setCurrentEvent', event);
+				this.$router.push({path: `/event/${event.url}`});
+			}
+			else {
+				this.$router.push({path: `/festival/${event.url}`});
+			}
 		},
 		updateBand(data) {
 			this.$refs.editBandDialog.close();
@@ -179,19 +132,19 @@ export default {
 				})
 				.catch(err =>  {
 					this.submitStatus = err.body.message;
-					this.$refs.snackbar.open();
+					this.$children[0].$refs.snackbar.open();
 				});
 		},
 		getCurrentBand(message = '') {
 			this.loading = true;
 
-			this.$http.get(backendUrl + `/api/bands/byid/` + this.band._id)
+			this.$http.get(`${backendUrl}/api/bands/byid/${this.band._id}`)
 				.then(response => {
 					this.loading = false;
 					if(response.body.data) {
 						if(message != '') {
 							this.submitStatus = message;
-							this.$refs.snackbar.open();
+							this.$children[0].$refs.snackbar.open();
 						}
 
 						this.$store.commit('setCurrentBand', response.body.data);
@@ -201,19 +154,14 @@ export default {
 				.catch(err => {
 					this.loading = false;
 					this.submitStatus = err.body.message;
-					this.$refs.snackbar.open();
+					this.$children[0].$refs.snackbar.open();
 				});
-		},
-		handleDialogClose(message, dialogRef) {
-			this.$refs[dialogRef].close();
-			this.submitStatus = message;
-			this.$refs.snackbar.open();
 		},
 		getBandEvents() {
 			this.loading = true;
 			this.bandEvents = [];
 
-			this.$http.get(backendUrl + '/api/bands/events/' + this.band._id)
+			this.$http.get(`${backendUrl}/api/bands/events/${this.band._id}?includeFestivals=true`)
 			.then(response => {
 				if(!response.body.message) {
 					this.bandEvents = response.body.data;
@@ -248,12 +196,6 @@ export default {
 	},
 	mounted() {
 		document.getElementById('topbar').classList.add('single-page');
-		
-		this.$http.get(backendUrl + '/api/users/auth')
-			.then(response => {
-				this.isAuthenticated = true;
-			})
-			.catch(err => console.log(err));
 
 		if(this.$store.getters.currentBand.name == ''  || this.$store.getters.currentBand.url != this.$route.params.url) {
 			this.getBandByUrl();
