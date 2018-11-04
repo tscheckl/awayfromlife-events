@@ -5,8 +5,7 @@
 			:id="band._id"
 			:loading="loading"
 			:submitStatus="submitStatus"
-			v-on:edit="openDialog('editBandDialog')"
-			v-on:delete="deleteBand">
+			v-on:edit="openDialog('editBandDialog')">
 			<h2 slot="title" class="title" v-if="band.name">{{band.name.toUpperCase()}}</h2>
 
 			<div v-if="band._id">
@@ -69,8 +68,6 @@
 import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 
 import BandForm from '@/components/ContentForms/BandForm';
-import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
-import ReportDialog from '@/components/SingleContentPages/ReportDialog';
 import DetailPage from '@/components/SingleContentPages/DetailPage';
 
 import { backendUrl } from '@/secrets.js';
@@ -80,8 +77,6 @@ export default {
 	name: 'band-page',
 	components: {
 		BandForm,
-		ConfirmDialog,
-		ReportDialog,
 		DetailPage
 	},
 	watch: {

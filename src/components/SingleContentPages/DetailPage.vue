@@ -7,21 +7,25 @@
 						<md-icon>edit</md-icon>
 						<md-tooltip md-direction="bottom">edit band</md-tooltip>	
 					</md-button>
+					
 					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="$refs['confirmDeletionDialog'].open()">
 						<md-icon>delete</md-icon>
 						<md-tooltip md-direction="bottom">delete band</md-tooltip>
 					</md-button>
+					
+					<slot name="additonal-edit-buttons"></slot>
+
 					<md-button class="md-icon-button edit-button" v-on:click="$refs['reportDialog'].open()">
 						<md-icon>report</md-icon>
 						<md-tooltip md-direction="bottom">report event</md-tooltip>
 					</md-button>
-
-					<slot name="additonal-edit-buttons"></slot>
 				</div>
 			</div>
 		</div>
 
 		<div class="content">
+			<slot name="important-information"></slot>
+			
 			<div class="content-header">
 				<slot name="title"></slot>
 			</div>

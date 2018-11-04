@@ -1,6 +1,9 @@
 @import "./generalPage";
 
 #festival_page {
+	.title {
+		margin-bottom: 0 !important;
+	}
 	.content {
 		position: relative;
 	}

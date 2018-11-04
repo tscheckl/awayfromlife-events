@@ -1,48 +1,35 @@
 <template>
 	<div id="event_page">
-		<div class="page-header">
+		<detail-page
+			contentType="event"
+			:id="event._id"
+			:loading="loading"
+			:submitStatus="submitStatus"
+			v-on:edit="openDialog('editEventDialog')">
+			<md-button slot="additonal-edit-buttons" class="md-icon-button edit-button" v-if="event.canceled != 2" v-on:click="openDialog('cancelDialog')">
+				<md-icon>event_busy</md-icon>
+				<md-tooltip md-direction="bottom">report event as cancelled</md-tooltip>
+			</md-button>
 
-			<div class="left-container">
+			<div slot="important-information">
+				<h1 v-if="event.canceled == 2" class="cancelled-info">
+					<md-icon>warning</md-icon>
+					<span>THIS EVENT WAS CANCELLED</span>
+					<md-icon>warning</md-icon>
+				</h1>
 
-				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-on:click="openDialog('editEventDialog')">
-						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">edit event</md-tooltip>	
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="openDialog('confirmDeletionDialog')">
-						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete event</md-tooltip>
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-if="event.canceled != 2" v-on:click="openDialog('cancelDialog')">
-						<md-icon>event_busy</md-icon>
-						<md-tooltip md-direction="bottom">report event as cancelled</md-tooltip>
-					</md-button>
-					<md-button class="md-icon-button edit-button" v-on:click="openDialog('reportDialog')">
-						<md-icon>report</md-icon>
-						<md-tooltip md-direction="bottom">report event</md-tooltip>
-					</md-button>
-				</div>
+				<h3 v-if="event.canceled == 1 && $route.path.indexOf('/event/') != -1" class="unverified-cancelled-info">
+					<md-icon>warning</md-icon>
+					This event was reported as cancelled but the report is not verified yet! 
+				</h3>
 			</div>
-		</div>
 
-		<div class="content" v-if="event._id">
-			<h1 v-if="event.canceled == 2" class="cancelled-info">
-				<md-icon>warning</md-icon>
-				<span>THIS EVENT WAS CANCELLED</span>
-				<md-icon>warning</md-icon>
-			</h1>
-
-			<h3 v-if="event.canceled == 1 && $route.path.indexOf('/event/') != -1" class="unverified-cancelled-info">
-				<md-icon>warning</md-icon>
-				This event was reported as cancelled but the report is not verified yet! 
-			</h3>
-
-			<div class="title">
-				<h2>{{event.name?event.name.toUpperCase(): ''}}</h2>
+			<div slot="title" class="title" v-if="event.name && event.formattedDate">
+				<h2>{{event.name.toUpperCase()}}</h2>
 				<h4 class="date">{{event.formattedDate}}</h4>
 			</div>
 
-			<div class="content-body">
+			<div v-if="event._id">
 				<div v-if="event.location.address" class="event-location">
 					<h3><md-icon>location_on</md-icon><span>Location</span></h3>
 					<p><b>{{event.location.name}}</b></p>
@@ -71,46 +58,26 @@
 					<h3><md-icon>format_quote</md-icon><span>Description</span></h3>
 					<p>{{event.description}}</p>
 				</div>
-
-				<div class="loading" v-show="loading">
-					<div class="darken"></div>
-					<md-spinner md-indeterminate class="md-accent"></md-spinner>
-				</div>
 			</div>
-		</div>
+			
+			<div slot="edit-dialogs">
+				<md-dialog ref="editEventDialog">
+					<event-form :event="JSON.parse(JSON.stringify(event))" canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
+						<h1 slot="headline">Edit Event</h1>
+					</event-form>
+				</md-dialog>
 
-		<div class="color-block"></div>
-
-		<md-dialog ref="editEventDialog">
-			<event-form :event="JSON.parse(JSON.stringify(event))" canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
-				<h1 slot="headline">Edit Event</h1>
-			</event-form>
-		</md-dialog>
-
-		<md-snackbar md-position="bottom right" ref="snackbar">
-			<span >{{this.submitStatus}}</span>
-			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
-		</md-snackbar>
-
-		<md-dialog ref="reportDialog">
-			<report-dialog :id="event._id" :contentType="backendEndpoint.slice(0,-1)" v-on:close="message => handleDialogClose(message, 'reportDialog')"></report-dialog>
-		</md-dialog>
-
-		<md-dialog ref="cancelDialog">
-			<div class="cancel-dialog">
-				<h2>Do you really want to report this event as cancelled?</h2>
-				<md-icon class="yes-icon">check</md-icon>
-				<md-icon class="no-icon">clear</md-icon>
-				<md-button class="yes" v-on:click="reportCancel(true)">Yes</md-button>
-				<md-button class="no" v-on:click="reportCancel(false)">No</md-button>
+				<md-dialog ref="cancelDialog">
+					<div class="cancel-dialog">
+						<h2>Do you really want to report this event as cancelled?</h2>
+						<md-icon class="yes-icon">check</md-icon>
+						<md-icon class="no-icon">clear</md-icon>
+						<md-button class="yes" v-on:click="reportCancel(true)">Yes</md-button>
+						<md-button class="no" v-on:click="reportCancel(false)">No</md-button>
+					</div>
+				</md-dialog>
 			</div>
-		</md-dialog>
-
-		<md-dialog ref="confirmDeletionDialog">
-			<confirm-dialog v-on:confirm="deleteEvent" v-on:close="$refs.confirmDeletionDialog.close()">
-				<h3 slot="headline">Do you really want to delete this event?</h3>
-			</confirm-dialog>
-		</md-dialog>
+		</detail-page>
 	</div>
 </template>
 
@@ -118,9 +85,7 @@
 import { removeEmptyObjectFields, addBandLabels } from '@/helpers/array-object-helpers.js';
 
 import EventForm from '@/components/ContentForms/EventForm';
-import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
-import ReportDialog from '@/components/SingleContentPages/ReportDialog';
-import NotFound from '@/components/NotFound';
+import DetailPage from '@/components/SingleContentPages/DetailPage';
 
 import {frontEndSecret, backendUrl } from '@/secrets.js';
 import moment from 'moment';
@@ -129,9 +94,7 @@ export default {
 	name: 'event-page-new',
 	components: {
 		EventForm,
-		ReportDialog,
-		NotFound,
-		ConfirmDialog
+		DetailPage
 	},
 	watch: {
 		$route() {
@@ -156,24 +119,13 @@ export default {
 		openDialog(ref) {
 			this.$refs[ref].open();
 		},
-		deleteEvent() {
-			this.$refs.confirmDeletionDialog.close();
-			
-			this.$http.delete(backendUrl + `/api/${this.backendEndpoint}/` + this.event._id)
-				.then(response => {
-					this.$router.go(-1);
-				})
-				.catch(err => {
-					this.submitStatus = err.body.message;
-					this.$refs.snackbar.open();
-				})
-		},
 		updateEvent(data) {
 			this.$refs.editEventDialog.close();
-
+		
 			this.loading = true;
 
 			removeEmptyObjectFields(data);
+			data.date = moment(data.date).format('YYYY-MM-DD');
 
 			this.$http.put(backendUrl + `/api/events/${data._id}`, data)
 				.then(response => {
@@ -181,7 +133,7 @@ export default {
 				})
 				.catch(err =>  {
 					this.submitStatus = err.body.message;
-					this.$refs.snackbar.open();
+					this.$children[0].$refs.snackbar.open();
 				});
 		},
 		getCurrentEvent(message = '') {
@@ -193,7 +145,7 @@ export default {
 					if(response.body.data) {
 						if(message != '') {
 							this.submitStatus = message;
-							this.$refs.snackbar.open();
+							this.$children[0].$refs.snackbar.open();
 						}
 
 						this.$store.commit('setCurrentEvent', response.body.data);
@@ -204,13 +156,8 @@ export default {
 				.catch(err => {
 					this.loading = false;
 					this.submitStatus = err.body.message;
-					this.$refs.snackbar.open();
+					this.$children[0].$refs.snackbar.open();
 				});
-		},
-		handleDialogClose(message, dialogRef) {
-			this.$refs[dialogRef].close();
-			this.submitStatus = message;
-			this.$refs.snackbar.open();
 		},
 		reportCancel(accept) {
 			document.getElementsByClassName(accept ?'yes' :'no')[0].classList.add('selected');
@@ -219,10 +166,15 @@ export default {
 				if(accept) {
 					this.$http.put(backendUrl + `/api/${this.backendEndpoint}/cancel/${this.event._id}`)
 					.then(response => {
-						console.log(response);
-						this.handleDialogClose('Thanks for your report, we will verify it before it is visible for everyone!', 'cancelDialog');
+						this.$refs.cancelDialog.close();
+						this.submitStatus = 'Thanks for your report, we will verify it before it is visible for everyone!';
+						this.$children[0].$refs.snackbar.open();
 					})
-					.catch(err => {this.handleDialogClose('Something went wrong while sending your report. Please try again!', 'cancelDialog')})
+					.catch(err => {
+						this.$refs.cancelDialog.close();
+						this.submitStatus = err.body.message;
+						this.$children[0].$refs.snackbar.open();
+					})
 				}
 
 				this.similarEventFound = false;
@@ -262,7 +214,7 @@ export default {
 			})
 			.catch(err => console.log(err));
 			
-		if(this.$store.getters.currentEvent.name == '' || this.$store.getters.currentEvent.url != this.$route.params.url)
+		if(this.$store.getters.currentEvent.name == '' || (this.$store.getters.currentEvent.url != this.$route.params.url && this.$route.path == '/event'))
 			this.getEventByUrl();
 		
 			

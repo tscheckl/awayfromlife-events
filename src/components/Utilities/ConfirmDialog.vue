@@ -70,6 +70,7 @@
 			
 			<slot name="headline"></slot>
 
+			<slot name="warning"></slot>
 			<slot name="additional-information"></slot>
 
 			<md-icon class="yes-icon">check</md-icon>
