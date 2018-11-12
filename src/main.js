@@ -84,7 +84,9 @@ router.beforeEach((to, from, next) => {
 
 	if (!to.matched.length) {
 		next('/not-found');
-	} else {
+	} else {		
+		document.title = to.meta.title + ' | AWAY FROM LIFE STREETS';
+		
 		//Check if a 'Single-Page' is opened and give top-bar extra class to change color.
 		if(to.path.indexOf('/event/') != -1 || to.path.indexOf('/location/') != -1 || to.path.indexOf('/band/') != -1 || to.path.indexOf('/festival/') != -1) {
 			

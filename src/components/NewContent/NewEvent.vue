@@ -149,6 +149,10 @@
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove band</md-tooltip>
 							</md-button>
+							<p class="not-verified-warning" v-if="band.isValidated == false">
+								<md-icon>error_outline</md-icon>
+								This Band is not validated yet.
+							</p>
 						</div>
 
 						<md-button v-if="currentObject.bands != null" v-on:click="currentObject.bands.push('');" class="md-icon-button md-raised md-accent add-field-btn">
@@ -457,7 +461,8 @@ export default {
 			this.currentObject.tourStops[index].location = selected;
 		},
 		onSelectBand(selected, index) {			
-			this.currentObject.bands[index] = selected;
+			this.currentObject.bands.splice(index, 1, selected);
+			
 			if(selected != '') {
 				if(this.currentObject.bands.reduce((acc, cur) => (acc != '' && cur != '')))
 					this.currentObject.bands.push('');
@@ -504,7 +509,7 @@ export default {
 		getLocationOptions()
 			.then(data => this.backendLocations = data)
 			.catch(err => console.log(err));
-	}
+	},
 }
 </script>
 

@@ -50,7 +50,7 @@
 
 				<div v-if="event.ticketLink" class="ticket-link">
 					<h3><md-icon>receipt</md-icon>Ticket Link</h3>
-					<a :href="event.ticketLink" target="_blank">{{event.ticketLink}}</a>
+					<a :href="'//' + event.ticketLink" target="_blank">{{event.ticketLink}}</a>
 					<hr>
 				</div>
 
@@ -151,6 +151,7 @@ export default {
 						this.$store.commit('setCurrentEvent', response.body.data);
 						addBandLabels(this.event);
 						this.$router.push({path: `/event/${response.body.data.url}`});
+						document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
 					}
 				})
 				.catch(err => {
@@ -195,6 +196,7 @@ export default {
 				if(response.body.data) {
 					this.loading = false;
 					this.$store.commit('setCurrentEvent', response.body.data);
+					document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
 				}
 			})
 			.catch(err => this.$router.push('/not-found'));
@@ -216,8 +218,8 @@ export default {
 			
 		if(this.$store.getters.currentEvent.name == '' || (this.$store.getters.currentEvent.url != this.$route.params.url && this.$route.path == '/event'))
 			this.getEventByUrl();
-		
-			
+		else
+			document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
 	}
 }
 </script>

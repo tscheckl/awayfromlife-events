@@ -141,9 +141,21 @@
 				margin-left: 0;
 				margin-top: 12px;
 			}
+
+			.not-verified-warning {
+				float: left;
+				margin-left: 20px;
+				margin-top: -10px;
+				color: $accentAccent2;
+
+				.md-icon {
+					transform: rotate(180deg);
+				}
+			}
 		}
 	
 		.add-field-btn {
+			display: block;
 			margin-top: -5px;
 			margin-bottom: 10px;
 			margin-left: 10px;

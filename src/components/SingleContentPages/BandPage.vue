@@ -36,10 +36,10 @@
 				<hr v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl">
 
 				<h3 v-if="band.facebookUrl || band.website || band.bandcampUrl || band.soundclouldUrl"><md-icon>subject</md-icon>Additional Information</h3>
-				<p v-if="band.facebookUrl"><span>Facebook Page: </span><a :href="band.facebookUrl" target="_blank">{{band.facebookUrl}}</a></p>
-				<p v-if="band.website"><span>Website: </span><a :href="band.website" target="_blank">{{band.website}}</a></p>
-				<p v-if="band.bandcampUrl"><span>Bandcamp Page: </span><a :href="band.bandcampUrl" target="_blank">{{band.bandcampUrl}}</a></p>
-				<p v-if="band.soundclouldUrl"><span>Soundcloud Page: </span><a :href="band.soundclouldUrl" target="_blank">{{band.soundclouldUrl}}</a></p>
+				<p v-if="band.facebookUrl"><span>Facebook Page: </span><a :href="'//' + band.facebookUrl" target="_blank">{{band.facebookUrl}}</a></p>
+				<p v-if="band.website"><span>Website: </span><a :href="'//' + band.website" target="_blank">{{band.website}}</a></p>
+				<p v-if="band.bandcampUrl"><span>Bandcamp Page: </span><a :href="'//' + band.bandcampUrl" target="_blank">{{band.bandcampUrl}}</a></p>
+				<p v-if="band.soundclouldUrl"><span>Soundcloud Page: </span><a :href="'//' + band.soundclouldUrl" target="_blank">{{band.soundclouldUrl}}</a></p>
 
 				<div class="events" v-if="bandEvents.length > 0">
 					<h3><md-icon>date_range</md-icon>Next Shows:</h3>
@@ -144,6 +144,7 @@ export default {
 
 						this.$store.commit('setCurrentBand', response.body.data);
 						this.$router.push({path: `/band/${response.body.data.url}`});
+						document.title = this.band.name + ' | AWAY FROM LIFE STREETS';
 					}
 				})
 				.catch(err => {
@@ -184,6 +185,7 @@ export default {
 						this.loading = false;
 						this.$store.commit('setCurrentBand', JSON.parse(JSON.stringify(response.body.data)));
 						this.getBandEvents();
+						document.title = this.band.name + ' | AWAY FROM LIFE STREETS';
 					}
 				})
 				.catch(err => this.$router.push('/not-found'));
@@ -197,6 +199,7 @@ export default {
 		}
 		else {
 			this.getBandEvents();
+			document.title = this.band.name + ' | AWAY FROM LIFE STREETS';
 		}
 	}
 }

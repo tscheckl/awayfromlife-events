@@ -3,11 +3,11 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 function getBandOptions(object) {	
 	return new Promise((resolve, reject) => {
-		fetch(backendUrl + "/api/bands")
+		fetch(backendUrl + "/api/bands/all")
 			.then(response => response.json())
 			.then(data => {				
 				for(let band of data.data) {
-					band.label = band.name + ' - ' + band.origin.country;
+					band.label = `${band.name} - ${band.origin.country} ${!band.isValidated ?'(unverified)' :''}`;
 				}
 				resolve(data.data);
 			})
@@ -21,7 +21,7 @@ function getLocationOptions() {
 			.then(response => response.json())
 			.then(data => {
 				for(let location of data.data) {
-					location.label = location.name + ' - ' + location.address.city;
+					location.label = `${location.name} - ${location.address.city} ${!location.isValidated ?'(unverified)' :''}`;
 				}
 				resolve(data.data);
 			})

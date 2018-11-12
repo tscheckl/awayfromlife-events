@@ -22,8 +22,8 @@
 				<hr v-if="location.website || location.facebookUrl">
 
 				<h3 v-if="location.website || location.facebookUrl"><md-icon>subject</md-icon>Additional Information</h3>
-				<p v-if="location.website" class="website">Website: <a :href="location.website" target="_blank">{{location.website}}</a></p>
-				<p v-if="location.facebookUrl" class="facebook-page">Facebook Page: <a :href="location.facebookUrl" target="_blank">{{location.facebookUrl}}</a></p>
+				<p v-if="location.website" class="website">Website: <a :href="'//' + location.website" target="_blank">{{location.website}}</a></p>
+				<p v-if="location.facebookUrl" class="facebook-page">Facebook Page: <a :href="'//' + location.facebookUrl" target="_blank">{{location.facebookUrl}}</a></p>
 
 				<hr v-if="location.information">
 
@@ -126,6 +126,7 @@ export default {
 
 						this.$store.commit('setCurrentLocation', response.body.data);
 						this.$router.push({path: `/location/${response.body.data.url}`});
+						document.title = `${this.location.name} - ${this.location.address.city} | AWAY FROM LIFE STREETS`;	
 					}
 				})
 				.catch(err => {
@@ -143,7 +144,6 @@ export default {
 			.then(response => {
 				if(!response.body.message) {
 					this.locationEvents = response.body.data;
-					console.log(this.locationEvents);
 					
 					if(this.locationEvents) {
 						for(let event of this.locationEvents) {
@@ -169,6 +169,7 @@ export default {
 				if(response.body.data) {
 					this.loading = false;
 					this.$store.commit('setCurrentLocation', response.body.data);
+					document.title = `${this.location.name} - ${this.location.address.city} | AWAY FROM LIFE STREETS`;	
 					this.getLocationEvents();
 				}
 			})
@@ -189,6 +190,7 @@ export default {
 		}
 		else {
 			this.getLocationEvents();
+			document.title = `${this.location.name} - ${this.location.address.city} | AWAY FROM LIFE STREETS`;
 		}
 	}
 }

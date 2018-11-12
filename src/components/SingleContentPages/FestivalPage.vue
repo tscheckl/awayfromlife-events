@@ -66,7 +66,7 @@
 
 				<div v-if="festival.ticketLink" class="ticket-link">
 					<h3><md-icon>receipt</md-icon>Ticket Link</h3>
-					<a :href="festival.ticketLink" target="_blank">{{festival.ticketLink}}</a>
+					<a :href="'//' + festival.ticketLink" target="_blank">{{festival.ticketLink}}</a>
 					<hr>
 				</div>
 
@@ -78,8 +78,8 @@
 
 				<div class="additional-info" v-if="festival.website || festival.facebookUrl">
 					<h3><md-icon>subject</md-icon>Additional Information</h3>
-					<p v-if="festival.website" class="website"><span>Website:</span> <a :href="festival.website" target="_blank">{{festival.website}}</a></p>
-					<p v-if="festival.facebookUrl" class="facebook-page"><span>Facebook Page:</span> <a :href="festival.facebookUrl" target="_blank">{{festival.facebookUrl}}</a></p>
+					<p v-if="festival.website" class="website"><span>Website:</span> <a :href="'//' + festival.website" target="_blank">{{festival.website}}</a></p>
+					<p v-if="festival.facebookUrl" class="facebook-page"><span>Facebook Page:</span> <a :href="'//' + festival.facebookUrl" target="_blank">{{festival.facebookUrl}}</a></p>
 					<hr>
 				</div>
 			</div>
@@ -197,6 +197,7 @@ export default {
 							this.onlyFestivalEvent = true;
 
 						this.$router.push({path: `/festival/${response.body.data.url}`});
+						document.title = `${this.festival.name} | AWAY FROM LIFE STREETS`;
 					}
 				})
 				.catch(err => {
@@ -262,6 +263,7 @@ export default {
 				if(response.body.data) {
 					this.loading = false;
 					this.$store.commit('setCurrentFestival', response.body.data);					
+					document.title = `${this.festival.name} | AWAY FROM LIFE STREETS`;
 
 					this.festival.events.forEach(event => {
 						addBandLabels(event);
@@ -293,6 +295,8 @@ export default {
 			this.festival.events.forEach(event => {
 				addBandLabels(event);
 			});
+			
+			document.title = `${this.festival.name} | AWAY FROM LIFE STREETS`;
 
 			if(this.festival.events.length == 1)
 				this.onlyFestivalEvent = true;

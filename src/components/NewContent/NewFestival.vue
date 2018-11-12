@@ -120,6 +120,10 @@
 						<md-icon>clear</md-icon>
 						<md-tooltip>Remove band</md-tooltip>
 					</md-button>
+					<p class="not-verified-warning" v-if="band.isValidated == false">
+						<md-icon>error_outline</md-icon>
+						This Band is not validated yet.
+					</p>
 				</div>
 				
 				<md-button v-if="newFestivalEvent.bands != null" v-on:click="newFestivalEvent.bands.push('')" class="md-icon-button md-raised md-accent add-field-btn">
