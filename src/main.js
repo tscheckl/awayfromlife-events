@@ -25,8 +25,37 @@ Vue.use(AirbnbStyleDatepicker);
 Vue.use(Datetime);
 
 Vue.use(VueAnalytics, {
-	id: 'UA-124600417-2',
-	router
+	id: ['UA-124600417-2', 'UA-124410591-1'],
+	router,
+	autoTracking: {
+		pageviewTemplate (route) {
+			let title;
+
+			console.log(route);
+			
+
+			if(route.params.url) {
+				title = route.params.url
+					.substr(0, (route.params.url.indexOf('--') != -1 ?route.params.url.indexOf('--') :route.params.url.length))
+					.replace(/-/g, ' ')
+					.split(' ')
+					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+					.join(' ');
+				
+				title += ` (${route.meta.category})`;
+			}
+			else title = route.meta.title;
+
+			console.log(title);
+			
+			
+		  	return {
+				page: title,
+				title: title,
+				location: window.location.href
+		  	}
+		}
+	}
 })
 
 Vue.component('calendar', Calendar);

@@ -51,14 +51,16 @@ export default new Router({
 			path: '/event/:url',
 			component: EventPage,
 			meta: {
-				title: 'Event Detail Page'
+				title: 'Event Detail Page',
+				category: 'Event'
 			}
 		},
 		{
 			path: '/archived-event/:url',
 			component: EventPage,
 			meta: {
-				title: 'Event Detail Page'
+				title: 'Event Detail Page',
+				category: 'Event'
 			}
 		},
 		{
@@ -72,7 +74,8 @@ export default new Router({
 			path: '/festival/:url',
 			component: FestivalPage,
 			meta: {
-				title: 'Festival Detail Page'
+				title: 'Festival Detail Page',
+				category: 'Festival'
 			}
 		},
 		{
@@ -86,7 +89,8 @@ export default new Router({
 			path: '/location/:url',
 			component: LocationPage,
 			meta: {
-				title: 'Location Detail Page'
+				title: 'Location Detail Page',
+				category: 'Location'
 			}
 		},
 		{
@@ -100,7 +104,8 @@ export default new Router({
 			path: '/band/:url',
 			component: BandPage,
 			meta: {
-				title: 'Band Detail Page'
+				title: 'Band Detail Page',
+				category: 'Band'
 			}
 		},
 		{
