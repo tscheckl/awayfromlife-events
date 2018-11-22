@@ -139,7 +139,7 @@
 				</div>
 
 				<div v-for="(event, index) in events" :key="index" v-on:click="showEvent(event, index)">
-					<router-link :to="`/${archive ?'archived-event' :(event.isFestival ?'festival' :'event')}/${event.url}`" class="list-item">
+					<router-link :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`" class="list-item">
 						<p class="event-date">{{event.formattedDate}}</p>
 						<h3 class="item-title">{{event.name}}</h3>
 						<p class="location-name" v-if="event.location"><b>{{event.location.name}}</b> {{event.location.address.city}}</p>
@@ -254,15 +254,11 @@ export default {
 		//Function for giving the Single-Event dialog the data of the clicked event and opening it.
 		showEvent(event, index) {
 			this.$store.commit('setCurrentEvent', event);
-			if(!this.archive) {
-				if(!event.isFestival)
-					this.$router.push({path: `/event/${event.url}`});
-				else
-					this.$router.push({path: `/festival/${event.url}`});
-			}
-			else {
-				this.$router.push({path: `/archived-event/${event.url}`});
-			}
+			
+			if(!event.isFestival)
+				this.$router.push({path: `/event/${event.url}`});
+			else
+				this.$router.push({path: `/festival/${event.url}`});
 		},
 		sortBy(sortCrit) {
 			this.currentlySorted = sortCrit;

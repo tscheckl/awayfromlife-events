@@ -123,6 +123,16 @@
 				margin-left: 15px;
 			}
 
+			.not-verifiable {
+				margin-top: 40px;
+				color: $accentAccent2;
+
+				.md-icon {
+					margin-top: -2px;
+					margin-right: 5px;
+				}
+			}
+
 			.verify-btn {
 				margin-top: 40px;
 

@@ -461,11 +461,16 @@ export default {
 			this.currentObject.tourStops[index].location = selected;
 		},
 		onSelectBand(selected, index) {			
+			//Select band into localBands array so that Vue detects the change.
 			this.currentObject.bands.splice(index, 1, selected);
 			
 			if(selected != '') {
 				if(this.currentObject.bands.reduce((acc, cur) => (acc != '' && cur != '')))
 					this.currentObject.bands.push('');
+
+				if(!selected.isValidated) {
+					this.event.verifiable = false;
+				}
 			}
 		},
 		addTourStop() {

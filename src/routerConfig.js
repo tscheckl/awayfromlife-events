@@ -56,14 +56,6 @@ export default new Router({
 			}
 		},
 		{
-			path: '/archived-event/:url',
-			component: EventPage,
-			meta: {
-				title: 'Event Detail Page',
-				category: 'Event'
-			}
-		},
-		{
 			path: '/festivals',
 			component: FestivalsList,
 			meta: {

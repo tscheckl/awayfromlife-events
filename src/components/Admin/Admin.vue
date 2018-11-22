@@ -101,7 +101,10 @@
 					</div>
 				</div>
 				
-				<div v-if="unverifiedContent.length > 0 && currentCategory != 'reports' && currentCategory != 'cancellations'" >
+				<div class="not-verifiable" v-if="unverifiedContent.length > 0 && currentCategory == 'unverified Events' && !verifyData.verifiable">
+					<h2><md-icon>warning</md-icon>This Event is not verifiable as it contains other unverified content that needs to be verified first.</h2>
+				</div>
+				<div v-else-if="unverifiedContent.length > 0 && currentCategory != 'reports' && currentCategory != 'cancellations'" >
 					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
 						<md-icon>check</md-icon>
 						<md-tooltip md-direction="top">Keep and activate entry</md-tooltip>
@@ -208,7 +211,9 @@ export default {
 			}
 		},
 		showInfo(content, index) {	
-			console.log("content clicked:", content[index].name);
+			console.log(this.currentCategory);
+			
+			console.log("content clicked:", content[index]);
 					
 			
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');

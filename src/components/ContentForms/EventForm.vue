@@ -55,7 +55,7 @@
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove band</md-tooltip>
 							</md-button>
-							<p class="not-verified-warning" v-if="band.isValidated == false">
+							<p class="not-verified-warning" v-if="localBands[index].isValidated == false">
 								<md-icon>error_outline</md-icon>
 								This Band is not validated yet.
 							</p>
@@ -164,9 +164,20 @@ export default {
 			//Set the new Event's location attribute to the ID of the selected location
 			this.event.location = selected;
 		},
-		onSelectBand(selected, index) {			
-			this.localBands[index] = selected;
+		onSelectBand(selected, index) {		
+			//Select band into localBands array so that Vue detects the change.
+			this.localBands.splice(index, 1, selected);
+
 			if(selected != '') {
+				// console.log(this.localBands);
+				
+				// console.log(this.localBands.every(band => band.isValidated == undefined || (band.isValidated != undefined && band.isValidated == true)));
+				
+				if(!this.localBands.every(band => band.isValidated == undefined || (band.isValidated != undefined && band.isValidated != false)))
+					this.event.verifiable = false;
+				else
+					this.event.verifiable = true;
+
 				if(this.localBands.reduce((acc, cur) => (acc != '' && cur != '')))
 					this.addBand();
 			}

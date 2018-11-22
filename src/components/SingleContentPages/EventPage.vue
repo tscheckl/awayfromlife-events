@@ -31,12 +31,14 @@
 
 			<div v-if="event._id">
 				<div v-if="event.location.address" class="event-location">
-					<h3><md-icon>location_on</md-icon><span>Location</span></h3>
-					<p><b>{{event.location.name}}</b></p>
-					<p>{{event.location.address.street}}</p>
-					<p>{{event.location.address.postcode}} {{event.location.address.city}}</p>
-					<p v-if="event.location.address.county">{{event.location.address.county}}</p>
-					<p>{{event.location.address.country}}</p>
+					<router-link :to="`/location/${event.location.url}`">
+						<h3><md-icon>location_on</md-icon><span>Location</span></h3>
+						<p><b>{{event.location.name}}</b></p>
+						<p>{{event.location.address.street}}</p>
+						<p>{{event.location.address.postcode}} {{event.location.address.city}}</p>
+						<p v-if="event.location.address.county">{{event.location.address.county}}</p>
+						<p>{{event.location.address.country}}</p>
+					</router-link>
 				</div>
 
 				<hr>
@@ -203,12 +205,13 @@ export default {
 		}
 	},
 	mounted() {
-		if(this.$route.path.indexOf('archived-event') != -1 || this.$route.path.indexOf('event') != -1)
+		if(this.$route.path.indexOf('event') != -1)
 			document.getElementById('topbar').classList.add('single-page');
+
+		let urlDate = moment(this.$route.path.split('--')[1], 'DD-MM-YYYY', true);
 		
-		if(this.$route.path.indexOf('archived-event') != -1) {
+		if(urlDate.isValid() && Date.now() > moment(urlDate).format('x'))
 			this.backendEndpoint = 'archived-events';
-		}
 		
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {
