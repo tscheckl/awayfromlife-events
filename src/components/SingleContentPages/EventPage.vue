@@ -64,7 +64,7 @@
 			
 			<div slot="edit-dialogs">
 				<md-dialog ref="editEventDialog">
-					<event-form :event="JSON.parse(JSON.stringify(event))" canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
+					<event-form :event="JSON.parse(JSON.stringify(event))" edit canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
 						<h1 slot="headline">Edit Event</h1>
 					</event-form>
 				</md-dialog>
@@ -195,7 +195,7 @@ export default {
 
 			this.$http.get(backendUrl + `/api/${this.backendEndpoint}/byurl/` + this.$route.params.url)
 			.then(response => {
-				if(response.body.data) {
+				if(response.body.data) {					
 					this.loading = false;
 					this.$store.commit('setCurrentEvent', response.body.data);
 					document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
@@ -212,6 +212,7 @@ export default {
 		
 		if(urlDate.isValid() && Date.now() > moment(urlDate).format('x'))
 			this.backendEndpoint = 'archived-events';
+		
 		
 		this.$http.get(backendUrl + '/api/users/auth')
 			.then(response => {

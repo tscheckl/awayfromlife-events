@@ -11,10 +11,14 @@ function removeEmptyObjectFields(object) {
 	}
 }
 
-function addBandLabels(object) {
+function addBandLabels(object) {	
 	object.bands.forEach(band => {
-		band.label = band.name + ' - ' + band.origin.country;
+		band.label = `${band.name} - ${band.origin.country} ${!band.isValidated ?'(unverified)' :''}`;
 	});
 }
 
-export {removeEmptyObjectFields, addBandLabels};
+function addLocationLabel(location) {
+	location.label = `${location.name} - ${location.address.city} ${location.isValidated == false ?'(unverified)' :''}`;
+}
+
+export {removeEmptyObjectFields, addBandLabels, addLocationLabel};

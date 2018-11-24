@@ -69,5 +69,24 @@
 	textarea {
 		height: 135px !important;
 	}
+}
 
+@media screen and (max-width: 768px) {
+	#band_form, .band-form {
+		.single-release {
+			.release-info {
+				.md-input-container {
+					width: 100% !important;
+					margin-left: 10px;
+
+					&:first-of-type {
+						margin-bottom: 10px;
+					}
+				}
+			}
+			.md-button {
+				margin-top: 60px !important;
+			}
+		}
+	}
 }

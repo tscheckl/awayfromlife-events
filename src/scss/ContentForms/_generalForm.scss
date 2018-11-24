@@ -25,15 +25,19 @@
 			margin-top: 12px;
 		}
 
-		.not-verified-warning {
-			float: left;
-			margin-left: 20px;
-			margin-top: -10px;
-			color: $accentAccent2;
+		.clear {
+			bottom: 6px;
+		}
+	}
 
-			.md-icon {
-				transform: rotate(180deg);
-			}
+	.not-verified-warning {
+		float: left;
+		margin-left: 20px;
+		margin-top: -10px;
+		color: $accentAccent2;
+
+		.md-icon {
+			transform: rotate(180deg);
 		}
 	}
 
@@ -46,5 +50,30 @@
 
 	.submit-button {
 		margin-top: 20px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#event_form, #festival_form, #festival_event_form, #band_form, #location_form, #tour_form,
+	.event-form, .festival-form, .festival-event-form, .band-form, .location-form, .tour-form {
+		padding: 10px !important;
+
+		h1 {
+			line-height: 1.1em;
+		}
+
+		.md-input-container, p, h2, h1 {
+			margin-left: 5px !important;
+		}
+
+		.selected-tag {
+			padding-right: 40px !important;
+		}
+
+		.single-form-field {
+			.md-input-container {
+				width: calc(100% - 51px);
+			}
+		}
 	}
 }

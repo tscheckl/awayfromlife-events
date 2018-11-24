@@ -3,6 +3,8 @@ import Vue from 'vue';
 import moment from 'moment';
 import {backendUrl} from '@/secrets.js';
 
+import { addBandLabels, addLocationLabel } from '../helpers/array-object-helpers';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -53,13 +55,11 @@ export default new Vuex.Store({
 			event.formattedDate = moment(event.date).format('LL');
 			event.formattedTime = moment(event.date).format('HH:mm');
 			if (event.location.address) {
-				event.location.label = event.location.name + ' - ' + event.location.address.city;
+				addLocationLabel(event.location);
 			}
 
 			if(event.bands[0] != '') {
-				event.bands.forEach(band => {
-					band.label = band.name + ' - ' + band.origin.country;
-				})
+				addBandLabels(event);
 			}
 			state.currentEvent = JSON.parse(JSON.stringify(event));
 			
@@ -67,7 +67,7 @@ export default new Vuex.Store({
 		setCurrentLocation(state, location) {
 			if(!location.address.value) {
 				if(location.address.street && location.address.city)
-					location.address.value = location.address.street + ', ' + location.address.city;
+					location.address.value = `${location.name} - ${location.address.city} ${!location.isValidated ?'(unverified)' :''}`;
 			}
 			
 			state.currentLocation = location;

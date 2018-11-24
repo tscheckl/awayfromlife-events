@@ -29,10 +29,7 @@ Vue.use(VueAnalytics, {
 	router,
 	autoTracking: {
 		pageviewTemplate (route) {
-			let title;
-
-			console.log(route);
-			
+			let title;		
 
 			if(route.params.url) {
 				title = route.params.url
@@ -44,10 +41,7 @@ Vue.use(VueAnalytics, {
 				
 				title += ` (${route.meta.category})`;
 			}
-			else title = route.meta.title;
-
-			console.log(title);
-			
+			else title = route.meta.title;			
 			
 		  	return {
 				page: title,

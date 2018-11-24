@@ -218,16 +218,6 @@ export default {
 			}
 
 			this.$refs.snackbar.open();
-		},
-		getLocationOptions() {
-			this.$http.get(backendUrl + "/api/locations")
-				.then(response => {
-					this.backendLocations = response.body.data;
-					for(let location of this.backendLocations) {
-						location.label = location.name + ' - ' + location.address.city;
-					}
-				})
-				.catch(err => console.log(err));
 		}
 	},
 	mounted() {

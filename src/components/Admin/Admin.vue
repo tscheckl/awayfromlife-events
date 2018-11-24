@@ -136,7 +136,7 @@ import EventPage from '@/components/SingleContentPages/EventPage';
 import ChangePasswordForm from './ChangePasswordForm';
 
 import {frontEndSecret, backendUrl} from '@/secrets.js';
-import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
+import { removeEmptyObjectFields, addBandLabels, addLocationLabel } from '@/helpers/array-object-helpers.js';
 
 export default {
 	name: 'admin',
@@ -210,12 +210,7 @@ export default {
 					.catch(err => console.log(err));
 			}
 		},
-		showInfo(content, index) {	
-			console.log(this.currentCategory);
-			
-			console.log("content clicked:", content[index]);
-					
-			
+		showInfo(content, index) {			
 			document.getElementsByClassName('verify-info')[0].classList.add('show-info');
 
 			if(this.currentCategory == 'cancellations')
@@ -224,21 +219,17 @@ export default {
 			if(this.currentCategory == 'unverified Events' || this.currentCategory == 'cancellations') {
 				this.verifyData = JSON.parse(JSON.stringify(content[index]));
 				
-				this.verifyData.bands.forEach(band => {
-					band.label = band.origin ?band.name + ' - ' + band.origin.country :'';
-				});
+				addBandLabels(this.verifyData);
 
-				this.verifyData.location.label = this.verifyData.location.address ?this.verifyData.location.name + ' - ' + this.verifyData.location.address.city :'';				
+				if(this.verifyData.location.address)
+					addLocationLabel(this.verifyData.location);
+				else 
+					this.verifyData.location.label = '';
 			}
 			else if(this.currentCategory == 'unverified Festivals') {
 				this.verifyData = JSON.parse(JSON.stringify(content[index]));
 				
-				this.verifyData.event.bands.forEach(band => {
-					band.label = band.origin ?band.name + ' - ' + band.origin.country :'';
-				});
-
-				console.log("currentFestival", this.verifyData);
-				
+				addBandLabels(this.verifyData.event);
 			}
 			else {
 				this.verifyData = content[index];

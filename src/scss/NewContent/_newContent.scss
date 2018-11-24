@@ -131,11 +131,6 @@
 		.single-form-field {
 			width: 100%;
 	
-			.md-input-container {
-				float: left;
-				width: calc(100% - 65px);
-			}
-	
 			.md-button {
 				float: left;
 				margin-left: 0;
@@ -165,14 +160,19 @@
 
 @media screen and (max-width: 768px){
 	#new_event, #new_band, #new_location, #new_festival {
-		height: 100%;
 
 		h1 {
 			font-size: 2em;
+			margin-left: 0;
 		}
 
 		.step {
 			padding: 0;
+		}
+		
+
+		.add-field-btn {
+			margin-left: 0 !important;
 		}
 
 		.md-input-container, h2, p {

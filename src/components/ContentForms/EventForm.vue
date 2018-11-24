@@ -16,7 +16,7 @@
 						</md-input-container>
 					</md-layout>
 
-					<md-layout md-flex="50" md-flex-small="100">
+					<md-layout class="event-location" md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<v-select class="form-v-select"
 							 		  :options="backendLocations"
@@ -30,6 +30,10 @@
 										</span>
 							</v-select>
 						</md-input-container>
+						<p class="not-verified-warning" v-if="event.location.isValidated == false">
+							<md-icon>error_outline</md-icon>
+							This Location is not validated yet.
+						</p>
 					</md-layout>
 
 					<md-layout md-flex="100">
@@ -95,7 +99,8 @@
 			</div>
 		</form>
 
-		<md-button v-if="canSubmit" type="submit" v-on:click="$emit('submit', event)" class="md-raised md-accent submit-button">Update event</md-button>
+		<md-button v-if="canSubmit" :disabled="event.bands.every(band => !band.isValidated)" type="submit" v-on:click="$emit('submit', event)" class="md-raised md-accent submit-button">Update event</md-button>
+		<span class="not-verifiable" v-if="event.bands.every(band => !band.isValidated)">Event can not be updated, as it only contains bands that are not verified yet.</span>
 
 		<md-dialog ref="newBandDialog">
 			<new-band 
@@ -163,20 +168,32 @@ export default {
 		onSelectLocation(selected) {
 			//Set the new Event's location attribute to the ID of the selected location
 			this.event.location = selected;
+
+			if(this.event.location.isValidated == false) {
+				this.event.verifiable = false;
+			}
+			else {
+				if(!this.localBands.every(band => band.isValidated == undefined || (band.isValidated != undefined && band.isValidated != false)))
+					this.event.verifiable = false;
+				else
+					this.event.verifiable = true;
+			} 
+				
 		},
 		onSelectBand(selected, index) {		
 			//Select band into localBands array so that Vue detects the change.
 			this.localBands.splice(index, 1, selected);
 
-			if(selected != '') {
-				// console.log(this.localBands);
-				
-				// console.log(this.localBands.every(band => band.isValidated == undefined || (band.isValidated != undefined && band.isValidated == true)));
-				
-				if(!this.localBands.every(band => band.isValidated == undefined || (band.isValidated != undefined && band.isValidated != false)))
+			if(selected != '') {				
+				if(!this.localBands.every(band => band.isValidated == undefined || (band.isValidated != undefined && band.isValidated != false))) {
 					this.event.verifiable = false;
-				else
-					this.event.verifiable = true;
+				}
+				else {
+					if(this.event.location.isValidated == false)
+						this.event.verifiable = false;
+					else
+						this.event.verifiable = true;
+				}
 
 				if(this.localBands.reduce((acc, cur) => (acc != '' && cur != '')))
 					this.addBand();
@@ -211,7 +228,9 @@ export default {
 		},
 	},
 	mounted() {
-		getLocationOptions()
+		let getUnverified = !this.edit;
+
+		getLocationOptions(getUnverified)
 			.then(data => this.backendLocations = data)
 			.catch(err => console.log(err));
 		

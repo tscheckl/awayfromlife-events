@@ -75,6 +75,14 @@
 			margin-left: 15px;
 		}
 
+		.single-form-field {
+			float: left;
+		}
+
+		.add-field-btn {
+			margin-top: 15px;
+		}
+
 		.heading-additional-info {
 			margin-top: -15px;
 		}
@@ -120,6 +128,10 @@
 		}
 
 		.festival-form {
+
+			.md-input-container, h4, p, h1, h3 {
+				margin-left: 5px;
+			}
 
 			.stepper-body {
 				padding: 20px 10px;

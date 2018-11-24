@@ -168,6 +168,7 @@
 	.expanded {
 		.menu-items-list {
 			width: 250px !important;
+			overflow: auto;
 	
 			.menu-item {
 				span {

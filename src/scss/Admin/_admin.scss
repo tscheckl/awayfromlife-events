@@ -125,6 +125,7 @@
 
 			.not-verifiable {
 				margin-top: 40px;
+				text-align: center;
 				color: $accentAccent2;
 
 				.md-icon {
@@ -262,9 +263,35 @@
 
 			.verify-info {
 				display: none;
+				padding: 10px;
 
 				.close-btn {
 					display: block;
+				}
+
+				.md-input-container, p {
+					margin-left: 0;
+				}
+
+				h2 {
+					margin-left: 0;
+					padding-left: 0;
+				}
+
+				.single-form-field {
+					.md-input-container {
+						width: calc(100% - 46px);
+					}
+				}
+
+				.not-verifiable {
+					text-align: left;
+					font-size: 0.8em;
+					margin-bottom: 20px;
+				}
+
+				.verify-btn {
+					margin-bottom: 55px;
 				}
 
 				.control-buttons {

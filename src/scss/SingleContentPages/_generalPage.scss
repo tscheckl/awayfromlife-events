@@ -214,8 +214,6 @@
 
 @media screen and (max-width: 768px) {
 	#event_page, #location_page, #band_page, #festival_page, #detail_page, #not_found {
-		padding-top: 30px;
-
 		.back-button {
 			margin-left: 15px;
 		}
@@ -225,9 +223,9 @@
 			padding: 10px;
 			border-radius: 0;
 
-			.title {
+			h2 {
 				max-width: 100%;
-				font-size: 0.8em;
+				font-size: 2em;
 			}
 		}
 

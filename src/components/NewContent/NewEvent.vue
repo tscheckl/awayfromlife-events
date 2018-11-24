@@ -36,7 +36,7 @@
 							<h2>Location of the event</h2>
 						</md-layout>
 
-						<md-layout md-flex="100">
+						<md-layout md-flex="100" class="event-location">
 							<md-input-container>
 								<v-select class="form-v-select"
 										:options="backendLocations"
@@ -49,6 +49,10 @@
 											</span>
 								</v-select>
 							</md-input-container>
+							<p class="not-verified-warning" v-if="currentObject.location && currentObject.location.isValidated == false">
+								<md-icon>error_outline</md-icon>
+								This Location is not validated yet.
+							</p>
 						</md-layout>
 					</md-layout>
 
@@ -110,6 +114,10 @@
 											</span>
 								</v-select>
 							</md-input-container>
+							<p class="not-verified-warning" v-if="tourstop.location.isValidated == false">
+								<md-icon>error_outline</md-icon>
+								This Location is not validated yet.
+							</p>
 							<md-button v-on:click="removeTourStop(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove tourstop</md-tooltip>
@@ -322,11 +330,14 @@ export default {
 	methods: {
 		addEvent() {
 			this.loading = true;
-			
 			//Only go on if all required fields are filled out
 			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
 				removeEmptyObjectFields(this.newEvent);
-				
+
+				if(this.apiRoute == '/api/events' 
+				&& (this.newEvent.location.isValidated == false || this.allBandsUnverified()))
+					this.apiRoute = '/api/unvalidated-events';
+					
 				//Send new/updated event to the backend.
 				this.$http.post(backendUrl + this.apiRoute, this.newEvent)
 					.then(response => {
@@ -364,9 +375,15 @@ export default {
 						date: this.newTour.tourStops[tourstop].date,
 						ticketLink: this.newTour.ticketLink
 					}
+					
+					if(this.apiRoute == '/api/events' && this.newTour.tourStops[tourstop].location.isValidated == false)
+						this.apiRoute = '/api/unvalidated-events';
 
 					fullEvents.push(singleTourStopEvent);
 				}
+
+				if(this.apiRoute == '/api/events' && this.allBandsUnverified())
+					this.apiRoute = '/api/unvalidated-events';
 
 				this.$http.post(backendUrl + this.apiRoute + '/multiple', {list: fullEvents})
 					.then(response => {	
@@ -467,10 +484,6 @@ export default {
 			if(selected != '') {
 				if(this.currentObject.bands.reduce((acc, cur) => (acc != '' && cur != '')))
 					this.currentObject.bands.push('');
-
-				if(!selected.isValidated) {
-					this.event.verifiable = false;
-				}
 			}
 		},
 		addTourStop() {
@@ -495,6 +508,9 @@ export default {
 			if(this.currentObject.bands.length == 0)
 				this.currentObject.bands[0] = '';
 		},
+		allBandsUnverified() {
+			return this.currentObject.bands.every(band => band.isValidated == false);
+		}
 	},
 	mounted() {	
 		this.resetEventFields();

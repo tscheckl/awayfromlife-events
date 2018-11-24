@@ -4,6 +4,7 @@
 
 #tour_form, .tour-form {
 	.tourstop {
+		position: relative;
 		margin-top: 20px;
 		width: 100%;
 
@@ -19,8 +20,17 @@
 			padding-top: 0;
 			float: left;
 		}
+		
+		.not-verified-warning {
+			position: absolute;
+			bottom: -10px;
+			left: 40%;
+		}
 
 		.datepicker-trigger {
+			label {
+				margin-left: 0 !important;
+			}
 			.md-input-container {
 				width: 90% !important;
 
@@ -45,7 +55,8 @@
 		}
 
 		.md-button {
-			margin: 0 !important;
+			margin-top: -10px !important;
+			margin-left: 10px !important;
 		}
 	}
 }
@@ -56,8 +67,14 @@
 			position: relative;
 			margin-bottom: 30px;
 
+			.not-verified-warning {
+				position: absolute;
+				bottom: -20px;
+				left: 0%;
+			}
+
 			.md-input-container, .datepicker-trigger {
-				width: 75% !important;
+				width: calc(100% - 51px) !important;
 				margin-top: 0;
 				min-height: 0;
 				padding-top: 0;
@@ -85,7 +102,7 @@
 
 			.md-button {
 				position: absolute;
-				right: 0;
+				margin-top: 12px !important;
 				top: 25px;
 			}
 		}
