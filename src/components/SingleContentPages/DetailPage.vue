@@ -24,15 +24,24 @@
 		</div>
 
 		<div class="content">
-			<slot name="important-information"></slot>
+			<div class="content-information">
+				<slot name="important-information"></slot>
 			
-			<div class="content-header">
-				<slot name="title"></slot>
-			</div>
+				<div class="content-header">
+					<slot name="title"></slot>
+				</div>
 
-			<div class="content-body">
-				<slot></slot>
+				<div class="content-body">
+					<slot></slot>
+				</div>
 			</div>
+			<div class="image-container">
+				<div class="image"></div>
+				<div class="image-color-block"></div>
+			</div>
+			<!-- <svg class="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+				<polygon class="svg-content" fill="#fdfdfd" points="0,0 0,100 30, 100"/>
+			</svg> -->
 			
 			<div class="loading" v-show="loading">
 				<div class="darken"></div>

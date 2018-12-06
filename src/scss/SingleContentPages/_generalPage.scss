@@ -4,7 +4,10 @@
 	padding: 30px 0;
 }
 
-#event_page, #location_page, #band_page, #festival_page, #detail_page, #not_found {
+// #event_page, 
+#location_page, #band_page, #festival_page, 
+// #detail_page, 
+#not_found {
 	width: 100%;
 	margin: 0;
 	position: relative;
@@ -205,7 +208,10 @@
 }
 
 @media screen and (max-width: 1390px) {
-	#event_page, #location_page, #band_page, #festival_page, #detail_page, #not_found {
+	// #event_page, 
+	#location_page, #band_page, #festival_page, 
+	// #detail_page, 
+	#not_found {
 		.content {
 			margin-bottom: 0;
 		}
@@ -213,7 +219,10 @@
 }
 
 @media screen and (max-width: 768px) {
-	#event_page, #location_page, #band_page, #festival_page, #detail_page, #not_found {
+	// #event_page, 
+	#location_page, #band_page, #festival_page, 
+	// #detail_page, 
+	#not_found {
 		.back-button {
 			margin-left: 15px;
 		}
