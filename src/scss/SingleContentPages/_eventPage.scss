@@ -267,6 +267,147 @@
 		.content-information {
 			width: 60%;
 			// max-height: 80vh;
+
+			.detail-info {
+				display: flex;
+				align-items: center;
+				width: 50%;
+				float: left;
+
+				.category {
+					display: inline-block;
+					text-align: center;
+
+					svg {
+						margin: 0 auto;
+					}
+
+					h4 {
+						margin: 0;
+						margin-top: 3px;
+						font-family: "Montserrat";
+						font-weight: 600;
+						font-size: 1.15em;
+						white-space: nowrap;
+					}
+				}
+
+				.category-content {
+					margin: 0;
+					margin-left: 20px;
+					font-size: 1.2em;
+					font-family: "Montserrat";
+					font-weight: 600;
+				}
+			}
+
+			.location {
+				align-items: flex-start;
+
+				.category-content {
+					h4 {
+						margin: 0;
+						font-family: "Montserrat";
+						font-weight: 600;
+					}
+					p {
+						margin: 0;
+						margin-top: -2px;
+						font-size: 0.9em;
+						font-family: "Montserrat";
+						font-weight: 500;
+	
+					}
+				}
+			}
+
+			.line-up {
+				margin-top: 30px;
+				width: 100%;
+				align-items: flex-start;
+
+				ul {
+					list-style: none;
+					flex: 1;
+					margin-left: 20px;
+					display: flex;
+					flex-wrap: wrap;
+					align-items: flex-start;
+
+					li {
+						width: calc(50% - 30px);
+						display: inline-block;
+						font-family: "Montserrat";
+						font-weight: 600;	
+						font-size: 1.5em;
+						margin-bottom: 25px;
+						margin-top: 0;
+
+						a {
+							display: inline-block;
+							color: #232323;
+							&:after {
+								content: " ";
+								width: 0%;
+								margin: 0 auto;
+								margin-top: 2px;
+								display: block;
+								height: 2px;
+								background-color: $accentAccent2;
+								transition: width .3s ease-out;
+							}
+
+							&:hover {
+								&:after {
+									width: 100%;
+								}
+							}
+						}
+
+						&:nth-child(odd) {						
+							margin-right: 30px;
+						}
+
+						&:nth-of-type(-n+4) {
+							font-size: 1.65em;
+						}
+
+						&:nth-of-type(-n+2) {
+							font-size: 1.8em;
+						}
+					}
+				}
+
+				.ticket-link {
+					display: flex;
+					margin-top: 20px;
+					padding: 5px 12px;
+					align-items: center;
+					background-color: $accentAccent2;
+					color: $primaryLighten5;
+					border-radius: 3px;
+					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+					span {
+						margin-top: 3px;
+						margin-left: 10px;
+						font-family: "Montserrat";
+						font-weight: 600;
+						font-size: 1.4em;
+					}
+				}
+			}
+
+			.description {
+				width: 100%;
+				margin-top: 30px;
+				align-items: flex-start;
+
+				p {
+					font-family: "Open Sans";
+					font-weight: normal;
+				}
+			}
 		}
 
 		.title {
@@ -296,7 +437,7 @@
 
 		.image {
 			width: 100%;
-			background-image: url("https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/47391860_2167092076886920_4202536004902453248_n.jpg?_nc_cat=100&_nc_ht=scontent-frx5-1.xx&oh=4dff84ce7d1036232886f122e03a6135&oe=5CA75829");
+			background-image: url("https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/47075490_10157095168284728_4432694132539916288_o.jpg?_nc_cat=105&_nc_ht=scontent-frx5-1.xx&oh=b039154532ea2b3c4f8e9ab6d308eea9&oe=5C69AEE0");
 			background-size: cover;
 			background-position: center;
 			background-color: #232323;
