@@ -250,8 +250,9 @@
 
 	.content {
 		max-width: 1400px;
-		min-height: 400px;
-		height: 80vh;
+		min-height: 550px;
+		// height: 80%;
+		height: 72vh;
 		margin: 20px auto;
 		margin-top: 0;
 		margin-bottom: 30px;
@@ -442,6 +443,7 @@
 			background-position: center;
 			background-color: #232323;
 			overflow: hidden;
+			cursor: pointer;
 
 			&:after {
 				position:absolute;
@@ -453,10 +455,11 @@
 				height:120%;
 				width: 120px;
 				background-color: #fdfdfd;
+				cursor: auto;
 			}
 		}
 
-		.image-color-block  {
+		.image-color-block {
 			width: 15px;
 			right: calc(100% - 55px);
 			background-color: $accentAccent2;
@@ -465,8 +468,16 @@
 	}
 
 	.lightbox {
-		display: none;
+		width: 100vw;
+		height: 100vh;
+		top: calc(0vh - 64px);
+		position: absolute;
 		z-index: 999;
+		// Attributes that will be changed by JS
+		display: none;
+		opacity: 0;
+		transition: opacity .2s ease-out;
+
 
 		.darken {
 			position: fixed;
@@ -475,6 +486,16 @@
 			top: 0;
 			left: 0;
 			background-color: rgba(0,0,0,0.6);
+			z-index: 998;
+		}
+		
+		img {
+			position: absolute;
+			max-height: 90vh;
+			max-width: 90vh;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
 			z-index: 999;
 		}
 

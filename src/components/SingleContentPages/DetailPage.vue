@@ -1,58 +1,60 @@
 <template>
 	<div id="detail_page">
-		<div class="page-header">
-			<div class="left-container">
-				<div class="edit-buttons">
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="$emit('edit')">
-						<md-icon>edit</md-icon>
-						<md-tooltip md-direction="bottom">edit band</md-tooltip>	
-					</md-button>
-					
-					<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="$refs['confirmDeletionDialog'].open()">
-						<md-icon>delete</md-icon>
-						<md-tooltip md-direction="bottom">delete band</md-tooltip>
-					</md-button>
-					
-					<slot name="additonal-edit-buttons"></slot>
+		<div class="page-wrapper">
+			<div class="page-header">
+				<div class="left-container">
+					<div class="edit-buttons">
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="$emit('edit')">
+							<md-icon>edit</md-icon>
+							<md-tooltip md-direction="bottom">edit band</md-tooltip>	
+						</md-button>
+						
+						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="$refs['confirmDeletionDialog'].open()">
+							<md-icon>delete</md-icon>
+							<md-tooltip md-direction="bottom">delete band</md-tooltip>
+						</md-button>
+						
+						<slot name="additonal-edit-buttons"></slot>
 
-					<md-button class="md-icon-button edit-button" v-on:click="$refs['reportDialog'].open()">
-						<md-icon>report</md-icon>
-						<md-tooltip md-direction="bottom">report event</md-tooltip>
-					</md-button>
+						<md-button class="md-icon-button edit-button" v-on:click="$refs['reportDialog'].open()">
+							<md-icon>report</md-icon>
+							<md-tooltip md-direction="bottom">report event</md-tooltip>
+						</md-button>
+					</div>
 				</div>
 			</div>
+
+			<div class="content">
+				<div class="content-information">
+					<slot name="important-information"></slot>
+				
+					<div class="content-header">
+						<slot name="title"></slot>
+					</div>
+
+					<div class="content-body">
+						<slot></slot>
+					</div>
+				</div>
+				<div class="image-container" v-on:click="showImage(true)">
+					<div class="image"></div>
+					<div class="image-color-block"></div>
+				</div>
+				
+				<div class="loading" v-show="loading">
+					<div class="darken"></div>
+					<md-spinner md-indeterminate class="md-accent"></md-spinner>
+				</div>
+			</div>
+
 		</div>
-
-		<div class="content">
-			<div class="content-information">
-				<slot name="important-information"></slot>
-			
-				<div class="content-header">
-					<slot name="title"></slot>
-				</div>
-
-				<div class="content-body">
-					<slot></slot>
-				</div>
-			</div>
-			<div class="image-container" v-on:click="showImage(true)">
-				<div class="image"></div>
-				<div class="image-color-block"></div>
-			</div>
-			
-			<div class="loading" v-show="loading">
-				<div class="darken"></div>
-				<md-spinner md-indeterminate class="md-accent"></md-spinner>
-			</div>
-		</div>
-
 		<div class="color-block"></div>
 
 		<div class="lightbox">
 			<div class="darken" v-on:click="showImage(false)"></div>
-			<div class="image-container" v-on:click="showImage(false)">
+			<!-- <div class="image-container" v-on:click="showImage(false)"> -->
 				<img v-on:click="showImage(true)" src="https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/47075490_10157095168284728_4432694132539916288_o.jpg?_nc_cat=105&_nc_ht=scontent-frx5-1.xx&oh=b039154532ea2b3c4f8e9ab6d308eea9&oe=5C69AEE0" alt="">
-			</div>
+			<!-- </div> -->
 		</div>
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{submitStatus}}</span>
@@ -118,10 +120,22 @@ export default {
 				})
 		},
 		showImage(openLightBox) {
-			if(openLightBox)
+			if(openLightBox) {
+				window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+
 				document.getElementsByClassName('lightbox')[0].style.display = 'block';
-			else 
-				document.getElementsByClassName('lightbox')[0].style.display = 'none';
+				setTimeout(() => {
+					document.getElementsByClassName('lightbox')[0].style.opacity = '1';
+				}, 100);
+				document.body.style.overflow = 'hidden';
+			}
+			else  {
+				document.getElementsByClassName('lightbox')[0].style.opacity = '0';
+				setTimeout(() => {
+					document.getElementsByClassName('lightbox')[0].style.display = 'none';
+				document.body.style.overflow = 'auto';
+				}, 100);
+			}
 		}
 	},
 	mounted() {
