@@ -35,13 +35,10 @@
 					<slot></slot>
 				</div>
 			</div>
-			<div class="image-container">
+			<div class="image-container" v-on:click="showImage(true)">
 				<div class="image"></div>
 				<div class="image-color-block"></div>
 			</div>
-			<!-- <svg class="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-				<polygon class="svg-content" fill="#fdfdfd" points="0,0 0,100 30, 100"/>
-			</svg> -->
 			
 			<div class="loading" v-show="loading">
 				<div class="darken"></div>
@@ -51,6 +48,12 @@
 
 		<div class="color-block"></div>
 
+		<div class="lightbox">
+			<div class="darken" v-on:click="showImage(false)"></div>
+			<div class="image-container" v-on:click="showImage(false)">
+				<img v-on:click="showImage(true)" src="https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/47075490_10157095168284728_4432694132539916288_o.jpg?_nc_cat=105&_nc_ht=scontent-frx5-1.xx&oh=b039154532ea2b3c4f8e9ab6d308eea9&oe=5C69AEE0" alt="">
+			</div>
+		</div>
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{submitStatus}}</span>
 			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
@@ -114,6 +117,12 @@ export default {
 					this.$refs.snackbar.open();
 				})
 		},
+		showImage(openLightBox) {
+			if(openLightBox)
+				document.getElementsByClassName('lightbox')[0].style.display = 'block';
+			else 
+				document.getElementsByClassName('lightbox')[0].style.display = 'none';
+		}
 	},
 	mounted() {
 		this.$http.get(backendUrl + '/api/users/auth')
