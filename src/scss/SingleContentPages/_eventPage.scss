@@ -255,7 +255,7 @@
 		height: 72vh;
 		margin: 20px auto;
 		margin-top: 0;
-		margin-bottom: 30px;
+		margin-bottom: 0px;
 		padding: 5px 50px;
 		position: relative;
 		background-color: #fdfdfd;
@@ -470,7 +470,10 @@
 	.lightbox {
 		width: 100vw;
 		height: 100vh;
+		//Subtract height of top-bar from top-position
 		top: calc(0vh - 64px);
+		//Subtract width of sidenav from left position
+		left: -80px;
 		position: absolute;
 		z-index: 999;
 		// Attributes that will be changed by JS
@@ -492,7 +495,7 @@
 		img {
 			position: absolute;
 			max-height: 90vh;
-			max-width: 90vh;
+			max-width: 90vw;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
