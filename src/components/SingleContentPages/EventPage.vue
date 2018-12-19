@@ -3,6 +3,7 @@
 		<detail-page
 			contentType="event"
 			:id="event._id"
+			:image="event.image"
 			:loading="loading"
 			:submitStatus="submitStatus"
 			v-on:edit="openDialog('editEventDialog')">

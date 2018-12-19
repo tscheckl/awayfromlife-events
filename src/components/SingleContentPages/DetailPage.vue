@@ -52,9 +52,8 @@
 
 		<div class="lightbox">
 			<div class="darken" v-on:click="showImage(false)"></div>
-			<!-- <div class="image-container" v-on:click="showImage(false)"> -->
-				<img v-on:click="showImage(true)" src="https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/47075490_10157095168284728_4432694132539916288_o.jpg?_nc_cat=105&_nc_ht=scontent-frx5-1.xx&oh=b039154532ea2b3c4f8e9ab6d308eea9&oe=5C69AEE0" alt="">
-			<!-- </div> -->
+				<img v-on:click="showImage(true)" :src="imageUrl" alt="">
+				<button class="close-btn" v-on:click="showImage(false)"><md-icon>close</md-icon></button>
 		</div>
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{submitStatus}}</span>
@@ -94,7 +93,16 @@ export default {
 		},
 		contentType: String,
 		submitStatus: String,
-		id: String
+		id: String,
+		image: String
+	},
+	computed: {
+		imageUrl() {
+			if(this.image)
+				return backendUrl + '/' + this.image.replace(/\\/g, '/');
+			else 
+				return '/static/placeholders/' + (Math.floor(Math.random() * 17) + 1) + '.jpg';
+		}
 	},
 	data() {
 		return {
@@ -146,6 +154,9 @@ export default {
 			.catch(err => this.isAuthenticated = false);
 			
 		document.getElementById('topbar').classList.add('single-page');
+		console.log('image url', this.imageUrl);
+		
+		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.imageUrl})`;
 	}
 }
 </script>

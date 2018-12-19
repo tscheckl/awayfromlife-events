@@ -79,6 +79,19 @@
 							</div>
 						</md-layout>
 					</md-layout>
+					
+					<md-layout md-flex="50">
+						<md-layout>
+							<h2>Image</h2>
+						</md-layout>
+
+						<md-layout md-flex="100">
+							<md-input-container>
+								<label>Only Images</label>
+								<md-file v-on:selected="uploadFile" accept="image/*"></md-file>
+							</md-input-container>
+						</md-layout>
+					</md-layout>
 
 					<md-layout md-flex="100" v-if="!createEvent">
 						<h2>Tourstops</h2>
@@ -269,7 +282,7 @@ export default {
 		edit: {
 			type: Boolean,
 			default: false
-		},
+		}
 	},
 	watch: {
 		newEventDate() {
@@ -324,29 +337,40 @@ export default {
 			currentObject: {},
 			backendBands: [],
 			backendLocations: [],
-			createdContent: ''
+			createdContent: '',
+			eventImage: null
 		}
 	},
 	methods: {
 		addEvent() {
 			this.loading = true;
+			// return;
+			
 			//Only go on if all required fields are filled out
 			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
 				removeEmptyObjectFields(this.newEvent);
-
-				if(this.apiRoute == '/api/events' 
-				&& (this.newEvent.location.isValidated == false || this.allBandsUnverified()))
-					this.apiRoute = '/api/unvalidated-events';
+				
+				var formData = new FormData();
+				formData.append('image', this.eventImage, 'event-image.png');
+				formData.append('json', JSON.stringify(this.newEvent));
+				
+				// if(this.apiRoute == '/api/events' 
+				// && (this.newEvent.location.isValidated == false || this.allBandsUnverified()))
+					// this.apiRoute = '/api/unvalidated-events';
 					
 				//Send new/updated event to the backend.
-				this.$http.post(backendUrl + this.apiRoute, this.newEvent)
+				this.$http.post(backendUrl + '/api/events/withImage', formData)
 					.then(response => {
+						console.log(response);
+						
 						this.$emit('success');
 						this.loading = false;
 
 						//Reset all fields
 						this.resetEventFields();
-					}).catch(err => {						
+					}).catch(err => {
+						console.log(err);
+												
 						this.submitStatus = err.body.message;
 						this.$refs.snackbar.open();
 						this.loading = false;
@@ -510,6 +534,9 @@ export default {
 		},
 		allBandsUnverified() {
 			return this.currentObject.bands.every(band => band.isValidated == false);
+		},
+		uploadFile(file) {
+			this.eventImage = file[0];			
 		}
 	},
 	mounted() {	
