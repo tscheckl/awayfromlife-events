@@ -471,7 +471,10 @@
 	.lightbox {
 		width: 100vw;
 		height: 100vh;
+		//Subtract height of top-bar from top-position
 		top: calc(0vh - 64px);
+		//Subtract width of sidenav from left position
+		left: -80px;
 		position: absolute;
 		z-index: 999;
 		// Attributes that will be changed by JS
