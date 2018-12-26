@@ -69,6 +69,14 @@ export default new Vuex.Store({
 				if(location.address.street && location.address.city)
 					location.address.value = `${location.name} - ${location.address.city} ${!location.isValidated ?'(unverified)' :''}`;
 			}
+
+			if (!/^(f|ht)tps?:\/\//i.test(location.website)) {
+				location.website = "http://" + location.website;
+			}
+
+			if (!/^(f|ht)tps?:\/\//i.test(location.facebookUrl)) {
+				location.facebookUrl = "http://" + location.facebookUrl;
+			}
 			
 			state.currentLocation = location;
 		},

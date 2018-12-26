@@ -98,7 +98,7 @@ export default {
 	},
 	computed: {
 		imageUrl() {
-			if(this.image)
+			if(this.image && this.image.length > 0)
 				return backendUrl + '/' + this.image.replace(/\\/g, '/');
 			else 
 				return '/static/placeholders/' + (Math.floor(Math.random() * 17) + 1) + '.jpg';

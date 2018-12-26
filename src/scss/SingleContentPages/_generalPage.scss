@@ -5,7 +5,8 @@
 }
 
 // #event_page, 
-#location_page, #band_page, #festival_page, 
+// #location_page, 
+#band_page, #festival_page, 
 // #detail_page, 
 #not_found {
 	width: 100%;
@@ -209,7 +210,8 @@
 
 @media screen and (max-width: 1390px) {
 	// #event_page, 
-	#location_page, #band_page, #festival_page, 
+	// #location_page, 
+	#band_page, #festival_page, 
 	// #detail_page, 
 	#not_found {
 		.content {
@@ -220,7 +222,8 @@
 
 @media screen and (max-width: 768px) {
 	// #event_page, 
-	#location_page, #band_page, #festival_page, 
+	// #location_page, 
+	#band_page, #festival_page, 
 	// #detail_page, 
 	#not_found {
 		.back-button {
