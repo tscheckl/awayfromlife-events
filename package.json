@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
-    "build": "node build/build.js"
+    "build": "node src/create-env.js && node build/build.js"
   },
   "dependencies": {
     "date-fns": "^1.29.0",
