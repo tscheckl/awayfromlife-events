@@ -95,7 +95,6 @@ let routerStack = [window.location.hash.substr(1)];
 
 router.beforeEach((to, from, next) => {
 	window.scrollTo(0, 0);
-	console.log("netlify hat da was für uns vorbereitet: ", process.env.REPOSITORY_URL);
 	
 	if(to.fullPath == routerStack[routerStack.length-2]) {
 		store.commit('setAnimation', 'slide-out');
