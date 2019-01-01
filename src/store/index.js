@@ -70,11 +70,11 @@ export default new Vuex.Store({
 					location.address.value = `${location.name} - ${location.address.city} ${!location.isValidated ?'(unverified)' :''}`;
 			}
 
-			if (!/^(f|ht)tps?:\/\//i.test(location.website)) {
+			if (location.website && !/^(f|ht)tps?:\/\//i.test(location.website)) {
 				location.website = "http://" + location.website;
 			}
 
-			if (!/^(f|ht)tps?:\/\//i.test(location.facebookUrl)) {
+			if (location.facebookUrl && !/^(f|ht)tps?:\/\//i.test(location.facebookUrl)) {
 				location.facebookUrl = "http://" + location.facebookUrl;
 			}
 			

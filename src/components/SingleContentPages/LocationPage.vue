@@ -120,6 +120,8 @@ export default {
 		$route() {
 			if(this.$route.params.url != this.location.url)
 				this.getLocationByUrl();
+
+			this.checkQuery();
 		}
 	},
 	computed: {
@@ -237,18 +239,21 @@ export default {
 				this.$router.push({query: { tab: 'upcoming-events'}});
 			else
 				this.$router.push({query: { tab: 'past-events'}});
-		} 
+		}, 
+		checkQuery() {
+			let queryTab = this.$route.query.tab;
+			if(queryTab) {
+				if(queryTab === 'information')
+					this.activeTab = 0;
+				else if(queryTab === 'upcoming-events')
+					this.activeTab = 1;
+				else
+					this.activeTab = 2;
+			}
+		}
 	},
 	created() {
-		let queryTab = this.$route.query.tab;
-		if(queryTab) {
-			if(queryTab === 'information')
-				this.activeTab = 0;
-			else if(queryTab === 'upcoming-events')
-				this.activeTab = 1;
-			else
-				this.activeTab = 2;
-		}
+		this.checkQuery();
 	},
 	mounted() {
 		document.getElementById('topbar').classList.add('single-page');
