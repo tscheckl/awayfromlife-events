@@ -352,7 +352,7 @@ export default {
 				
 				var formData = new FormData();
 				formData.append('image', this.eventImage, 'event-image.png');
-				formData.append('json', JSON.stringify(this.newEvent));
+				formData.append('data', JSON.stringify(this.newEvent));
 				
 				// if(this.apiRoute == '/api/events' 
 				// && (this.newEvent.location.isValidated == false || this.allBandsUnverified()))

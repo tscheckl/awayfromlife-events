@@ -1,4 +1,5 @@
-		
+import moment from 'moment';
+
 //Function that removes empty strings from all array-attributes of a given object.
 function removeEmptyObjectFields(object) {
 	for(let attrib in object) {					
@@ -21,4 +22,17 @@ function addLocationLabel(location) {
 	location.label = `${location.name} - ${location.address.city} ${location.isValidated == false ?'(unverified)' :''}`;
 }
 
-export {removeEmptyObjectFields, addBandLabels, addLocationLabel};
+function sortEventsByMonth(events) {
+	let sortedEvents = {};
+	events.forEach(event => {
+		let eventDateMonth = moment(event.date).format('MMMM YYYY');
+		if(!sortedEvents[eventDateMonth])
+			sortedEvents[eventDateMonth] = [event];
+		else 
+			sortedEvents[eventDateMonth].push(event);
+	});
+
+	return sortedEvents;
+}
+
+export {removeEmptyObjectFields, addBandLabels, addLocationLabel, sortEventsByMonth};
