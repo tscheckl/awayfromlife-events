@@ -70,17 +70,17 @@ export default new Vuex.Store({
 					location.address.value = `${location.name} - ${location.address.city} ${!location.isValidated ?'(unverified)' :''}`;
 			}
 
-			if (location.website && !/^(f|ht)tps?:\/\//i.test(location.website)) {
-				location.website = "http://" + location.website;
-			}
-
-			if (location.facebookUrl && !/^(f|ht)tps?:\/\//i.test(location.facebookUrl)) {
-				location.facebookUrl = "http://" + location.facebookUrl;
-			}
+			location.website = fixUrl(location.website);
+			location.facebookUrl = fixUrl(location.facebookUrl);
 			
 			state.currentLocation = location;
 		},
-		setCurrentBand(state, band) {			
+		setCurrentBand(state, band) {
+			band.website = fixUrl(band.website);
+			band.facebookUrl = fixUrl(band.facebookUrl);
+			band.soundcloudUrl = fixUrl(band.soundcloudUrl);
+			band.bandcampUrl = fixUrl(band.bandcampUrl);
+
 			state.currentBand = band;
 		},
 		setCurrentFestival(state, festival) {
@@ -114,3 +114,11 @@ export default new Vuex.Store({
 		}
 	}
 });
+
+function fixUrl(url) {
+	if (url && !/^(f|ht)tps?:\/\//i.test(url)) {
+		return 'http://' + url;
+	}
+
+	return url;
+}
