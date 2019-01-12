@@ -286,11 +286,15 @@ export default {
 					else 
 						this.newBand.genre[genre] = this.newBand.genre[genre].name;
 				}
+
+				var formData = new FormData();
+				// formData.append('image', this.eventImage, 'event-image.png');
+				formData.append('data', JSON.stringify(this.newBand));
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
-				let editBand = this.edit?'/' + this.newBand._id: '';
+				let editBand = this.edit?'/withImage/' + this.newBand._id: '/withImage';
 
-				this.$http[requestType](backendUrl + this.apiRoute + editBand, this.newBand)
+				this.$http[requestType](backendUrl + this.apiRoute + editBand, formData)
 					.then(response => {	
 						this.emitSuccess();
 						vm.loading = false;

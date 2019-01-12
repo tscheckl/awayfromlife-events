@@ -199,9 +199,9 @@
 			padding: 5px 0;
 			// max-height: 80vh;
 
-			.information-tab {
+			.information-tab, .discography-tab {
 				padding-left: 0;
-				
+
 				.detail-info {
 					display: flex;
 					align-items: center;
@@ -343,10 +343,101 @@
 					.category {
 						padding-left: 0px;
 					}
+
+					.founding-date {
+						font-family: "Montserrat";
+						margin-bottom: 0;
+					}
 	
 					p {
+						margin-top: 5px;
 						font-family: "Open Sans";
 						font-weight: normal;
+					}
+				}
+			}
+
+			.discography-tab {
+				.record-label {
+					width: 100%;
+
+					.category {
+						h4 {
+							margin-left: -7px;
+						}
+					}
+				}
+
+				.releases {
+					width: 100%;
+					margin-top: 25px;
+					position: relative;
+					align-items: flex-start;
+
+					.category {
+						padding-left: 10px;
+					}
+
+					.category-content {
+						height: 100%;
+						position: relative;
+						margin-top: 15px;
+
+						&:before {
+							content: "";
+							display: block;
+							position: absolute;
+							width: 3px;
+							margin-left: 50px;
+							min-height: 100%;
+							background-color: $accentAccent2;
+							border-radius: 50px;
+							z-index: 0;
+						}
+
+						div {
+							margin-bottom: 40px;
+							position: relative;
+							width: 100%;
+							.release-year {
+								display: inline-block;
+								width: 60px;
+								color: $accentAccent2;
+
+								&:after {
+									content: "";
+									display: inline-block;
+									position: relative;
+									float: right;
+									width: 12px;
+									height: 12px;
+									margin-top: 3px;
+									margin-right: 2px;
+									background-color: #fafafa;
+									border: 3px solid $accentAccent2;
+									border-radius: 50px;
+									z-index: 5;
+								}
+							}
+
+							.release-name {
+								font-weight: 700;
+								display: block;
+								width: 100%;
+								margin-left: 65px;
+								padding-right: 60px;
+								margin-top: -20px;
+								// position: absolute;
+							}
+
+							&:first-of-type {
+								margin-top: 15px;
+							}
+
+							&:last-of-type {
+								margin-bottom: 30px;
+							}
+						}
 					}
 				}
 			}
@@ -455,11 +546,11 @@
 			right: 0px;
 		}
 
-		.image, .image-color-block {
+		.image, .image-color-block, .image-loading-indicator {
 			position: absolute;
 		}
 
-		.image {
+		.image, .image-loading-indicator {
 			width: 20vw;
 			min-width: 200px;
 			max-width: 350px;
@@ -477,6 +568,12 @@
 			cursor: pointer;
 			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 			z-index: 999;
+		}
+
+		.image-loading-indicator {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
 		.image-color-block {
@@ -563,7 +660,7 @@
 				.title {
 					font-size: 3.5em;
 					line-height: 0.9em;
-					margin-left: 20px;
+					// margin-left: 20px;
 				}
 				.information-tab {
 					.title {
@@ -583,17 +680,68 @@
 						.category {
 							width: 70px;
 							text-align: center;
+
+							svg {
+								width: 40px;
+							}
+
+							h4 {
+								font-size: 1.1em;
+							}
 						}
 					}
 
 					.address {
-						padding-left: 0;
+						padding-left: 5px;
 					}
 
 					.additional-information {
+						align-items: start;
+
 						.category {
-							margin-left: -5px;
+							margin-left: -3px;
 							width: 100px;
+						}
+
+						.category-content {
+							a {
+								width: 100px;
+								margin-bottom: 15px;
+								margin-left: 5px;
+								// width: 200px;
+								// padding: 2px;
+								// border-radius: 3px;
+								// box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+								svg {
+									// box-shadow: none;
+								}
+
+								h4 {
+									margin: 0 5px;
+									font-size: 1em;
+									// margin: 0;
+									// padding: 0 5px;
+									// color: #fafafa;
+								}
+							}
+
+							// .facebook {
+							// 	background-color: #1C74BB;
+							// }
+		
+							// .website {
+							// 	padding-left: 5px;
+							// 	background-color: $primary;
+							// }
+	
+							// .soundcloud {
+							// 	background-color: #FE6D35;
+							// }
+	
+							// .bandcamp {
+							// 	background-color: #629AA9;
+							// }
 						}
 					}
 
@@ -601,16 +749,33 @@
 						display: block;
 	
 						.category {
-							
-						padding-left: 10px;
+							width: auto;
+							display: flex;
+							justify-content: start;
+							align-items: center;
+							padding-left: 10px;
+							border-bottom: 1px solid $accentAccent2;
+
+							svg {
+								margin: 0;
+								margin-left: 10px;
+							}
+
+							svg, h4 {
+								display: inline-block;
+							}
+
 							h4 {
-								margin-left: -8px;
+								margin-left: 10px;
+							}
+
+							br {
+								display: none;
 							}
 						}
 	
 						.category-content {
 							margin-top: -5px;
-							margin-left: 0;
 
 							p {
 								line-height: 1.35em;

@@ -37,7 +37,10 @@
 					</div>
 				</div>
 				<div class="image-container" v-on:click="showImage(true)">
-					<div class="image"></div>
+					<div v-show="this.imageUrl" class="image"></div>
+					<div v-show="!this.imageUrl" class="image-loading-indicator">
+						<md-spinner md-indeterminate></md-spinner>
+					</div>
 					<div class="image-color-block"></div>
 				</div>
 				
@@ -100,8 +103,13 @@ export default {
 		imageUrl() {
 			if(this.image && this.image.length > 0)
 				return backendUrl + '/' + this.image.replace(/\\/g, '/');
-			else 
-				return '/static/placeholders/' + (Math.floor(Math.random() * 17) + 1) + '.jpg';
+			
+			return null;
+		}
+	},
+	watch: {
+		imageUrl() {
+			document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.imageUrl})`;
 		}
 	},
 	data() {
@@ -154,7 +162,6 @@ export default {
 			.catch(err => this.isAuthenticated = false);
 			
 		document.getElementById('topbar').classList.add('single-page');
-		console.log('image url', this.imageUrl);
 		
 		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.imageUrl})`;
 	}

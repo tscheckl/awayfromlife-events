@@ -408,11 +408,11 @@
 			right: 0px;
 		}
 
-		.image, .image-color-block {
+		.image, .image-color-block, .image-loading-indicator {
 			position: absolute;
 		}
 
-		.image {
+		.image, .image-loading-indicator {
 			width: 20vw;
 			min-width: 200px;
 			max-width: 350px;
@@ -430,6 +430,12 @@
 			cursor: pointer;
 			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 			z-index: 999;
+		}
+
+		.image-loading-indicator {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
 		.image-color-block {

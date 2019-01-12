@@ -4,6 +4,7 @@
 			contentType="location"
 			:id="location._id"
 			:loading="loading"
+			:image="location.image ?location.image[2] :null"
 			:submitStatus="submitStatus"
 			v-on:edit="openDialog('editLocationDialog')">
 
@@ -69,7 +70,7 @@
 								<md-card v-for="(event, j) in month" :key="j" md-with-hover>
 									<router-link :to="`/event/${event.url}`">
 										<md-card-media>
-											<img :src="event.image[1] ?`${baseUrl}/${event.image[1]}` :'/static/placeholders/1.jpg'" alt="People">
+											<img :src="`${baseUrl}/${event.image[1]}`" alt="People">
 										</md-card-media>
 										<div class="color-block"></div>
 										<div class="card-content">
@@ -195,7 +196,7 @@ export default {
 			this.loading = true;
 			this.locationEvents = [];
 
-			this.$http.get(backendUrl + '/api/locations/events/' + this.location._id)
+			this.$http.get(`${backendUrl}/api/locations/${this.location._id}/upcomingEvents`)
 			.then(response => {
 				if(!response.body.message) {
 					this.locationEvents = response.body.data;

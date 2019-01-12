@@ -428,7 +428,7 @@
 			right: 0px;
 		}
 
-		.image, .image-color-block {
+		.image, .image-color-block, .image-loading-indicator {
 			margin-top: -5px;
 			margin-right: -50px;
 			position: absolute;
@@ -437,7 +437,7 @@
 			right: 0;
 		}
 
-		.image {
+		.image, .image-loading-indicator {
 			width: 100%;
 			background-image: url("");
 			background-size: cover;
@@ -458,6 +458,12 @@
 				background-color: #fdfdfd;
 				cursor: auto;
 			}
+		}
+
+		.image-loading-indicator {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
 		.image-color-block {
