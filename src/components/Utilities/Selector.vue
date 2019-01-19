@@ -1,7 +1,7 @@
 <template>
 	<div id="selector">
 		<label for="selector-input">{{selectLabel}}</label>
-		<div id="selector-input" v-on:click="showList = !showList">{{currentlySelected[label] ?currentlySelected[label] :currentlySelected }}</div>
+		<div id="selector-input" v-on:click="showList = !showList"><span>{{currentlySelected[label] ?currentlySelected[label] :currentlySelected }}</span></div>
 
 		<ul class="options" v-if="showList">
 			<li :class="item == currentlySelected ?'active' :''" v-on:click="selectItem(emitIndex ?(index+1) :item)" v-for="(item, index) in options" :key="index">{{item[label] ?item[label] :item}}</li>

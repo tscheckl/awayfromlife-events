@@ -1,232 +1,1096 @@
 @import "./generalPage";
+@import "../themeColors";
+
 
 #festival_page {
-	.title {
-		margin-bottom: 0 !important;
+	width: 100%;
+	margin: 0;
+	position: relative;
+	background-color: $primaryLighten4;
+
+	.color-block {
+		position: absolute;
+		width: 100%;
+		background-color: #232323;
+		height: 250px;
+		top: 0;
+		left: 0;
+		z-index: 0;
 	}
-	.content {
+
+	.page-header {
+		max-width: 1300px;
+		margin: 0 auto;
 		position: relative;
-	}
+		z-index: 2;
 
-	.festival-genres {
-		display: block;
-		margin-top: 20px;
-
-		h3, p {
-			display: inline;
-		}
-
-		p {
-			margin-left: 10px;
-		}
-	}
-
-	span.festival-genre {
-		font-family: "OpenSans";
-		margin-right: 5px;
-
-		&:after {
-			content: ", ";
-		}
-
-		&:last-of-type:after {
-			content: " ";
-		}
-	}
-
-	.website, .facebook-page {
-		span {
-			font-weight: bold;
-		}
-	}
-
-	.festivals-stepper {
-		overflow: visible;
-
-		.selectable-steps {
-			margin-top: 20px;
-			margin-left: 40px;
-		}
-
-		.steps {
-			color: $primaryLighten5;
-			background-color: $accentAccent2;
+		.edit-buttons {
+			text-align: right;
 			
-			padding: 20px 40px;
-			padding-top: 10px;
-			position: relative;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-			border-radius: 5px;
-			overflow: hidden;
-
-			.color-block {
-				height: 110px;
-				box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			.edit-button {
+				color: $accentAccent2;
+				text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 			}
 
-			h1, h4 {
-				position: relative;
+			.more-button {
+				.md-icon {
+					margin-top: 6px;
+					width: 30px;
+					height: 30px;
+					font-size: 30px;
+				}
 			}
+		}
+	}
 
-			.step {
-				.edit-buttons {
-					position: absolute;
-					right: 10px;
-					z-index: 2;
+	.content {
+		max-width: 1400px;
+		width: 100%;
+		min-height: 550px;
+		// height: 80%;
+		height: 72vh;
+		margin: 20px auto;
+		margin-top: 0;
+		margin-bottom: 0px;
+		padding: 0px 30px;
+		padding-right: 50px;
+		position: relative;
+		background-color: #fdfdfd;
+		border-radius: 3px;
+		overflow: auto;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		z-index: 1;
+		display: flex;
+
+		.title {
+			margin-top: 20px;
+			margin-bottom: 10px;
+			padding-left: 20px;
+			font-family: "Montserrat";
+			font-weight: 900;
+			font-size: 5em;
+			line-height: 0.8em;
+		}
+
+		.genre {
+			margin: 0;
+			margin-bottom: 5px;
+			padding-left: 20px;
+			color: $accentAccent2;
+			font-family: "Montserrat";
+			font-size: 1.4em;
+
+			span {
+				&:after {
+					content: " - ";
+				}
+
+				&:last-of-type:after {
+					content: "";
 				}
 			}
 		}
 
-		.infinite-controls {
-			.md-icon {
-				color: $primaryDarken4;
-			}
-		}
-	}
+		.tab-navigation {
+			// ul {
+			// 	margin-top: 0;
+			// 	margin-bottom: 40px;
+			// 	padding-left: 20px;
+			// 	display: flex;
+				// justify-content: space-evenly;
 
-	.line-up {
-		h3 {
-			font-size: 18px;
-			margin-bottom: -20px;
-			background-color: transparent !important;
-			box-shadow: none !important;	
-
-			.md-icon {
-				color: $primaryLighten5;
-			}
-		}
-
-		ul {
-			margin-top: -10px;
-			padding: 0 20px;
-
-			li:nth-child(-n+4) {
-				font-size: 1.15em;
+			.md-whiteframe {
+				background-color: transparent !important;
 			}
 
-			li:nth-child(-n+2) {
-				font-size: 1.5em;
+			.md-tab-indicator {
+				display: none;
 			}
 
-			li {
-				display: inline-block;
-				min-width: 49%;
-				margin-top: 40px;
+			.md-tab-header {
+				margin-right: 5vw;
+				padding-left: 20px;
+				text-transform: none;
+				color: #555555;
 
 				span {
-					position: relative;
-					padding: 10px 17px;
-					border-radius: 3px;
+					margin-top: 0;
+					// margin-right: 5vw;
+					display: inline-block;
 					font-family: "Montserrat";
-					color: $primaryLighten5;
-					line-height: 40px;
-					background-color: $primaryDarken4;
-					text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-					box-decoration-break: clone;
-					-webkit-box-decoration-break: clone;
-					transition: all .2s ease-out;
+					font-weight: 700;
+					font-size: 1.45em;
+					cursor: pointer;
+					white-space: nowrap;
 
 					&:after {
-						content: "keyboard_arrow_right";
-						position: absolute;
-						opacity: 0;  
-						// top: 3px;
-						font-family: "Material Icons";
-						color: $accentAccent2;
-						font-size: 25px;
+						content: "";
+						display: block;
+						width: 0%;
+						height: 3px;
+						margin: 0 auto;
+						margin-top: 2px;
+						background-color: $accentAccent2;
 						transition: all .2s ease-out;
+						transform: rotate(2deg);
 					}
 
 					&:hover {
-						padding-left: 10px;
-						padding-right: 25px;
-
 						&:after {
-							opacity: 1 !important;
+							width: 100%;
 						}
 					}
 				}
+			}
+
+			.md-active {
+				color: #232323;
+				span {
+					&:after {
+						content: "";
+						display: block;
+						width: 100% !important;
+						height: 3px;
+						margin-top: 2px;
+						// margin-left: -5%;
+						background-color: $accentAccent2;
+						transform: rotate(2deg);
+					}
+	
+					&:hover {
+						&:after {
+							width: 100% !important;
+						}
+					}
+				}
+			}
+
+			.md-ink-ripple {
+				display: none;
+			}
+		}
+
+		.content-information {
+			width: 75%;
+			padding: 5px 0;
+			// max-height: 80vh;
+
+			.information-tab {
+				padding-left: 0;
+
+				.detail-info {
+					display: flex;
+					align-items: center;
+					width: 50%;
+					float: left;
+	
+					.category {
+						display: inline-block;
+						text-align: center;
+						padding-left: 20px;
+	
+						svg {
+							margin: 0 auto;
+						}
+	
+						h4 {
+							margin: 0;
+							margin-top: 3px;
+							font-family: "Montserrat";
+							font-weight: 600;
+							font-size: 1.15em;
+							white-space: nowrap;
+						}
+					}
+	
+					.category-content {
+						margin: 0;
+						margin-left: 20px;
+						font-size: 1.2em;
+						font-family: "Montserrat";
+						font-weight: 600;
+					}
+				}
+	
+				.address {
+					align-items: flex-start;
+	
+					.category-content {
+						h4 {
+							margin: 0;
+							font-size: 1.1em;
+							font-family: "Montserrat";
+							font-weight: 600;
+						}
+						p {
+							margin: 0;
+							margin-top: -2px;
+							font-family: "Montserrat";
+							font-weight: 500;
+		
+						}
+					}
+				}
+	
+				.additional-information {
+					width: 100%;
+					align-items: center;
+					display: flex;
+					margin-top: 40px;
+
+					.category {
+						padding-left: 0px;
+					}
+	
+					.category-content {
+						width: 100%;
+						overflow: hidden;
+						display: flex;
+						flex-wrap: wrap;
+						
+						a {
+							width: 30%;
+							margin-bottom: 10px;
+							margin-left: 20px;
+							margin-right: 40px;
+							display: flex;
+							align-items: center;
+							cursor: pointer;
+							
+							svg {
+								padding: 3px;
+								display: inline-block;
+								border-radius: 3px;
+								min-height: 40px;
+								min-width: 40px;
+								box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+								transition: box-shadow .3s ease-out;
+							}
+	
+							h4 {
+								margin-left: 10px;
+								display: inline-block;
+								color: #232323;
+								font-family: "Montserrat";
+								font-size: 1.2em;
+								font-weight: 600;
+							}
+	
+							&:hover {
+								svg {
+									box-shadow: 0 6px 12px rgba(0,0,0,0.19), 0 4px 8px rgba(0,0,0,0.23);
+	
+								}
+							}
+						}
+	
+						.facebook {
+							svg {
+								background-color: #1C74BB;
+							}
+						}
+	
+						.website {
+							svg {
+								padding-left: 5px;
+								background-color: $primary;
+							}
+						}
+					}
+				}
+	
+				.description {
+					width: 100%;
+					margin-top: 30px;
+					align-items: flex-start;
+
+					.category {
+						padding-left: 7px;
+					}
+
+					.founding-date {
+						font-family: "Montserrat";
+						margin-bottom: 0;
+					}
+	
+					p {
+						margin-top: 5px;
+						font-family: "Open Sans";
+						font-weight: normal;
+					}
+				}
+			}
+
+			.history-tab {
+				#stepper {
+					.infinite-controls {
+						button:last-of-type {
+							right: 0;
+						}
+					}
+				}
+
+				#selector {
+					label {
+						font-family: "Montserrat";
+						font-weight: 600;
+						font-size: 1.1em;
+						color: #232323;
+					}
+
+					#selector-input {
+						width: 250px;
+						padding: 10px;
+						padding-right: 20px;
+						position: relative;
+						font-family: "Montserrat";
+						box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);	
+						border-radius: 3px;
+
+						&:after {
+							right: 5px;
+							bottom: 8px;
+						}
+					}
+				}
+
+				.festival-instance {
+					display: flex;
+				}
+
+				.festival-instance-content {
+					font-family: "Montserrat";
+					max-width: 500px;
+
+					h2, h4 {
+						font-family: "Montserrat";
+					}
+
+					h2 {
+						font-size: 1.7em;
+						margin-bottom: 0;
+					}
+
+					.festival-event-date {
+						margin-top: 5px;
+						font-weight: 600;
+						color: $accentAccent2;
+					}
+					
+					.festival-event-header {
+						margin-top: 0;
+						display: inline-block;
+						position: relative;
+						font-size: 1.2em;
+
+						&:after {
+							content: "";
+							display: block;
+							width: 110%;
+							height: 3px;
+							margin-left: -5%;
+							background-color: $accentAccent2;
+							transform: rotate(3deg);
+						}
+					}
+
+					.line-up {
+						margin-top: 10px;
+						width: 100%;
+						align-items: flex-start;
+		
+						ul {
+							margin-top: 0;
+							padding-left: 0;
+							list-style: none;
+							flex: 1;
+							display: flex;
+							flex-wrap: wrap;
+							align-items: flex-start;
+		
+							li {
+								width: calc(50% - 30px);
+								display: inline-block;
+								font-family: "Montserrat";
+								font-weight: 600;	
+								font-size: 1.2em;
+								line-height: 0.9em;
+								margin-bottom: 25px;
+								margin-top: 0;
+		
+								a {
+									display: inline-block;
+									color: #232323;
+									&:after {
+										content: " ";
+										width: 0%;
+										margin: 0 auto;
+										margin-top: 2px;
+										display: block;
+										height: 2px;
+										background-color: $accentAccent2;
+										transition: width .3s ease-out;
+									}
+		
+									&:hover {
+										&:after {
+											width: 100%;
+										}
+									}
+								}
+		
+								&:nth-child(odd) {						
+									margin-right: 30px;
+								}
+		
+								&:nth-of-type(-n+4) {
+									font-size: 1.25em;
+								}
+		
+								&:nth-of-type(-n+2) {
+									font-size: 1.4em;
+								}
+							}
+						}
+		
+						.ticket-link {
+							display: flex;
+							margin-top: 20px;
+							padding: 5px 12px;
+							align-items: center;
+							background-color: $accentAccent2;
+							color: $primaryLighten5;
+							border-radius: 3px;
+							box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		
+							span {
+								margin-top: 3px;
+								margin-left: 10px;
+								font-family: "Montserrat";
+								font-weight: 600;
+								font-size: 1.4em;
+							}
+						}
+					}
+
+					.description {
+						h4 {
+							margin-bottom: 0;
+						}
+
+						p {
+							font-family: "OpenSans";
+						}
+					}
+				}
+
+				.festival-instance-image {
+					img {
+						width: 230px;
+						height: 230px;
+						object-fit: cover;
+						border-radius: 3px;
+						box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+					}
+				}
+			}
+		}
+
+		.image-container {
+			position: sticky;
+			height: 100%;
+			width: 22vw;
+			max-width: 25%;
+			top: 0px;
+			left: 100%;
+		}
+
+		.image, .image-color-block, .image-loading-indicator {
+			position: absolute;
+		}
+
+		.image, .image-loading-indicator {
+			width: 90%;
+			position: relative;
+			left: 40px;
+			top: 20px;
+			background-image: url("");
+			background-size: cover;
+			background-position: center;
+			background-color: #232323;
+			overflow: hidden;
+			border-radius: 3px;
+			cursor: pointer;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			z-index: 999;
+			&:before{
+				content: "";
+				display: block;
+				padding-top: 100%;
+			}
+		}
+
+		.image-loading-indicator {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.image-color-block {
+			width: 30%;
+			top: 0;
+			height: 100%;
+			left: 10px;
+			// right: calc(100% - 55px);
+			background-color: $accentAccent2;
+		}
+	}
+
+	.lightbox {
+		width: 100vw;
+		height: 100vh;
+		//Subtract height of top-bar from top-position
+		top: calc(0vh - 64px);
+		//Subtract width of sidenav from left position
+		left: -80px;
+		position: absolute;
+		z-index: 999;
+		// Attributes that will be changed by JS
+		display: none;
+		opacity: 0;
+		transition: opacity .2s ease-out;
+
+
+		.darken {
+			position: fixed;
+			width: 100%;
+			height: 100vh;
+			top: 0;
+			left: 0;
+			background-color: rgba(0,0,0,0.6);
+			z-index: 998;
+		}
+		
+		img {
+			position: absolute;
+			max-height: 90vh;
+			max-width: 90vw;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 999;
+		}
+
+		.close-btn {
+			position: absolute;
+			top: 20px;
+			right: 100px;
+			display: block;
+			color: $accentAccent2;
+			background-color: transparent;
+			border: none;
+			cursor: pointer;
+			text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			z-index: 999;
+
+			.md-icon {
+				font-size: 3.5em;
 			}
 		}
 	}
 }
 
-
-.md-dialog {
-	overflow: auto !important;
-
-	#festival_event_form, #festival_form {
-		padding: 40px;
-		max-width: 1000px;
-		background-color: $primaryLighten4 !important;
-	}
-
-
-	h1 {
-		margin-top: 15px;
-		margin-left: 15px;
-		font-size: 3em;
-		text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-	}
-
-	h2 {
-		margin-top: 30px;
-	}
-
-	.submit-button {
-		margin-top: 20px;
-	}
-
-	#festival_event_form {
-		.submit-button {
-			margin-left: calc(100% - 210px);
-		}
-	}
-
-	#festival_form {
-		.submit-button {
-			margin-left: calc(100% - 160px);
+@media screen and (max-width: 1000px) {
+	#festival_page {
+		.content {
+			.content-information {
+				.history-tab {
+					.festival-instance {
+						flex-wrap: wrap;
+						justify-content: center;
+					}
+	
+					.festival-instance-image {
+						width: 100%;
+						order: 1;
+	
+						img {
+							width: 100%;
+							height: 170px;
+						}
+					}
+	
+					.festival-instance-content {
+						width: 100%;
+						order: 2;
+					}
+				}
+			}
 		}
 	}
 }
 
 @media screen and (max-width: 768px) {
 	#festival_page {
-		.festivals-stepper {
-			.selectable-steps {
-				margin: 0 auto;
-				margin-top: 20px;
-			}
+		#detail_page {
+			padding-bottom: 0;
+		}
 
-			.stepper-body {
-				padding: 10px 0;
+		.content {
+			padding: 0;
+			flex-wrap: wrap;
+			height: auto;
+			overflow: visible;
 
-				.steps {
-					padding: 20px;
+			.content-information {
+				width: 100%;
+				margin-top: 260px;
+				padding: 5px;
+				padding-top: 0;
 
-					.step {
-						padding: 0;
+				.title {
+					font-size: 3.5em;
+					line-height: 0.9em;
+					// margin-left: 20px;
+				}
+				.information-tab {
+					.title {
+						font-size: 2.5em;
+						line-height: 0.9em;
+					}
+	
+					.detail-info {
+						width: 100%;
+						margin-top: 30px;
+						padding-left: 10px;
+	
+						&:first-of-type {
+							margin-top: -5px;
+						}
+	
+						.category {
+							width: 70px;
+							text-align: center;
+
+							svg {
+								width: 40px;
+							}
+
+							h4 {
+								font-size: 1.1em;
+							}
+						}
+					}
+
+					.address {
+						padding-left: 5px;
+					}
+
+					.additional-information {
+						align-items: start;
+
+						.category {
+							margin-left: -3px;
+							width: 100px;
+						}
+
+						.category-content {
+							a {
+								width: 100px;
+								margin-bottom: 15px;
+								margin-left: 5px;
+
+								h4 {
+									margin: 0 5px;
+									font-size: 1em;
+								}
+							}
+						}
+					}
+
+					.description {
+						display: block;
+	
+						.category {
+							width: auto;
+							display: flex;
+							justify-content: start;
+							align-items: center;
+							padding-left: 10px;
+							border-bottom: 1px solid $accentAccent2;
+
+							svg {
+								margin: 0;
+								margin-left: 10px;
+							}
+
+							svg, h4 {
+								display: inline-block;
+							}
+
+							h4 {
+								margin-left: 10px;
+							}
+
+							br {
+								display: none;
+							}
+						}
+	
+						.category-content {
+							margin-top: -5px;
+
+							p {
+								line-height: 1.35em;
+							}
+						}
+					} 
+				}
+
+				.upcoming-tab {
+					padding: 0;
+					padding-left: 10px;
+					.month-cards {
+						display: flex;
+						flex-wrap: nowrap;
+						overflow-x: auto;
+						justify-content: start;
+						margin-right: 10px;
+
+						.md-card { 
+							flex: 0 0 auto;
+							width: 70%;
+							min-width: 270px;
+							margin: 5px;
+							margin-right: 10px;
+
+							&:first-of-type {
+								margin-left: 0;
+							}
+
+							.md-card-media {
+							}
+
+							.card-content {
+								padding: 5px 10px;
+								font-size: 1.05em;
+								color: #232323;
+	
+								h2 {
+									width: 100%;
+									margin: 0;
+									padding: 5px 0px;
+									font-family: "Montserrat";
+									font-size: 1.2em;
+									overflow: hidden;
+									white-space: nowrap;
+									text-overflow: ellipsis;
+								}
+		
+								p {
+									margin: 0;
+									padding-bottom: 5px;
+								}
+							}
+						}
 					}
 				}
 			}
 
-			.infinite-controls {
-				button {
-					top: 10px !important;
+			.image-container {
+				position: absolute;
+				width: 100%;
+				max-width: 100%;
+				height: 260px;
+				left: 0;
 
-					&:first-of-type {
-						left: 0px;
+				.image {
+					margin-right: 0;
+					margin-top: 0;
+					width: 100%;
+					height: 100%;
+					min-height: 0;
+					max-height: none;
+					min-width: none;
+					max-width: none;
+					position: relative;
+					left: 0;
+					top: 0;
+					z-index: 0;
+					border-radius: 0;
+
+					&:before {
+						content: "";
+						height: 15px;
+						width: 100%;
+						padding-top: 0;
+						display: block;
+						background-color: $accentAccent2;
 					}
 
-					&:last-of-type {
-						right: -20px;
+					&:after {
+						width: 105%;
+						height: 30px;
+						left: -5px;
+						top: 265px;
+						transform:rotate(2deg);
 					}
+				}
+
+				.image-color-block {
+					width: 105%;
+					// display: none;
+					height: 15px;
+					left: -5px;
+					top: 253px;
+					transform:rotate(2deg);
+
 				}
 			}
 		}
-	}
 
-	#festival_event_form, #festival_form {
-		padding: 10px;
+		.lightbox {
+			top: -135px;
+
+			img {
+				max-width: 100vw;
+			}
+
+			.close-btn {
+				top: 5px;
+				right: 5px;
+			}
+		}
 	}
 }
+
+// #festival_page {
+// 	.title {
+// 		margin-bottom: 0 !important;
+// 	}
+// 	.content {
+// 		position: relative;
+// 	}
+
+// 	.festival-genres {
+// 		display: block;
+// 		margin-top: 20px;
+
+// 		h3, p {
+// 			display: inline;
+// 		}
+
+// 		p {
+// 			margin-left: 10px;
+// 		}
+// 	}
+
+// 	span.festival-genre {
+// 		font-family: "OpenSans";
+// 		margin-right: 5px;
+
+// 		&:after {
+// 			content: ", ";
+// 		}
+
+// 		&:last-of-type:after {
+// 			content: " ";
+// 		}
+// 	}
+
+// 	.website, .facebook-page {
+// 		span {
+// 			font-weight: bold;
+// 		}
+// 	}
+
+// 	.festivals-stepper {
+// 		overflow: visible;
+
+// 		.selectable-steps {
+// 			margin-top: 20px;
+// 			margin-left: 40px;
+// 		}
+
+// 		.steps {
+// 			color: $primaryLighten5;
+// 			background-color: $accentAccent2;
+			
+// 			padding: 20px 40px;
+// 			padding-top: 10px;
+// 			position: relative;
+// 			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+// 			border-radius: 5px;
+// 			overflow: hidden;
+
+// 			.color-block {
+// 				height: 110px;
+// 				box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+// 			}
+
+// 			h1, h4 {
+// 				position: relative;
+// 			}
+
+// 			.step {
+// 				.edit-buttons {
+// 					position: absolute;
+// 					right: 10px;
+// 					z-index: 2;
+// 				}
+// 			}
+// 		}
+
+// 		.infinite-controls {
+// 			.md-icon {
+// 				color: $primaryDarken4;
+// 			}
+// 		}
+// 	}
+
+// 	.line-up {
+// 		h3 {
+// 			font-size: 18px;
+// 			margin-bottom: -20px;
+// 			background-color: transparent !important;
+// 			box-shadow: none !important;	
+
+// 			.md-icon {
+// 				color: $primaryLighten5;
+// 			}
+// 		}
+
+// 		ul {
+// 			margin-top: -10px;
+// 			padding: 0 20px;
+
+// 			li:nth-child(-n+4) {
+// 				font-size: 1.15em;
+// 			}
+
+// 			li:nth-child(-n+2) {
+// 				font-size: 1.5em;
+// 			}
+
+// 			li {
+// 				display: inline-block;
+// 				min-width: 49%;
+// 				margin-top: 40px;
+
+// 				span {
+// 					position: relative;
+// 					padding: 10px 17px;
+// 					border-radius: 3px;
+// 					font-family: "Montserrat";
+// 					color: $primaryLighten5;
+// 					line-height: 40px;
+// 					background-color: $primaryDarken4;
+// 					text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+// 					box-decoration-break: clone;
+// 					-webkit-box-decoration-break: clone;
+// 					transition: all .2s ease-out;
+
+// 					&:after {
+// 						content: "keyboard_arrow_right";
+// 						position: absolute;
+// 						opacity: 0;  
+// 						// top: 3px;
+// 						font-family: "Material Icons";
+// 						color: $accentAccent2;
+// 						font-size: 25px;
+// 						transition: all .2s ease-out;
+// 					}
+
+// 					&:hover {
+// 						padding-left: 10px;
+// 						padding-right: 25px;
+
+// 						&:after {
+// 							opacity: 1 !important;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+
+// .md-dialog {
+// 	overflow: auto !important;
+
+// 	#festival_event_form, #festival_form {
+// 		padding: 40px;
+// 		max-width: 1000px;
+// 		background-color: $primaryLighten4 !important;
+// 	}
+
+
+// 	h1 {
+// 		margin-top: 15px;
+// 		margin-left: 15px;
+// 		font-size: 3em;
+// 		text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+// 	}
+
+// 	h2 {
+// 		margin-top: 30px;
+// 	}
+
+// 	.submit-button {
+// 		margin-top: 20px;
+// 	}
+
+// 	#festival_event_form {
+// 		.submit-button {
+// 			margin-left: calc(100% - 210px);
+// 		}
+// 	}
+
+// 	#festival_form {
+// 		.submit-button {
+// 			margin-left: calc(100% - 160px);
+// 		}
+// 	}
+// }
+
+// @media screen and (max-width: 768px) {
+// 	#festival_page {
+// 		.festivals-stepper {
+// 			.selectable-steps {
+// 				margin: 0 auto;
+// 				margin-top: 20px;
+// 			}
+
+// 			.stepper-body {
+// 				padding: 10px 0;
+
+// 				.steps {
+// 					padding: 20px;
+
+// 					.step {
+// 						padding: 0;
+// 					}
+// 				}
+// 			}
+
+// 			.infinite-controls {
+// 				button {
+// 					top: 10px !important;
+
+// 					&:first-of-type {
+// 						left: 0px;
+// 					}
+
+// 					&:last-of-type {
+// 						right: -20px;
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	#festival_event_form, #festival_form {
+// 		padding: 10px;
+// 	}
+// }

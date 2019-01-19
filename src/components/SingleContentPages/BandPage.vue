@@ -8,7 +8,7 @@
 			:submitStatus="submitStatus"
 			v-on:edit="openDialog('editBandDialog')">
 			<div slot="title">
-				<h2 class="title" v-if="band.name">{{band.name.toUpperCase()}}</h2>
+				<h2 class="title" v-if="band.name">{{band.name}}</h2>
 				<h4 class="band-genre">
 					<span v-for="(genre, index) in band.genre" :key="index"> {{genre}} </span>
 				</h4>

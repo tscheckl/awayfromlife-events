@@ -102,7 +102,7 @@ export default {
 	computed: {
 		imageUrl() {
 			if(this.image && this.image.length > 0)
-				return backendUrl + '/' + this.image.replace(/\\/g, '/');
+				return backendUrl + '/' + this.image;
 			
 			return null;
 		}

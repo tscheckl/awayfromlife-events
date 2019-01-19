@@ -98,7 +98,8 @@
 		}
 
 		.band-genre {
-			margin-top: 0;
+			margin: 0;
+			margin-bottom: 5px;
 			padding-left: 20px;
 			color: $accentAccent2;
 			font-family: "Montserrat";
@@ -541,9 +542,9 @@
 			position: sticky;
 			height: 100%;
 			width: 22vw;
-			max-width: 20%;
+			max-width: 25%;
 			top: 0px;
-			right: 0px;
+			left: 100%;
 		}
 
 		.image, .image-color-block, .image-loading-indicator {
@@ -551,12 +552,8 @@
 		}
 
 		.image, .image-loading-indicator {
-			width: 20vw;
-			min-width: 200px;
-			max-width: 350px;
-			height: 20vw;
-			min-height: 200px;
-			max-height: 350px;
+			width: 90%;
+			position: relative;
 			left: 40px;
 			top: 20px;
 			background-image: url("");
@@ -568,6 +565,11 @@
 			cursor: pointer;
 			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 			z-index: 999;
+			&:before{
+				content: "";
+				display: block;
+				padding-top: 100%;
+			}
 		}
 
 		.image-loading-indicator {
@@ -577,7 +579,8 @@
 		}
 
 		.image-color-block {
-			width: 6vw;
+			width: 30%;
+			top: 0;
 			height: 100%;
 			left: 10px;
 			// right: calc(100% - 55px);
@@ -860,8 +863,10 @@
 						content: "";
 						height: 15px;
 						width: 100%;
+						padding-top: 0;
 						display: block;
 						background-color: $accentAccent2;
+						z-index: -1;
 					}
 
 					&:after {
