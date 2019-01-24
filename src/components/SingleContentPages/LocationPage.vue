@@ -18,7 +18,7 @@
 				</ul>
 			</div> -->
 
-			<md-tabs class="tab-navigation" md-dynamic-height v-on:change="handleTabChange">
+			<md-tabs class="tab-navigation" md-dynamic-height v-on:change="handleTabChange" :md-navigation="false">
 				<md-tab md-label="Information" :md-active="activeTab === 0" class="information-tab">
 					<div class="detail-info address">
 						<div class="category">

@@ -1,326 +1,22 @@
 @import "./generalPage";
 @import "../themeColors";
 
-// #band_page {
-// 	.content-body {
-// 		p {
-// 			margin-bottom: 3px;
-
-// 			span {
-// 				font-family: "OpenSansBold";
-// 			}
-// 		}
-
-// 		.band-genre {
-// 			font-family: "OpenSans";
-// 			margin-right: 5px;
-// 		}
-
-// 		.band-history {
-// 			margin-top: 15px;
-// 		}
-
-// 		li {
-// 			margin-top: 3px;
-// 		}
-// 	}
-// }
-
-
 #band_page {
-	width: 100%;
-	margin: 0;
-	position: relative;
-	background-color: $primaryLighten4;
-
-	.color-block {
-		position: absolute;
-		width: 100%;
-		background-color: #232323;
-		height: 250px;
-		top: 0;
-		left: 0;
-		z-index: 0;
-	}
-
-	.page-header {
-		max-width: 1300px;
-		margin: 0 auto;
-		position: relative;
-		z-index: 2;
-
-		.edit-buttons {
-			text-align: right;
-			
-			.edit-button {
-				color: $accentAccent2;
-				text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-			}
-
-			.more-button {
-				.md-icon {
-					margin-top: 6px;
-					width: 30px;
-					height: 30px;
-					font-size: 30px;
-				}
-			}
-		}
-	}
-
 	.content {
-		max-width: 1400px;
-		width: 100%;
-		min-height: 550px;
-		// height: 80%;
-		height: 72vh;
-		margin: 20px auto;
-		margin-top: 0;
-		margin-bottom: 0px;
-		padding: 0px 30px;
-		padding-right: 50px;
-		position: relative;
-		background-color: #fdfdfd;
-		border-radius: 3px;
-		overflow: auto;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-		z-index: 1;
-		display: flex;
-
 		.title {
-			margin-top: 20px;
-			margin-bottom: 10px;
-			padding-left: 20px;
-			font-family: "Montserrat";
-			font-weight: 900;
-			font-size: 5em;
-			line-height: 0.8em;
-		}
-
-		.band-genre {
-			margin: 0;
-			margin-bottom: 5px;
-			padding-left: 20px;
-			color: $accentAccent2;
-			font-family: "Montserrat";
-			font-size: 1.4em;
-
-			span {
-				&:after {
-					content: " - ";
-				}
-
-				&:last-of-type:after {
-					content: "";
-				}
-			}
-		}
-
-		.tab-navigation {
-			// ul {
-			// 	margin-top: 0;
-			// 	margin-bottom: 40px;
-			// 	padding-left: 20px;
-			// 	display: flex;
-				// justify-content: space-evenly;
-
-			.md-whiteframe {
-				background-color: transparent !important;
-			}
-
-			.md-tab-indicator {
-				display: none;
-			}
-
-			.md-tab-header {
-				margin-right: 5vw;
-				padding-left: 20px;
-				text-transform: none;
-				color: #555555;
-
-				span {
-					margin-top: 0;
-					// margin-right: 5vw;
-					display: inline-block;
-					font-family: "Montserrat";
-					font-weight: 700;
-					font-size: 1.45em;
-					cursor: pointer;
-					white-space: nowrap;
-
-					&:after {
-						content: "";
-						display: block;
-						width: 0%;
-						height: 3px;
-						margin: 0 auto;
-						margin-top: 2px;
-						background-color: $accentAccent2;
-						transition: all .2s ease-out;
-						transform: rotate(2deg);
-					}
-
-					&:hover {
-						&:after {
-							width: 100%;
-						}
-					}
-				}
-			}
-
-			.md-active {
-				color: #232323;
-				span {
-					&:after {
-						content: "";
-						display: block;
-						width: 100% !important;
-						height: 3px;
-						margin-top: 2px;
-						// margin-left: -5%;
-						background-color: $accentAccent2;
-						transform: rotate(2deg);
-					}
-	
-					&:hover {
-						&:after {
-							width: 100% !important;
-						}
-					}
-				}
-			}
-
-			.md-ink-ripple {
-				display: none;
-			}
+			margin-bottom: 10px !important;
 		}
 
 		.content-information {
-			width: 70%;
-			padding: 5px 0;
-			// max-height: 80vh;
-
-			.information-tab, .discography-tab {
-				padding-left: 0;
-
-				.detail-info {
-					display: flex;
-					align-items: center;
-					width: 50%;
-					float: left;
-	
-					.category {
-						display: inline-block;
-						text-align: center;
-						padding-left: 20px;
-	
-						svg {
-							margin: 0 auto;
-						}
-	
-						h4 {
-							margin: 0;
-							margin-top: 3px;
-							font-family: "Montserrat";
-							font-weight: 600;
-							font-size: 1.15em;
-							white-space: nowrap;
-						}
-					}
-	
-					.category-content {
-						margin: 0;
-						margin-left: 20px;
-						font-size: 1.2em;
-						font-family: "Montserrat";
-						font-weight: 600;
-					}
-				}
-	
-				.address {
-					align-items: flex-start;
-	
-					.category-content {
-						h4 {
-							margin: 0;
-							font-size: 1.1em;
-							font-family: "Montserrat";
-							font-weight: 600;
-						}
-						p {
-							margin: 0;
-							margin-top: -2px;
-							font-family: "Montserrat";
-							font-weight: 500;
-		
-						}
-					}
-				}
-	
+			.information-tab, .discography-tab {	
 				.additional-information {
-					width: 100%;
-					align-items: center;
-					display: flex;
-					margin-top: 40px;
-
 					.category {
-						padding-left: 0px;
+						padding-left: 5px !important;
 					}
 	
 					.category-content {
-						width: 100%;
-						overflow: hidden;
-						display: flex;
+						overflow: hidden !important;
 						flex-wrap: wrap;
-						
-						a {
-							width: 30%;
-							margin-bottom: 10px;
-							margin-left: 20px;
-							margin-right: 40px;
-							display: flex;
-							align-items: center;
-							cursor: pointer;
-							
-							svg {
-								padding: 3px;
-								display: inline-block;
-								border-radius: 3px;
-								min-height: 40px;
-								min-width: 40px;
-								box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-								transition: box-shadow .3s ease-out;
-							}
-	
-							h4 {
-								margin-left: 10px;
-								display: inline-block;
-								color: #232323;
-								font-family: "Montserrat";
-								font-size: 1.2em;
-								font-weight: 600;
-							}
-	
-							&:hover {
-								svg {
-									box-shadow: 0 6px 12px rgba(0,0,0,0.19), 0 4px 8px rgba(0,0,0,0.23);
-	
-								}
-							}
-						}
-	
-						.facebook {
-							svg {
-								background-color: #1C74BB;
-							}
-						}
-	
-						.website {
-							svg {
-								padding-left: 5px;
-								background-color: $primary;
-							}
-						}
 
 						.soundcloud {
 							svg {
@@ -337,12 +33,8 @@
 				}
 	
 				.description {
-					width: 100%;
-					margin-top: 30px;
-					align-items: flex-start;
-
 					.category {
-						padding-left: 0px;
+						padding-left: 5px !important;
 					}
 
 					.founding-date {
@@ -352,41 +44,37 @@
 	
 					p {
 						margin-top: 5px;
-						font-family: "Open Sans";
-						font-weight: normal;
 					}
 				}
 			}
 
 			.discography-tab {
 				.record-label {
-					width: 100%;
+					width: 100% !important;
 
 					.category {
+						padding-left: 15px !important;
 						h4 {
-							margin-left: -7px;
+							margin-left: -7px !important;
 						}
 					}
 				}
 
 				.releases {
-					width: 100%;
+					width: 100% !important;
 					margin-top: 25px;
-					position: relative;
-					align-items: flex-start;
+					align-items: flex-start !important;
 
 					.category {
-						padding-left: 10px;
+						padding-left: 5px !important;
 					}
 
 					.category-content {
-						height: 100%;
 						position: relative;
-						margin-top: 15px;
+						margin-top: 15px !important;
 
 						&:before {
 							content: "";
-							display: block;
 							position: absolute;
 							width: 3px;
 							margin-left: 50px;
@@ -442,309 +130,42 @@
 					}
 				}
 			}
-
-			.upcoming-tab {
-				h1 {
-					font-family: "Montserrat";
-					font-weight: 700;
-					font-size: 1.4em;
-				}
-
-				.no-events {
-					margin-top: 40px;
-					text-align: center;
-
-					h2 {
-						display: block;
-						margin-top: 0;
-						font-family: "Montserrat";
-						font-size: 1.2em;
-						color: #555555;
-
-						span {
-							color: $accentAccent2;
-							cursor: pointer;
-						}
-					}
-				}
-
-				.month-cards {
-					margin-bottom: 30px;
-					display: flex;
-					justify-content: space-between;
-
-					.md-card {
-						width: 31%;
-						font-family: "Montserrat";
-						overflow: hidden;
-
-						.md-card-media {
-							img {
-								height: 150px;
-								object-fit: cover;
-							}
-						}
-
-						.card-content {
-							padding: 5px 10px;
-							font-size: 1.1em;
-							color: #232323;
-
-							h2 {
-								width: 100%;
-								margin: 0;
-								padding: 5px 0px;
-								font-family: "Montserrat";
-								font-size: 1.3em;
-								overflow: hidden;
-								white-space: nowrap;
-								text-overflow: ellipsis;
-							}
-	
-							p {
-								margin: 0;
-								padding-bottom: 5px;
-							}
-
-							.bands {
-								white-space: nowrap;
-								overflow: hidden;
-								text-overflow: ellipsis;
-
-								span {
-									display: inline-block;
-									margin-right: 5px;
-
-									&:after {
-										content: ", "
-									}
-
-									&:last-of-type {
-										&:after {
-											content: "";
-										}
-									}
-								}
-							}
-						}
-					}
-
-					.color-block {
-						position: relative;
-						height: 4px;
-						background-color: $accentAccent2;
-					}
-				}
-			}
-		}
-
-		.image-container {
-			position: sticky;
-			height: 100%;
-			width: 22vw;
-			max-width: 25%;
-			top: 0px;
-			left: 100%;
-		}
-
-		.image, .image-color-block, .image-loading-indicator {
-			position: absolute;
-		}
-
-		.image, .image-loading-indicator {
-			width: 90%;
-			position: relative;
-			left: 40px;
-			top: 20px;
-			background-image: url("");
-			background-size: cover;
-			background-position: center;
-			background-color: #232323;
-			overflow: hidden;
-			border-radius: 3px;
-			cursor: pointer;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-			z-index: 999;
-			&:before{
-				content: "";
-				display: block;
-				padding-top: 100%;
-			}
-		}
-
-		.image-loading-indicator {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.image-color-block {
-			width: 30%;
-			top: 0;
-			height: 100%;
-			left: 10px;
-			// right: calc(100% - 55px);
-			background-color: $accentAccent2;
-		}
-	}
-
-	.lightbox {
-		width: 100vw;
-		height: 100vh;
-		//Subtract height of top-bar from top-position
-		top: calc(0vh - 64px);
-		//Subtract width of sidenav from left position
-		left: -80px;
-		position: absolute;
-		z-index: 999;
-		// Attributes that will be changed by JS
-		display: none;
-		opacity: 0;
-		transition: opacity .2s ease-out;
-
-
-		.darken {
-			position: fixed;
-			width: 100%;
-			height: 100vh;
-			top: 0;
-			left: 0;
-			background-color: rgba(0,0,0,0.6);
-			z-index: 998;
-		}
-		
-		img {
-			position: absolute;
-			max-height: 90vh;
-			max-width: 90vw;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			z-index: 999;
-		}
-
-		.close-btn {
-			position: absolute;
-			top: 20px;
-			right: 100px;
-			display: block;
-			color: $accentAccent2;
-			background-color: transparent;
-			border: none;
-			cursor: pointer;
-			text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-			z-index: 999;
-
-			.md-icon {
-				font-size: 3.5em;
-			}
 		}
 	}
 }
 
 @media screen and (max-width: 768px) {
 	#band_page {
-		#detail_page {
-			padding-bottom: 0;
-		}
-
 		.content {
-			padding: 0;
-			flex-wrap: wrap;
-			height: auto;
-			overflow: visible;
 
 			.content-information {
-				width: 100%;
-				margin-top: 260px;
-				padding: 5px;
-				padding-top: 0;
-
-				.title {
-					font-size: 3.5em;
-					line-height: 0.9em;
-					// margin-left: 20px;
-				}
 				.information-tab {
-					.title {
-						font-size: 2.5em;
-						line-height: 0.9em;
-					}
-	
-					.detail-info {
-						width: 100%;
-						margin-top: 30px;
-						padding-left: 10px;
-	
-						&:first-of-type {
-							margin-top: -5px;
-						}
-	
-						.category {
-							width: 70px;
-							text-align: center;
-
-							svg {
-								width: 40px;
-							}
-
-							h4 {
-								font-size: 1.1em;
-							}
-						}
-					}
-
 					.address {
-						padding-left: 5px;
+						padding-left: 5px !important;
 					}
 
 					.additional-information {
-						align-items: start;
+						align-items: start !important;
 
 						.category {
-							margin-left: -3px;
-							width: 100px;
+							padding-left: 0 !important;
 						}
 
 						.category-content {
 							a {
-								width: 100px;
-								margin-bottom: 15px;
-								margin-left: 5px;
-								// width: 200px;
-								// padding: 2px;
-								// border-radius: 3px;
-								// box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-
-								svg {
-									// box-shadow: none;
-								}
+								width: 130px !important;
+								margin-bottom: 15px !important;
+								margin-left: 10px !important;
 
 								h4 {
-									margin: 0 5px;
-									font-size: 1em;
-									// margin: 0;
-									// padding: 0 5px;
-									// color: #fafafa;
+									margin: 0 5px !important;
+									font-size: 1em !important;
+								}
+
+								svg {
+									width: 40px;
 								}
 							}
-
-							// .facebook {
-							// 	background-color: #1C74BB;
-							// }
-		
-							// .website {
-							// 	padding-left: 5px;
-							// 	background-color: $primary;
-							// }
-	
-							// .soundcloud {
-							// 	background-color: #FE6D35;
-							// }
-	
-							// .bandcamp {
-							// 	background-color: #629AA9;
-							// }
 						}
 					}
 
@@ -752,24 +173,23 @@
 						display: block;
 	
 						.category {
-							width: auto;
-							display: flex;
-							justify-content: start;
-							align-items: center;
-							padding-left: 10px;
+							width: auto !important;
+							display: flex !important;
+							justify-content: start !important;
+							align-items: center !important;
 							border-bottom: 1px solid $accentAccent2;
 
 							svg {
-								margin: 0;
-								margin-left: 10px;
+								margin: 0 !important;
+								margin-left: 5px !important;
 							}
 
 							svg, h4 {
-								display: inline-block;
+								display: inline-block !important;
 							}
 
 							h4 {
-								margin-left: 10px;
+								margin-left: 10px !important;
 							}
 
 							br {
@@ -778,128 +198,12 @@
 						}
 	
 						.category-content {
-							margin-top: -5px;
-
 							p {
 								line-height: 1.35em;
 							}
 						}
 					} 
 				}
-
-				.upcoming-tab {
-					padding: 0;
-					padding-left: 10px;
-					.month-cards {
-						display: flex;
-						flex-wrap: nowrap;
-						overflow-x: auto;
-						justify-content: start;
-						margin-right: 10px;
-
-						.md-card { 
-							flex: 0 0 auto;
-							width: 70%;
-							min-width: 270px;
-							margin: 5px;
-							margin-right: 10px;
-
-							&:first-of-type {
-								margin-left: 0;
-							}
-
-							.md-card-media {
-							}
-
-							.card-content {
-								padding: 5px 10px;
-								font-size: 1.05em;
-								color: #232323;
-	
-								h2 {
-									width: 100%;
-									margin: 0;
-									padding: 5px 0px;
-									font-family: "Montserrat";
-									font-size: 1.2em;
-									overflow: hidden;
-									white-space: nowrap;
-									text-overflow: ellipsis;
-								}
-		
-								p {
-									margin: 0;
-									padding-bottom: 5px;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			.image-container {
-				position: absolute;
-				width: 100%;
-				max-width: 100%;
-				height: 260px;
-				left: 0;
-
-				.image {
-					margin-right: 0;
-					margin-top: 0;
-					width: 100%;
-					height: 100%;
-					min-height: 0;
-					max-height: none;
-					min-width: none;
-					max-width: none;
-					position: relative;
-					left: 0;
-					top: 0;
-					z-index: 0;
-					border-radius: 0;
-
-					&:before {
-						content: "";
-						height: 15px;
-						width: 100%;
-						padding-top: 0;
-						display: block;
-						background-color: $accentAccent2;
-						z-index: -1;
-					}
-
-					&:after {
-						width: 105%;
-						height: 30px;
-						left: -5px;
-						top: 265px;
-						transform:rotate(2deg);
-					}
-				}
-
-				.image-color-block {
-					width: 105%;
-					// display: none;
-					height: 15px;
-					left: -5px;
-					top: 253px;
-					transform:rotate(2deg);
-
-				}
-			}
-		}
-
-		.lightbox {
-			top: -135px;
-
-			img {
-				max-width: 100vw;
-			}
-
-			.close-btn {
-				top: 5px;
-				right: 5px;
 			}
 		}
 	}

@@ -61,6 +61,7 @@ export default new Vuex.Store({
 			if(event.bands[0] != '') {
 				addBandLabels(event);
 			}
+			event.ticketLink = fixUrl(event.ticketLink);
 			state.currentEvent = JSON.parse(JSON.stringify(event));
 			
 		},
@@ -84,6 +85,7 @@ export default new Vuex.Store({
 			state.currentBand = band;
 		},
 		setCurrentFestival(state, festival) {
+			festival.ticketLink = fixUrl(festival.ticketLink);
 			state.currentFestival = festival;
 		},
 		setAnimation(state, animation) {

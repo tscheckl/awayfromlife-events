@@ -1,5 +1,5 @@
 <template>
-	<div id="detail_page">
+	<div id="detail_page" v-on:keyup.esc="showImage(false)" tabindex="0">
 		<div class="page-wrapper">
 			<div class="page-header">
 				<div class="left-container">
@@ -55,8 +55,8 @@
 
 		<div class="lightbox">
 			<div class="darken" v-on:click="showImage(false)"></div>
-				<img v-on:click="showImage(true)" :src="imageUrl" alt="">
-				<button class="close-btn" v-on:click="showImage(false)"><md-icon>close</md-icon></button>
+			<img v-on:click="showImage(true)" :src="imageUrl" alt="">
+			<button class="close-btn" v-on:click="showImage(false)"><md-icon>close</md-icon></button>
 		</div>
 		<md-snackbar md-position="bottom right" ref="snackbar">
 			<span >{{submitStatus}}</span>
@@ -152,6 +152,15 @@ export default {
 				document.body.style.overflow = 'auto';
 				}, 100);
 			}
+		}
+	},
+	updated() {
+		
+
+		console.log('schau her', document.getElementsByClassName('md-tab-header').length);
+		const numberOfTabHeaders = document.getElementsByClassName('md-tab-header').length;
+		if(numberOfTabHeaders > 2) {
+			document.getElementsByClassName('tab-navigation')[0].classList.add('tab-navigation-small');
 		}
 	},
 	mounted() {

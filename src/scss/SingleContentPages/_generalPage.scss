@@ -1,15 +1,5 @@
-@import "../themeColors.scss";
-
-#detail_page {
-	padding: 30px 0;
-}
-
-// #event_page, 
-// #location_page, 
-// #band_page, 
-// #festival_page, 
-// #detail_page, 
-#not_found {
+@import "src/scss/_themeColors";
+#event_page, #band_page, #festival_page, #detail_page, #location_page {
 	width: 100%;
 	margin: 0;
 	position: relative;
@@ -51,213 +41,872 @@
 	}
 
 	.content {
-		max-width: 1300px;
-		min-height: 400px;
+		max-width: 1400px;
+		width: 100%;
+		min-height: 550px;
+		// height: 80%;
+		height: 72vh;
 		margin: 20px auto;
 		margin-top: 0;
-		margin-bottom: 30px;
-		padding: 30px 50px;
+		margin-bottom: 0px;
+		padding: 0px 30px;
 		position: relative;
 		background-color: #fdfdfd;
 		border-radius: 3px;
-		overflow: visible;
+		overflow: auto;
+		overflow-x: hidden;
 		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 		z-index: 1;
+		display: flex;
 
 		.title {
-			display: inline-block;
-		}
-
-		h2 {
-			margin: 0;
-			margin-bottom: 10px;
-			padding: 10px;
-			color: $primaryLighten4;
-			background-color: $accentAccent2;
-			text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-			font-family: 'Montserrat';
-			font-size: 3em;
-			letter-spacing: 1px;
-			line-height: 1em;
-			border-radius: 3px;
-		}
-
-		hr {
-			margin: 15px 0;
-			border: none;
-			border-top: 1px solid $primaryLighten2;
-		}
-
-		.md-icon {
-			margin-top: -3px;
-			margin-right: 7px;
-			color: $accentAccent2;
-			text-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-		}
-
-		h3 {
-			// font-size: 1.25em;
-			margin-bottom: 5px;
-			color: $primaryDarken3;
-			padding: 5px 7px;
-			background-color:  #232323;
-			display:  inline-block;
-			color:  #fafafafa;
-			/* padding-left:  0; */
-			border-radius: 3px;			
-			box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.24);
-		}
-
-		.md-spinner {
-			display: block;
-			margin: 0 auto;
-			margin-top: 25px;
-		}
-
-		p {
-			white-space: pre-wrap;
-		}
-	}
-
-	.events {
-		margin-top: 20px;
-		background-color: $primaryLighten5;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
-		border-radius: 3px;
-		border: 1px solid #232323;
-
-		h3 {
-			margin: 0;
-			margin-bottom: 0 !important;
-			padding: 10px;
-			padding-bottom: 8px;
-			display: block;
+			margin-top: 20px;
+			margin-bottom: 30px;
+			padding-left: 20px;
 			font-family: "Montserrat";
-			font-size: 1.5em;
-			color: $primaryLighten4 !important;
-			background-color: #232323;
-			border-bottom-right-radius: 0;
-			border-bottom-left-radius: 0;
-			box-shadow: none;
-			text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			font-weight: 900;
+			font-size: 5em;
+			line-height: 0.8em;
 		}
 
-		p {
-			color: #232323;
-		}
+		.genre {
+			margin: 0;
+			margin-bottom: 5px;
+			padding-left: 20px;
+			color: $accentAccent2;
+			font-family: "Montserrat";
+			font-size: 1.4em;
 
-		.event {
-			padding: 10px;
-			border-bottom: 1px solid #bbb;
-			overflow: hidden;
-			display: flex;
-			cursor: pointer;
-
-			&:hover {
-				background-color: $primaryLighten3;
-			}
-
-			p:first-child {
-				margin-top: 5px;
-				font-family: "OpenSansBold";
-			}
-
-			&:last-of-type {
-				border-bottom: none;
-			}
-
-			.event-information {
-				width: 95%;
-				float: left;
-			}
-
-			.learn-more-icon {
-				width: 3%;
-				height: 100%;
-				margin: auto;
-				margin-right: 0 !important;
-				float: left;
-			}
-
-			.event-band {
+			span {
 				&:after {
-					content: ", ";
-					display: inline;
+					content: " - ";
 				}
 
-				&:last-of-type {
+				&:last-of-type:after {
+					content: "";
+				}
+			}
+		}
+
+		.tab-navigation {
+
+			.md-whiteframe {
+				background-color: transparent !important;
+			}
+
+			.md-tab-indicator {
+				display: none;
+			}
+
+			.md-tab-header {
+				margin-right: 5vw;
+				padding-left: 20px;
+				text-transform: none;
+				color: #555555;
+
+				span {
+					margin-top: 0;
+					// margin-right: 5vw;
+					display: inline-block;
+					font-family: "Montserrat";
+					font-weight: 700;
+					font-size: 1.45em;
+					cursor: pointer;
+					white-space: nowrap;
+
 					&:after {
 						content: "";
+						display: block;
+						width: 0%;
+						height: 3px;
+						margin: 0 auto;
+						margin-top: 2px;
+						background-color: $accentAccent2;
+						transition: all .2s ease-out;
+						transform: rotate(2deg);
+					}
+
+					&:hover {
+						&:after {
+							width: 100%;
+						}
+					}
+				}
+			}
+
+			.md-active {
+				color: #232323;
+				span {
+					&:after {
+						content: "";
+						display: block;
+						width: 100% !important;
+						height: 3px;
+						margin-top: 2px;
+						// margin-left: -5%;
+						background-color: $accentAccent2;
+						transform: rotate(2deg);
+					}
+	
+					&:hover {
+						&:after {
+							width: 100% !important;
+						}
+					}
+				}
+			}
+
+			.md-ink-ripple {
+				display: none;
+			}
+		}
+
+		.content-information {
+			width: 70%;
+			padding: 5px 0;
+			// max-height: 80vh;
+
+			.information-tab, .discography-tab, .event-content {
+				padding-left: 0;
+
+				.detail-info {
+					display: flex;
+					align-items: center;
+					width: 50%;
+					float: left;
+	
+					.category {
+						display: inline-block;
+						text-align: center;
+						padding-left: 20px;
+	
+						svg {
+							margin: 0 auto;
+						}
+	
+						h4 {
+							margin: 0;
+							margin-top: 3px;
+							font-family: "Montserrat";
+							font-weight: 600;
+							font-size: 1.15em;
+							white-space: nowrap;
+						}
+					}
+	
+					.category-content {
+						margin: 0;
+						margin-left: 20px;
+						font-size: 1.2em;
+						font-family: "Montserrat";
+						font-weight: 600;
+					}
+				}
+	
+				.address, .location {
+					align-items: flex-start;
+					padding-left: 5px;
+	
+					.category-content {
+						h4 {
+							margin: 0;
+							font-size: 1.1em;
+							font-family: "Montserrat";
+							font-weight: 600;
+						}
+						p {
+							margin: 0;
+							margin-top: -2px;
+							font-family: "Montserrat";
+							font-weight: 500;
+		
+						}
+					}
+				}
+
+				.line-up {
+					margin-top: 30px;
+					width: 100%;
+					align-items: flex-start;
+	
+					ul {
+						list-style: none;
+						flex: 1;
+						margin-left: 20px;
+						display: flex;
+						flex-wrap: wrap;
+						align-items: flex-start;
+	
+						li {
+							width: calc(50% - 30px);
+							display: inline-block;
+							font-family: "Montserrat";
+							font-weight: 600;	
+							font-size: 1.5em;
+							line-height: 0.9em;
+							margin-bottom: 25px;
+							margin-top: 0;
+	
+							a {
+								display: inline-block;
+								color: #232323;
+								&:after {
+									content: " ";
+									width: 0%;
+									margin: 0 auto;
+									margin-top: 2px;
+									display: block;
+									height: 2px;
+									background-color: $accentAccent2;
+									transition: width .3s ease-out;
+								}
+	
+								&:hover {
+									&:after {
+										width: 100%;
+									}
+								}
+							}
+	
+							&:nth-child(odd) {						
+								margin-right: 30px;
+							}
+	
+							&:nth-of-type(-n+4) {
+								font-size: 1.65em;
+							}
+	
+							&:nth-of-type(-n+2) {
+								font-size: 1.8em;
+							}
+						}
+					}
+				}
+	
+				.ticket-link {
+					display: flex;
+					margin-top: 20px;
+					padding: 5px 12px;
+					align-items: center;
+					background-color: $accentAccent2;
+					color: $primaryLighten5;
+					border-radius: 3px;
+					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+
+					span {
+						margin-top: 3px;
+						margin-left: 10px;
+						font-family: "Montserrat";
+						font-weight: 600;
+						font-size: 1.4em;
+					}
+				}
+	
+				.additional-information {
+					width: 100%;
+					align-items: center;
+					display: flex;
+					margin-top: 40px;
+	
+					.category-content {
+						width: 100%;
+						overflow: hidden;
+						display: flex;
+						flex-wrap: wrap;
+						
+						a {
+							width: 30%;
+							margin-bottom: 10px;
+							margin-left: 20px;
+							margin-right: 40px;
+							display: flex;
+							align-items: center;
+							cursor: pointer;
+							
+							svg {
+								padding: 3px;
+								display: inline-block;
+								border-radius: 3px;
+								min-height: 40px;
+								min-width: 40px;
+								box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+								transition: box-shadow .3s ease-out;
+							}
+	
+							h4 {
+								margin-left: 10px;
+								display: inline-block;
+								color: #232323;
+								font-family: "Montserrat";
+								font-size: 1.2em;
+								font-weight: 600;
+							}
+	
+							&:hover {
+								svg {
+									box-shadow: 0 6px 12px rgba(0,0,0,0.19), 0 4px 8px rgba(0,0,0,0.23);
+	
+								}
+							}
+						}
+	
+						.facebook {
+							svg {
+								background-color: #1C74BB;
+							}
+						}
+	
+						.website {
+							svg {
+								padding-left: 5px;
+								background-color: $primary;
+							}
+						}
+					}
+				}
+	
+				.description {
+					width: 100%;
+					margin-top: 30px;
+					margin-left: 0;
+					align-items: flex-start;
+					
+					.category {
+						padding-left: 15px;
+					}
+	
+					p {
+						font-family: "Open Sans";
+						font-weight: normal;
+					}
+				}
+			}
+
+			.upcoming-tab {
+				h1 {
+					font-family: "Montserrat";
+					font-weight: 700;
+					font-size: 1.4em;
+				}
+
+				.no-events {
+					margin-top: 40px;
+					text-align: center;
+
+					h2 {
+						display: block;
+						margin-top: 0;
+						font-family: "Montserrat";
+						font-size: 1.2em;
+						color: #555555;
+
+						span {
+							color: $accentAccent2;
+							cursor: pointer;
+						}
+					}
+				}
+
+				.month-cards {
+					margin-bottom: 15px;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: start;
+
+					.md-card {
+						min-width: 31%;
+						max-width: 31%;
+						margin-right: 1.5%;
+						margin-bottom: 15px;
+						font-family: "Montserrat";
+						overflow: hidden;
+
+						.md-card-media {
+							img {
+								height: 150px;
+								object-fit: cover;
+							}
+						}
+
+						.card-content {
+							padding: 5px 10px;
+							font-size: 1.1em;
+							color: #232323;
+
+							h2 {
+								width: 100%;
+								margin: 0;
+								padding: 5px 0px;
+								font-family: "Montserrat";
+								font-size: 1.3em;
+								overflow: hidden;
+								white-space: nowrap;
+								text-overflow: ellipsis;
+							}
+	
+							p {
+								margin: 0;
+								padding-bottom: 5px;
+							}
+
+							.bands {
+								width: 100%;
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								padding-right: 15px;
+
+								span {
+									display: inline-block;
+									margin-right: 5px;
+
+									&:after {
+										content: ", "
+									}
+
+									&:last-of-type {
+										&:after {
+											content: "";
+										}
+									}
+								}
+							}
+						}
+					}
+
+					.color-block {
+						position: relative;
+						height: 4px;
+						background-color: $accentAccent2;
 					}
 				}
 			}
 		}
 
-		.more-events-btn {
-			color: $primaryLighten4;
-			background-color: #232323;
-			padding: 5px;
-			margin: 0;
-			cursor: pointer;
-			text-align: center;
+		.image-container {
+			position: sticky;
+			height: 100%;
+			width: 22vw;
+			max-width: 25%;
+			top: 0px;
+			left: 100%;
+		}
 
-			&:hover {
-				background-color: #000
+		.image, .image-color-block, .image-loading-indicator {
+			position: absolute;
+		}
+
+		.image, .image-loading-indicator {
+			width: 90%;
+			position: relative;
+			left: 40px;
+			top: 20px;
+			background-image: url("");
+			background-size: cover;
+			background-position: center;
+			background-color: #232323;
+			overflow: hidden;
+			border-radius: 3px;
+			cursor: pointer;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			z-index: 999;
+			&:before{
+				content: "";
+				display: block;
+				padding-top: 100%;
 			}
 		}
-	}
-}
 
-@media screen and (max-width: 1390px) {
-	// #event_page, 
-	// #location_page, 
-	// #band_page,
-	// #festival_page, 
-	// #detail_page, 
-	#not_found {
-		.content {
-			margin-bottom: 0;
+		.image-loading-indicator {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.image-color-block {
+			width: 30%;
+			top: 0;
+			height: 100%;
+			left: 10px;
+			background-color: $accentAccent2;
+		}
+	}
+
+	.lightbox {
+		width: 100vw;
+		height: 100vh;
+		//Subtract height of top-bar from top-position
+		top: calc(0vh - 64px);
+		//Subtract width of sidenav from left position
+		left: -80px;
+		position: absolute;
+		z-index: 999;
+		// Attributes that will be changed by JS
+		display: none;
+		opacity: 0;
+		transition: opacity .2s ease-out;
+
+
+		.darken {
+			position: fixed;
+			width: 100%;
+			height: 100vh;
+			top: 0;
+			left: 0;
+			background-color: rgba(0,0,0,0.6);
+			z-index: 998;
+		}
+		
+		img {
+			position: absolute;
+			max-height: 90vh;
+			max-width: 90vw;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 999;
+		}
+
+		.close-btn {
+			position: absolute;
+			top: 20px;
+			right: 100px;
+			display: block;
+			color: $accentAccent2;
+			background-color: transparent;
+			border: none;
+			cursor: pointer;
+			text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			z-index: 999;
+
+			.md-icon {
+				font-size: 3.5em;
+			}
 		}
 	}
 }
 
 @media screen and (max-width: 768px) {
-	// #event_page, 
-	// #location_page, 
-	// #band_page, 
-	#festival_page, 
-	// #detail_page, 
-	#not_found {
-		.back-button {
-			margin-left: 15px;
+#event_page, 
+#band_page, 
+#festival_page, 
+#detail_page, 
+	#location_page {
+		#detail_page {
+			padding-bottom: 0;
 		}
-		
+
 		.content {
-			margin-bottom: 0;
-			padding: 10px;
-			border-radius: 0;
+			padding: 0;
+			flex-wrap: wrap;
+			height: auto;
+			overflow: visible;
 
-			h2 {
-				max-width: 100%;
-				font-size: 2em;
-			}
-		}
+			.content-information {
+				width: 100%;
+				margin-top: 260px;
+				padding: 5px;
+				padding-top: 0;
+				
 
-		.content-body {
-			padding: 0 10px;
-		}
+				.content-header {
+					h2, h4 {
+						margin-left: 0 !important;
+						padding-left: 10px;
+					}
 
-		.events {
-
-			h3 {
-				font-size: 1.3em;
-			}
-
-			.event {
-				.event-information {
-					width: 85%;
+					h2 {
+						margin-bottom: 0;
+					}
 				}
+
+				.title {
+					font-size: 3.5em;
+					line-height: 0.9em;
+					// margin-left: 20px;
+					position: relative;
+					z-index: 2;
+				}
+
+				.tab-navigation {
+					margin-top: 20px;
+					.md-tabs-navigation {
+						height: auto;
+						overflow: visible;
+					}
+					.md-tabs-navigation-container {
+						width: 100%;
+						margin: 0 auto;
+						overflow: hidden;
+						.md-tabs-navigation-scroll-container {	
+							width: 100%;
+							justify-content: space-around;
+								
+
+							.md-tab-header {
+								margin-right: 0;
+								padding-left: 0;
+								font-size: 0.9em;
+							}
+	
+							span {
+								white-space: wrap;
+							}
+						}
+					}
+				}
+
+				.tab-navigation-small {
+					.md-tabs-navigation {						
+						.md-tabs-navigation-container {
+							overflow: visible;
+							.md-tabs-navigation-scroll-container {	
+								flex-wrap: wrap;
+
+								.md-tab-header {
+									font-size: 0.8em;
+			
+									span {
+										white-space: wrap;
+									}
+								}
+			
+								.md-active {
+									order: 99;
+									min-width: 100%;
+									font-size: 1.1em;
+								}
+							}
+						}
+					}					
+				}
+
+				.information-tab, .event-content {
+					.title {
+						font-size: 2.5em;
+						line-height: 0.9em;
+					}
+	
+					.detail-info {
+						width: 100%;
+						margin-top: 30px;
+						padding-left: 10px;
+	
+						&:first-of-type {
+							margin-top: -5px;
+						}
+	
+						.category {
+							width: 70px;
+							text-align: center;
+
+							svg {
+								width: 40px;
+							}
+
+							h4 {
+								margin-top: 0;
+								font-size: 1.1em;
+							}
+						}
+					}
+
+					.address, .location {
+						padding-left: 0;
+					}
+
+					.line-up {
+						display: flex;
+						flex-wrap: wrap;
+						justify-content: space-between;
+
+						.category {
+							padding-left: 10px;
+						}
+
+						.category-content {
+							margin-top: 20px;
+							margin-left: 0;
+							padding: 0 15px;
+							min-width: 100%;
+							order: 3;
+						}
+					}
+
+					.ticket-link {
+						margin-top: 0;
+						margin-right: 50px;
+						display: inline-block;
+						line-height: 35px;
+						order: 2;
+
+						svg {
+							margin-top: -5px;
+						}
+
+						span {
+							display: inline-block;
+							margin-top: 0;
+						}
+					}
+
+					.additional-information {
+						.category {
+							margin-left: -5px;
+							width: 100px;
+						}
+					}
+
+					.description {
+						display: block;
+	
+						.category {
+							
+						padding-left: 10px;
+							h4 {
+								margin-left: -8px;
+							}
+						}
+	
+						.category-content {
+							margin-top: -5px;
+							margin-left: 0;
+
+							p {
+								line-height: 1.35em;
+							}
+						}
+					} 
+				}
+
+				.upcoming-tab {
+					padding: 0;
+					padding-left: 10px;
+
+					.no-events {
+						margin-left: -10px;
+					}
+
+					.month-cards {
+						display: flex;
+						flex-wrap: nowrap;
+						overflow-x: auto;
+						justify-content: start;
+						margin-right: 10px;
+
+						.md-card { 
+							flex: 0 0 auto;
+							width: 70%;
+							min-width: 270px;
+							margin: 5px;
+							margin-right: 10px;
+
+							&:first-of-type {
+								margin-left: 0;
+							}
+
+							.card-content {
+								padding: 5px 10px;
+								font-size: 1.05em;
+								color: #232323;
+	
+								h2 {
+									width: 100%;
+									margin: 0;
+									padding: 5px 0px;
+									font-family: "Montserrat";
+									font-size: 1.2em;
+									overflow: hidden;
+									white-space: nowrap;
+									text-overflow: ellipsis;
+								}
+		
+								p {
+									margin: 0;
+									padding-bottom: 5px;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			
+
+			.image-container {
+				position: absolute;
+				width: 100%;
+				max-width: 100%;
+				height: 280px !important;
+				left: 0;
+				overflow: hidden;
+
+				.image, .image-loading-indicator {
+					margin-right: 0;
+					margin-top: 0;
+					width: 100%;
+					height: 100% !important;
+					min-height: 0;
+					max-height: none;
+					min-width: none;
+					max-width: none;
+					position: relative;
+					left: 0;
+					top: 0;
+					z-index: 0;
+					border-radius: 0;
+					overflow: visible;
+					// transform: skewY(3deg);
+					box-shadow: none;
+
+					&:before {
+						content: "";
+						height: 15px;
+						width: 100%;
+						padding-top: 0;
+						display: block;
+						position: absolute;
+						top: 0;
+						// transform: skewY(-3deg);
+						background-color: $accentAccent2;
+					}
+
+					&:after {
+						content: "";
+						width: 105%;
+						height: 30px;
+						position: relative;
+						display: block;
+						left: -5px;
+						top: 265px;
+						transform:rotate(2deg);
+						background-color: #fdfdfd;
+					}
+				}
+
+				.image-color-block {
+					width: 105%;
+					// display: none;
+					height: 15px;
+					left: -5px;
+					top: 253px;
+					transform:rotate(2deg);
+
+				}
+			}
+		}
+
+		.lightbox {
+			top: -135px;
+			left: 0;
+
+			img {
+				max-width: 100vw;
+			}
+
+			.close-btn {
+				top: 5px;
+				right: 5px;
 			}
 		}
 	}
