@@ -110,9 +110,13 @@ router.beforeEach((to, from, next) => {
 		next('/not-found');
 	} else {		
 		document.title = to.meta.title + ' | AWAY FROM LIFE STREETS';
-		
+		console.log(to);
+		const singlePages = ['event', 'location', 'band', 'festival'];
+		const goToSinglePage = singlePages.reduce((acc, curr) => {
+			return (to.path.indexOf(`/${curr}/`) != -1 || to.path.indexOf(`/new-${curr}/`) != -1) && acc;
+		}, true);
 		//Check if a 'Single-Page' is opened and give top-bar extra class to change color.
-		if(to.path.indexOf('/event/') != -1 || to.path.indexOf('/location/') != -1 || to.path.indexOf('/band/') != -1 || to.path.indexOf('/festival/') != -1) {
+		if(goToSinglePage) {
 			
 			document.getElementById('topbar').classList.add('single-page');
 		}

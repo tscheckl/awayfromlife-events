@@ -14,6 +14,7 @@ import EventPage from '@/components/SingleContentPages/EventPage';
 import FestivalPage from '@/components/SingleContentPages/FestivalPage';
 import LocationPage from '@/components/SingleContentPages/LocationPage';
 import BandPage from '@/components/SingleContentPages/BandPage';
+import FormWrapper from '@/components/NewContent/FormWrapper';
 import NotFound from '@/components/NotFound';
 
 export default new Router({
@@ -98,6 +99,16 @@ export default new Router({
 			meta: {
 				title: 'Band Detail Page',
 				category: 'Band'
+			}
+		},
+		{
+			path: '/new-event',
+			component: FormWrapper,
+			props: {
+				formType: 'new-event'
+			},
+			meta: {
+				title: 'New Event',
 			}
 		},
 		{
