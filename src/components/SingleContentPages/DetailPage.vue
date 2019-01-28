@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { backendUrl } from '@/secrets.js';
+import { backendUrl, imageUrl } from '@/secrets.js';
 
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
@@ -102,7 +102,7 @@ export default {
 	computed: {
 		imageUrl() {
 			if(this.image && this.image.length > 0)
-				return backendUrl + '/' + this.image;
+				return imageUrl + '/' + this.image;
 			return null;
 		}
 	},

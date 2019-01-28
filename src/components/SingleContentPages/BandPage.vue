@@ -138,7 +138,7 @@ import { removeEmptyObjectFields, sortEventsByMonth } from '@/helpers/array-obje
 import BandForm from '@/components/ContentForms/BandForm';
 import DetailPage from '@/components/SingleContentPages/DetailPage';
 
-import { backendUrl } from '@/secrets.js';
+import { backendUrl, imageUrl } from '@/secrets.js';
 import moment from 'moment';
 
 export default {
@@ -158,7 +158,7 @@ export default {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentBand));
 		},
 		baseUrl() {
-			return backendUrl;
+			return imageUrl;
 		}
 	},
 	data() {

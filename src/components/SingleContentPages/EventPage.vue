@@ -116,7 +116,6 @@ export default {
 	},
 	watch: {
 		$route() {
-			console.log(this.$route.params.url);
 			if(this.$route.params.url != this.event.url)
 				this.getEventByUrl();
 		}

@@ -107,7 +107,7 @@
 import LocationForm from '@/components/ContentForms/LocationForm';
 import DetailPage from '@/components/SingleContentPages/DetailPage';
 
-import { backendUrl } from '@/secrets.js';
+import { backendUrl, imageUrl } from '@/secrets.js';
 import { removeEmptyObjectFields, sortEventsByMonth } from '@/helpers/array-object-helpers.js';
 import moment from 'moment';
 
@@ -130,7 +130,7 @@ export default {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentLocation));
 		},
 		baseUrl() {
-			return backendUrl;
+			return imageUrl;
 		}
 	},
 	data() {
