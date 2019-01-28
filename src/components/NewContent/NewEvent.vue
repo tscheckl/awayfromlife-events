@@ -1,8 +1,8 @@
 <template>
   	<div id="new_event">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close');">
+		<!-- <md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close');">
 			<md-icon>clear</md-icon>
-		</md-button>
+		</md-button> -->
 
 		<div :class="'form-intro '  + (showStepper ?'hide' :'')">
 			<h1>New Event</h1>

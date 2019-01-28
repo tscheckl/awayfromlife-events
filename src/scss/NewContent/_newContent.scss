@@ -27,7 +27,12 @@
 	h1 {
 		margin-left: 15px;
 		font-size: 2.5em;
-		text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		// text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+	}
+
+	h2 {
+		font-family: "Montserrat";
+		font-weight: 700;
 	}
 
 	.form-intro {
@@ -67,6 +72,7 @@
 	.back-to-selection-btn {
 		position: absolute;
 		top: 55px;
+		left: 0;
 		z-index: 2;
 	}
 
