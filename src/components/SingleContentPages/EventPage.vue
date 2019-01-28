@@ -109,20 +109,20 @@ import {frontEndSecret, backendUrl } from '@/secrets.js';
 import moment from 'moment';
 
 export default {
-	name: 'event-page-new',
+	name: 'event-page',
 	components: {
 		EventForm,
 		DetailPage
 	},
 	watch: {
 		$route() {
+			console.log(this.$route.params.url);
 			if(this.$route.params.url != this.event.url)
 				this.getEventByUrl();
 		}
 	},
 	computed: {
 		event() {
-			console.log(this.$store.getters.currentEvent);
 			return JSON.parse(JSON.stringify(this.$store.getters.currentEvent));
 		}
 	},
@@ -236,12 +236,14 @@ export default {
 				this.isAuthenticated = true;
 			})
 			.catch(err => console.log(err));
-			
-		if(this.$store.getters.currentEvent.name == '' || (this.$store.getters.currentEvent.url != this.$route.params.url && this.$route.path == '/event'))
+
+		if(this.$store.getters.currentEvent.name == '' || (this.$store.getters.currentEvent.url != this.$route.params.url && this.$route.path.indexOf('/event') != -1)) {
 			this.getEventByUrl();
+		}
 		else
 			document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
-	}
+			
+	},
 }
 </script>
 

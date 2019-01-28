@@ -103,7 +103,6 @@ export default {
 		imageUrl() {
 			if(this.image && this.image.length > 0)
 				return backendUrl + '/' + this.image;
-			
 			return null;
 		}
 	},
@@ -155,13 +154,11 @@ export default {
 		}
 	},
 	updated() {
-		
-
-		console.log('schau her', document.getElementsByClassName('md-tab-header').length);
 		const numberOfTabHeaders = document.getElementsByClassName('md-tab-header').length;
 		if(numberOfTabHeaders > 2) {
 			document.getElementsByClassName('tab-navigation')[0].classList.add('tab-navigation-small');
 		}
+		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.imageUrl})`;
 	},
 	mounted() {
 		this.$http.get(backendUrl + '/api/users/auth')
@@ -169,9 +166,6 @@ export default {
 				this.isAuthenticated = true;
 			})
 			.catch(err => this.isAuthenticated = false);
-			
-		document.getElementById('topbar').classList.add('single-page');
-		
 		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.imageUrl})`;
 	}
 }
