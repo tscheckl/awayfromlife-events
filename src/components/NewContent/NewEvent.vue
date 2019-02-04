@@ -4,7 +4,7 @@
 			<md-icon>clear</md-icon>
 		</md-button> -->
 
-		<div :class="'form-intro '  + (showStepper ?'hide' :'')">
+		<div :class="'form-intro '  + (showStepper || finishedCreation ?'hide' :'')">
 			<h1>New Event</h1>
 			<h3>Do you want to create a</h3>
 			<button class="md-button md-raised" v-on:click="showForm(true)">Single Event</button>
@@ -152,20 +152,18 @@
 					</md-layout>
 
 					<md-layout md-flex="100">
-						<div class="single-form-field" v-for="(band, index) in currentObject.bands" :key="index">
-							<md-input-container>
-								<v-select class="form-v-select"
-											:options="backendBands"
-											:on-change="(selected) => onSelectBand(selected, index)"
-											v-model="currentObject.bands[index]"
-											placeholder="Select event's bands*">
+						<div class="single-form-field band-input" v-for="(band, index) in currentObject.bands" :key="index">
+							<v-select class="form-v-select"
+										:options="backendBands"
+										:on-change="(selected) => onSelectBand(selected, index)"
+										v-model="currentObject.bands[index]"
+										placeholder="Select event's bands*">
 
-											<span slot="no-options">
-												Looks like the band you're looking for doesn't exist yet. 
-												<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
-											</span>
-								</v-select>
-							</md-input-container>
+										<span slot="no-options">
+											Looks like the band you're looking for doesn't exist yet. 
+											<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+										</span>
+							</v-select>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove band</md-tooltip>
@@ -176,7 +174,7 @@
 							</p>
 						</div>
 
-						<md-button v-if="currentObject.bands != null" v-on:click="currentObject.bands.push('');" class="md-icon-button md-raised md-accent add-field-btn">
+						<md-button v-if="currentObject.bands != null" v-on:click="currentObject.bands.push('');" class="md-icon-button md-raised add-field-btn">
 							<md-icon>add</md-icon>
 							<md-tooltip md-direction="right">Add another band</md-tooltip>
 						</md-button>
@@ -206,6 +204,13 @@
 				</md-layout>
 			</div>
 		</stepper>
+
+		<finished-step 
+			:class="(!finishedCreation ?'hide' :'')"
+			contentType="Event"
+			v-on:back="$router.push('events')"
+			v-on:redo="restartForm">
+		</finished-step>
 
 		<div class="loading" v-show="loading">
 			<div class="darken"></div>
@@ -249,11 +254,6 @@
 					v-on:success="updateContent('newLocationDialog')">
 			</new-location>
 		</md-dialog>
-
-		<md-snackbar md-position="bottom right" ref="snackbar">
-			<span>New {{createdContent}} successfully created! <br> <b>It will be visible for everyone after it was verified by us.</b></span>
-			<md-button class="md-accent" v-on:click="$refs.snackbar.close()">OK</md-button>
-		</md-snackbar>
   	</div>
 </template>
 
@@ -266,6 +266,7 @@ import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js
 
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import Stepper from '@/components/Utilities/Stepper';
+import FinishedStep from '@/components/NewContent/FinishedStep';
 import NewBand from "@/components/NewContent/NewBand";
 import NewLocation from "@/components/NewContent/NewLocation";
 
@@ -274,6 +275,7 @@ export default {
 	components: {
 		ConfirmDialog,
 		Stepper,
+		FinishedStep,
 		NewBand,
 		NewLocation
 	},
@@ -338,7 +340,8 @@ export default {
 			backendBands: [],
 			backendLocations: [],
 			createdContent: '',
-			eventImage: null
+			eventImage: null,
+			finishedCreation: false
 		}
 	},
 	methods: {
@@ -350,22 +353,20 @@ export default {
 			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
 				removeEmptyObjectFields(this.newEvent);
 				
-				var formData = new FormData();
+				let formData = new FormData();
 				formData.append('image', this.eventImage, 'event-image.png');
 				formData.append('data', JSON.stringify(this.newEvent));
-				
-				// if(this.apiRoute == '/api/events' 
-				// && (this.newEvent.location.isValidated == false || this.allBandsUnverified()))
-					// this.apiRoute = '/api/unvalidated-events';
-					
-				//Send new/updated event to the backend.
-				this.$http.post(backendUrl + '/api/events/withImage', formData)
-					.then(response => {
-						console.log(response);
-						
+
+				if(this.apiRoute == '/api/events' && (this.newEvent.location.isValidated == false || this.allBandsUnverified()))
+					this.apiRoute = '/api/unvalidated-events';
+
+				this.$http.post(backendUrl + this.apiRoute, formData)
+					.then(response => {						
 						this.$emit('success');
 						this.loading = false;
-
+						
+						this.finishedCreation = true;
+						this.showStepper = false;
 						//Reset all fields
 						this.resetEventFields();
 					}).catch(err => {
@@ -537,6 +538,9 @@ export default {
 		},
 		uploadFile(file) {
 			this.eventImage = file[0];			
+		},
+		restartForm() {
+			//TODO: Implement Stepper restart function
 		}
 	},
 	mounted() {	

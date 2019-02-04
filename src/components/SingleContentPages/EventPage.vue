@@ -105,7 +105,7 @@ import { removeEmptyObjectFields, addBandLabels } from '@/helpers/array-object-h
 import EventForm from '@/components/ContentForms/EventForm';
 import DetailPage from '@/components/SingleContentPages/DetailPage';
 
-import {frontEndSecret, backendUrl } from '@/secrets.js';
+import { backendUrl, imageUrl } from '@/secrets.js';
 import moment from 'moment';
 
 export default {
@@ -239,9 +239,13 @@ export default {
 			
 		if(this.$store.getters.currentEvent.name == '' || (this.$store.getters.currentEvent.url != this.$route.params.url && this.$route.path == '/event'))
 			this.getEventByUrl();
-		else
+		else {
+			//THIS DEFINITELY NEEDS A NICER FIX
+			document.getElementsByClassName('image')[1].style.backgroundImage = `url(${imageUrl}/${this.event.image[2]})`;
 			document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
-	}
+		}
+			
+	},
 }
 </script>
 

@@ -31,8 +31,12 @@
 	}
 
 	h2 {
-		font-family: "Montserrat";
 		font-weight: 700;
+	}
+
+	.add-field-btn {
+		color: #fafafa;
+		background-color: $accentAccent2;
 	}
 
 	.form-intro {
@@ -49,6 +53,7 @@
 
 		h3 {
 			margin: 0;
+			font-family: "Montserrat";
 		}
 
 		div {
@@ -61,6 +66,7 @@
 			margin-top: 20px;
 			color: $primaryLighten4;
 			background-color: $accentAccent2;
+			font-family: Montserrat;
 		}
 	}
 	
