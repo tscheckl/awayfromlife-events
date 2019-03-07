@@ -14,7 +14,7 @@
 
 		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
 
-		<stepper :class="(createEvent ?'event-form ' :'tour-form ') + (!showStepper ?'hide' :'')" :steps="3" v-on:submit="createEvent ?addEvent() :addTour()">
+		<stepper ref="formStepper" :class="(createEvent ?'event-form ' :'tour-form ') + (!showStepper ?'hide' :'')" :steps="3" v-on:submit="createEvent ?addEvent() :addTour()">
 			<h1 slot="headline">New {{createEvent ?'Event' :'Tour'}}</h1>
 			<div slot="step-1">
 				<md-layout md-gutter>
@@ -88,7 +88,7 @@
 						<md-layout md-flex="100">
 							<md-input-container>
 								<label>Only Images</label>
-								<md-file v-on:selected="uploadFile" accept="image/*"></md-file>
+								<md-file ref="imageInput" v-on:selected="uploadFile" accept="image/*"></md-file>
 							</md-input-container>
 						</md-layout>
 					</md-layout>
@@ -434,6 +434,8 @@ export default {
 	 	resetEventFields() {			 
 			this.$store.commit('setCurrentEvent', JSON.parse(JSON.stringify(this.blankEvent)));			
 			this.currentObject = this.newEvent;
+			this.eventImage = null;
+			this.$refs.imageInput.resetFile();
 	  	},
 		resetTourFields() {
 			this.newTour = {
@@ -541,6 +543,9 @@ export default {
 		},
 		restartForm() {
 			//TODO: Implement Stepper restart function
+			this.showStepper = false;
+			this.finishedCreation = false;
+			this.$refs.formStepper.changeStep(1);
 		}
 	},
 	mounted() {	

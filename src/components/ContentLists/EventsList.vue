@@ -6,7 +6,10 @@
 					<h1>{{archive ?'Events Archive' :'All Events'}}</h1>
 				</div>
 
-				<md-button class="md-raised create-content-btn" v-on:click="$refs.newEventDialog.open();	"><md-icon>add</md-icon>Create new Event</md-button>
+				<router-link to="new-event">
+					<md-button class="md-raised create-content-btn"><md-icon>add</md-icon>Create new Event</md-button>
+				</router-link>
+				
 			</div>
 
 			
@@ -180,7 +183,7 @@
 </template>
 
 <script>
-import {frontEndSecret, backendUrl} from '@/secrets.js';
+import {backendUrl} from '@/secrets.js';
 
 import moment from 'moment';
 

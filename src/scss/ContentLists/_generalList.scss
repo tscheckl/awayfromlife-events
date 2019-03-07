@@ -39,6 +39,14 @@
 
 		.header-line {
 			display: flex;
+
+			a {
+				margin-top: 20px;
+				
+				&:after {
+					display: none;
+				}
+			}
 		}
 
 		.left-container {

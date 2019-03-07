@@ -171,6 +171,7 @@ export default {
 				removeEmptyObjectFields(this.verifyData.festival);
 				removeEmptyObjectFields(this.verifyData.event);				
 			}
+			
 
 			//Variable for the id that will be sent in the verification-request
 			let requestID = this.verifyData._id;
@@ -194,8 +195,12 @@ export default {
 					this.unvalidatedRoute = '/api/unvalidated-festivals/';
 			}
 
+			let formData = new FormData();
+			// formData.append('image', this.eventImage, 'event-image.png');
+			formData.append('data', JSON.stringify(requestBody));
+
 			if(keepData) {				
-				this.$http.post(`${backendUrl}${this.unvalidatedRoute}${requestEndpoint}${requestID}`, requestBody)
+				this.$http.post(`${backendUrl}${this.unvalidatedRoute}${requestEndpoint}${requestID}`, formData)
 					.then(response => {
 						this.showNextItem();
 					})

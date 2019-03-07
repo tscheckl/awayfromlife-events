@@ -15,11 +15,13 @@
 	.content {
 		display: flex;
 		flex-wrap: wrap;
+		margin-top: 0 !important;
 
 		.check-icon {
 			padding: 5px;
 			border-radius: 50px;
-			border: 3px solid $accentAccent2;
+			border: 3px solid #4CAF50;
+			color: #4CAF50;
 			font-size: 60px;
 			max-width: none;
 			max-height: none;
@@ -36,6 +38,22 @@
 			margin-top: 0;
 			display: block;
 			text-align: center;
+
+			h1 {
+				margin-bottom: 10px;
+				margin-left: 0;
+			}
+			
+			h3 {
+				margin-top: 0;
+				font-size: 1.35em;
+				color: $primaryDarken2;
+				font-weight: 500;
+
+				b {
+					color: $accentAccent2;
+				}
+			}
 
 			.md-button {
 				margin-top: 0;

@@ -78,12 +78,9 @@ export default {
 			this.currentStep = 1;
 		},
 		selectableSteps() {
-			console.log("change of steps", this.selectableSteps);
 			
 		},
 		currentStep() {
-			console.log("currentStep:",this.currentStep);
-			
 		}
 	},
 	computed: {
