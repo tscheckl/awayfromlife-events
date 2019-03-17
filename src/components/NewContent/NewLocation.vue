@@ -4,7 +4,7 @@
   			<md-icon>clear</md-icon>
 		</md-button>
 		
-		<stepper class="location-form" :steps="2" v-on:submit="addLocation">
+		<stepper class="location-form" :steps="3" v-on:submit="addLocation">
 			<h1 slot="headline">New Location</h1>
 			<div slot="step-1">
 				<md-layout md-gutter>
@@ -29,6 +29,10 @@
 			</div>
 
 			<div slot="step-2">
+				<image-step ref="imageInput" v-model="locationImage"></image-step>
+			</div>
+
+			<div slot="step-3">
 				<md-layout md-gutter>
 					<md-layout md-flex="100">
 						<h2>Additional information</h2>
@@ -94,14 +98,16 @@ import places from 'places.js';
 
 import {backendUrl} from '@/secrets.js';
 
-import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import LocationForm from '@/components/ContentForms/LocationForm';
+import ImageStep from '@/components/NewContent/ImageStep';
+import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import Stepper from '@/components/Utilities/Stepper';
 
 export default {
 	name: 'new-location',
 	components: {
 		LocationForm,
+		ImageStep,
 		ConfirmDialog,
 		Stepper
 	},
@@ -154,8 +160,8 @@ export default {
 				facebookUrl: ''
 			},
 			similarLocationFound: false,
-			similarLocations: []
-
+			similarLocations: [],
+			locationImage: null
 		}
 	},
 	methods: {
@@ -164,7 +170,12 @@ export default {
 			this.submitStatus = '';
 
 			if(this.newLocation.name && this.newLocation.address) {
-				this.$http.post(backendUrl + this.apiRoute, this.newLocation)
+				
+				let formData = new FormData();
+				formData.append('image', this.locationImage, 'location-image.png');
+				formData.append('data', JSON.stringify(this.newLocation));
+
+				this.$http.post(backendUrl + this.apiRoute, formData)
 					.then(response => {
 						this.$emit('success');
 						this.loading = false;

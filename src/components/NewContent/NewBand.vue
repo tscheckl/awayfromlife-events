@@ -7,7 +7,7 @@
 		<div class="content">
 		
 			<!-- <band-form :data="newBand"></band-form> -->
-			<stepper class="band-form" :steps="4" v-on:submit="addBand">
+			<stepper class="band-form" :steps="5" v-on:submit="addBand">
 				<h1 slot="headline">New Band</h1>
 				<div slot="step-1" >
 					<md-layout md-gutter>
@@ -63,7 +63,11 @@
 					</md-layout>
 				</div>
 
-				<div slot="step-2" >
+				<div slot="step-2">
+					<image-step ref="imageInput" v-model="bandImage"></image-step>
+				</div>
+
+				<div slot="step-3">
 					<md-layout md-gutter>
 						<md-layout md-flex="100">
 							<h2>Origin</h2>
@@ -78,7 +82,7 @@
 					</md-layout>
 				</div>
 
-				<div slot="step-3" >
+				<div slot="step-4" >
 					<md-layout md-gutter>
 						<md-layout md-flex="100">
 							<h2>Band History / Description</h2>
@@ -123,7 +127,7 @@
 					</md-layout>
 				</div>
 
-				<div slot="step-4" >
+				<div slot="step-5">
 					<md-layout md-gutter>
 						<md-layout md-flex="100">
 							<h2>Additional information</h2>
@@ -202,6 +206,7 @@ import places from 'places.js';
 import {backendUrl} from '@/secrets.js';
 
 import BandForm from '@/components/ContentForms/BandForm';
+import ImageStep from '@/components/NewContent/ImageStep';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import Stepper from '@/components/Utilities/Stepper';
 
@@ -209,6 +214,7 @@ export default {
 	name: 'new-band',
 	components: {
 		BandForm,
+		ImageStep,
 		ConfirmDialog,
 		Stepper
 	},
@@ -269,7 +275,8 @@ export default {
 			},
 			similarBandFound: false,
 			similarBands: [],
-			backendGenres: []
+			backendGenres: [],
+			bandImage: null
 		}
 	},
 	methods: {
@@ -278,7 +285,7 @@ export default {
 			this.submitStatus = '';
 			
 			var vm = this;
-
+			
 			if(this.newBand.name && this.newBand.genre[0] != '' && this.newBand.origin) {
 				for(let genre in this.newBand.genre) {
 					if(this.newBand.genre[genre] == '') 
@@ -286,13 +293,12 @@ export default {
 					else 
 						this.newBand.genre[genre] = this.newBand.genre[genre].name;
 				}
-
 				var formData = new FormData();
-				// formData.append('image', this.eventImage, 'event-image.png');
+				formData.append('image', this.bandImage, 'band-image.png');
 				formData.append('data', JSON.stringify(this.newBand));
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'
-				let editBand = this.edit?'/withImage/' + this.newBand._id: '/withImage';
+				let editBand = this.edit?  this.newBand._id: '';
 
 				this.$http[requestType](backendUrl + this.apiRoute + editBand, formData)
 					.then(response => {	

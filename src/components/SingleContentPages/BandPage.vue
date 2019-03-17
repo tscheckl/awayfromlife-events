@@ -228,7 +228,7 @@ export default {
 		getBandEvents() {
 			this.loading = true;
 			this.bandEvents = [];
-
+			console.log('BAND: ', this.band);
 			this.$http.get(`${backendUrl}/api/bands/${this.band._id}/upcomingEvents`)
 			.then(response => {
 				if(!response.body.message) {

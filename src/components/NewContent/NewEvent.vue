@@ -14,7 +14,7 @@
 
 		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
 
-		<stepper ref="formStepper" :class="(createEvent ?'event-form ' :'tour-form ') + (!showStepper ?'hide' :'')" :steps="3" v-on:submit="createEvent ?addEvent() :addTour()">
+		<stepper ref="formStepper" :class="(createEvent ?'event-form ' :'tour-form ') + (!showStepper ?'hide' :'')" :steps="4" v-on:submit="createEvent ?addEvent() :addTour()">
 			<h1 slot="headline">New {{createEvent ?'Event' :'Tour'}}</h1>
 			<div slot="step-1">
 				<md-layout md-gutter>
@@ -79,19 +79,6 @@
 							</div>
 						</md-layout>
 					</md-layout>
-					
-					<md-layout md-flex="50">
-						<md-layout>
-							<h2>Image</h2>
-						</md-layout>
-
-						<md-layout md-flex="100">
-							<md-input-container>
-								<label>Only Images</label>
-								<md-file ref="imageInput" v-on:selected="uploadFile" accept="image/*"></md-file>
-							</md-input-container>
-						</md-layout>
-					</md-layout>
 
 					<md-layout md-flex="100" v-if="!createEvent">
 						<h2>Tourstops</h2>
@@ -146,6 +133,10 @@
 			</div>
 
 			<div slot="step-2">
+				<image-step ref="imageInput" v-model="eventImage"></image-step>
+			</div>
+
+			<div slot="step-3">
 				<md-layout md-gutter>
 					<md-layout md-flex="100">
 						<h2>Lineup for this event</h2>
@@ -182,7 +173,7 @@
 				</md-layout>
 			</div>
 
-			<div slot="step-3">
+			<div slot="step-4">
 				<md-layout md-gutter>
 					<md-layout md-flex="100">
 						<h2>Additional Information</h2>
@@ -267,6 +258,7 @@ import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import Stepper from '@/components/Utilities/Stepper';
 import FinishedStep from '@/components/NewContent/FinishedStep';
+import ImageStep from '@/components/NewContent/ImageStep';
 import NewBand from "@/components/NewContent/NewBand";
 import NewLocation from "@/components/NewContent/NewLocation";
 
@@ -275,6 +267,7 @@ export default {
 	components: {
 		ConfirmDialog,
 		Stepper,
+		ImageStep,
 		FinishedStep,
 		NewBand,
 		NewLocation
@@ -435,7 +428,7 @@ export default {
 			this.$store.commit('setCurrentEvent', JSON.parse(JSON.stringify(this.blankEvent)));			
 			this.currentObject = this.newEvent;
 			this.eventImage = null;
-			this.$refs.imageInput.resetFile();
+			this.$refs.imageInput.resetInput();
 	  	},
 		resetTourFields() {
 			this.newTour = {
@@ -537,9 +530,6 @@ export default {
 		},
 		allBandsUnverified() {
 			return this.currentObject.bands.every(band => band.isValidated == false);
-		},
-		uploadFile(file) {
-			this.eventImage = file[0];			
 		},
 		restartForm() {
 			//TODO: Implement Stepper restart function

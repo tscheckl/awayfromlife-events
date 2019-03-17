@@ -37,7 +37,7 @@
 
 		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
 
-		<stepper :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?4 :3" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
+		<stepper :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?5 :4" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
 			<h1 slot="headline">New Festival {{createFestival ?' ' :' Instance'}}</h1>
 			<div slot="step-1" v-show="createFestival">
 				<h3>General information</h3>
@@ -101,6 +101,10 @@
 			</div>
 
 			<div slot="step-2">
+				<image-step ref="imageInput" v-model="festivalImage"></image-step>
+			</div>
+
+			<div slot="step-3">
 				<h3>Lineup</h3>
 				<div class="single-form-field" v-for="(band, index) in newFestivalEvent.bands" :key="index">
 					<md-input-container>
@@ -132,7 +136,7 @@
 				</md-button>
 			</div>
 
-			<div slot="step-3">
+			<div slot="step-4">
 				<h3>When does the festival happen? </h3>
 				<p class="heading-additional-info">(You can select a date range)</p>
 				<div class="datepicker-trigger">
@@ -157,7 +161,7 @@
 				</div>
 			</div>
 
-			<div slot="step-4" v-if="createFestival">
+			<div slot="step-5" v-if="createFestival">
 				<h3>Additional information</h3>
 				<md-layout md-gutter>
 					<md-layout md-flex="100">
@@ -244,14 +248,15 @@ import { getBandOptions } from '@/helpers/backend-getters.js';
 
 import Stepper from '@/components/Utilities/Stepper';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
-import NewBand from "@/components/NewContent/NewBand";
+import NewBand from '@/components/NewContent/NewBand';
+import ImageStep from '@/components/NewContent/ImageStep';
 
 export default {
 	name: 'new-festival',
 	components: {
 		Stepper,
 		NewBand,
-		Stepper,
+		ImageStep,
 		ConfirmDialog
 	},
 	watch: {
@@ -287,6 +292,7 @@ export default {
 				endDate: new Date().setDate(new Date().getDate()+1),
 				bands: ['']
 			},
+			festivalImage: null,
 			authorized: false,
 			loading: false,
 			submitStatus: '',
@@ -322,10 +328,14 @@ export default {
 					festival: this.newFestival,
 					event: this.newFestivalEvent
 				}
+
+				let formData = new FormData();
+				formData.append('image', this.festivalImage, 'festival-image.png');
+				formData.append('data', JSON.stringify(requestBody));
 				
 				let apiRoute = this.authorized ?'festivals' :'unvalidated-festivals';
 	
-				this.$http.post(`${backendUrl}/api/${apiRoute}`, requestBody)
+				this.$http.post(`${backendUrl}/api/${apiRoute}`, formData)
 					.then(response => {
 						this.loading = false;
 						this.$emit('success');					
@@ -356,9 +366,13 @@ export default {
 						this.newFestivalEvent.bands.splice(index, 1)
 				}
 
+				let formData = new FormData();
+				formData.append('image', this.festivalImage, 'festival-image.png');
+				formData.append('data', JSON.stringify(this.newFestivalEvent));
+
 				let apiRoute = this.authorized ?'festival-events' :'unvalidated-festival-events';
 
-				this.$http.post(`${backendUrl}/api/${apiRoute}/` + this.existingFestival._id, this.newFestivalEvent)
+				this.$http.post(`${backendUrl}/api/${apiRoute}/` + this.existingFestival._id, formData)
 					.then(response => {
 						this.loading = false;
 						this.$emit('success');					
