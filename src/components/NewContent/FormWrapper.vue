@@ -1,7 +1,7 @@
 <template>
 	<div id="form_wrapper">
 		<div class="color-block"></div>
-		<div class="content">
+		<div class="wrapper-content">
 			<new-event v-if="formType == 'new-event'" class="content-form"></new-event>
 			<new-location v-if="formType == 'new-location'" class="content-form"></new-location>
 			<new-band v-if="formType == 'new-band'" class="content-form"></new-band>

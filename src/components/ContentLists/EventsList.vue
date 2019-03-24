@@ -8,8 +8,7 @@
 
 				<router-link to="new-event">
 					<md-button class="md-raised create-content-btn"><md-icon>add</md-icon>Create new Event</md-button>
-				</router-link>
-				
+				</router-link>				
 			</div>
 
 			

@@ -6,7 +6,9 @@
 					<h1>All Festivals</h1>
 				</div>
 
-				<md-button class="md-raised create-content-btn" v-on:click="$refs.newFestivalDialog.open()"><md-icon>add</md-icon>Create new Festival</md-button>
+				<router-link to="new-festival">
+					<md-button class="md-raised create-content-btn"><md-icon>add</md-icon>Create new Festival</md-button>
+				</router-link>
 			</div>
 
 			

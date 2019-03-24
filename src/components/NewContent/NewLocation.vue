@@ -1,10 +1,10 @@
 <template>
 	<div id="new_location">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close');">
+		<!-- <md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close');">
   			<md-icon>clear</md-icon>
-		</md-button>
+		</md-button> -->
 		
-		<stepper class="location-form" :steps="3" v-on:submit="addLocation">
+		<stepper ref="formStepper" :class="'location-form ' + (finishedCreation ?'hide' :'')" :steps="3" v-on:submit="addLocation">
 			<h1 slot="headline">New Location</h1>
 			<div slot="step-1">
 				<md-layout md-gutter>
@@ -62,6 +62,13 @@
 			</div>
 		</stepper>
 
+		<finished-step 
+			:class="(!finishedCreation ?'hide' :'')"
+			contentType="Location"
+			v-on:back="$router.push('locations')"
+			v-on:redo="restartForm">
+		</finished-step>
+
 		<div class="loading" v-show="loading">
 			<div class="darken"></div>
 			<md-spinner md-indeterminate class="md-accent"></md-spinner>
@@ -101,6 +108,7 @@ import {backendUrl} from '@/secrets.js';
 import LocationForm from '@/components/ContentForms/LocationForm';
 import ImageStep from '@/components/NewContent/ImageStep';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
+import FinishedStep from '@/components/NewContent/FinishedStep';
 import Stepper from '@/components/Utilities/Stepper';
 
 export default {
@@ -109,6 +117,7 @@ export default {
 		LocationForm,
 		ImageStep,
 		ConfirmDialog,
+		FinishedStep,
 		Stepper
 	},
 	watch: {
@@ -161,7 +170,8 @@ export default {
 			},
 			similarLocationFound: false,
 			similarLocations: [],
-			locationImage: null
+			locationImage: null,
+			finishedCreation: false
 		}
 	},
 	methods: {
@@ -181,6 +191,7 @@ export default {
 						this.loading = false;
 						this.emptyFormFields();
 
+						this.finishedCreation = true;
 					})
 					.catch(err => {
 						this.loading = false;
@@ -196,6 +207,8 @@ export default {
     	},
 	  	emptyFormFields() {
 			this.$store.commit('setCurrentLocation', JSON.parse(JSON.stringify(this.blankLocation)));
+			this.locationImage = null;
+			this.$refs.imageInput.resetInput();
 		},
 		getSimilar() {
 			this.similarLocationFound = false;
@@ -220,6 +233,10 @@ export default {
 
 			this.similarLocationFound = false;
 			this.$refs.similarLocationDialog.close();
+		},
+		restartForm() {
+			this.finishedCreation = false;
+			this.$refs.formStepper.changeStep(1);
 		}
 	},
 	mounted() {

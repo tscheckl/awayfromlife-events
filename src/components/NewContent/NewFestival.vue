@@ -1,10 +1,10 @@
 <template>
 	<div id="new_festival">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close')">
+		<!-- <md-button class="md-icon-button md-accent close-btn" v-on:click="$emit('close')">
   			<md-icon>clear</md-icon>
-		</md-button>
+		</md-button> -->
 
-		<div :class="'form-intro '  + (showStepper ?'hide' :'')">
+		<div :class="'form-intro '  + (showStepper || finishedCreation ?'hide' :'')">
 			<h1>New Festival</h1>
 			<div :class="(createExistingFestival ?'hide ' :'') + 'creation-prompt'">
 				<h3>Do you want to create a</h3>
@@ -37,7 +37,7 @@
 
 		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
 
-		<stepper :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?5 :4" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
+		<stepper  ref="formStepper" :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?5 :4" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
 			<h1 slot="headline">New Festival {{createFestival ?' ' :' Instance'}}</h1>
 			<div slot="step-1" v-show="createFestival">
 				<h3>General information</h3>
@@ -195,6 +195,13 @@
 			</div>
 		</stepper>
 
+		<finished-step 
+			:class="(!finishedCreation ?'hide' :'')"
+			contentType="Festival"
+			v-on:back="$router.push('festivals')"
+			v-on:redo="restartForm">
+		</finished-step>
+
 		<div class="loading" v-show="loading">
 			<div class="darken"></div>
 			<md-spinner md-indeterminate class="md-accent"></md-spinner>
@@ -248,6 +255,7 @@ import { getBandOptions } from '@/helpers/backend-getters.js';
 
 import Stepper from '@/components/Utilities/Stepper';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
+import FinishedStep from '@/components/NewContent/FinishedStep';
 import NewBand from '@/components/NewContent/NewBand';
 import ImageStep from '@/components/NewContent/ImageStep';
 
@@ -257,7 +265,8 @@ export default {
 		Stepper,
 		NewBand,
 		ImageStep,
-		ConfirmDialog
+		ConfirmDialog,
+		FinishedStep
 	},
 	watch: {
 		newFestivalName() {			
@@ -306,7 +315,8 @@ export default {
 			existingFestival: null,
 			similarFestivals: [],
 			similarFestivalFound: false,
-			checkForSimilarFestivalEvent: false
+			checkForSimilarFestivalEvent: false,
+			finishedCreation: false
 		}
 	},
 	methods: {
@@ -340,6 +350,8 @@ export default {
 						this.loading = false;
 						this.$emit('success');					
 						this.resetFormFields();
+
+						this.finishedCreation = true;
 					})
 					.catch(err => {
 						this.loading = false;
@@ -501,6 +513,10 @@ export default {
 		showForm(createFestival) {
 			this.createFestival = createFestival;
 			this.showStepper = true;
+		},
+		restartForm() {
+			this.finishedCreation = false;
+			this.$refs.formStepper.changeStep(1);
 		}
 	},
 	mounted() {

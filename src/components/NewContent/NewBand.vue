@@ -1,13 +1,13 @@
 <template>
 	<div id="new_band">
-		<md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
+		<!-- <md-button class="md-icon-button md-accent close-btn" v-on:click="emitClose">
   			<md-icon>clear</md-icon>
-		</md-button>
+		</md-button> -->
 		
 		<div class="content">
 		
 			<!-- <band-form :data="newBand"></band-form> -->
-			<stepper class="band-form" :steps="5" v-on:submit="addBand">
+			<stepper ref="formStepper" :class="'band-form '  + (finishedCreation ?'hide' :'')" :steps="5" v-on:submit="addBand">
 				<h1 slot="headline">New Band</h1>
 				<div slot="step-1" >
 					<md-layout md-gutter>
@@ -164,6 +164,13 @@
 				</div>
 			</stepper>
 		</div>
+
+		<finished-step 
+			:class="(!finishedCreation ?'hide' :'')"
+			contentType="Band"
+			v-on:back="$router.push('bands')"
+			v-on:redo="restartForm">
+		</finished-step>
 		
 		<div class="loading" v-show="loading">
 			<div class="darken"></div>
@@ -208,6 +215,7 @@ import {backendUrl} from '@/secrets.js';
 import BandForm from '@/components/ContentForms/BandForm';
 import ImageStep from '@/components/NewContent/ImageStep';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
+import FinishedStep from '@/components/NewContent/FinishedStep';
 import Stepper from '@/components/Utilities/Stepper';
 
 export default {
@@ -216,6 +224,7 @@ export default {
 		BandForm,
 		ImageStep,
 		ConfirmDialog,
+		FinishedStep,
 		Stepper
 	},
 	props: {
@@ -276,7 +285,8 @@ export default {
 			similarBandFound: false,
 			similarBands: [],
 			backendGenres: [],
-			bandImage: null
+			bandImage: null,
+			finishedCreation: false
 		}
 	},
 	methods: {
@@ -306,6 +316,7 @@ export default {
 						vm.loading = false;
 						this.emptyFormFields();
 
+						this.finishedCreation = true;
 					})
 					.catch(err => {
 						this.loading = false;
@@ -327,6 +338,8 @@ export default {
 		},
 	  	emptyFormFields() {
 			this.$store.commit('setCurrentBand', JSON.parse(JSON.stringify(this.blankBand)));
+			this.bandImage = null;
+			this.$refs.imageInput.resetInput();
 		},
 		getSimilar() {
 			this.similarBandFound = false;
@@ -335,7 +348,6 @@ export default {
 				
 				this.$http.get(backendUrl + '/api/bands/similar?country=' + this.newBand.origin.country + '&name=' + this.newBand.name)
 				.then(response => {		
-						console.log("anfrage an:", backendUrl + '/api/bands/similar?country=' + this.newBand.origin.country + '&name=' + this.newBand.name);
 					if (response.body.data) {
 						this.similarBands = response.body.data;
 						this.similarBandFound = true;
@@ -373,6 +385,10 @@ export default {
 				array[0] = '';
 			}
 		},
+		restartForm() {
+			this.finishedCreation = false;
+			this.$refs.formStepper.changeStep(1);
+		}
 	},
 	mounted() {
 		this.emptyFormFields();

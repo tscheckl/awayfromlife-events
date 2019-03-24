@@ -112,6 +112,36 @@ export default new Router({
 			}
 		},
 		{
+			path: '/new-band',
+			component: FormWrapper,
+			props: {
+				formType: 'new-band'
+			},
+			meta: {
+				title: 'New Band',
+			}
+		},
+		{
+			path: '/new-location',
+			component: FormWrapper,
+			props: {
+				formType: 'new-location'
+			},
+			meta: {
+				title: 'New Location',
+			}
+		},
+		{
+			path: '/new-festival',
+			component: FormWrapper,
+			props: {
+				formType: 'new-festival'
+			},
+			meta: {
+				title: 'New Festival',
+			}
+		},
+		{
 			path: '/calendar',
 			component: EventCalendar,
 			meta: {

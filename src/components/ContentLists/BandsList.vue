@@ -6,7 +6,9 @@
 					<h1>All Bands</h1>
 				</div>
 
-				<md-button class="md-raised create-content-btn" v-on:click="openDialog('newBandDialog')"><md-icon>add</md-icon>Create new Band</md-button>
+				<router-link to="new-band">
+					<md-button class="md-raised create-content-btn"><md-icon>add</md-icon>Create new Band</md-button>
+				</router-link>
 			</div>
 
 			<h3 class="show-filters-button" v-on:click="toggleFilters">
