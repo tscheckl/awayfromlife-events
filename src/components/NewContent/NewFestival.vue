@@ -35,12 +35,12 @@
 			</div>
 		</div>
 
-		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="showStepper = false"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
+		<button class="md-button back-to-selection-btn" v-if="showStepper" v-on:click="backToSelection"><md-icon>keyboard_arrow_left</md-icon>Back to selection</button>
 
-		<stepper  ref="formStepper" :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?5 :4" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
-			<h1 slot="headline">New Festival {{createFestival ?' ' :' Instance'}}</h1>
+		<stepper  ref="formStepper" :class="'festival-form ' + (!showStepper ?'hide' :'')" :steps="createFestival ?6 :4" v-on:submit="createFestival ?addFestival() :addFestivalEvent()">
+			<h1 slot="headline">New Festival {{createFestival ?' ' :' Event'}}</h1>
 			<div slot="step-1" v-show="createFestival">
-				<h3>General information</h3>
+				<h2>General information</h2>
 				<md-layout md-gutter>
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
@@ -88,24 +88,81 @@
 			</div>
 
 			<div class="select-existing-festival" slot="step-1" v-if="!createFestival">
-				<h3>Select the festival you want to create a new instance of</h3>
-				<md-input-container>
-					<v-select class="form-v-select"
-								v-model="existingFestival"
-								:options="festivalList"
-								:on-change="checkSelection"
-								label="name"
-								placeholder="Enter the festival you're looking for*">
-					</v-select>
-				</md-input-container>
+				<h2>Select the festival you want to create a new instance of</h2>
+				<md-layout md-gutter>
+					<md-layout md-flex="100">
+						<md-input-container>
+							<v-select class="form-v-select"
+										v-model="existingFestival"
+										:options="festivalList"
+										:on-change="checkSelection"
+										label="name"
+										placeholder="Enter the festival you're looking for*">
+							</v-select>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Title of this festival edition</label>
+							<md-input v-model="newFestivalEvent.name" required></md-input>
+						</md-input-container>
+					</md-layout>
+				</md-layout>
 			</div>
 
-			<div slot="step-2">
+			<div slot="step-2" v-if="createFestival">
 				<image-step ref="imageInput" v-model="festivalImage"></image-step>
 			</div>
 
-			<div slot="step-3">
-				<h3>Lineup</h3>
+			<div slot="step-3" v-if="createFestival">
+				<h2>Additional information</h2>
+				<md-layout md-gutter>
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Description</label>
+							<md-textarea v-model="newFestival.description"></md-textarea>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="100">
+						<md-input-container>
+							<label>Ticket Link</label>
+							<md-input v-model="newFestival.ticketLink"></md-input>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100">
+						<md-input-container>
+							<label>Website</label>
+							<md-input v-model="newFestival.website"></md-input>
+						</md-input-container>
+					</md-layout>
+
+					<md-layout md-flex="50" md-flex-small="100">
+						<md-input-container>
+							<label>Facebook page</label>
+							<md-input v-model="newFestival.facebookUrl"></md-input>
+						</md-input-container>
+					</md-layout>
+				</md-layout>
+			</div>
+
+			<div :slot="createFestival ?'step-4':'step-2'">
+				<h3 class="new-edition-info" v-if="createFestival">You now have to create one edition of this festival (e.g. Groezrock -> Groezrock 2019)</h3>
+
+				<md-layout md-flex="100" v-if="createFestival">
+					<md-input-container>
+						<label>Title of this festival edition</label>
+						<md-input v-model="newFestivalEvent.name" required></md-input>
+					</md-input-container>
+				</md-layout>
+
+				<image-step ref="festivalEventImageInput" v-model="festivalEventImage"></image-step>
+			</div>
+
+			<div :slot="createFestival ?'step-5' :'step-3'">
+				<h2>Lineup</h2>
 				<div class="single-form-field" v-for="(band, index) in newFestivalEvent.bands" :key="index">
 					<md-input-container>
 						<v-select class="form-v-select"
@@ -136,8 +193,8 @@
 				</md-button>
 			</div>
 
-			<div slot="step-4">
-				<h3>When does the festival happen? </h3>
+			<div :slot="createFestival ?'step-6' :'step-4'">
+				<h2>When does the festival happen? </h2>
 				<p class="heading-additional-info">(You can select a date range)</p>
 				<div class="datepicker-trigger">
 					<input
@@ -159,39 +216,6 @@
 						@date-two-selected="val => { newFestivalEvent.endDate = val }"
 					/>
 				</div>
-			</div>
-
-			<div slot="step-5" v-if="createFestival">
-				<h3>Additional information</h3>
-				<md-layout md-gutter>
-					<md-layout md-flex="100">
-						<md-input-container>
-							<label>Description</label>
-							<md-textarea v-model="newFestival.description"></md-textarea>
-						</md-input-container>
-					</md-layout>
-
-					<md-layout md-flex="100">
-						<md-input-container>
-							<label>Ticket Link</label>
-							<md-input v-model="newFestival.ticketLink"></md-input>
-						</md-input-container>
-					</md-layout>
-
-					<md-layout md-flex="50" md-flex-small="100">
-						<md-input-container>
-							<label>Website</label>
-							<md-input v-model="newFestival.website"></md-input>
-						</md-input-container>
-					</md-layout>
-
-					<md-layout md-flex="50" md-flex-small="100">
-						<md-input-container>
-							<label>Facebook page</label>
-							<md-input v-model="newFestival.facebookUrl"></md-input>
-						</md-input-container>
-					</md-layout>
-				</md-layout>
 			</div>
 		</stepper>
 
@@ -302,6 +326,7 @@ export default {
 				bands: ['']
 			},
 			festivalImage: null,
+			festivalEventImage: null,
 			authorized: false,
 			loading: false,
 			submitStatus: '',
@@ -323,14 +348,7 @@ export default {
 		addFestival() {
 			this.loading = true;
 			
-			if(this.newFestival.name 
-			&& this.newFestival.address.value 
-			&& this.newFestival.genre[0] != '' 
-			&& this.newFestivalEvent.bands[0] != '' 
-			&& this.newFestivalEvent.startDate 
-			&& this.newFestivalEvent.endDate) {
-				this.newFestivalEvent.name = this.newFestival.name + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
-
+			if(this.allRequiredFieldsFilledOut()) {
 				removeEmptyObjectFields(this.newFestival);
 				removeEmptyObjectFields(this.newFestivalEvent);
 
@@ -340,7 +358,8 @@ export default {
 				}
 
 				let formData = new FormData();
-				formData.append('image', this.festivalImage, 'festival-image.png');
+				formData.append('festivalImage', this.festivalImage, 'festival-image.png');
+				formData.append('eventImage', this.festivalEventImage, 'festival-event-image.png');
 				formData.append('data', JSON.stringify(requestBody));
 				
 				let apiRoute = this.authorized ?'festivals' :'unvalidated-festivals';
@@ -351,6 +370,7 @@ export default {
 						this.$emit('success');					
 						this.resetFormFields();
 
+						this.showStepper = false;
 						this.finishedCreation = true;
 					})
 					.catch(err => {
@@ -369,8 +389,6 @@ export default {
 			this.loading = true;
 
 			if(this.existingFestival && this.newFestivalEvent.bands[0] != '' && this.newFestivalEvent.startDate && this.newFestivalEvent.endDate) {
-				this.newFestivalEvent.name = this.existingFestival.name + ' ' + moment(this.newFestivalEvent.startDate).format('YYYY');
-
 				for(let index in this.newFestivalEvent.bands) {
 					if(this.newFestivalEvent.bands[index]._id) 
 						this.newFestivalEvent.bands[index] = this.newFestivalEvent.bands[index]._id
@@ -379,7 +397,7 @@ export default {
 				}
 
 				let formData = new FormData();
-				formData.append('image', this.festivalImage, 'festival-image.png');
+				formData.append('image', this.festivalEventImage, 'festival-image.png');
 				formData.append('data', JSON.stringify(this.newFestivalEvent));
 
 				let apiRoute = this.authorized ?'festival-events' :'unvalidated-festival-events';
@@ -389,6 +407,8 @@ export default {
 						this.loading = false;
 						this.$emit('success');					
 						this.resetFormFields();
+						this.showStepper = false;
+						this.finishedCreation = true;
 					})
 					.catch(err => {
 						this.loading = false;
@@ -401,6 +421,14 @@ export default {
 				this.submitStatus = 'All required form fields need to be filled out!';	
 				this.$refs.snackbar.open();		
 			}
+		},
+		allRequiredFieldsFilledOut() {
+			return this.newFestival.name 
+			&& this.newFestival.address.value 
+			&& this.newFestival.genre[0] != '' 
+			&& this.newFestivalEvent.bands[0] != '' 
+			&& this.newFestivalEvent.startDate 
+			&& this.newFestivalEvent.endDate;
 		},
 		getSimilarFestivals() {
 			this.similarFestivalFound = false;
@@ -467,6 +495,9 @@ export default {
 				endDate: new Date().setDate(new Date().getDate()+1),
 				bands: ['']
 			};
+
+			this.festivalImage = null;
+			this.festivalEventImage = null;
 		},
 		onSelectGenre(selected, index) {
 			this.newFestival.genre[index] = selected;
@@ -494,7 +525,7 @@ export default {
 		updateContent(dialog) {
 			this.$refs[dialog].close();
 
-			this.submitStatus = `New Band successfully created! \nIt will be visible for everyone after it was verified by us.`;
+			this.submitStatus = `New Band successfully created! \nIt will be visible fkor everyone after it was verified by us.`;
 			getBandOptions()
 				.then(data => this.backendBands = data)
 				.catch(err => console.log(err));
@@ -504,6 +535,7 @@ export default {
 		checkSelection(selection) {
 			if(selection != null) {
 				this.existingFestival = selection;
+				this.newFestivalEvent.name = this.existingFestival.name + ' ' + new Date().getFullYear();
 				this.createExistingFestival = true;
 			}
 			else {
@@ -517,6 +549,11 @@ export default {
 		restartForm() {
 			this.finishedCreation = false;
 			this.$refs.formStepper.changeStep(1);
+		},
+		backToSelection() {
+			this.showStepper = false;
+			this.newFestivalEvent.name = null;
+			this.existingFestival = null;
 		}
 	},
 	mounted() {
