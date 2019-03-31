@@ -16,6 +16,8 @@
 						</md-input-container>
 					</md-layout>
 
+					<image-step v-model="image"></image-step>
+ 
 					<md-layout md-flex="100">
 						<h2>Address</h2>
 					</md-layout>
@@ -63,14 +65,17 @@
 <script>
 import places from 'places.js';
 
+import ImageStep from "@/components/NewContent/ImageStep";
+
 export default {
 	name: 'location-form',
 	components: {
-    	places
+		places,
+		ImageStep
 	},
 	props: {
 		data: Object,
-		value: String,
+		value: [String, Object, File],
 		canSubmit: {
 			type: Boolean,
 			default: false
@@ -78,9 +83,20 @@ export default {
 	},
 	watch: {
 		data() {
-			if(this.value == '') {
+			if(this.locationValue == '')
 				this.close();
-			}
+		},
+		value() {
+			this.image = this.value;
+		},
+		image() {
+			this.$emit('input', this.image);
+		}
+	},
+	data() {
+		return {
+			locationValue: '',
+			image: this.value
 		}
 	},
 	methods: {
@@ -113,7 +129,7 @@ export default {
 			this.data.address.lat = e.suggestion.latlng.lat;
 			this.data.address.lng = e.suggestion.latlng.lng;
 			this.data.address.value = e.suggestion.value;
-			this.value = e.suggestion.value ?e.suggestion.value :this.value;
+			this.locationValue = e.suggestion.value ?e.suggestion.value :this.locationValue;
 		});
 	},
 	updated() {

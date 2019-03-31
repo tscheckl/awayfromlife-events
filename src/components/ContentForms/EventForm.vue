@@ -36,6 +36,8 @@
 						</p>
 					</md-layout>
 
+					<image-step v-model="value"></image-step>
+
 					<md-layout md-flex="100">
 						<h2>Lineup for this event</h2>
 					</md-layout>
@@ -129,15 +131,18 @@ import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js
 
 import NewBand from "@/components/NewContent/NewBand";
 import NewLocation from "@/components/NewContent/NewLocation";
+import ImageStep from "@/components/NewContent/ImageStep";
 
 export default {
 	name: 'event-form',
 	components: {
 		NewBand,
 		NewLocation,
+		ImageStep
 	},
 	props: {
 		event: Object,
+		value: [String, Object, File],
 		edit: {
 			type: Boolean,
 			default: false
@@ -162,6 +167,10 @@ export default {
 	watch: {
 		event() {
 			this.localBands = this.event.bands;
+		},
+		value() {
+			console.log('CHANGE IMAGE');
+			this.$emit('input', this.value);
 		}
 	},
 	methods: {

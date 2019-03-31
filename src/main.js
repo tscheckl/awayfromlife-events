@@ -110,19 +110,15 @@ router.beforeEach((to, from, next) => {
 		next('/not-found');
 	} else {		
 		document.title = to.meta.title + ' | AWAY FROM LIFE STREETS';
-		console.log(to);
 		const singlePages = ['event', 'location', 'band', 'festival'];
 		const goToSinglePage = singlePages.reduce((acc, curr) => {
-			return (to.path.indexOf(`/${curr}/`) != -1 || to.path.indexOf(`/new-${curr}/`) != -1) && acc;
-		}, true);
+			return (to.path.indexOf(`/${curr}/`) != -1 || to.path.indexOf(`/new-${curr}/`) != -1) || acc;
+		}, false);
 		//Check if a 'Single-Page' is opened and give top-bar extra class to change color.
-		if(goToSinglePage) {
-			
+		if(goToSinglePage)			
 			document.getElementById('topbar').classList.add('single-page');
-		}
-		else {
+		else
 			document.getElementById('topbar') ?document.getElementById('topbar').classList.remove('single-page') :'';
-		}
 
 		if(to.path == "/admin") {
 			Vue.http.get(backendUrl + '/api/users/auth')

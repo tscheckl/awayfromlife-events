@@ -16,6 +16,8 @@
 						</md-input-container>
 					</md-layout>
 
+					<image-step v-model="image"></image-step>
+
 					<md-layout class="genre-header" md-flex="100">
 						<h2>Genre</h2>
 						<p>(You can add up to 3)</p>
@@ -101,11 +103,16 @@ import places from 'places.js';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions } from '@/helpers/backend-getters.js';
 
+import ImageStep from "@/components/NewContent/ImageStep";
+
 export default {
 	name: 'festival-form',
+	components: {
+		ImageStep
+	},
 	props: {
 		data: Object,
-		value: String,
+		value: [String, Object, File],
 		canSubmit: {
 			type: Boolean,
 			default: false
@@ -114,6 +121,12 @@ export default {
 	watch: {
 		data() {
 			this.myData = this.data;
+		},
+		value() {
+			this.image = this.value;
+		},
+		image() {
+			this.$emit('input', this.image);
 		}
 	},
 	data() {
@@ -121,6 +134,8 @@ export default {
 			myData: this.data,
 			backendGenres: [],
 			backendBands: [],
+			image: this.value,
+			locationValue: ''
 		}
 	},
 	methods: {
@@ -173,7 +188,7 @@ export default {
 			this.myData.address.lat = e.suggestion.latlng.lat;
 			this.myData.address.lng = e.suggestion.latlng.lng;
 			this.myData.address.value = e.suggestion.value;
-			this.value = e.suggestion.value;
+			this.locationValue = e.suggestion.value;
 		});
 	},
 	updated() {

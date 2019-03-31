@@ -16,6 +16,8 @@
 						</md-input-container>
 					</md-layout>
 
+					<image-step v-model="image"></image-step>
+
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
 							<label>Band's Founding year</label>
@@ -155,11 +157,16 @@
 import places from 'places.js';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 
+import ImageStep from "@/components/NewContent/ImageStep";
+
 export default {
 	name: 'band-form',
+	components: {
+		ImageStep
+	},
 	props: {
 		data: Object,
-		value: String,
+		value: [String, Object, File],
 		canSubmit: {
 			type: Boolean,
 			default: false
@@ -168,12 +175,19 @@ export default {
 	watch: {
 		data() {
 			this.myData = this.data;
+		},
+		value() {
+			this.image = this.value;
+		},
+		image() {
+			this.$emit('input', this.image);
 		}
 	},
 	data() {
 		return {
 			myData: this.data,
-			backendGenres: []
+			backendGenres: [],
+			image: this.value
 		}	
 	},
 	methods: {
@@ -222,7 +236,6 @@ export default {
 			this.myData.origin.lat = e.suggestion.latlng.lat;
 			this.myData.origin.lng = e.suggestion.latlng.lng;
 			this.myData.origin.value = e.suggestion.value;
-			this.value = e.suggestion.value;
 		});	
 	},
 	updated() {

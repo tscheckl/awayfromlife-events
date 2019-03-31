@@ -16,6 +16,8 @@
 						</md-input-container>
 					</md-layout>
 
+					<image-step v-model="image"></image-step>
+
 					<md-layout md-flex="100">
 						<h2>When does the festival happen? </h2>
 					</md-layout>
@@ -103,22 +105,36 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions } from '@/helpers/backend-getters.js';
 
 import NewBand from "@/components/NewContent/NewBand";
+import ImageStep from "@/components/NewContent/ImageStep";
 
 export default {
 	name: 'festival-event-form',
 	components: {
-		NewBand
+		NewBand,
+		ImageStep
 	},
 	props: {
 		data: Object,
+		value: [String, Object, File],
 		canSubmit: {
 			type: Boolean,
 			default: false
 		}
 	},
+	watch: {
+		value() {
+			console.log('value change');
+			this.image = this.value;
+		},
+		image() {
+			console.log('image change');
+			this.$emit('input', this.image);
+		}
+	},
 	data() {
 		return {
 			backendBands: [],
+			image: this.value
 		}
 	},
 	methods : {		
@@ -152,7 +168,10 @@ export default {
 		getBandOptions()
 			.then(data => this.backendBands = data)
 			.catch(err => console.log(err));
-	}
+	},
+	updated() {
+		console.log('update', this.value);
+	},
 }
 </script>
 

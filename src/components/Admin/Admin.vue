@@ -54,11 +54,11 @@
 				</md-button>
 
 				<h1>Given data</h1>
-				<event-form v-if="currentCategory == 'unverified Events' && unverifiedContent.length > 0" :event="verifyData" :edit="false"></event-form>
+				<event-form v-if="currentCategory == 'unverified Events' && unverifiedContent.length > 0" :event="verifyData" v-model="verifyImage" :edit="false"></event-form>
 
 				<div class="verify-festival" v-if="currentCategory == 'unverified Festivals' && unverifiedContent.length > 0">
 					<h2 v-if="!verifyData.validated">Unvalidated Festival</h2>
-					<festival-form v-if="!verifyData.validated" :data="verifyData.festival"></festival-form>
+					<festival-form v-if="!verifyData.validated" :data="verifyData.festival" v-model="festivalImage"></festival-form>
 					<h2 v-if="verifyData.validated">Associated Festival</h2>
 					<div class="report-target" v-if="verifyData.validated">
 						<a :href="`/festivals/${verifyData.festival.url}`" target="_blank">
@@ -67,12 +67,12 @@
 						</a>
 					</div>
 					<h2>Unverified Festival Instance</h2>
-					<festival-event-form :data="verifyData.event"></festival-event-form>
+					<festival-event-form :data="verifyData.event" v-model="verifyImage"></festival-event-form>
 				</div>
 
-				<location-form v-if="currentCategory == 'unverified Locations' && unverifiedContent.length > 0" :data="verifyData"></location-form>
+				<location-form v-if="currentCategory == 'unverified Locations' && unverifiedContent.length > 0" :data="verifyData" v-model="verifyImage"></location-form>
 
-				<band-form v-if="currentCategory == 'unverified Bands' && unverifiedContent.length > 0" :data="verifyData"></band-form>
+				<band-form v-if="currentCategory == 'unverified Bands' && unverifiedContent.length > 0" :data="verifyData" v-model="verifyImage"></band-form>
 
 				<div class="report-form" v-if="currentCategory == 'reports' && unverifiedContent.length > 0">
 					<h2>Reported {{verifyData.category}}:</h2>
@@ -135,7 +135,7 @@ import BandForm from '@/components/ContentForms/BandForm';
 import EventPage from '@/components/SingleContentPages/EventPage';
 import ChangePasswordForm from './ChangePasswordForm';
 
-import {frontEndSecret, backendUrl} from '@/secrets.js';
+import {frontEndSecret, backendUrl, imageUrl} from '@/secrets.js';
 import { removeEmptyObjectFields, addBandLabels, addLocationLabel } from '@/helpers/array-object-helpers.js';
 
 export default {
@@ -159,6 +159,10 @@ export default {
 			unvalidatedRoute: '/api/unvalidated-events/',
 			validatedRoute: '/api/events',
 			verifyData: {},
+			verifyImage: null,
+			previousImage: null,
+			festivalImage: null,
+			previousFestivalImage: null,
 			unverifiedContent: []
 		}
 	},
@@ -171,14 +175,15 @@ export default {
 				removeEmptyObjectFields(this.verifyData.festival);
 				removeEmptyObjectFields(this.verifyData.event);				
 			}
-			
-
 			//Variable for the id that will be sent in the verification-request
 			let requestID = this.verifyData._id;
 			//Variable for the verification backend-endpoint, reports needs special treatment here
 			let requestEndpoint = this.currentCategory == 'reports' ?'accept/' :'validate/';
 			//Data that will be sent in the body of the verification request
 			let requestBody = this.verifyData;
+
+			console.log('image:', this.verifyImage);
+			// return;
 
 			//Special adjustments for festivals.
 			if(this.currentCategory == 'unverified Festivals') {
@@ -196,7 +201,19 @@ export default {
 			}
 
 			let formData = new FormData();
-			// formData.append('image', this.eventImage, 'event-image.png');
+			if(this.verifyImage != this.previousImage) {
+				let imageAppendName = this.currentCategory == 'unverified Festivals' ?'eventImage' :'image';
+				let requestBodyImageParent = this.currentCategory == 'unverified Festivals' ? requestBody.event : requestBody;
+				
+				if(this.verifyImage != null) formData.append(imageAppendName, this.verifyImage);
+				else requestBodyImageParent.image = [];
+			}
+
+			if(this.currentCategory == 'unverified Festivals' && this.festivalImage != this.previousFestivalImage) {
+				if(this.festivalImage != null) formData.append('festivalImage', this.festivalImage);
+				else requestBody.festival.image = [];
+			}
+
 			formData.append('data', JSON.stringify(requestBody));
 
 			if(keepData) {				
@@ -223,6 +240,8 @@ export default {
 			
 			if(this.currentCategory == 'unverified Events' || this.currentCategory == 'cancellations') {
 				this.verifyData = JSON.parse(JSON.stringify(content[index]));
+				this.previousImage = imageUrl + '/' + this.verifyData.image[this.verifyData.image.length-1];
+				this.verifyImage = imageUrl + '/' + this.verifyData.image[this.verifyData.image.length-1];
 				
 				addBandLabels(this.verifyData);
 
@@ -233,11 +252,19 @@ export default {
 			}
 			else if(this.currentCategory == 'unverified Festivals') {
 				this.verifyData = JSON.parse(JSON.stringify(content[index]));
+
+				this.previousImage = imageUrl + '/' + this.verifyData.event.image[this.verifyData.event.image.length-1];
+				this.verifyImage = imageUrl + '/' + this.verifyData.event.image[this.verifyData.event.image.length-1];
+				console.log('image given to form: ', this.verifyImage);
+				this.previousFestivalImage = imageUrl + '/' + this.verifyData.festival.image[this.verifyData.festival.image.length-1];
+				this.festivalImage = imageUrl + '/' + this.verifyData.festival.image[this.verifyData.festival.image.length-1];
 				
 				addBandLabels(this.verifyData.event);
 			}
 			else {
 				this.verifyData = content[index];
+				this.previousImage = imageUrl + '/' + this.verifyData.image[this.verifyData.image.length-1];
+				this.verifyImage = imageUrl + '/' + this.verifyData.image[this.verifyData.image.length-1];
 			}
 			this.verifyIndex = index;
 		},

@@ -16,7 +16,7 @@
 			<span><md-icon>error_outline</md-icon>	Maximum file size: 5MB</span>
 		</md-layout>
 
-		<div class="image-preview-wrapper" v-if="value != null">
+		<div class="image-preview-wrapper" v-show="value != null">
 			<h3>Preview: </h3>
 			<img ref="imagePreview" :src="value" :alt="value">
 		</div>
@@ -34,8 +34,19 @@ export default {
 			imageName: ''
 		}
 	},
+	watch: {
+		value() {
+			console.log('value change', this.value);
+			if(this.value && !this.value.type) {
+				this.imageName = this.value;
+				console.log('name was changed', this.imageName);
+				this.$refs.imagePreview.src = this.value;
+			}
+		}
+	},
 	methods: {
 		uploadFile(file) {
+			console.log(file[0]);
 			this.$emit('input', file[0]);
 			const reader = new FileReader();
 			reader.onload = e => this.$refs.imagePreview.src = e.target.result;
@@ -45,6 +56,15 @@ export default {
 			this.imageName = '';
 			this.$emit('input', null);
 			this.$refs.imageInput.resetFile();
+		},
+	},
+	mounted() {
+		if(this.value && !this.value.type) {
+			this.imageName = this.value;
+			this.$refs.imagePreview.src = this.value;
+		}
+		if(this.value && this.value.type != null) {
+			this.uploadFile(this.value);
 		}
 	},
 }
