@@ -104,6 +104,29 @@
 			background-color: $primaryLighten5;
 			z-index: 0;
 
+			#image_step {
+				width: 100%;
+
+				.image-preview-wrapper {
+					max-height: 400px;
+					width: auto;
+				}
+
+				img {
+					max-height: 350px;
+				}
+
+				.image-preview-wrapper {
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: center;
+
+					h3 {
+						flex-basis: 100%;
+					}
+				}
+			}
+
 			#event_form, #festival_form, #festival_event_form, #band_form, #location_form, #tour_form {
 				padding: 5px;
 

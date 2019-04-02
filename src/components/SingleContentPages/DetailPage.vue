@@ -155,9 +155,6 @@ export default {
 		}
 	},
 	updated() {
-		
-
-		console.log('schau her', document.getElementsByClassName('md-tab-header').length);
 		const numberOfTabHeaders = document.getElementsByClassName('md-tab-header').length;
 		if(numberOfTabHeaders > 2) {
 			document.getElementsByClassName('tab-navigation')[0].classList.add('tab-navigation-small');

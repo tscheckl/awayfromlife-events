@@ -169,7 +169,6 @@ export default {
 			this.localBands = this.event.bands;
 		},
 		value() {
-			console.log('CHANGE IMAGE');
 			this.$emit('input', this.value);
 		}
 	},

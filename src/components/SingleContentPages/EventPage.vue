@@ -80,7 +80,7 @@
 			
 			<div slot="edit-dialogs">
 				<md-dialog ref="editEventDialog">
-					<event-form :event="JSON.parse(JSON.stringify(event))" edit canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
+					<event-form :event="JSON.parse(JSON.stringify(event))" v-model="eventImage" edit canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
 						<h1 slot="headline">Edit Event</h1>
 					</event-form>
 				</md-dialog>
@@ -118,11 +118,10 @@ export default {
 		$route() {
 			if(this.$route.params.url != this.event.url)
 				this.getEventByUrl();
-		}
+		},
 	},
 	computed: {
 		event() {
-			console.log(this.$store.getters.currentEvent);
 			return JSON.parse(JSON.stringify(this.$store.getters.currentEvent));
 		}
 	},
@@ -131,7 +130,9 @@ export default {
 			submitStatus: '',
 			isAuthenticated: false,
 			backendEndpoint: 'events',
-			loading: false
+			loading: false, 
+			eventImage: '',
+			previousImage: ''
 		}
 	},
 	methods: {
@@ -146,7 +147,15 @@ export default {
 			removeEmptyObjectFields(data);
 			data.date = moment(data.date).format('YYYY-MM-DD');
 
-			this.$http.put(backendUrl + `/api/events/${data._id}`, data)
+			
+			let formData = new FormData();
+			if(this.eventImage != this.previousImage) {
+				if(this.eventImage != null) formData.append('image', this.eventImage);
+				else this.event.image = [];
+			}
+			formData.append('data', JSON.stringify(this.event));
+
+			this.$http.put(backendUrl + `/api/events/${data._id}`, formData)
 				.then(response => {
 					this.getCurrentEvent('Event successfully updated!');
 				})
@@ -215,6 +224,7 @@ export default {
 				if(response.body.data) {					
 					this.loading = false;
 					this.$store.commit('setCurrentEvent', response.body.data);
+					this.eventImage = `${imageUrl}/${this.event.image[2]}`;
 					document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
 				}
 			})
@@ -241,8 +251,11 @@ export default {
 			this.getEventByUrl();
 		else {
 			//THIS DEFINITELY NEEDS A NICER FIX
-			document.getElementsByClassName('image')[1].style.backgroundImage = `url(${imageUrl}/${this.event.image[2]})`;
 			document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
+			this.previousImage = `${imageUrl}/${this.event.image[2]}`;
+			this.eventImage = `${imageUrl}/${this.event.image[2]}`;
+			console.log('previous image:', this.previousImage);
+			document.getElementsByClassName('image')[1].style.backgroundImage = `url(${imageUrl}/${this.event.image[2]})`;
 		}
 			
 	},
