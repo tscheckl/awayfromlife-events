@@ -80,7 +80,13 @@
 			
 			<div slot="edit-dialogs">
 				<md-dialog ref="editEventDialog">
-					<event-form :event="JSON.parse(JSON.stringify(event))" v-model="eventImage" edit canSubmit v-on:submit="updateEvent" v-on:close="$refs.editEventDialog.close()">
+					<event-form 
+						:event="JSON.parse(JSON.stringify(event))" 
+						v-model="eventImage" 
+						edit 
+						canSubmit 
+						v-on:submit="updateEvent" 
+						v-on:close="$refs.editEventDialog.close()">
 						<h1 slot="headline">Edit Event</h1>
 					</event-form>
 				</md-dialog>
@@ -153,7 +159,7 @@ export default {
 				if(this.eventImage != null) formData.append('image', this.eventImage);
 				else this.event.image = [];
 			}
-			formData.append('data', JSON.stringify(this.event));
+			formData.append('data', JSON.stringify(data));
 
 			this.$http.put(backendUrl + `/api/events/${data._id}`, formData)
 				.then(response => {
@@ -224,6 +230,7 @@ export default {
 				if(response.body.data) {					
 					this.loading = false;
 					this.$store.commit('setCurrentEvent', response.body.data);
+					this.previousImage = `${imageUrl}/${this.event.image[2]}`;
 					this.eventImage = `${imageUrl}/${this.event.image[2]}`;
 					document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
 				}
@@ -254,7 +261,6 @@ export default {
 			document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
 			this.previousImage = `${imageUrl}/${this.event.image[2]}`;
 			this.eventImage = `${imageUrl}/${this.event.image[2]}`;
-			console.log('previous image:', this.previousImage);
 			document.getElementsByClassName('image')[1].style.backgroundImage = `url(${imageUrl}/${this.event.image[2]})`;
 		}
 			

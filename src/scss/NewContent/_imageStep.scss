@@ -1,6 +1,10 @@
 @import "../themeColors";
 
 #image_step {
+	.md-layout {
+		position: relative;
+	}
+
 	.md-input-container {
 		margin-bottom: 10px;
 		cursor: pointer;

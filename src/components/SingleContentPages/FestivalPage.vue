@@ -78,8 +78,8 @@
 					:selectableSteps="festival.events"
 					selectionLabel="Select Year">
 					<div class="festival-instance" v-for="(festivalEvent, index) in festival.events" :key="index" :slot="'step-' + (index+1)">
-						<!-- <div class="edit-buttons">
-							<md-button class="md-icon-button edit-button" v-on:click="editFestivalEvent(festivalEvent)">
+						<div class="edit-buttons">
+							<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="editFestivalEvent(festivalEvent)">
 								<md-icon>edit</md-icon>
 								<md-tooltip md-direction="bottom">edit festival event</md-tooltip>	
 							</md-button>
@@ -88,7 +88,7 @@
 								<md-icon>delete</md-icon>
 								<md-tooltip md-direction="bottom">delete festival event</md-tooltip>
 							</md-button>
-						</div> -->
+						</div>
 
 						<div class="festival-instance-content">
 							<h2>{{festivalEvent.name}}</h2>
@@ -125,13 +125,13 @@
 				</md-dialog>
 
 				<md-dialog ref="editFestivalDialog">
-					<festival-form :data="JSON.parse(JSON.stringify(festival))" canSubmit v-on:submit="updateFestival" v-on:close="$refs.editFestivalDialog.close()">
+					<festival-form :data="JSON.parse(JSON.stringify(festival))" v-model="festivalImage" canSubmit v-on:submit="updateFestival" v-on:close="$refs.editFestivalDialog.close()">
 						<h1 slot="headline">Edit Festival</h1>
 					</festival-form>
 				</md-dialog>
 
 				<md-dialog ref="editFestivalEventDialog">
-					<festival-event-form :data="currentFestivalEvent" canSubmit v-on:submit="updateFestivalEvent" v-on:close="$refs.editFestivalEventDialog.close()">
+					<festival-event-form :data="currentFestivalEvent" v-model="festivalEventImage" canSubmit v-on:submit="updateFestivalEvent" v-on:close="$refs.editFestivalEventDialog.close()">
 						<h1 slot="headline">Edit Festival Event</h1>
 					</festival-event-form>
 				</md-dialog>
@@ -147,7 +147,7 @@ import FestivalForm from '@/components/ContentForms/FestivalForm';
 import FestivalEventForm from '@/components/ContentForms/FestivalEventForm';
 import DetailPage from '@/components/SingleContentPages/DetailPage';
 
-import {frontEndSecret, backendUrl } from '@/secrets.js';
+import {frontEndSecret, backendUrl, imageUrl } from '@/secrets.js';
 import { removeEmptyObjectFields, addBandLabels } from '@/helpers/array-object-helpers.js';
 
 import moment from 'moment';
@@ -185,9 +185,14 @@ export default {
 		return {
 			isAuthenticated: false,
 			loading: false,
+			activeTab: 0,
 			submitStatus: '',
 			currentFestivalEvent: {},
-			onlyFestivalEvent: false
+			onlyFestivalEvent: false,
+			festivalImage: '',
+			previousFestivalImage: '',
+			festivalEventImage: '',
+			previousFestivalEventImage: ''
 		}
 	},
 	methods: {
@@ -203,6 +208,8 @@ export default {
 		},
 		editFestivalEvent(event) {
 			this.currentFestivalEvent = JSON.parse(JSON.stringify(event));
+			this.previousFestivalEventImage = `${imageUrl}/${event.image[2]}`;
+			this.festivalEventImage = `${imageUrl}/${event.image[2]}`;
 			this.openDialog('editFestivalEventDialog');
 		},
 		getCurrentFestival(message = '') {
@@ -258,8 +265,15 @@ export default {
 			this.loading = true;
 			
 			removeEmptyObjectFields(data);
+
+			let formData = new FormData();
+			if(this.festivalImage != this.previousFestivalImage) {
+				if(this.festivalImage != null) formData.append('image', this.festivalImage);
+				else data.image = [];
+			}
+			formData.append('data', JSON.stringify(data));
 			
-			this.$http.put(backendUrl + `/api/festivals/${data._id}`, data)
+			this.$http.put(backendUrl + `/api/festivals/${data._id}`, formData)
 				.then(response => {
 					this.getCurrentFestival('Festival successfully updated!');
 				})
@@ -274,8 +288,15 @@ export default {
 			this.loading = true;
 			
 			removeEmptyObjectFields(data);
+
+			let formData = new FormData();
+			if(this.festivalEventImage != this.previousFestivalEventImage) {
+				if(this.festivalEventImage != null) formData.append('image', this.festivalEventImage);
+				else data.image = [];
+			}
+			formData.append('data', JSON.stringify(data));
 			
-			this.$http.put(backendUrl + `/api/festival-events/${data._id}`, data)
+			this.$http.put(backendUrl + `/api/festival-events/${data._id}`, formData)
 				.then(response => {
 					this.getCurrentFestival('Event successfully updated!');
 				})
@@ -291,7 +312,10 @@ export default {
 			.then(response => {
 				if(response.body.data) {
 					this.loading = false;
-					this.$store.commit('setCurrentFestival', response.body.data);					
+					this.$store.commit('setCurrentFestival', response.body.data);	
+					this.previousFestivalImage = `${imageUrl}/${this.festival.image[2]}`;
+					this.festivalImage = `${imageUrl}/${this.festival.image[2]}`;
+
 					document.title = `${this.festival.name} | AWAY FROM LIFE STREETS`;
 
 					this.festival.events.forEach(event => {
@@ -348,6 +372,8 @@ export default {
 			});
 			
 			document.title = `${this.festival.name} | AWAY FROM LIFE STREETS`;
+			this.previousFestivalImage = `${imageUrl}/${this.festival.image[2]}`;
+			this.festivalImage = `${imageUrl}/${this.festival.image[2]}`;
 
 			if(this.festival.events.length == 1)
 				this.onlyFestivalEvent = true;

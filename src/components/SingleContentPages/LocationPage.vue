@@ -95,7 +95,12 @@
 			</md-tabs>
 
 			<md-dialog ref="editLocationDialog" slot="edit-dialogs">
-				<location-form :data="JSON.parse(JSON.stringify(location))" canSubmit v-on:submit="updateLocation" v-on:close="$refs.editLocationDialog.close()">
+				<location-form 
+					:data="JSON.parse(JSON.stringify(location))" 
+					v-model="locationImage" 
+					canSubmit 
+					v-on:submit="updateLocation" 
+					v-on:close="$refs.editLocationDialog.close()">
 					<h1 slot="headline">Edit Location</h1>
 				</location-form>
 			</md-dialog>
@@ -107,7 +112,7 @@
 import LocationForm from '@/components/ContentForms/LocationForm';
 import DetailPage from '@/components/SingleContentPages/DetailPage';
 
-import { backendUrl } from '@/secrets.js';
+import { backendUrl, imageUrl } from '@/secrets.js';
 import { removeEmptyObjectFields, sortEventsByMonth } from '@/helpers/array-object-helpers.js';
 import moment from 'moment';
 
@@ -140,7 +145,9 @@ export default {
 			isAuthenticated: false,
 			eventLimiter: 3,
 			loading: false,
-			activeTab: 0
+			activeTab: 0,
+			locationImage: '',
+			previousImage: ''
 		}
 	},
 	methods: {
@@ -159,7 +166,14 @@ export default {
 
 			removeEmptyObjectFields(data);
 
-			this.$http.put(backendUrl + `/api/locations/${data._id}`, data)
+			let formData = new FormData();
+			if(this.locationImage != this.previousImage) {
+				if(this.locationImage != null) formData.append('image', this.locationImage);
+				else this.location.image = [];
+			}
+			formData.append('data', JSON.stringify(data));
+
+			this.$http.put(backendUrl + `/api/locations/${data._id}`, formData)
 				.then(response => {
 					this.getCurrentLocation('Location successfully updated!');
 				})
@@ -226,7 +240,8 @@ export default {
 				if(response.body.data) {
 					this.loading = false;
 					this.$store.commit('setCurrentLocation', response.body.data);
-					console.log(this.location);
+					this.previousImage = `${imageUrl}/${this.location.image[2]}`;
+					this.locationImage = `${imageUrl}/${this.location.image[2]}`;
 					document.title = `${this.location.name} - ${this.location.address.city} | AWAY FROM LIFE STREETS`;	
 					this.getLocationEvents();
 				}
@@ -271,6 +286,8 @@ export default {
 		}
 		else {
 			this.getLocationEvents();
+			this.previousImage = `${imageUrl}/${this.location.image[2]}`;
+			this.locationImage = `${imageUrl}/${this.location.image[2]}`;
 			document.title = `${this.location.name} - ${this.location.address.city} | AWAY FROM LIFE STREETS`;
 		}
 	}

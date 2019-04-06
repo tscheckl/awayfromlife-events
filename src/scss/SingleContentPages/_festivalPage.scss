@@ -74,6 +74,13 @@
 
 				.festival-instance {
 					display: flex;
+					flex-wrap: wrap;
+
+					.edit-buttons {
+						display: flex;
+						justify-content: flex-end;
+						flex-basis: 100%;
+					}
 				}
 
 				.festival-instance-content {

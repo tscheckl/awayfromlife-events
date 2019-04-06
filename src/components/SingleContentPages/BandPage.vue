@@ -124,7 +124,12 @@
 			</md-tabs>
 
 			<md-dialog ref="editBandDialog" slot="edit-dialogs">
-				<band-form :data="JSON.parse(JSON.stringify(band))" canSubmit v-on:submit="updateBand" v-on:close="$refs.editBandDialog.close()">
+				<band-form 
+					:data="JSON.parse(JSON.stringify(band))" 
+					v-model="bandImage" 
+					canSubmit 
+					v-on:submit="updateBand" 
+					v-on:close="$refs.editBandDialog.close()">
 					<h1 slot="headline">Edit Band</h1>
 				</band-form>
 			</md-dialog>
@@ -138,7 +143,7 @@ import { removeEmptyObjectFields, sortEventsByMonth } from '@/helpers/array-obje
 import BandForm from '@/components/ContentForms/BandForm';
 import DetailPage from '@/components/SingleContentPages/DetailPage';
 
-import { backendUrl } from '@/secrets.js';
+import { backendUrl, imageUrl } from '@/secrets.js';
 import moment from 'moment';
 
 export default {
@@ -169,7 +174,9 @@ export default {
 			isAuthenticated: false,
 			eventLimiter: 3,
 			loading: false,
-			activeTab: 0
+			activeTab: 0,
+			bandImage: '',
+			previousImage: ''
 		}
 	},
 	methods: {
@@ -192,8 +199,15 @@ export default {
 			this.loading = true;
 
 			removeEmptyObjectFields(data);
+			
+			let formData = new FormData();
+			if(this.bandImage != this.previousImage) {
+				if(this.bandImage != null) formData.append('image', this.bandImage);
+				else this.band.image = [];
+			}
+			formData.append('data', JSON.stringify(data));
 
-			this.$http.put(backendUrl + `/api/bands/${data._id}`, data)
+			this.$http.put(backendUrl + `/api/bands/${data._id}`, formData)
 				.then(response => {
 					this.getCurrentBand('Band successfully updated!');
 				})
@@ -228,7 +242,6 @@ export default {
 		getBandEvents() {
 			this.loading = true;
 			this.bandEvents = [];
-			console.log('BAND: ', this.band);
 			this.$http.get(`${backendUrl}/api/bands/${this.band._id}/upcomingEvents`)
 			.then(response => {
 				if(!response.body.message) {
@@ -258,6 +271,8 @@ export default {
 					if(response.body.data) {
 						this.loading = false;
 						this.$store.commit('setCurrentBand', JSON.parse(JSON.stringify(response.body.data)));
+						this.previousImage = `${imageUrl}/${this.band.image[2]}`;
+						this.bandImage = `${imageUrl}/${this.band.image[2]}`;
 						this.getBandEvents();
 						document.title = this.band.name + ' | AWAY FROM LIFE STREETS';
 					}
@@ -300,6 +315,8 @@ export default {
 		}
 		else {
 			this.getBandEvents();
+			this.previousImage = `${imageUrl}/${this.band.image[2]}`;
+			this.bandImage = `${imageUrl}/${this.band.image[2]}`;
 			document.title = this.band.name + ' | AWAY FROM LIFE STREETS';
 		}
 	}
