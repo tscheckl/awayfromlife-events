@@ -37,8 +37,8 @@
 					</div>
 				</div>
 				<div class="image-container" v-on:click="showImage(true)">
-					<div v-show="this.imageUrl" class="image"></div>
-					<div v-show="!this.imageUrl" class="image-loading-indicator">
+					<div v-show="this.computedImageUrl" class="image"></div>
+					<div v-show="!this.computedImageUrl" class="image-loading-indicator">
 						<md-spinner md-indeterminate></md-spinner>
 					</div>
 					<div class="image-color-block"></div>
@@ -55,7 +55,7 @@
 
 		<div class="lightbox">
 			<div class="darken" v-on:click="showImage(false)"></div>
-			<img v-on:click="showImage(true)" :src="imageUrl" alt="">
+			<img v-on:click="showImage(true)" :src="computedImageUrl" alt="">
 			<button class="close-btn" v-on:click="showImage(false)"><md-icon>close</md-icon></button>
 		</div>
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { backendUrl } from '@/secrets.js';
+import { backendUrl, imageUrl } from '@/secrets.js';
 
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import ReportDialog from '@/components/SingleContentPages/ReportDialog';
@@ -100,16 +100,16 @@ export default {
 		image: String
 	},
 	computed: {
-		imageUrl() {
+		computedImageUrl() {
 			if(this.image && this.image.length > 0)
-				return backendUrl + '/' + this.image;
+				return imageUrl + '/' + this.image;
 			
 			return null;
 		}
 	},
 	watch: {
-		imageUrl() {
-			document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.imageUrl})`;
+		computedImageUrl() {
+			document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
 		}
 	},
 	data() {
@@ -169,7 +169,7 @@ export default {
 			
 		document.getElementById('topbar').classList.add('single-page');
 		
-		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.imageUrl})`;
+		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
 	}
 }
 </script>

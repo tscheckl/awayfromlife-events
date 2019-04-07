@@ -135,7 +135,7 @@ export default {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentLocation));
 		},
 		baseUrl() {
-			return backendUrl;
+			return imageUrl;
 		}
 	},
 	data() {

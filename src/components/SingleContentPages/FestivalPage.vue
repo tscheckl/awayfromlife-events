@@ -345,7 +345,7 @@ export default {
 			}
 		},
 		fullImageUrl(relativeUrl) {
-			return backendUrl + '/' + relativeUrl;
+			return imageUrl + '/' + relativeUrl;
 		}
 	},
 	created() {

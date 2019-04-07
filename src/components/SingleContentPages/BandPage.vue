@@ -163,7 +163,7 @@ export default {
 			return JSON.parse(JSON.stringify(this.$store.getters.currentBand));
 		},
 		baseUrl() {
-			return backendUrl;
+			return imageUrl;
 		}
 	},
 	data() {
