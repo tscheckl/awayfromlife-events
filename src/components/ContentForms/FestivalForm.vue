@@ -25,7 +25,7 @@
 
 					<md-layout md-gutter md-flex="100">
 						<md-layout class="single-genre single-form-field" v-for="(genre, index) in myData.genre" :key="index" md-flex="33" md-flex-small="100">
-							<md-input-container>
+							<!-- <md-input-container>
 								<v-select class="form-v-select"
 										  label="name"
 										  :on-change="(selected) => onSelectGenre(selected, index)"
@@ -33,7 +33,13 @@
 										  v-model="myData.genre[index]"
 										  placeholder="Select festival's genre*">
 								</v-select>
-							</md-input-container>
+							</md-input-container> -->
+							<search-select label="name"
+										  v-on:change="(selected) => onSelectGenre(selected, index)"
+										  :options="backendGenres"
+										  v-model="myData.genre[index]"
+										  placeholder="Select festival's genre*">
+							</search-select>
 
 							<md-button v-if="myData.genre.length > 1" v-on:click="removeFromArray(myData.genre,index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -104,11 +110,13 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { getBandOptions } from '@/helpers/backend-getters.js';
 
 import ImageStep from "@/components/NewContent/ImageStep";
+import SearchSelect from '@/components/Utilities/SearchSelect';
 
 export default {
 	name: 'festival-form',
 	components: {
-		ImageStep
+		ImageStep,
+		SearchSelect
 	},
 	props: {
 		data: Object,

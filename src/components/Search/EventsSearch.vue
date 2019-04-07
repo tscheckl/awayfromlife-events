@@ -52,7 +52,7 @@
 						</div>
 
 						<h4>Only Show results with Genre: </h4>
-						<md-input-container class="genre-select">
+						<!-- <md-input-container class="genre-select">
 							<v-select class="form-v-select"
 									  label="name"
 									  :on-change="onSelectGenre"
@@ -60,7 +60,13 @@
 									  v-model="searchOptions.genre"
 									  placeholder="Select genre">
 							</v-select>
-						</md-input-container>
+						</md-input-container> -->
+					<search-select label="name"
+									v-on:change="onSelectGenre"
+									:options="availableGenres"
+									v-model="searchOptions.genre"
+									placeholder="Select genre">
+					</search-select>
 
 						<md-button v-if="showResetButton()" v-on:click="searchOptions = resetFilters()">
 							<md-icon>restore</md-icon>
@@ -103,12 +109,14 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 import FollowButtons from '@/components/FollowButtons';
 import ResultCategory from '@/components/Search/ResultCategory';
+import SearchSelect from '@/components/Utilities/SearchSelect';
 
 export default {
 	name: 'events-search',
 	components: {
 		FollowButtons,
-		ResultCategory
+		ResultCategory,
+		SearchSelect
 	},
 	data() {
 		return {

@@ -39,7 +39,7 @@
 
 						<md-layout md-gutter md-flex="100">
 							<md-layout class="single-genre single-form-field" v-for="(genre, index) in newBand.genre" :key="index" md-flex="33" md-flex-small="100">
-								<md-input-container>
+								<!-- <md-input-container>
 									<v-select class="form-v-select"
 											label="name"
 											:on-change="(selected) => onSelectGenre(selected, index)"
@@ -47,7 +47,13 @@
 											v-model="newBand.genre[index]"
 											placeholder="Select band's genre*">
 									</v-select>
-								</md-input-container>
+								</md-input-container> -->
+								<search-select label="name"
+											v-on:change="(selected) => onSelectGenre(selected, index)"
+											:options="backendGenres"
+											v-model="newBand.genre[index]"
+											placeholder="Select band's genre*">
+								</search-select>
 
 								<md-button v-if="newBand.genre.length > 1" v-on:click="removeFromArray(newBand.genre,index)" class="md-icon-button md-raised">
 									<md-icon>clear</md-icon>
@@ -215,6 +221,7 @@ import {backendUrl} from '@/secrets.js';
 import BandForm from '@/components/ContentForms/BandForm';
 import ImageStep from '@/components/NewContent/ImageStep';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
+import SearchSelect from '@/components/Utilities/SearchSelect';
 import FinishedStep from '@/components/NewContent/FinishedStep';
 import Stepper from '@/components/Utilities/Stepper';
 
@@ -224,6 +231,7 @@ export default {
 		BandForm,
 		ImageStep,
 		ConfirmDialog,
+		SearchSelect,
 		FinishedStep,
 		Stepper
 	},
@@ -343,9 +351,7 @@ export default {
 		},
 		getSimilar() {
 			this.similarBandFound = false;
-			
-			if(this.newBand.name && this.newBand.origin.country && this.$route.path.toLowerCase().indexOf('/band/') == -1) {
-				
+			if(this.newBand.name && this.newBand.origin.country) {
 				this.$http.get(backendUrl + '/api/bands/similar?country=' + this.newBand.origin.country + '&name=' + this.newBand.name)
 				.then(response => {		
 					if (response.body.data) {
@@ -358,7 +364,7 @@ export default {
 		},
 		checkSimilar(accept) {
 			if(accept)
-				this.emitClose();
+				this.$router.push('/bands');
 
 			this.similarBandFound = false;
 			this.$refs.similarBandDialog.close();

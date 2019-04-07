@@ -212,7 +212,7 @@ export default {
 		},
 		getSimilar() {
 			this.similarLocationFound = false;
-			if((this.newLocation.address.street || (this.newLocation.address.city && this.newLocation.name)) && this.$route.path.toLowerCase().indexOf('/location/') == -1) {
+			if((this.newLocation.address.street || (this.newLocation.address.city && this.newLocation.name))) {
 				let requestParams = (this.newLocation.address.city && this.newLocation.name) 
 					?`city=${this.newLocation.address.city}&name=${this.newLocation.name}` 
 					:`address=${this.newLocation.address.street}`;
@@ -229,7 +229,7 @@ export default {
 		},
 		checkSimilar(accept) {
 			if(accept)
-				this.$emit('close');
+				this.$router.push('/locations');
 
 			this.similarLocationFound = false;
 			this.$refs.similarLocationDialog.close();

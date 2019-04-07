@@ -27,6 +27,13 @@
 		display: flex;
 		margin-bottom: 30px;
 
+		#search_select {
+			.select-overlay {
+				position: relative;
+				box-shadow: none;
+			}
+		}
+
 		.v-select {
 			border-bottom: 1px solid $primaryLighten2;
 			height: 34px;

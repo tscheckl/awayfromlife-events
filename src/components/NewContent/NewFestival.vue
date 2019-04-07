@@ -15,7 +15,7 @@
 				<p class="not-sure-prompt">not sure? <span v-on:click="showFestivalList = !showFestivalList">check if the festival you want to create already exists <md-icon>{{showFestivalList ?'keyboard_arrow_down' :'keyboard_arrow_right'}}</md-icon></span></p>
 
 				<div :class="'festival-list ' + (!showFestivalList ?'hide' : '')">
-					<md-input-container>
+					<!-- <md-input-container>
 						<v-select class="form-v-select"
 									v-model="existingFestival"
 									:options="festivalList"
@@ -23,7 +23,13 @@
 									label="name"
 									placeholder="Enter the festival you're looking for*">
 						</v-select>
-					</md-input-container>
+					</md-input-container> -->
+					<search-select v-model="existingFestival"
+									:options="festivalList"
+									v-on:change="checkSelection"
+									label="name"
+									placeholder="Enter the festival you're looking for*">
+					</search-select>
 				</div>
 			</div>
 
@@ -63,7 +69,7 @@
 							<p>(You can add up to 3)</p>
 						</md-layout>
 						<md-layout class="single-genre single-form-field" v-for="(genre, index) in newFestival.genre" :key="index" md-flex="33" md-flex-small="100">
-							<md-input-container>
+							<!-- <md-input-container>
 								<v-select class="form-v-select"
 										  label="name"
 										  :on-change="(selected) => onSelectGenre(selected, index)"
@@ -71,7 +77,13 @@
 										  v-model="newFestival.genre[index]"
 										  placeholder="Select festival's genre*">
 								</v-select>
-							</md-input-container>
+							</md-input-container> -->
+							<search-select label="name"
+										  v-on:change="(selected) => onSelectGenre(selected, index)"
+										  :options="backendGenres"
+										  v-model="newFestival.genre[index]"
+										  placeholder="Select festival's genre*">
+							</search-select>
 
 							<md-button v-if="newFestival.genre.length > 1" v-on:click="removeFromArray(newFestival.genre,index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
@@ -91,7 +103,7 @@
 				<h2>Select the festival you want to create a new instance of</h2>
 				<md-layout md-gutter>
 					<md-layout md-flex="100">
-						<md-input-container>
+						<!-- <md-input-container>
 							<v-select class="form-v-select"
 										v-model="existingFestival"
 										:options="festivalList"
@@ -99,7 +111,13 @@
 										label="name"
 										placeholder="Enter the festival you're looking for*">
 							</v-select>
-						</md-input-container>
+						</md-input-container> -->
+						<search-select v-model="existingFestival"
+										:options="festivalList"
+										v-on:change="checkSelection"
+										label="name"
+										placeholder="Enter the festival you're looking for*">
+						</search-select>
 					</md-layout>
 
 					<md-layout md-flex="100">
@@ -164,7 +182,7 @@
 			<div :slot="createFestival ?'step-5' :'step-3'">
 				<h2>Lineup</h2>
 				<div class="single-form-field" v-for="(band, index) in newFestivalEvent.bands" :key="index">
-					<md-input-container>
+					<!-- <md-input-container>
 						<v-select class="form-v-select"
 									:options="backendBands"
 									:on-change="(selected) => onSelectBand(selected, index)"
@@ -176,7 +194,17 @@
 										<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
 									</span>
 						</v-select>
-					</md-input-container>
+					</md-input-container> -->
+					<search-select :options="backendBands"
+									v-on:change="(selected) => onSelectBand(selected, index)"
+									v-model="newFestivalEvent.bands[index]"
+									placeholder="Select festival's bands*">
+
+						<span slot="no-options">
+							Looks like the band you're looking for doesn't exist yet. 
+							<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+						</span>
+					</search-select>
 					<md-button v-on:click="removeFromArray(newFestivalEvent.bands, index)" class="md-icon-button md-raised">
 						<md-icon>clear</md-icon>
 						<md-tooltip>Remove band</md-tooltip>
@@ -279,6 +307,7 @@ import { getBandOptions } from '@/helpers/backend-getters.js';
 
 import Stepper from '@/components/Utilities/Stepper';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
+import SearchSelect from '@/components/Utilities/SearchSelect';
 import FinishedStep from '@/components/NewContent/FinishedStep';
 import NewBand from '@/components/NewContent/NewBand';
 import ImageStep from '@/components/NewContent/ImageStep';
@@ -290,6 +319,7 @@ export default {
 		NewBand,
 		ImageStep,
 		ConfirmDialog,
+		SearchSelect,
 		FinishedStep
 	},
 	watch: {
@@ -470,7 +500,7 @@ export default {
 			if(accept) {
 				this.resetFormFields();
 				this.showStepper = false;
-				this.$emit('close');
+				this.$router.push('/festivals');
 			}
 
 			this.similarFestivalFound = false;

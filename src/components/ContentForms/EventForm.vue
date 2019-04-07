@@ -17,7 +17,7 @@
 					</md-layout>
 
 					<md-layout class="event-location" md-flex="50" md-flex-small="100">
-						<md-input-container>
+						<!-- <md-input-container>
 							<v-select class="form-v-select"
 							 		  :options="backendLocations"
 									  :on-change="onSelectLocation"
@@ -29,8 +29,19 @@
 											<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
 										</span>
 							</v-select>
-						</md-input-container>
-						<p class="not-verified-warning" v-if="event.location.isValidated == false">
+						</md-input-container> -->
+
+						<search-select :options="backendLocations"
+										v-on:change="onSelectLocation"
+										v-model="event.location"
+										placeholder="Select event location*">
+
+							<span slot="no-options">
+								Looks like the location you're looking for doesn't exist yet. 
+								<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+							</span>
+						</search-select>
+						<p class="not-verified-warning" v-if="event.location && event.location.isValidated == false">
 							<md-icon>error_outline</md-icon>
 							This Location is not validated yet.
 						</p>
@@ -44,7 +55,7 @@
 
 					<md-layout md-flex="100">
 						<div class="single-form-field" v-for="(band, index) in localBands" :key="index">
-							<md-input-container>
+							<!-- <md-input-container>
 								<v-select class="form-v-select"
 										  :options="backendBands"
 										  :on-change="(selected) => onSelectBand(selected, index)"
@@ -56,12 +67,22 @@
 												<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
 											</span>
 								</v-select>
-							</md-input-container>
+							</md-input-container> -->
+							<search-select :options="backendBands"
+										  v-on:change="(selected) => onSelectBand(selected, index)"
+										  v-model="localBands[index]"
+										  placeholder="Select event's bands*">
+
+								<span slot="no-options">
+									Looks like the band you're looking for doesn't exist yet. 
+									<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+								</span>
+							</search-select>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove band</md-tooltip>
 							</md-button>
-							<p class="not-verified-warning" v-if="localBands[index].isValidated == false">
+							<p class="not-verified-warning" v-if="localBands[index] && localBands[index].isValidated == false">
 								<md-icon>error_outline</md-icon>
 								This Band is not validated yet.
 							</p>
@@ -132,13 +153,15 @@ import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js
 import NewBand from "@/components/NewContent/NewBand";
 import NewLocation from "@/components/NewContent/NewLocation";
 import ImageStep from "@/components/NewContent/ImageStep";
+import SearchSelect from '@/components/Utilities/SearchSelect';
 
 export default {
 	name: 'event-form',
 	components: {
 		NewBand,
 		NewLocation,
-		ImageStep
+		ImageStep,
+		SearchSelect
 	},
 	props: {
 		event: Object,

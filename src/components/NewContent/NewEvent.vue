@@ -37,8 +37,16 @@
 						</md-layout>
 
 						<md-layout md-flex="100" class="event-location">
-							<md-input-container>
-								<v-select class="form-v-select"
+							<!-- <md-input-container> -->
+								<search-select v-model="currentObject.location"
+												:options="backendLocations"
+												placeholder="Select event location*">
+									<span slot="no-options">
+										Looks like the location you're looking for doesn't exist yet. 
+										<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+									</span>
+								</search-select>
+								<!-- <v-select class="form-v-select"
 										:options="backendLocations"
 										v-model="currentObject.location"
 										placeholder="Select event location*">
@@ -47,8 +55,8 @@
 												Looks like the location you're looking for doesn't exist yet. 
 												<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
 											</span>
-								</v-select>
-							</md-input-container>
+								</v-select> -->
+							<!-- </md-input-container> -->
 							<p class="not-verified-warning" v-if="currentObject.location && currentObject.location.isValidated == false">
 								<md-icon>error_outline</md-icon>
 								This Location is not validated yet.
@@ -101,7 +109,7 @@
 									@date-one-selected="val => { tourstop.date = val }"
 								/>
 							</div>
-							<md-input-container class="location-select">
+							<!-- <md-input-container class="location-select">
 								<v-select class="form-v-select"
 										  :options="backendLocations"
 										  :on-change="(selected) => onSelectTourLocation(selected, index)"
@@ -113,8 +121,17 @@
 												<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
 											</span>
 								</v-select>
-							</md-input-container>
-							<p class="not-verified-warning" v-if="tourstop.location.isValidated == false">
+							</md-input-container> -->
+							<search-select v-model="tourstop.location"
+											:options="backendLocations"
+											v-on:change="(selected) => onSelectTourLocation(selected, index)"
+											placeholder="Select event location*">
+								<span slot="no-options">
+									Looks like the location you're looking for doesn't exist yet. 
+									<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+								</span>
+							</search-select>
+							<p class="not-verified-warning" v-if="tourstop.location && tourstop.location.isValidated == false">
 								<md-icon>error_outline</md-icon>
 								This Location is not validated yet.
 							</p>
@@ -144,7 +161,7 @@
 
 					<md-layout md-flex="100">
 						<div class="single-form-field band-input" v-for="(band, index) in currentObject.bands" :key="index">
-							<v-select class="form-v-select"
+							<!-- <v-select class="form-v-select"
 										:options="backendBands"
 										:on-change="(selected) => onSelectBand(selected, index)"
 										v-model="currentObject.bands[index]"
@@ -154,12 +171,21 @@
 											Looks like the band you're looking for doesn't exist yet. 
 											<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
 										</span>
-							</v-select>
+							</v-select> -->
+							<search-select v-model="currentObject.bands[index]"
+											:options="backendBands"
+											v-on:change="(selected) => onSelectBand(selected, index)"
+											placeholder="Select event's bands*">
+								<span slot="no-options">
+									Looks like the band you're looking for doesn't exist yet. 
+									<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+								</span>
+							</search-select>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove band</md-tooltip>
 							</md-button>
-							<p class="not-verified-warning" v-if="band.isValidated == false">
+							<p class="not-verified-warning" v-if="band && band.isValidated == false">
 								<md-icon>error_outline</md-icon>
 								This Band is not validated yet.
 							</p>
@@ -198,7 +224,7 @@
 
 		<finished-step 
 			:class="(!finishedCreation ?'hide' :'')"
-			contentType="Event"
+			:contentType="createdTour ?'Tour' :'Event'"
 			v-on:back="$router.push('events')"
 			v-on:redo="restartForm">
 		</finished-step>
@@ -257,10 +283,12 @@ import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js
 
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import Stepper from '@/components/Utilities/Stepper';
+import SearchSelect from '@/components/Utilities/SearchSelect';
 import FinishedStep from '@/components/NewContent/FinishedStep';
 import ImageStep from '@/components/NewContent/ImageStep';
 import NewBand from "@/components/NewContent/NewBand";
 import NewLocation from "@/components/NewContent/NewLocation";
+
 
 export default {
 	name: 'new-event',
@@ -270,7 +298,8 @@ export default {
 		ImageStep,
 		FinishedStep,
 		NewBand,
-		NewLocation
+		NewLocation,
+		SearchSelect
 	},
 	props: {
 		data: Object,
@@ -284,6 +313,7 @@ export default {
 			this.getSimilar();
 		},
 		newEventLocation() {
+			console.log('location change: ',this.newEvent.location);
 			this.getSimilar();
 		}
 	},
@@ -334,7 +364,8 @@ export default {
 			backendLocations: [],
 			createdContent: '',
 			eventImage: null,
-			finishedCreation: false
+			finishedCreation: false,
+			createdTour: false
 		}
 	},
 	methods: {
@@ -344,6 +375,8 @@ export default {
 			
 			//Only go on if all required fields are filled out
 			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
+				this.createdTour = false;
+
 				removeEmptyObjectFields(this.newEvent);
 				
 				let formData = new FormData();
@@ -380,6 +413,7 @@ export default {
 		  	this.loading = true;
 
 			if(this.newTour.name && this.newTour.tourStops[0].location && this.newTour.tourStops[0].date) {
+				this.createdTour = true;
 				removeEmptyObjectFields(this.newTour);
 
 				let fullEvents = [];
@@ -403,10 +437,17 @@ export default {
 				if(this.apiRoute == '/api/events' && this.allBandsUnverified())
 					this.apiRoute = '/api/unvalidated-events';
 
-				this.$http.post(backendUrl + this.apiRoute + '/multiple', {list: fullEvents})
+				let formData = new FormData();
+				formData.append('image', this.eventImage, 'event-image.png');
+				formData.append('data', JSON.stringify({list: fullEvents}));
+
+				this.$http.post(backendUrl + this.apiRoute + '/multiple', formData)
 					.then(response => {	
 						this.loading = false;
 						this.$emit('success');
+
+						this.finishedCreation = true;
+						this.showStepper = false;
 						//Reset all fields
 						this.resetTourFields();
 					})
@@ -445,10 +486,11 @@ export default {
 		},
 		getSimilar() {
 			this.similarEventFound = false;
-			if(this.newEvent.location && this.newEvent.date && this.$route.path.toLowerCase().indexOf('/events') != -1) {
+			if(this.newEvent.location != '' && this.newEvent.date != '') {
 				
 				this.$http.get(backendUrl + '/api/events/similar?location=' + this.newEvent.location._id + '&date=' + this.newEvent.date)
 				.then(response => {
+					console.log('similar response: ', response);
 					if (response.body.data) {
 						this.similarEvents = response.body.data;
 
@@ -463,7 +505,7 @@ export default {
 		},
 		checkSimilar(accept) {
 			if(accept)
-				this.$emit('close');
+				this.$router.push('/events');
 
 			this.similarEventFound = false;
 			this.$refs.similarEventDialog.close();

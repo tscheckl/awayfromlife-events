@@ -16,7 +16,7 @@
 
 					<md-layout md-flex="100">
 						<div class="single-form-field" v-for="(band, index) in data.bands" :key="index">
-							<md-input-container>
+							<!-- <md-input-container>
 								<v-select class="form-v-select"
 										  :options="backendBands"
 										  :on-change="(selected) => onSelectBand(selected, index)"
@@ -28,12 +28,24 @@
 												<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
 											</span>
 								</v-select>
-							</md-input-container>
+							</md-input-container> -->
+							
+							<search-select label="name"
+										  :options="backendBands"
+										  v-on:change="(selected) => onSelectBand(selected, index)"
+										  v-model="selectedBands[index]"
+										  placeholder="Select event's bands*">
+
+								<span slot="no-options">
+									Looks like the band you're looking for doesn't exist yet. 
+									<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
+								</span>
+							</search-select>
 							<md-button v-on:click="removeBand(index)" class="md-icon-button md-raised">
 								<md-icon>clear</md-icon>
 								<md-tooltip>Remove band</md-tooltip>
 							</md-button>
-							<p class="not-verified-warning" v-if="band.isValidated == false">
+							<p class="not-verified-warning" v-if="band && band.isValidated == false">
 								<md-icon>error_outline</md-icon>
 								This Band is not validated yet.
 							</p>
@@ -51,7 +63,7 @@
 
 					<md-layout md-flex="100">
 						<div class="tourstop single-form-field" v-for="(tourstop, index) in data.tourStops" :key="index">
-							<md-input-container>
+							<!-- <md-input-container>
 								<v-select class="form-v-select"
 										  :options="backendLocations"
 										  :on-change="(selected) => selectionHandler(selected, index)"
@@ -63,7 +75,17 @@
 												<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
 											</span>
 								</v-select>
-							</md-input-container>
+							</md-input-container> -->
+							<search-select :options="backendLocations"
+										  v-on:change="(selected) => selectionHandler(selected, index)"
+										  v-model="selectedLocations[index]"
+										  placeholder="Select event location*">
+								
+								<span slot="no-options">
+									Looks like the location you're looking for doesn't exist yet. 
+									<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
+								</span>
+							</search-select>
 							<div class="picker">
 								<md-icon>date_range</md-icon>
 								<datetime v-model="tourstop.date" placeholder="Select date*" type="date"></datetime>
@@ -128,12 +150,14 @@ import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js
 
 import NewBand from "@/components/NewContent/NewBand";
 import NewLocation from "@/components/NewContent/NewLocation";
+import SearchSelect from '@/components/Utilities/SearchSelect';
 
 export default {
 	name: 'event-form',
 	components: {
 		NewBand,
-		NewLocation
+		NewLocation,
+		SearchSelect
 	},
 	props: {
 		data: Object,
