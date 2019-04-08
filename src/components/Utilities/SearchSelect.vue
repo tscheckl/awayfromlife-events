@@ -76,7 +76,8 @@ export default {
 		}
 	},
 	mounted() {
-		this.filterValue = this.value[this.computedLabel] ?this.value[this.computedLabel] :this.value;
+		if(this.value)
+			this.filterValue = this.value[this.computedLabel] ?this.value[this.computedLabel] :this.value;
 	},
 }
 </script>

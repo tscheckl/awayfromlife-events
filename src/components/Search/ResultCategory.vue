@@ -50,7 +50,12 @@ export default {
 	methods: {
 		showResult(result) {
 			this.$store.commit(('setCurrent' + result.category), result.data);
-			this.$router.push({path: `/${result.category}/${result.data.url}`});
+			// console.log(result.category.toString().toLowerCase());
+			// return;
+			let resultCat = String(result.category);
+			console.log(typeof resultCat);
+			let pushRoute = `/${resultCat.slice()}/${result.data.url}`;
+			this.$router.push({path: pushRoute});
 		},
 		showSpecialAttrib(object) {
 			return this.attribToBeDisplayed.split('.').reduce((prev, curr) => {
@@ -75,7 +80,6 @@ export default {
 				this.$emit('expanded');
 				categoryElement.classList.remove('column-category');
 				categoryElement.classList.add('expanded-category');
-				console.log(this.content);
 				
 				this.resultLimiter = this.content.length;
 			}

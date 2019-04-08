@@ -128,7 +128,7 @@ export default {
 
 			this.$http.delete(`${backendUrl}/api/${this.contentType}s/${this.id}`)
 				.then(response => {
-					this.$router.go(-1);
+					this.$router.push(`/${this.contentType}s`);
 				})
 				.catch(err => {
 					this.submitStatus = err.body.message;

@@ -63,10 +63,19 @@
   }
 
   &::before {
+	margin-top: -1px;
     top: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
   }
 
   &::after {
     bottom: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
   }
+}
+
+@media screen and (max-width: 768px) {
+	.hamburger-inner {
+		&::before {
+			margin-top: 0;
+		}
+	}
 }
