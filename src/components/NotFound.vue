@@ -8,15 +8,11 @@
 			</div>
             <h1>WHOOOPSIE, LOOKS LIKE THE PAGE YOU'RE LOOKING FOR DOESN'T EXIST...</h1>
 			<div class="alternative-suggestions">
-				
-			<h2 class="alt-header">But now that you are already here, why dont you</h2>
-			<span>
-				<router-link to="/"><h3>search for some events in your area</h3></router-link>
-				<h3 class="suggestion-spacer">or</h3>
-				<router-link to="/bands"><h3>discover some new bands</h3></router-link>
-				<h3>?</h3>
-			</span>
-			
+				<h2 class="alt-header">But now that you are already here, you could:</h2>
+				<ul>
+					<li><router-link to="/"><h3>search for some events in your area</h3></router-link></li>
+					<li><router-link to="/bands"><h3>discover some new bands</h3></router-link></li>
+				</ul>
 			</div>
         </div>
         <div class="color-block"></div>
