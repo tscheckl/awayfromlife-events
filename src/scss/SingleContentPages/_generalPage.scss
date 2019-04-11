@@ -1,5 +1,5 @@
 @import "src/scss/_themeColors";
-#event_page, #band_page, #festival_page, #detail_page, #location_page {
+#event_page, #band_page, #festival_page, #detail_page, #location_page, #not_found {
 	width: 100%;
 	margin: 0;
 	position: relative;
@@ -587,11 +587,7 @@
 }
 
 @media screen and (max-width: 768px) {
-#event_page, 
-#band_page, 
-#festival_page, 
-#detail_page, 
-	#location_page {
+#event_page, #band_page, #festival_page, #detail_page, #location_page, #not_found {
 		#detail_page {
 			padding-bottom: 0;
 		}

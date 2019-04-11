@@ -177,6 +177,13 @@ export default new Router({
 			}
 		},
 		{
+			path: '/*',
+			component: NotFound,
+			meta: {
+				title: '404 Page Not Found'
+			}
+		},
+		{
 			path: '/not-found',
 			component: NotFound,
 			meta: {

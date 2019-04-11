@@ -70,7 +70,7 @@
 								<md-card v-for="(event, j) in month" :key="j" md-with-hover>
 									<router-link :to="`/event/${event.url}`">
 										<md-card-media>
-											<img :src="`${baseUrl}/${event.image[1]}`" alt="People">
+											<img :src="`${baseUrl}/${event.image[1]}`" :alt="`Image for ${event.name}`">
 										</md-card-media>
 										<div class="color-block"></div>
 										<div class="card-content">
@@ -251,11 +251,11 @@ export default {
 		handleTabChange(tab) {
 			this.activeTab = tab;
 			if(tab === 0)
-				this.$router.push({query: { tab: 'information'}});
+				this.$router.replace({query: { tab: 'information'}});
 			else if(tab === 1)
-				this.$router.push({query: { tab: 'upcoming-events'}});
+				this.$router.replace({query: { tab: 'upcoming-events'}});
 			else
-				this.$router.push({query: { tab: 'past-events'}});
+				this.$router.replace({query: { tab: 'past-events'}});
 		}, 
 		checkQuery() {
 			let queryTab = this.$route.query.tab;

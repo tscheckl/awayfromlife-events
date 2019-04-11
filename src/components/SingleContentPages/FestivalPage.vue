@@ -331,9 +331,9 @@ export default {
 		handleTabChange(tab) {
 			this.activeTab = tab;
 			if(tab === 0)
-				this.$router.push({query: { tab: 'information'}});
+				this.$router.replace({query: { tab: 'information'}});
 			if(tab === 1)
-				this.$router.push({query: { tab: 'history'}});
+				this.$router.replace({query: { tab: 'history'}});
 		}, 
 		checkQuery() {
 			let queryTab = this.$route.query.tab;
