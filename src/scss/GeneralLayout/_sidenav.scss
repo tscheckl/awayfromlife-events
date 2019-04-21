@@ -219,61 +219,107 @@
 		}
 
 		.mobile-toggle-btn {
-			display: block;
 			position: relative;
+			display: block;
 			background-color: #232323;
-			padding: 0 5px;
+			padding: 5px;
 			width: 100%;
 			transition: all .4s ease-out;
 			z-index: 3;
 			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 
-			.hamburger {
-				padding: 9px 3px;
-				padding-top: 11px;
-				margin-left: 10px;
-
-				.hamburger-inner:before {
-					top: 9px;
+			.mobile-controls {
+				display: flex;
+				justify-content: space-between;
+				.hamburger {
+					padding: 9px 3px;
+					padding-top: 11px;
+					margin-left: 10px;
+					text-align: left;
+	
+					.hamburger-inner:before {
+						top: 9px;
+					}
+	
+					.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
+						width: 45px;
+						height: 7px;
+						background-color: #232323;
+						border: 2px solid $accentAccent2;
+					}
+	
+					.hamburger-inner:before, .hamburger-inner:after {
+						margin-left: -2px;
+					}
 				}
-
-				.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
-					width: 45px;
-					height: 7px;
-					background-color: #232323;
-					border: 2px solid $accentAccent2;
+	
+				.is-active {
+					.hamburger-inner {
+						border: none;
+						
+						&:before {
+							top: 0px;
+						}
+					}
 				}
-
-				.hamburger-inner:before, .hamburger-inner:after {
-					margin-left: -2px;
+	
+				&:hover {
+					.md-icon {
+						color: #232323;
+					}
 				}
-			}
-
-			.is-active {
-				.hamburger-inner {
+	
+				.md-icon {
+					color: #232323;
+				}
+	
+				.search-btn {
+					margin-right: 5px;
+					background-color: transparent;
 					border: none;
-					
-					&:before {
-						top: 0px;
+					.md-icon {
+						font-size: 2em;
+						color: $primaryLighten5;
+					}
+				}
+	
+				.home-btn {
+					img {
+						height: 35px;
+						margin-top: 7px;
 					}
 				}
 			}
 
-			&:hover {
-				.md-icon {
-					color: #232323;
+			#topbar {
+				display: block;
+				height: 0px;
+				overflow: hidden;
+				background-color: #232323;
+				transition: height .2s ease-in-out;
+
+				.md-toolbar {
+					background-color: #232323;
+					margin-bottom: 10px;
+				}
+
+				#follow_buttons {
+					a {
+						color: $accentAccent2;
+					}
+				}
+
+				button {
+					background-color: $accentAccent2;
 				}
 			}
 
-			.md-icon {
-				color: #232323;
+			.show {
+				height: 110px !important;
 			}
 
-			img {
-				float: right;
-				height: 35px;
-				margin-top: 7px;
-				margin-right: 10px;
+			.overflow-visible {
+				overflow: visible !important;
 			}
 		}
 	}
