@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
+		searchBackgroundImage: '',
 		currentEvent: {
 			name: '',
 			location: '',
@@ -51,6 +52,9 @@ export default new Vuex.Store({
 		previousRoute: ''
 	},
 	mutations: {
+		setSearchBackgroundImage(state, imageUrl) {
+			state.searchBackgroundImage = imageUrl;
+		},
 		setCurrentEvent(state, event) {
 			event.formattedDate = moment(event.date).format('LL');
 			event.formattedTime = moment(event.date).format('HH:mm');
@@ -96,6 +100,9 @@ export default new Vuex.Store({
 		}
 	},
 	getters: {
+		searchBackgroundImage: state => {
+			return state.searchBackgroundImage;
+		},
 		currentEvent: state => {
 			return state.currentEvent;
 		},

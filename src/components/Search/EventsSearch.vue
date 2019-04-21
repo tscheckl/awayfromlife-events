@@ -156,6 +156,17 @@ export default {
 			showAdvancedSearch: false
 		}
 	},
+	computed: {
+		backgroundImage() {
+			return this.$store.getters.searchBackgroundImage;
+		}
+	},
+	watch: {
+		backgroundImage() {
+			let backgroundElement = document.getElementsByClassName('background-img')[0];
+			backgroundElement.style.backgroundImage = this.$store.getters.searchBackgroundImage;
+		}
+	},
 	methods: {
 		emptyResults() {
 			this.results = {
@@ -281,7 +292,7 @@ export default {
 				this.searchOptions.country === blankOptions.country &&
 				this.searchOptions.genre === blankOptions.genre &&
 				JSON.stringify(this.searchOptions.includeCategories) === JSON.stringify(blankOptions.includeCategories));
-		}
+		},
 	},
 	mounted() {		
 		this.searchOptions = {
@@ -319,6 +330,9 @@ export default {
 		this.placesAutocomplete2.on('change', e => {
 			this.searchOptions[this.locationOption] = e.suggestion.name;
 		});	
+
+		let backgroundElement = document.getElementsByClassName('background-img')[0];
+		backgroundElement.style.backgroundImage = this.$store.getters.searchBackgroundImage;
 	}
 } 
 </script>

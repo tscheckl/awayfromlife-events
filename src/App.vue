@@ -39,6 +39,10 @@ export default {
 				this.$ga.disable(); 
 
 			document.cookie = 'allowCookies=' + allowCookies;
+		},
+		setRandomBackgroundImage() {
+			let imageNumber = Math.floor(Math.random() * 13 + 1);
+			this.$store.commit('setSearchBackgroundImage', `url("/static/background-images/${imageNumber}.jpg")`);
 		}
 	},
 	mounted() {
@@ -48,6 +52,8 @@ export default {
 			if(document.cookie.split('allowCookies=')[1].split(';')[0] == 'false')
 				this.$ga.disable();
 		}		
+
+		this.setRandomBackgroundImage();
 	}
 }
 </script>
