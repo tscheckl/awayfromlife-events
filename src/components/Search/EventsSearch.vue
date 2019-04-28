@@ -97,6 +97,10 @@
 					<h3>No results found...</h3>
 				</div>
 			</div>
+
+			<div class="latest-content">
+				<latest-content></latest-content>
+			</div>
 		</div>
   	</div>
 </template>
@@ -109,6 +113,7 @@ import {frontEndSecret, backendUrl} from '@/secrets.js';
 
 import FollowButtons from '@/components/FollowButtons';
 import ResultCategory from '@/components/Search/ResultCategory';
+import LatestContent from '@/components/Search/LatestContent';
 import SearchSelect from '@/components/Utilities/SearchSelect';
 
 export default {
@@ -116,6 +121,7 @@ export default {
 	components: {
 		FollowButtons,
 		ResultCategory,
+		LatestContent,
 		SearchSelect
 	},
 	data() {

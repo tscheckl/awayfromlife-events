@@ -170,6 +170,76 @@
 			.additional-filters {
 				margin-top: 20px;
 
+				.datepicker-trigger {
+					width: 200px;
+					margin-right: 15px;
+					// position: relative;
+					// transform: translateY(-5px);
+					display: inline-block;
+	
+					.md-input-container {
+						width: 100%;
+						position: relative;
+
+						label {
+							margin-top: -18px;
+							margin-left: 10px;
+						}
+					}
+
+					.md-input-focused {
+						&:after {
+							height: 0;
+						}
+
+						margin-top: 5px;
+					}
+				}
+	
+				.asd__wrapper {
+					margin: 0 auto;
+					border: none;
+					box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+					border-radius: 3px;
+			
+					.asd__change-month-button {
+						button {
+							border: none;
+							background-color: $accentAccent2;
+							box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+			
+							svg {
+								
+							fill: $primaryLighten4;
+							stroke: $primaryLighten4;
+							}
+						}
+					}
+			
+					
+					.asd__day--in-range {
+						border: none !important;
+						overflow: visible;
+						button {
+							background-color: $accentLighten4 !important;
+						}
+					}
+					.asd__day--selected {
+						border-color: $accentAccent2 !important;
+						button {
+							background-color: $accentAccent2 !important;
+						}
+					}
+					.asd__selected-date-one, .asd__selected-date-two {
+						overflow: visible;
+						border-color: rgb(228, 231, 231) !important;
+						background-color: transparent !important;
+						button {
+							box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+						}
+					}
+				}
+
 				.md-input-container {
 					// width: 150px;
 					height: 30px;
@@ -200,15 +270,6 @@
 
 				.genre-select {
 					margin-top: -20px;
-				}
-
-				.vdatetime {
-					input {
-						padding-left: 10px;
-						font-size: 14px;
-						color: #232323;
-						cursor: pointer;
-					}
 				}
 
 				.switch-select {
