@@ -1,5 +1,6 @@
 <template>
 	<div id="latest_content">
+		<h2 class="recent-content-header">Recently added:</h2>
 		<div class="content">
 			<!-- <div class="card" v-for="(item, index) in content" :key="index">
 				<router-link :to="`/${item.isFestival ?'festival' :'event'}/${item.url}`">
