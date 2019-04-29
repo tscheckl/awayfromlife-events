@@ -176,23 +176,17 @@
 					// position: relative;
 					// transform: translateY(-5px);
 					display: inline-block;
-	
-					.md-input-container {
-						width: 100%;
-						position: relative;
 
-						label {
-							margin-top: -18px;
-							margin-left: 10px;
-						}
+					.input-label {
+						display: block;
+						margin-top: -45px !important;
+						font-size: 13px;
 					}
 
-					.md-input-focused {
-						&:after {
-							height: 0;
-						}
-
-						margin-top: 5px;
+					input {							
+						font-size: 14px;
+						padding: 2px 5px;
+						color: #232323;
 					}
 				}
 	
@@ -265,6 +259,7 @@
 						position: absolute;
 						margin-top: -20px;
 						margin-left: 5px;
+						color: #232323;
 					}
 				}
 
@@ -549,6 +544,13 @@
 						margin-right: 0;
 						margin-bottom: 30px;
 						width: calc(50% - 2px);
+					}
+
+					.last-date {
+						.asd__wrapper {
+							right: 0 !important;
+							left: auto !important;
+						}
 					}
 
 					.switch-select {

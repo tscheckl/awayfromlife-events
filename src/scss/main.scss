@@ -183,6 +183,8 @@ a {
 // All of this needs to be important as the plugin's default styles would overwrite these after building the app.
 .form-v-select {
 	width: 100% !important;
+	font-family: "Montserrat";
+	font-size: 14px;
 	
 	.dropdown-toggle {
 		border: none !important;
@@ -197,9 +199,12 @@ a {
 		left: 0 !important;
 		width: 100% !important;
 		padding-right: 45px !important;
+		margin-top: 0;
 		overflow: hidden !important;
 		white-space: nowrap !important;
 		text-overflow: ellipsis !important;
+		font-family: "Montserrat";
+		color: #232323;
 	}
 
 	input {

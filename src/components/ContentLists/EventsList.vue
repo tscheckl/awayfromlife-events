@@ -48,35 +48,29 @@
 								  placeholder="Genre">
 						</v-select>
 					</md-input-container>
-					<!-- <md-input-container class="date-select">
-						<span class="input-label" v-if="appliedFilters.firstDate != ''">From</span>						 -->
-					<div class="datepicker-trigger">
-						<md-input-container>
-							<label>From</label>
-							<md-input id="first-date-trigger" v-model="appliedFilters.firstDate" required></md-input>
-						</md-input-container>
+					
+					<md-input-container class="date-select">	
+						<div class="datepicker-trigger first-date">
+							<label class="input-label" v-if="appliedFilters.firstDate != ''" for="last-date-trigger">From</label>
+							<input id="first-date-trigger" placeholder="From" type="text" v-model="appliedFilters.firstDate">
 
-						<AirbnbStyleDatepicker
-							:trigger-element-id="'first-date-trigger'"
-							:minDate="appliedFilters.firstDate" 
-							:endDate="appliedFilters.lastDate && (appliedFilters.lastDate < filterCriteria.lastDate) 
-								? appliedFilters.lastDate
-								: filterCriteria.lastDate" 
-							:offsetY="0"
-							:mode="'single'"
-							:showActionButtons="false"
-							:date-one="appliedFilters.firstDate"
-							@date-one-selected="(val) =>  appliedFilters.firstDate = val"
-						/>
-					</div>
-					<!-- </md-input-container> -->
-					<!-- <md-input-container class="date-select">
-						<span class="input-label" v-if="appliedFilters.lastDate != ''">To</span>				 -->
-						<div class="datepicker-trigger">
-							<md-input-container>
-								<label>To</label>
-								<md-input id="last-date-trigger" v-model="appliedFilters.lastDate" required></md-input>
-							</md-input-container>
+							<AirbnbStyleDatepicker
+								:trigger-element-id="'first-date-trigger'"
+								:minDate="appliedFilters.firstDate" 
+								:endDate="appliedFilters.lastDate && (appliedFilters.lastDate < filterCriteria.lastDate) 
+									? appliedFilters.lastDate
+									: filterCriteria.lastDate" 
+								:mode="'single'"
+								:showActionButtons="false"
+								:date-one="appliedFilters.firstDate"
+								@date-one-selected="(val) =>  appliedFilters.firstDate = val"
+							/>
+						</div>
+					</md-input-container>
+					<md-input-container class="date-select">
+						<div class="datepicker-trigger last-date">
+							<label class="input-label" v-if="appliedFilters.lastDate != ''" for="last-date-trigger">To</label>
+							<input id="last-date-trigger" placeholder="To" type="text" v-model="appliedFilters.lastDate">
 
 							<AirbnbStyleDatepicker
 								:trigger-element-id="'last-date-trigger'"
@@ -84,23 +78,13 @@
 								  	? appliedFilters.firstDate 
 									: filterCriteria.firstDate" 
 								:endDate="filterCriteria.lastDate"
-								:offsetY="-300"
 								:mode="'single'"
 								:showActionButtons="false"
 								:date-one="appliedFilters.lastDate"
 								@date-one-selected="(val) =>  appliedFilters.lastDate = val"
 							/>
 						</div>
-						<!-- <datetime v-model="appliedFilters.lastDate" 
-								  type="date" 
-								  :min-datetime="appliedFilters.firstDate > filterCriteria.firstDate 
-								  	? appliedFilters.firstDate 
-									: filterCriteria.firstDate" 
-								  :max-datetime="filterCriteria.lastDate"
-								  placeholder="To" 
-								  input-format="DD-MM-YYYY">
-						</datetime> -->
-					<!-- </md-input-container> -->
+					</md-input-container>
 
 					<div class="switch-select">
 						<md-button-toggle md-single class="md-accent">
