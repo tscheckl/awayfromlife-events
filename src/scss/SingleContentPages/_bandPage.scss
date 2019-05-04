@@ -48,6 +48,18 @@
 				}
 			}
 
+			.upcoming-tab {
+				.month-cards {
+					.card-content {
+						.event-location {
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
+					}
+				}
+			}
+
 			.discography-tab {
 				.record-label {
 					width: 100% !important;
@@ -137,7 +149,6 @@
 @media screen and (max-width: 768px) {
 	#band_page {
 		.content {
-
 			.content-information {
 				.information-tab {
 					.address {

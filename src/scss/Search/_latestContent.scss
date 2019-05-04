@@ -6,32 +6,22 @@
 	margin: 0 auto;
 
 	.recent-content-header {
-		// padding: 7px 10px;
 		margin-left: 20px;
 		font-size: 1.75em;
-		color: $primaryLighten5;
+		color: white;
 		display: inline-block;
 		font-weight: 700;
-		// background-color: $accentAccent2;
-		// transform: rotate(-2deg);
-		// box-shadow: 0 3px 6px rgba(0,0,0,0.18);
-		// border-radius: 3px;
 
 		&:after {
 			content: "";
 			display: block;
 			height: 5px;
 			width: 105%;
-			// margin-top: 3px;
 			background-color: $accentAccent2;
-			// transform: rotate(1deg);
 		}
 	}
 
 	.content {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
 		
 		// .card {
 		// 	width: 100%;
@@ -107,6 +97,18 @@
 		// 	}
 		// }
 
+		.md-spinner {
+			.md-spinner-path {
+				stroke: $accentAccent2;
+			}
+		}
+
+		main {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+
 		.md-card {
 				width: 18%;
 				min-width: 270px;
@@ -114,6 +116,18 @@
 				margin-top: 0;
 				box-shadow: 0 5px 6px rgba(0,0,0,0.12), 0 5px 6px rgba(0,0,0,0.24);
 				background-color: $primaryLighten5;
+
+				.card-category {
+					position: absolute;
+					z-index: 2;
+					color: $primaryLighten5;
+					background-color: #232323;
+					font-size: 1.05em;
+					padding: 5px 12px;
+					text-transform: capitalize;
+					font-weight: 500;
+					right: 0;
+				}
 
 				.md-card-media {
 					height: 180px;
@@ -153,12 +167,22 @@
 					p {
 						clear: left;
 						margin: 5px 0;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+
+					.bold-detail {
 						font-size: 1.1em;
 						font-weight: 500;
 					}
 	
-					.bands {
+					.bands, .genres {
+						clear: both;
 						margin-top: 0;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
 	
 						span {
 							&:after {
@@ -180,6 +204,9 @@
 
 @media screen and (max-width: 768px) {
 	#latest_content {
+		width: 90%;
+		max-width: 100%;
+
 
 		.recent-content-header {
 			font-size: 18px;
@@ -191,7 +218,8 @@
 		.content {
 			.md-card {
 				min-width: 0;
-				width: 42%;
+				width: 100%;
+				margin-bottom: 15px;
 
 				.md-card-media {
 					height: 100px;
@@ -200,19 +228,25 @@
 				.card-content {
 					h2 {
 						max-width: 100%;
-						font-size: 1.1em;
+						margin-bottom: 5px;
+						font-size: 1.2em;
 						padding: 3px 5px;
 						white-space: nowrap;
 						text-overflow: ellipsis;
 						overflow: hidden;
 					}
 
-					p {
-						font-size: 1em;
+					.bold-detail {
+						font-size: 13px;
 					}
 
-					.bands {
-						font-size: 0.8em;
+					p {
+						margin: 0;
+						// font-size: 0.9em;
+					}
+
+					.bands, .genres {
+						font-size: 0.9em;
 						white-space: nowrap;
 						text-overflow: ellipsis;
 						overflow: hidden;

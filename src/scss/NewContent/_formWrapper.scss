@@ -38,3 +38,11 @@
 		}
 	}
 }
+
+@media screen and (max-width: 768px) {
+	#form_wrapper {
+		.wrapper-content {
+			margin-top: 0;
+		}
+	}
+}

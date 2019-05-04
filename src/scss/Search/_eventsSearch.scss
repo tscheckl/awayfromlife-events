@@ -94,7 +94,7 @@
 			height: 45px;
 			float: left;
 			margin: 0;
-			background-color: $accentDarken1;
+			background-color: $accentAccent2;
 			box-shadow: none;
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
@@ -142,7 +142,7 @@
 			cursor: pointer;
 
 			.md-icon {
-				color: $accent;
+				color: $accentAccent2;
 			}
 		}
 
@@ -164,6 +164,13 @@
 
 		.md-checkbox {
 			margin-top: 0;
+		}
+
+		.md-checked {
+			.md-checkbox-container {
+				background-color: $accentAccent2;
+				border-color: $accentAccent2;
+			}
 		}
 
 		.genre-select {
@@ -188,7 +195,7 @@
 				}
 	
 				.md-toggle {
-					background-color: $accent;
+					background-color: $accentAccent2;
 					color: $primaryLighten4;
 				}
 			}
@@ -211,6 +218,10 @@
 			.ap-dropdown-menu {
 				color: #232323;
 			}
+		}
+
+		.reset-button {
+			margin-left: 0;
 		}
 	}
 
@@ -236,8 +247,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		margin: 0 auto;
-
 		margin-top: 20px;
+		margin-bottom: 20px;
 
 		.column-category {
 			flex: 1;

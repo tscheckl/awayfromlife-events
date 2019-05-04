@@ -166,8 +166,6 @@ export default {
 				this.isAuthenticated = true;
 			})
 			.catch(err => this.isAuthenticated = false);
-			
-		document.getElementById('topbar').classList.add('single-page');
 		
 		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
 	}

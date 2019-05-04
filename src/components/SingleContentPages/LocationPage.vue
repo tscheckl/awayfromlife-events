@@ -72,10 +72,9 @@
 										<md-card-media>
 											<img :src="`${baseUrl}/${event.image[1]}`" :alt="`Image for ${event.name}`">
 										</md-card-media>
-										<div class="color-block"></div>
 										<div class="card-content">
 											<h2>{{event.name}}</h2>
-											<p>{{event.formattedDate}}</p>
+											<p class="event-date">{{event.formattedDate}}</p>
 											<div class="bands">
 												<span v-for="(band, h) in event.bands" :key="h">{{band.name}}</span>
 											</div>

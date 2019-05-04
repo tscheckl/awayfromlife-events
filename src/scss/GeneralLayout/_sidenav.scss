@@ -207,6 +207,9 @@
 
 @media screen and (max-width: 768px){
 	#sidenav {
+		position: fixed;
+		width: 100%;
+		
 		.menu-items-list {
 			width: 0%;
 			padding: 0;
@@ -219,7 +222,6 @@
 		}
 
 		.mobile-toggle-btn {
-			position: relative;
 			display: block;
 			background-color: #232323;
 			padding: 5px;

@@ -430,23 +430,34 @@
 
 						.card-content {
 							padding: 5px 10px;
-							font-size: 1.1em;
+							font-size: 1em;
 							color: #232323;
 
 							h2 {
-								width: 100%;
-								margin: 0;
-								padding: 5px 0px;
-								font-family: "Montserrat";
-								font-size: 1.3em;
-								overflow: hidden;
-								white-space: nowrap;
-								text-overflow: ellipsis;
+								margin-top: -25px;
+								margin-bottom: 10px;
+								margin-left: -5px;
+								margin-right: 20px;
+								padding: 7px 10px;
+								display: block;
+								float: left;
+								clear: left;
+								color: $primaryLighten5;
+								background-color: $accentAccent2;
+								transform: rotate(-2deg);
+								box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+								// position: absolute;
 							}
 	
 							p {
+								clear: both;
 								margin: 0;
 								padding-bottom: 5px;
+							}
+							
+							.event-date {
+								font-weight: 600;
+								font-size: 1.1em;
 							}
 
 							.bands {
@@ -472,12 +483,6 @@
 								}
 							}
 						}
-					}
-
-					.color-block {
-						position: relative;
-						height: 4px;
-						background-color: $accentAccent2;
 					}
 				}
 			}
@@ -588,6 +593,7 @@
 
 @media screen and (max-width: 768px) {
 #event_page, #band_page, #festival_page, #detail_page, #location_page, #not_found {
+	font-size: 0.85em;
 		#detail_page {
 			padding-bottom: 0;
 		}
@@ -622,6 +628,7 @@
 					// margin-left: 20px;
 					position: relative;
 					z-index: 2;
+					word-wrap: break-word;
 				}
 
 				.tab-navigation {
@@ -702,13 +709,16 @@
 
 							h4 {
 								margin-top: 0;
-								font-size: 1.1em;
+								font-size: 1.15em;
 							}
 						}
 					}
 
 					.address, .location {
 						padding-left: 0;
+						.category-content {							
+							font-size: 1.3em;
+						}
 					}
 
 					.line-up {
@@ -726,6 +736,7 @@
 							padding: 0 15px;
 							min-width: 100%;
 							order: 3;
+							font-size: 1em;
 						}
 					}
 

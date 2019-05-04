@@ -250,6 +250,10 @@
 	#topbar {
 		display: none;
 		.md-toolbar {
+			.back-button {
+				display: none !important;
+			}
+
 			.search {
 				margin-right: auto;
 				margin-top: 0;

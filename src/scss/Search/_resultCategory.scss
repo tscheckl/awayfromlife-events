@@ -4,14 +4,15 @@
 	min-width: 320px;
 	max-width: 500px;
 	margin: 0 10px;
+	margin-bottom: 20px;
 	transition: height .3s ease-out;
 	transition: width .5s ease-out;
 
 	h2 {
-		color: $accentDarken1;
-		font-family: "Montserrat";
-		font-size: 24px;
-		text-shadow: 0 5px 6px rgba(0,0,0,0.12), 0 5px 6px rgba(0,0,0,0.24);
+		font-size: 1.75em;
+		color: white;
+		display: inline-block;
+		font-weight: 700;
 	}
 
 	.result {			
@@ -34,6 +35,14 @@
 
 			p:first-of-type {
 				margin-top: 0;
+			}
+
+			p:last-of-type {
+				margin-top: 10px;
+			}
+
+			p {
+				margin: 0;
 			}
 
 			.result-match {

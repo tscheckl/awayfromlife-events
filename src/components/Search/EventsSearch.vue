@@ -52,23 +52,14 @@
 						</div>
 
 						<h4>Only Show results with Genre: </h4>
-						<!-- <md-input-container class="genre-select">
-							<v-select class="form-v-select"
-									  label="name"
-									  :on-change="onSelectGenre"
-									  :options="availableGenres"
-									  v-model="searchOptions.genre"
-									  placeholder="Select genre">
-							</v-select>
-						</md-input-container> -->
-					<search-select label="name"
-									v-on:change="onSelectGenre"
-									:options="availableGenres"
-									v-model="searchOptions.genre"
-									placeholder="Select genre">
-					</search-select>
+						<search-select label="name"
+										v-on:change="onSelectGenre"
+										:options="availableGenres"
+										v-model="searchOptions.genre"
+										placeholder="Select genre">
+						</search-select>
 
-						<md-button v-if="showResetButton()" v-on:click="searchOptions = resetFilters()">
+						<md-button class="reset-button" v-if="showResetButton()" v-on:click="searchOptions = resetFilters()">
 							<md-icon>restore</md-icon>
 							Reset Filters
 						</md-button>
@@ -81,14 +72,13 @@
 			<div class="results">
 				<md-spinner md-indeterminate class="md-accent" v-if="loading"></md-spinner>
 
-				<result-category 
+				<result-category
 					v-for="(category, index) in Object.keys(results)" :key="index"
-					v-if="results[category].length > 0"
 					:ref="'result-' + category"
 					:class="'result-category column-category result-' + category" 
 					:title="category"
 					:content="results[category]"
-					:attribToBeDisplayed="specialAttributes[category]"
+					:attribsToBeDisplayed="specialAttributes[category]"
 					v-on:expanded="minifyCategories(category)">
 				</result-category>
 
@@ -136,10 +126,10 @@ export default {
 				bands: []
 			},
 			specialAttributes: {
-				events: 'date',
-				festivals: 'address.city',
-				locations: 'address.city',
-				bands: 'origin.city'
+				events: ['formattedDate', 'location.name', 'location.address.city'],
+				festivals: ['address.city'],
+				locations: ['address.city'],
+				bands: ['origin.city']
 			},
 			loading: false,
 			searched: false,
@@ -194,6 +184,16 @@ export default {
 			.then(response => {
 				this.searched = true;
 				this.results = response.body.data;
+				this.results.events.forEach(event => {
+					event.data.formattedDate = moment(event.data.date).format('LL');
+				});
+
+				// this.results.forEach(category => {
+				// 	category.forEach(result => {
+				// 		result.resultMatch = result.match;
+				// 	});
+				// });
+
 				this.$router.push({query: {
 					query: this.query,
 					genre: this.searchOptions.genre ?this.searchOptions.genre.name :undefined,

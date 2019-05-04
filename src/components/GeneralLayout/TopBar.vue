@@ -1,5 +1,5 @@
 <template>
-	<div id="topbar" v-if="$route.path != '/search' && $route.path != '/login' && $route.path != '/admin' && $route.path !='/'">
+	<div id="topbar" :class="isSinglePage() ?'single-page': ''" v-if="showTopbar()">
 		<md-toolbar>
 			<router-link class="logo-link" to="/"><img :src="'/static/' + logoLink" alt="Away From Life Streets Logo"></router-link>
 			<follow-buttons></follow-buttons>
@@ -88,12 +88,17 @@ export default {
 			}, setTimer ?700 :0);
 		},
 		isSinglePage() {
-			if(this.$route.path.indexOf('/event/') != -1 || 
-			   this.$route.path.indexOf('/location/') != -1 || 
-			   this.$route.path.indexOf('/band/') != -1) 
-				return true;
-			else
-				return false;
+			const singlePages = ['event', 'location', 'band', 'festival'];
+			return singlePages.reduce((acc, curr) => {
+				let lowercasePath = this.$route.path.slice().toLowerCase();
+				return (lowercasePath.indexOf(`/${curr}/`) != -1 || lowercasePath.indexOf(`/new-${curr}`) != -1) || acc;
+			}, false);
+		},
+		showTopbar() {
+			return this.$route.path != '/search' 
+				&& this.$route.path != '/login' 
+				&& this.$route.path != '/admin' 
+				&& this.$route.path !='/';
 		},
 		hideResults() {
 			this.searched = false;
@@ -101,7 +106,6 @@ export default {
 	},
 	mounted() {
 		let context = this;
-
 		window.addEventListener('click', function(e){  
 			
 			if (document.getElementsByClassName('topbar-search')[0] && !document.getElementsByClassName('topbar-search')[0].contains(e.target)){
