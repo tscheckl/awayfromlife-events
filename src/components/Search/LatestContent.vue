@@ -20,7 +20,7 @@
 			<md-spinner md-indeterminate v-if="loading"></md-spinner>
 			<main v-if="!loading">
 				<md-card v-for="(item, index) in content" :key="index" md-with-hover>
-					<router-link :to="`/${item.category == 'festivalEvent' ? 'festival' :item.category}/${item.data.url}`">
+					<router-link :to="`/${item.category == 'festivalEvent' ? 'festival' :item.category}/${item.category == 'festivalEvent' ?item.data.festival.url :item.data.url}`">
 						<span class="card-category">{{item.category == 'festivalEvent' ?'festival' :item.category}}</span>
 
 						<md-card-media>
@@ -50,10 +50,10 @@
 
 							<div class="card-details" v-if="item.category == 'festivalEvent'">
 								<p  class="bold-detail">{{item.data.formattedStartDate}} - {{item.data.formattedEndDate}}</p>
-								<!-- <div class="genres">
+								<div class="genres">
 									<span v-for="(genre, index) in item.data.festival.genre" :key="index">{{genre}}</span>
 								</div>
-								<p>{{item.data.festival.address.city}}, {{item.data.festival.address.country}}</p> -->
+								<p>{{item.data.festival.address.city}}, {{item.data.festival.address.country}}</p>
 							</div>
 						</div>
 					</router-link>

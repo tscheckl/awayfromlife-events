@@ -37,8 +37,8 @@
 					</div>
 				</div>
 				<div class="image-container" v-on:click="showImage(true)">
-					<div v-show="this.computedImageUrl" class="image"></div>
-					<div v-show="!this.computedImageUrl" class="image-loading-indicator">
+					<div v-show="computedImageUrl" class="image" :style="'background-image: url(' + computedImageUrl +');'"></div>
+					<div v-show="!computedImageUrl" class="image-loading-indicator">
 						<md-spinner md-indeterminate></md-spinner>
 					</div>
 					<div class="image-color-block"></div>
@@ -109,7 +109,7 @@ export default {
 	},
 	watch: {
 		computedImageUrl() {
-			document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
+			// document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
 		}
 	},
 	data() {
@@ -167,7 +167,7 @@ export default {
 			})
 			.catch(err => this.isAuthenticated = false);
 		
-		document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
+		// document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
 	}
 }
 </script>

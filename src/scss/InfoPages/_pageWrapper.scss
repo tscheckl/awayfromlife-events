@@ -1,0 +1,33 @@
+#page_wrapper {
+	.content {		
+		max-width: 1400px;
+		width: 100%;
+		margin: 20px auto;
+		margin-top: 40px;
+		margin-bottom: 20px;
+		padding: 10px 30px;
+		position: relative;
+		background-color: #fdfdfd;
+		border-radius: 3px;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		z-index: 1;
+	}
+
+	.color-block {
+		position: absolute;
+		width: 100%;
+		background-color: #232323;
+		height: 250px;
+		top: 0;
+		left: 0;
+		z-index: 0;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#page_wrapper {
+		.content {
+			padding: 10px;
+		}
+	}
+}

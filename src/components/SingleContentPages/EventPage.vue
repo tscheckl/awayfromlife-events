@@ -254,17 +254,17 @@ export default {
 			})
 			.catch(err => console.log(err));
 			
-		if(this.$store.getters.currentEvent.name == '' || (this.$store.getters.currentEvent.url != this.$route.params.url && this.$route.path == '/event'))
+		if(this.$store.getters.currentEvent.name == '' || (this.$store.getters.currentEvent.url != this.$route.params.url && this.$route.path.indexOf('/event') != -1))
 			this.getEventByUrl();
 		else {
 			//THIS DEFINITELY NEEDS A NICER FIX
 			document.title = `${this.event.name}, ${moment(this.event.date).format('DD.MM.YYYY')}, ${this.event.location.name} | AWAY FROM LIFE STREETS`;
 			this.previousImage = `${imageUrl}/${this.event.image[2]}`;
 			this.eventImage = `${imageUrl}/${this.event.image[2]}`;
-			document.getElementsByClassName('image')[1].style.backgroundImage = `url(${imageUrl}/${this.event.image[2]})`;
+			// document.getElementsByClassName('image')[0].style.backgroundImage = `url(${imageUrl}/${this.event.image[2]})`;
 		}
 			
-	},
+	}
 }
 </script>
 

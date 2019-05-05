@@ -1,0 +1,31 @@
+@import "../themeColors";
+
+#faq, #imprint {
+	h3 {
+		margin-top: 25px;
+		margin-bottom: 0;
+	}
+
+	h5 {
+		margin: 0;
+		margin-top: 5px;
+		font-size: 1em;
+	}
+
+	p {
+		margin-top: 5px;
+	}
+
+	a {
+		font-weight: 500;
+	}
+
+	.version-warning {
+		color: $accentAccent2;
+		font-weight: 500;
+
+		.md-icon {
+			margin-top: -3px;
+		}
+	}
+}

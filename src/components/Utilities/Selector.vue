@@ -53,7 +53,7 @@ export default {
 			
 			this.$emit('input', data);
 		},
-		updateSelection() {						
+		updateSelection() {					
 			if(this.emitIndex)
 				this.currentlySelected = this.options[this.value-1];
 			else 
@@ -66,7 +66,7 @@ export default {
 	mounted() {
 		this.updateSelection();
 
-		if(this.displayDirection != 'top') {			
+		if(this.displayDirection !== 'top') {			
 			document.getElementById('selector').classList.add(this.displayDirection);
 		}
 

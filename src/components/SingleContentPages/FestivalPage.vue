@@ -71,6 +71,7 @@
 				<md-tab md-label="History" :md-active="activeTab === 1" class="history-tab">
 					<stepper
 					class="festivals-stepper"
+					ref="festivalsStepper"
 					v-if="festival.events.length > 0"
 					:steps="festival.events.length"
 					infinite
@@ -169,7 +170,9 @@ export default {
 	},
 	computed: {
 		festival() {
-			return JSON.parse(JSON.stringify(this.$store.getters.currentFestival));
+			let festival = JSON.parse(JSON.stringify(this.$store.getters.currentFestival));
+			festival.events.reverse();
+			return festival;
 		},
 		selectableSteps() {
 			let selectableSteps = [];

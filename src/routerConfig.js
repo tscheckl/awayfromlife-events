@@ -15,6 +15,9 @@ import FestivalPage from '@/components/SingleContentPages/FestivalPage';
 import LocationPage from '@/components/SingleContentPages/LocationPage';
 import BandPage from '@/components/SingleContentPages/BandPage';
 import FormWrapper from '@/components/NewContent/FormWrapper';
+import Faq from '@/components/InfoPages/Faq';
+import Imprint from '@/components/InfoPages/Imprint';
+import Privacy from '@/components/InfoPages/Privacy';
 import NotFound from '@/components/NotFound';
 
 export default new Router({
@@ -174,6 +177,27 @@ export default new Router({
 			component: BugReport,
 			meta: {
 				title: 'Report A Bug'
+			}
+		},
+		{
+			path: '/faq',
+			component: Faq,
+			meta: {
+				title: 'FAQ'
+			}
+		},
+		{
+			path: '/imprint',
+			component: Imprint,
+			meta: {
+				title: 'Imprint'
+			}
+		},
+		{
+			path: '/privacy',
+			component: Privacy,
+			meta: {
+				title: 'Privacy'
 			}
 		},
 		{

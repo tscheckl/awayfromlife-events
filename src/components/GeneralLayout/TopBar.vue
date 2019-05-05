@@ -1,10 +1,10 @@
 <template>
-	<div id="topbar" :class="isSinglePage() ?'single-page': ''" v-if="showTopbar()">
+	<div id="topbar" :class="useDarkBar() ?'single-page': ''" v-if="showTopbar()">
 		<md-toolbar>
 			<router-link class="logo-link" to="/"><img :src="'/static/' + logoLink" alt="Away From Life Streets Logo"></router-link>
 			<follow-buttons></follow-buttons>
 
-			<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)" v-if="isSinglePage()">
+			<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)" v-if="useDarkBar()">
 				<md-icon>keyboard_backspace</md-icon>
 				<md-tooltip md-direction="bottom">Go Back</md-tooltip>	
 			</md-button>
@@ -65,7 +65,7 @@ export default {
 			this.hideResults();
 			this.query = '';
 			
-			if(this.isSinglePage())
+			if(this.useDarkBar())
 				this.logoLink = 'Logo-Red.png';
 			else 
 				this.logoLink = 'Logo.png'
@@ -87,12 +87,21 @@ export default {
 				.catch(err => console.log(err));			
 			}, setTimer ?700 :0);
 		},
-		isSinglePage() {
+		useDarkBar() {
 			const singlePages = ['event', 'location', 'band', 'festival'];
-			return singlePages.reduce((acc, curr) => {
+			const infoPages = ['faq', 'imprint', 'privacy']
+			
+			const isSinglePage = singlePages.reduce((acc, curr) => {
 				let lowercasePath = this.$route.path.slice().toLowerCase();
 				return (lowercasePath.indexOf(`/${curr}/`) != -1 || lowercasePath.indexOf(`/new-${curr}`) != -1) || acc;
 			}, false);
+
+			const isInfoPage = infoPages.reduce((acc, curr) => {
+				let lowercasePath = this.$route.path.slice().toLowerCase();
+				return (lowercasePath.indexOf(`/${curr}`) != -1) || acc;
+			}, false);
+
+			return isSinglePage || isInfoPage;
 		},
 		showTopbar() {
 			return this.$route.path != '/search' 

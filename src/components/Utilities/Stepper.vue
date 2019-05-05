@@ -77,11 +77,6 @@ export default {
 		steps() {
 			this.currentStep = 1;
 		},
-		selectableSteps() {
-			
-		},
-		currentStep() {
-		}
 	},
 	computed: {
 		selectOptions() {

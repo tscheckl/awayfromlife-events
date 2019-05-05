@@ -294,7 +294,7 @@ export default {
 			similarBands: [],
 			backendGenres: [],
 			bandImage: null,
-			finishedCreation: false
+			finishedCreation: true
 		}
 	},
 	methods: {
