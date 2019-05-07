@@ -109,7 +109,7 @@ router.beforeEach((to, from, next) => {
 	if (!to.matched.length) {
 		next('/not-found');
 	} else {		
-		document.title = to.meta.title + ' | AWAY FROM LIFE STREETS';
+		document.title = to.meta.title + ' | AWAY FROM LIFE Streets';
 			
 		if(to.path == "/admin") {
 			Vue.http.get(backendUrl + '/api/users/auth')

@@ -11,13 +11,13 @@
 	.menu-items-list {
 		position: fixed;
 		left: 0;
-		width: 80px;
+		max-width: 80px;
 		height: 100%;
 		display: inline;
 		padding: 10px 0px;
 		background-color: #232323;
 		z-index: 3;
-		transition: width .3s ease-out, padding .2s ease-out;
+		transition: max-width .3s ease-out, padding .2s ease-out;
 		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 
 		.menu-item {
@@ -167,7 +167,7 @@
 
 	.expanded {
 		.menu-items-list {
-			width: 250px !important;
+			max-width: 300px !important;
 			overflow: auto;
 	
 			.menu-item {
@@ -197,7 +197,7 @@
 			}
 
 			.show {
-				max-height: 200px;
+				max-height: 250px;
 				padding: 5px 10px;
 			}
 		}
@@ -211,7 +211,7 @@
 		width: 100%;
 		
 		.menu-items-list {
-			width: 0%;
+			max-width: 0%;
 			padding: 0;
 			overflow: hidden;
 			overflow-y: scroll;
@@ -330,7 +330,7 @@
 
 	.expanded {
 		.menu-items-list {
-			width: 100%;
+			max-width: 100%;
 			padding: 20px 0px !important;
 
 			.menu-item {

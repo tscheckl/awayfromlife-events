@@ -71,4 +71,13 @@
 			}
 		}
 	}
+
+	.no-options {
+		padding: 5px;
+
+		b:hover {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	}
 }

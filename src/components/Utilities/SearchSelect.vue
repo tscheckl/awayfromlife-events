@@ -19,7 +19,9 @@
 				</li>
 			</ul>
 
-			<slot name="no-options" v-if="filteredOptions.length == 0"></slot>
+			<div class="no-options" v-if="options && filteredOptions.length == 0">
+				<slot name="no-options"></slot>
+			</div>
 		</div>
 	</div>
 </template>
