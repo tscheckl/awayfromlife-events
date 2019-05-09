@@ -1,20 +1,21 @@
 <template>
 	<div id="result_category" :class="'result-' + title" v-if="content && content.length > 0">
 		<h2>{{title.charAt(0).toUpperCase() + title.substring(1)}} Results: </h2>
+		<router-link v-for="index in resultLimiter" :key="index-1" :to="`/${content[index-1].category.slice()}/${content[index-1].data.url}`">
+			<div class="result" >
+				<div class="result-content">
+					<h3>{{content[index-1].data.name}}</h3>
+					<p v-for="(attrib, index) in showSpecialAttribs(content[index-1].data)" :key="index">{{attrib}}</p>
 
-		<div class="result" v-for="index in resultLimiter" :key="index-1" v-on:click="showResult(content[index-1])">
-			<div class="result-content">
-				<h3>{{content[index-1].data.name}}</h3>
-				<p v-for="(attrib, index) in showSpecialAttribs(content[index-1].data)" :key="index">{{attrib}}</p>
-
-				<p>Result found in {{content[index-1].match.pretty}}: 
-					{{content[index-1].match.value.beforeMatch}}
-					<span class="result-match">{{content[index-1].match.value.exactMatch}}</span>
-					{{content[index-1].match.value.afterMatch}}
-				</p>
+					<p>Result found in {{content[index-1].match.pretty}}: 
+						{{content[index-1].match.value.beforeMatch}}
+						<span class="result-match">{{content[index-1].match.value.exactMatch}}</span>
+						{{content[index-1].match.value.afterMatch}}
+					</p>
+				</div>
+				<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
 			</div>
-			<md-icon class="learn-more-icon">keyboard_arrow_right</md-icon>
-		</div>
+		</router-link>
 		
 		<p class="more-results-btn" v-if="resultLimiter!=content.length" @click="toggleResults(true)">Show more Results<md-icon>keyboard_arrow_down</md-icon></p>
 		<p class="more-results-btn" v-if="resultLimiter==content.length && content.length > 3" @click="toggleResults(false)">Show less Results<md-icon>keyboard_arrow_up</md-icon></p>
@@ -68,7 +69,8 @@ export default {
 		createMatchStrings(result) {			
 			if(result.match.value) {
 				//Get Index of the result-match-value string at which the entered query starts.
-				let resultMatchValueIndex = result.match.value.toLowerCase().indexOf(this.$route.query.query.toLowerCase());
+				let lowercaseResult = result.match.value.toLowerCase();
+				let resultMatchValueIndex = lowercaseResult.indexOf(this.$route.query.query.toLowerCase());
 
 				//Split the result-match-value string into 3 parts: before the exact match, the exact match, after the exact match.
 				let resultMatchValue = result.match.value;
