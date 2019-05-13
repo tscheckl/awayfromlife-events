@@ -1,6 +1,7 @@
 <template>
 	<div id="event_page">
 		<detail-page
+			ref="eventWrapperPage"
 			contentType="event"
 			:id="event._id"
 			:image="event.image ? event.image[2] : null"
@@ -127,6 +128,9 @@ export default {
 			if(this.$route.params.url != this.event.url)
 				this.getEventByUrl();
 		},
+		eventImage() {
+			this.$refs.eventWrapperPage.updateImageUrl(this.event);
+		}
 	},
 	computed: {
 		event() {

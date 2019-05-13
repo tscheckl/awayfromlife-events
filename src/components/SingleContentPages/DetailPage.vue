@@ -37,8 +37,8 @@
 					</div>
 				</div>
 				<div class="image-container" v-on:click="showImage(true)">
-					<div v-show="computedImageUrl" class="image" :style="'background-image: url(' + computedImageUrl +');'"></div>
-					<div v-show="!computedImageUrl" class="image-loading-indicator">
+					<div v-show="fullImageUrl" class="image" :style="'background-image: url(' + fullImageUrl +');'"></div>
+					<div v-show="!fullImageUrl" class="image-loading-indicator">
 						<md-spinner md-indeterminate></md-spinner>
 					</div>
 					<div class="image-color-block"></div>
@@ -55,7 +55,7 @@
 
 		<div class="lightbox">
 			<div class="darken" v-on:click="showImage(false)"></div>
-			<img v-on:click="showImage(true)" :src="computedImageUrl" alt="">
+			<img v-on:click="showImage(true)" :src="fullImageUrl" alt="">
 			<button class="close-btn" v-on:click="showImage(false)"><md-icon>close</md-icon></button>
 		</div>
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -97,7 +97,7 @@ export default {
 		contentType: String,
 		submitStatus: String,
 		id: String,
-		image: String
+		image: String,
 	},
 	computed: {
 		computedImageUrl() {
@@ -114,7 +114,8 @@ export default {
 	},
 	data() {
 		return {
-			isAuthenticated: false
+			isAuthenticated: false,
+			fullImageUrl: ''
 		}
 	},
 	methods: {
@@ -134,6 +135,10 @@ export default {
 					this.submitStatus = err.body.message;
 					this.$refs.snackbar.open();
 				})
+		},
+		updateImageUrl(data) {
+			console.log("FISCH", data);
+			this.fullImageUrl = `${imageUrl}/${data.image[2]}`;
 		},
 		showImage(openLightBox) {
 			if(openLightBox) {

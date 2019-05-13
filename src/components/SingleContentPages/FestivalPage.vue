@@ -1,6 +1,7 @@
 <template>
 	<div id="festival_page">
 		<detail-page
+			ref="festivalWrapperPage"
 			contentType="festival"
 			:id="festival._id"
 			:loading="loading"
@@ -106,7 +107,7 @@
 							</div>
 						</div>
 
-						<div class="festival-instance-image">
+						<div class="festival-instance-image" v-if="festivalEvent.image">
 							<img :src="fullImageUrl(festivalEvent.image[1])" :alt="festivalEvent.name">
 						</div>
 					</div>
@@ -166,6 +167,10 @@ export default {
 		$route() {
 			if(this.$route.params.url != this.festival.url)
 				this.getFestivalByUrl();
+		},
+		festivalImage() {
+			if(this.$refs.festivalWrapperPage)
+				this.$refs.festivalWrapperPage.updateImageUrl(this.festival);
 		}
 	},
 	computed: {

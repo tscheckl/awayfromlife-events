@@ -1,6 +1,7 @@
 <template>
 	<div id="band_page">
 		<detail-page
+			ref="bandWrapperPage"
 			contentType="band"
 			:id="band._id"
 			:loading="loading"
@@ -153,6 +154,9 @@ export default {
 		$route() {
 			if(this.$route.params.url != this.band.url)
 				this.getBandByUrl();
+		},
+		bandImage() {
+			this.$refs.bandWrapperPage.updateImageUrl(this.band);
 		}
 	},
 	computed: {

@@ -1,6 +1,7 @@
 <template>
 	<div id="location_page">
 		<detail-page
+			ref="locationWrapperPage"
 			contentType="location"
 			:id="location._id"
 			:loading="loading"
@@ -127,6 +128,9 @@ export default {
 				this.getLocationByUrl();
 
 			this.checkQuery();
+		},
+		locationImage() {
+			this.$refs.locationWrapperPage.updateImageUrl(this.location);
 		}
 	},
 	computed: {
