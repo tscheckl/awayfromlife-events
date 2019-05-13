@@ -5,9 +5,28 @@
 		.content-information {
 			width: 60% !important;
 			.location {
+				cursor: pointer;
+				color: #232323;
 				.category-content {
+					h4 {
+						&:after {
+							content: "";
+							display: block;
+							height: 2px;
+							width: 0%;
+							margin: 0 auto;
+							background-color: $accentAccent2;
+							transition: width .3s ease-out;
+						}
+					}
 					p {
 						font-size: 0.9em;
+					}
+				}
+
+				&:hover {
+					h4:after {
+						width: 100%;
 					}
 				}
 			}

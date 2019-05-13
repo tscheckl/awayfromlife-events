@@ -42,7 +42,7 @@ export default {
 		},
 		setRandomBackgroundImage() {
 			let imageNumber = Math.floor(Math.random() * 5 + 1);
-			this.$store.commit('setSearchBackgroundImage', `url("/static/background-images/${imageNumber}.jpg")`);
+			this.$store.commit('setSearchBackgroundImage', `url("/static/background-images/${imageNumber}.JPG")`);
 		}
 	},
 	mounted() {
