@@ -10,15 +10,21 @@
 				<md-file ref="imageInput" v-model="imageName" v-on:selected="uploadFile" accept="image/*"></md-file>
 			</md-input-container>
 			
-			<div v-if="value != null" v-on:click="resetInput"  class="clear-image-icon">
+			<div v-if="imageName != ''" v-on:click="resetInput"  class="clear-image-icon">
 				<md-icon>clear<md-tooltip>clear image</md-tooltip></md-icon>
 			</div>
-			<span><md-icon>error_outline</md-icon>	Maximum file size: 5MB</span>
+			<span><md-icon>error_outline</md-icon>	Maximum file size: 2MB</span>
 		</md-layout>
 
 		<div class="image-preview-wrapper" v-show="value != null">
 			<h3>Preview: </h3>
 			<img ref="imagePreview" :src="value" :alt="value">
+		</div>
+		<div class="not-image-warning upload-warning" v-show="notImageFile">
+			<h3><md-icon>warning</md-icon> Uploaded file is not an image or the file type is not supported!</h3>
+		</div>
+		<div class="size-too-big-warning upload-warning" v-show="sizeTooBig">
+			<h3><md-icon>warning</md-icon> Uploaded file is too big!</h3>
 		</div>
 	</div>
 </template>
@@ -31,7 +37,9 @@ export default {
 	},
 	data() {
 		return {
-			imageName: ''
+			imageName: '',
+			notImageFile: false,
+			sizeTooBig: false,
 		}
 	},
 	watch: {
@@ -47,6 +55,20 @@ export default {
 	methods: {
 		uploadFile(file) {
 			console.log(file[0]);
+			if(!this.isImage(file[0])) {
+				this.notImageFile = true;
+				this.$emit('input', null);
+				return;
+			}
+			this.notImageFile = false;
+
+			if(file[0].size > 2000000) {
+				this.sizeTooBig = true;
+				this.$emit('input', null);
+				return;
+			}
+			this.sizeTooBig = false;
+			
 			this.$emit('input', file[0]);
 			const reader = new FileReader();
 			reader.onload = e => this.$refs.imagePreview.src = e.target.result;
@@ -55,8 +77,13 @@ export default {
 		resetInput() {
 			this.imageName = '';
 			this.$emit('input', null);
+			this.sizeTooBig = false;
+			this.notImageFile = false;
 			this.$refs.imageInput.resetFile();
 		},
+		isImage(file) {
+			return file != null && (file.type === "image/jpeg" || file.type === "image/png");
+		}
 	},
 	mounted() {
 		if(this.value && !this.value.type) {

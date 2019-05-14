@@ -140,6 +140,9 @@ export default {
 			console.log("FISCH", data);
 			this.fullImageUrl = `${imageUrl}/${data.image[2]}`;
 		},
+		escapeUrl(url) {
+			return escape(url);
+		},
 		showImage(openLightBox) {
 			if(openLightBox) {
 				window.scrollTo({top: 0, left: 0, behavior: 'smooth'});

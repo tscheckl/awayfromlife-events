@@ -56,6 +56,10 @@
 			border-radius: 3px;
 		}
 	}
+
+	.upload-warning {
+		color: $accentAccent2;
+	}
 }
 
 @media screen and (max-width: 768px) {
@@ -67,6 +71,10 @@
 		img {
 			width: 95%;
 			margin-left: 0;
+		}
+
+		.upload-warning {
+			font-size: 0.9em;
 		}
 	}
 }
