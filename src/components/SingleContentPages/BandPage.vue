@@ -89,7 +89,7 @@
 					</div>
 					<div class="no-events" v-else>
 						<h1>No Upcoming Events available.. :(</h1>
-						<h2>Want to create one now? <router-link to="/new-band">Click Here</router-link></h2>
+						<h2>Want to create one now? <router-link to="/new-event">Click Here</router-link></h2>
 					</div>
 				</md-tab>
 
