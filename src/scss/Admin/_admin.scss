@@ -157,7 +157,7 @@
 				}
 			}
 
-			.verify-btn {
+			.accept-btn {
 				margin-top: 40px;
 
 				.md-icon {
@@ -267,7 +267,8 @@
 @media screen and (max-width: 767px) {
 	#admin {
 		width: 100%;
-		max-height: calc(100% - 49px);
+		position: relative;
+		max-height: calc(100%);
 
 		h1 {
 			font-size: 1.4em;
@@ -313,8 +314,13 @@
 					margin-bottom: 20px;
 				}
 
-				.verify-btn {
-					margin-bottom: 55px;
+				.verify-buttons {
+					display: flex;
+					justify-content: space-evenly;
+				}
+
+				.accept-btn, .delete-btn {
+					margin-bottom: 35px;
 				}
 
 				.control-buttons {

@@ -104,8 +104,8 @@
 				<div class="not-verifiable" v-if="unverifiedContent.length > 0 && currentCategory == 'unverified Events' && !verifyData.verifiable">
 					<h2><md-icon>warning</md-icon>This Event is not verifiable as it contains other unverified content that needs to be verified first.</h2>
 				</div>
-				<div v-else-if="unverifiedContent.length > 0 && currentCategory != 'reports' && currentCategory != 'cancellations'" >
-					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent verify-btn">
+				<div class="verify-buttons" v-else-if="unverifiedContent.length > 0 && currentCategory != 'reports' && currentCategory != 'cancellations'" >
+					<md-button type="submit" v-on:click="handleVerify(true)" class="md-accent accept-btn">
 						<md-icon>check</md-icon>
 						<md-tooltip md-direction="top">Keep and activate entry</md-tooltip>
 					</md-button>

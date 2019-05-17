@@ -362,8 +362,8 @@ export default {
 		}
 	},
 	computed: {
-		showSearchButton() {
-			return this.$route.path.indexOf('/search') == -1;
+		showSearchButton() {			
+			return this.$route.path.indexOf('/search') == -1 && this.$route.path != "/";
 		}
 	},
 	methods: {
