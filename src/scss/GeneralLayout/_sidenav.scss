@@ -1,33 +1,54 @@
 @import "../themeColors";
 
 #sidenav {
-	position: relative;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	// left: 0;
 	z-index: 7;
+
+	.expand-container {
+		background-color: #232323;
+		height: 100vh;
+		// position: sticky;
+		max-width: 100px;
+		overflow: auto;
+		overflow-x: hidden;
+	}
 
 	.mobile-toggle-btn {
 		display: none;
 	}
 
 	.menu-items-list {
-		position: fixed;
-		left: 0;
-		max-width: 80px;
-		height: 100%;
-		display: inline;
+		position: relative;
+		// left: 0;
+		// display: inline;
 		padding: 10px 0px;
 		background-color: #232323;
 		z-index: 3;
-		transition: max-width .3s ease-out, padding .2s ease-out;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		// transition: max-width .3s ease-out, padding .2s ease-out;
+		
 
 		.menu-item {
 			width: 100%;
-			margin-bottom: 35px;
+			margin-bottom: 25px;
 			padding: 0 20px;
-			height: 40px;
+			// height: 40px;
 			overflow: hidden;
 			position: relative;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
 			cursor: pointer;
+
+
+			svg {
+				flex-basis: 100%;
+				max-width: 40px;
+				max-height: 40px;
+			}
 
 			.md-icon {
 				width: 38px;
@@ -35,7 +56,7 @@
 				font-size: 38px;
 				color: $accentAccent2;
 				text-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
-				transition: transform .3s ease-out;
+				// transition: transform .3s ease-out;
 			}
 
 			img {
@@ -43,9 +64,9 @@
 			}
 
 			span {
-				opacity: 0;
-				margin-left: 15px;
-				font-size: 1.15em;
+				display: block;
+				margin-top: 3px;
+				font-size: 0.9em;
 				color: $accentAccent2;
 				transition: opacity .3s ease-out;
 
@@ -79,7 +100,7 @@
 		border-radius: 3px;
 		opacity: 0;
 		visibility: hidden;
-		transition: opacity .2s ease-out;
+		// transition: opacity .2s ease-out;
 
 		.indicator {
 			display: block;
@@ -96,6 +117,9 @@
 			padding-left: 20px;
 			margin-bottom: 15px;
 			height: 40px;
+			display: flex;
+			justify-content: left;
+			align-items: center;
 			overflow: hidden;
 
 			.md-icon {
@@ -107,10 +131,16 @@
 				transition: transform .3s ease-out;
 			}
 
+			svg {
+				width: 30px;
+				height: 30px;
+			}
+
 			span {
 				margin-left: 15px;
 				font-size: 1.15em;
 				color: $accentAccent2;
+				white-space: nowrap;
 				transition: opacity .3s ease-out;
 			}
 
@@ -139,12 +169,13 @@
 
 		span {
 			opacity: 1 !important;
+			margin-top: 0 !important;
 			margin-left: 0;
 		}
 
 		.hamburger {
 			padding: 15px 0;
-			margin-left: -33px;
+			margin-left: -8px;
 
 			.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
 				width: 45px;
@@ -166,23 +197,39 @@
 	}
 
 	.expanded {
-		background-color: #232323;
-		max-height: 100vh;
-		overflow: auto;
-		position: sticky;
-
-		.expand-container {
-			max-height: 100%;
-		}
-
+		max-height: 100%;
+		width: 100%;
+		width: 250px;
+		max-width: 100%;
+		display: block;
 		.menu-items-list {
-			position: sticky;
-			max-width: 300px !important;
+			// max-width: 300px !important;
 			overflow: auto;
+
+			.hamburger {
+				margin-left: -33px;
+			}
 	
 			.menu-item {
+				flex-wrap: nowrap;
+				justify-content: left;
+				align-items: center;
+
+				svg {
+					width: 40px;
+					height: 40px;
+					flex-basis: initial;
+				}
+
 				span {
-					opacity: 1 !important;
+					font-size: 1.15em;
+					margin-left: 15px;
+					display: flex;
+					white-space: nowrap;
+
+					.md-icon {
+						justify-self: center;
+					}
 				}
 			}
 			
@@ -198,7 +245,6 @@
 				overflow: hidden;
 				background-color: #181818;
 				box-shadow: none;
-				transition: all .2s ease-out;
 				z-index: 7;
 
 				.indicator {
@@ -219,16 +265,26 @@
 	#sidenav {
 		position: fixed;
 		width: 100%;
+
+		.expand-container {
+			max-width: 100%;
+			background-color: transparent;
+		}
 		
 		.menu-items-list {
 			max-width: 0%;
 			padding: 0;
 			overflow: hidden;
 			overflow-y: scroll;
+			transition: max-width .3s ease-out, padding .2s ease-out;
+
+			.sub-items {
+				transition: all .2s ease-out;
+			}
 		}
 
 		.toggle-menu-btn {
-			display: none;
+			display: none !important;
 		}
 
 		.mobile-toggle-btn {
@@ -336,15 +392,20 @@
 				overflow: visible !important;
 			}
 		}
-	}
 
-	.expanded {
-		.menu-items-list {
+		.expanded {
 			max-width: 100%;
-			padding: 20px 0px !important;
+			width: auto;
 
-			.menu-item {
-				padding: 0 20px;
+			.menu-items-list {
+				max-width: 100% !important;
+				width: 250px;
+				padding: 20px 0px !important;
+				background-color: #232323;
+	
+				.menu-item {
+					padding: 0 20px;
+				}
 			}
 		}
 	}

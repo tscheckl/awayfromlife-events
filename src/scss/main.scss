@@ -19,7 +19,7 @@
 }
 body {
 	font-family: "Montserrat", sans-serif;
-	overflow-x: hidden;
+	// overflow-x: hidden;
 	//Nicer ton #efadaa
 	font-size: 13px !important;
 }
@@ -35,10 +35,23 @@ h2, h3, h4, h5 {
 	flex-wrap: 700;
 }
 
+html {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
+
 body, html {
 	margin: 0;
 	padding: 0;
+	// overflow: auto;
 }
+
+@-moz-document url-prefix() {
+	body {
+	  font-weight: lighter !important;
+	}
+  }
 
 a {
 	&:hover {
@@ -49,8 +62,9 @@ a {
 #app {
 	width: 100%;
 	min-height: 100%;
-	position: absolute;
-	overflow: hidden;
+	// position: absolute;
+	// overflow: hidden;
+	// overflow: auto;
 	display: flex;
 	background-color: $primaryLighten4;
 }
