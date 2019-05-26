@@ -51,13 +51,15 @@ a {
 	min-height: 100%;
 	position: absolute;
 	overflow: hidden;
+	display: flex;
 	background-color: $primaryLighten4;
 }
 
 .router-view-container {
-	width: calc(100% - 80px);
+	// width: calc(100% - 80px);
+	width: 100%;
 	min-height: calc(100vh - 60px);
-	margin-left: 80px;
+	// margin-left: 80px;
 }
 
 .md-dialog {

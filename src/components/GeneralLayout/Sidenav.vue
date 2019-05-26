@@ -445,6 +445,9 @@ export default {
 			topbarElement.classList.remove('show');
 			topbarElement.classList.remove('overflow-visible');
 		}
+	},
+	mounted() {
+		this.addExpandedClass();
 	}
 }
 </script>

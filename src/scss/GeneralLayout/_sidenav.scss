@@ -166,7 +166,17 @@
 	}
 
 	.expanded {
+		background-color: #232323;
+		max-height: 100vh;
+		overflow: auto;
+		position: sticky;
+
+		.expand-container {
+			max-height: 100%;
+		}
+
 		.menu-items-list {
+			position: sticky;
 			max-width: 300px !important;
 			overflow: auto;
 	

@@ -1,16 +1,18 @@
 <template>
 	<div id="app">
 		<sidenav></sidenav>
-		<div class="router-view-container">
-			<transition :name="$store.getters.animation">
-				<top-bar></top-bar>
-			</transition>
-			<transition :name="$store.getters.animation">
-				<router-view class="router-view"></router-view>
-			</transition>
+		<div style="width: 100%;">
+			<div class="router-view-container">
+				<transition :name="$store.getters.animation">
+					<top-bar></top-bar>
+				</transition>
+				<transition :name="$store.getters.animation">
+					<router-view class="router-view"></router-view>
+				</transition>
+			</div>
+			<cookie-notification v-if="showCookieNotification" v-on:accept="updateCookieSettings(true)" v-on:decline="updateCookieSettings(false)"></cookie-notification>
+			<app-footer></app-footer>
 		</div>
-		<cookie-notification v-if="showCookieNotification" v-on:accept="updateCookieSettings(true)" v-on:decline="updateCookieSettings(false)"></cookie-notification>
-		<app-footer></app-footer>
 	</div>
 </template>
 
