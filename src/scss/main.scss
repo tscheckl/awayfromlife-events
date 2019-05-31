@@ -141,7 +141,7 @@ a {
 }
 
 .unscrollable {
-	overflow: hidden;
+	overflow: hidden !important;
 }
 
 .router-view {
