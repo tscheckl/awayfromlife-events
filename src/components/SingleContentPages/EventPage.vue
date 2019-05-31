@@ -249,8 +249,8 @@ export default {
 			document.getElementById('topbar').classList.add('single-page');
 
 		let urlDate = moment(this.$route.path.split('--')[1], 'DD-MM-YYYY', true);
-		
-		if(urlDate.isValid() && Date.now() > moment(urlDate).format('x'))
+
+		if(urlDate.isValid() && moment(urlDate).isBefore(moment(), 'day'))
 			this.backendEndpoint = 'archived-events';
 		
 		
