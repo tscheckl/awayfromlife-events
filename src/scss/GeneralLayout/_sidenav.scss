@@ -8,33 +8,25 @@
 	// left: 0;
 	z-index: 7;
 
-	.expand-container {
-		background-color: #232323;
-		height: 100vh;
-		// position: sticky;
-		max-width: 100px;
-		overflow-y: auto;
-		overflow-x: hidden;
-	}
-
 	.mobile-toggle-btn {
 		display: none;
 	}
 
 	.menu-items-list {
-		position: relative;
+		// position: relative;
 		height: 100vh;
 		// position: sticky;
-		max-width: 100px;
+		width: 100px;
+		// max-width: 200px;
 		// left: 0;
 		// display: inline;
 		margin: 0;
 		padding: 10px 0px;
 		background-color: #232323;
-		z-index: 3;
+		z-index: 13;
 		overflow-y: auto;
 		overflow-x: hidden;
-		// transition: max-width .3s ease-out, padding .2s ease-out;
+		transition: width .3s ease-out, padding .2s ease-out;
 
 		.toggle-menu-btn {
 			display: flex;
@@ -45,10 +37,15 @@
 		.menu-item, .sub-items-menu-item {
 			width: 100%;
 			margin-bottom: 25px;
-			// height: 40px;
+			height: 60px;
 			overflow: hidden;
 			position: static;
 			cursor: pointer;
+			z-index: 13;
+
+			a {
+				display: block;
+			}
 
 			div, button {
 				padding: 0 20px;
@@ -91,15 +88,15 @@
 					margin-top: -3px;
 				}
 			}
+		}
 
-			&:hover {
-				.md-icon, span {
-					color: $accentAccent3;
-				}
+		.menu-item:hover {
+			.md-icon, span {
+				color: $accentAccent3;
+			}
 
-				path {
-					fill: $accentAccent3;
-				}
+			path {
+				fill: $accentAccent3;
 			}
 		}
 
@@ -118,70 +115,105 @@
 		}
 	}
 
-	.sub-items-menu-item {
-		position: relative;
-		padding: 0 20px;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		// overflow: visible;
+	.sub-items-menu-item {		
+		margin-bottom: 25px;
+
+		&:hover {
+			.indicator {
+				color: $accentAccent3;
+			}
+		}
+
+		div, button {
+			padding: 0 20px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+
+
+			svg {
+				flex-basis: 100%;
+				max-width: 35px;
+				max-height: 35px;
+			}
+		}
+
+		img {
+			height: 40px;
+		}
+
+		span {
+			display: block;
+			margin-top: 3px;
+			font-size: 0.9em;
+			color: $accentAccent2;
+			transition: opacity .3s ease-out;
+
+			.md-icon {
+				width: 25px;
+				height: 25px;
+				font-size: 25px;
+				margin-top: -3px;
+			}
+		}
 
 		.menu-item {
 			margin-bottom: 0;
 		}
+	
+		.indicator {
+			color: $accentAccent2;
+			position: absolute;
+			margin-left: 75px;
+			margin-top: -50px;
+			z-index: 11;
+			font-size: 16px;
+		}
 
 		.sub-items {
 			position: absolute;
-			width: 250px;
-			// margin-left: 85px;
+			// width: 250px;
+			margin-left: 80px;
+			height: 100px;
+			// max-width: 0;
+			overflow: hidden;
+			left: -500%;
 			margin-top: -80px;
 			background-color: #232323;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 			border-radius: 3px;
-			opacity: 0;
-			visibility: hidden;
-			z-index: 10;
-			// transition: opacity .2s ease-out;
-	
-			.indicator {
-				display: block;
-				width: 60px;
-				height: 60px;
-				margin-left: -30px;
-				font-size: 60px;
-				color: #232323;
-				position: absolute;
-			}
+			// opacity: 0;
+			// visibility: hidden;
+			display: flex;	
+			flex-wrap: nowrap !important;
+			z-index: -1;
+			justify-content: left !important;
+			align-items: center;
+			transition: left .3s ease-out;
+			padding: 0 !important;
 	
 			.sub-item {
 				padding: 10px;
-				padding-left: 20px;
-				margin-bottom: 15px;
-				height: 40px;
-				display: flex;
-				justify-content: left;
+				// padding-left: 20px;
+				width: 100px;
+				// margin-bottom: 15px;
 				align-items: center;
+				align-content: space-around;
 				overflow: hidden;
 	
-				.md-icon {
-					width: 30px;
-					height: 30px;
-					font-size: 30px;
-					color: $accentAccent2;
-					text-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
-					transition: transform .3s ease-out;
-				}
-	
 				svg {
+					flex-basis: 100%;
 					width: 30px;
 					height: 30px;
 				}
 	
 				span {
-					margin-left: 15px;
-					font-size: 1.15em;
+					// margin-left: 15px;
+					flex-basis: 100%;
+					font-size: 0.8em;
+					line-height: 1.25em;
 					color: $accentAccent2;
-					white-space: nowrap;
+					// white-space: nowrap;
+					text-align: center;
 					transition: opacity .3s ease-out;
 				}
 	
@@ -196,11 +228,14 @@
 				}
 			}
 		}
-	}	
+	}
 
 	.show {
-		opacity: 1;
-		visibility: visible;
+		left: 0 !important;
+		max-width: 450px !important;
+		max-height: 100% !important;
+		opacity: 1 !important;
+		visibility: visible !important;
 	}
 
 	
@@ -254,6 +289,9 @@
 		}
 
 		.menu-item, .sub-items-menu-item {
+			align-items: center;
+			height: auto;
+			padding: 10px 0;
 			div {
 				flex-wrap: nowrap;
 				justify-content: left;
@@ -291,40 +329,49 @@
 		}
 		
 		.sub-items-menu-item {
+			position: relative !important;
 			display: block;
+			max-height: auto;
+			height: auto;
 			flex-wrap: wrap;
 			justify-content: left;
 			align-items: flex-start;
-			padding: 0;
+			padding: 0 !important;
 			overflow: visible;
 
 			a {
 				flex-basis: 100%;
 			}
 
+			.indicator {
+				display: none;
+			}
+
 			.sub-items {
-				position: relative;
+				position: relative !important;
 				display: block;
 				width: auto;
 				max-height: 0;
+				max-width: 100%;
 				margin-left: 0;
 				margin-top: 0px;
 				margin-bottom: 30px;
-				opacity: 1;
-				visibility: visible;
 				overflow: hidden;
 				background-color: #181818;
 				box-shadow: none;
 				z-index: 7;
+				transition: max-height .3s ease-out, margin-top .3s ease-out, padding .3s ease-out;
 
-				.indicator {
-					display: none;
+				.sub-item {
+					position: relative;
+					width: 100%;
+					padding-left: 20px;
 				}
 			}
 
 			.show {
 				max-height: 250px !important;
-				margin-top: 15px;
+				margin-top: 5px;
 				padding: 5px 10px;
 			}
 		}
@@ -342,7 +389,7 @@
 		
 		.menu-items-list {
 			position: absolute;
-			max-width: 0px;
+			width: 0px;
 			left: 0;
 			top: 59px;
 			// width: 0px;
@@ -352,7 +399,7 @@
 			overflow: hidden;
 			padding: 0;
 			// overflow-y: scroll;
-			transition: max-width .3s ease-out, padding .2s ease-out;
+			transition: width .3s ease-out, padding .2s ease-out;
 			z-index: 40;
 
 			.sub-items {
@@ -471,8 +518,7 @@
 		}
 
 		.expanded {
-			max-width: 250px;
-			width: auto;
+			width: 250px;
 			// display: block;
 			overflow: auto;
 			padding: 20px 0px !important;
