@@ -242,9 +242,6 @@ export default {
 				'magazine-sub-menu': false,
 				'addcontent-sub-menu': false
 			};
-			for(var showItem of document.getElementsByClassName('show')) {
-				showItem.classList.remove('show');
-			}
 			// this.showSubMenu(false, 'events-sub-menu');
 			// this.showSubMenu(false, 'magazine-sub-menu');
 			// this.showSubMenu(false, 'addcontent-sub-menu');
@@ -289,9 +286,11 @@ export default {
 				setTimeout(() => topbarElement.classList.add('overflow-visible'), 200)
 			else
 				topbarElement.classList.remove('overflow-visible');
+
 			this.removeExpandedClass();
 		},
 		hideSearchBar() {
+			console.log("whatever");
 			const topbarElement = document.getElementById('topbar');
 			if(topbarElement !== null) {
 				topbarElement.classList.remove('show');
