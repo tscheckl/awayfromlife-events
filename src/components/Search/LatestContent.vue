@@ -86,14 +86,13 @@ export default {
 			.then(response => {
 				if(!response.body.message) {
 					this.content = response.body.data;	
-					console.log(this.content);
 					this.content.forEach(element => {
 						if(element.category == 'event')
-							element.data.formattedDate = moment(element.data.date).format('LL');
+							element.data.formattedDate = moment(element.data.date).format('ll');
 
 						if(element.category == 'festivalEvent') {
-							element.data.formattedStartDate = moment(element.data.startDate).format('DD.MM.YYYY');
-							element.data.formattedEndDate = moment(element.data.endDate).format('DD.MM.YYYY');
+							element.data.formattedStartDate = moment(element.data.startDate).format('ll');
+							element.data.formattedEndDate = moment(element.data.endDate).format('ll');
 						}
 					});
 				}
