@@ -100,23 +100,29 @@
 	}
 
 	.sub-items-menu-item {	
+		// display: flex;
+
 		&:hover {
 			.indicator {
 				color: $accentAccent3;
 			}
 		}
 
-		.menu-item {
-			margin-bottom: 0;
-		}
+			.menu-item {
+				position: relative !important;
+				margin-bottom: 0;
+
+			.indicator {
+				position: absolute;
+				right: 0px;
+				top: 10px;
+				color: $accentAccent2;
+				font-size: 16px;
+				z-index: 13;
+			}
+			}
 	
 		.indicator {
-			position: absolute;
-			right: 5px;
-			margin-top: -50px;
-			color: $accentAccent2;
-			font-size: 16px;
-			z-index: 13;
 		}
 
 		.sub-items {
@@ -223,6 +229,12 @@
 
 			.md-icon {
 				margin-top: -2px;
+			}
+
+			.menu-item {
+				div {
+					padding: 0 !important;
+				}
 			}
 
 			.sub-items {
