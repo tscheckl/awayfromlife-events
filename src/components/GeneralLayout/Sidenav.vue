@@ -294,13 +294,25 @@ export default {
 			this.removeExpandedClass();
 		},
 		hideSearchBar() {
-			console.log("whatever");
 			const topbarElement = document.getElementById('topbar');
 			if(topbarElement !== null) {
 				topbarElement.classList.remove('show');
 				topbarElement.classList.remove('overflow-visible');
 			}
+		},
+		adjustSubMenuPositions() {
+			let subMenuLists = document.getElementsByClassName('sub-items');
+			let subMenuContainers = document.getElementsByClassName('sub-items-menu-item');
+			for(let i = 0; i < subMenuLists.length; i++) {
+				const containerTop = subMenuContainers[i].getBoundingClientRect().top;
+				const containerHeight = subMenuContainers[i].getBoundingClientRect().bottom - subMenuContainers[i].getBoundingClientRect().top;
+				const newSubMenuTop = containerTop + containerHeight;
+				subMenuLists[i].style.top = newSubMenuTop + "px";
+			}
 		}
+	},
+	mounted() {
+		document.getElementsByClassName('menu-items-list')[0].addEventListener('scroll', this.adjustSubMenuPositions);
 	}
 }
 </script>
