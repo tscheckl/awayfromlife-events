@@ -5,6 +5,7 @@
 			contentType="event"
 			:id="event._id"
 			:image="event.image ? event.image[2] : null"
+			:imageSource="event.imageSource"
 			:loading="loading"
 			:submitStatus="submitStatus"
 			v-on:edit="openDialog('editEventDialog')">

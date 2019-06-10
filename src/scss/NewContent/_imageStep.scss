@@ -19,6 +19,10 @@
 		.md-file, input {
 			cursor: pointer;
 		}
+
+		&:last-of-type, input:last-of-type {
+			cursor: text;
+		}
 	}
 
 	.clear-image-icon {

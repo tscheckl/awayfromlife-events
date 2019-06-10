@@ -16,7 +16,11 @@
 						</md-input-container>
 					</md-layout>
 
-					<image-step v-model="image"></image-step>
+					<image-step 
+						v-model="image"						
+						:imageSource="myData.imageSource" 
+						v-on:sourceChange="changeImageSource"
+					></image-step>
 
 					<md-layout md-flex="50" md-flex-small="100">
 						<md-input-container>
@@ -226,6 +230,9 @@ export default {
 				array[0] = '';
 			}
 		},
+		changeImageSource(value) {
+			this.myData.imageSource = value;
+		}
 	},
 	mounted() {		
 		this.$http.get(backendUrl + '/api/genres')

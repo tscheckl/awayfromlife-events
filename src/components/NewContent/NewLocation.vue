@@ -29,7 +29,12 @@
 			</div>
 
 			<div slot="step-2">
-				<image-step ref="imageInput" v-model="locationImage"></image-step>
+				<image-step 
+					ref="imageInput" 
+					v-model="locationImage"
+					:imageSource="newLocation.imageSource" 
+					v-on:sourceChange="changeImageSource"
+				></image-step>
 			</div>
 
 			<div slot="step-3">
@@ -166,7 +171,8 @@ export default {
 				},
 				information: '',
 				website: '',
-				facebookUrl: ''
+				facebookUrl: '',
+				imageSource: ''
 			},
 			similarLocationFound: false,
 			similarLocations: [],
@@ -237,6 +243,9 @@ export default {
 		restartForm() {
 			this.finishedCreation = false;
 			this.$refs.formStepper.changeStep(1);
+		},
+		changeImageSource(value) {
+			this.newLocation.imageSource = value;
 		}
 	},
 	mounted() {

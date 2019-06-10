@@ -16,6 +16,13 @@
 			<span><md-icon>error_outline</md-icon>	Maximum file size: 2MB</span>
 		</md-layout>
 
+		<md-layout md-flex="100" v-if="addImageSource">
+			<md-input-container>
+				<label>Image source</label>
+				<md-input v-model="computedImageSource"></md-input>
+			</md-input-container>
+		</md-layout>
+
 		<div class="image-preview-wrapper" v-show="value != null">
 			<h3>Preview: </h3>
 			<img ref="imagePreview" :src="value" :alt="value">
@@ -33,7 +40,12 @@
 export default {
 	name: 'image-step',
 	props: {
-		value: undefined
+		value: undefined,
+		imageSource: '',
+		addImageSource: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
@@ -42,19 +54,26 @@ export default {
 			sizeTooBig: false,
 		}
 	},
-	watch: {
-		value() {
-			console.log('value change', this.value);
-			if(this.value && !this.value.type) {
-				this.imageName = this.value;
-				console.log('name was changed', this.imageName);
-				this.$refs.imagePreview.src = this.value;
+	computed: {
+		computedImageSource: {
+			get() {				
+				return this.imageSource; 
+			},
+			set(newValue) {
+				this.$emit('sourceChange', newValue);
 			}
 		}
 	},
+	watch: {
+		value() {
+			if(this.value && !this.value.type) {
+				this.imageName = this.value;
+				this.$refs.imagePreview.src = this.value;
+			}
+		},
+	},
 	methods: {
 		uploadFile(file) {
-			console.log(file[0]);
 			if(!this.isImage(file[0])) {
 				this.notImageFile = true;
 				this.$emit('input', null);
@@ -70,6 +89,7 @@ export default {
 			this.sizeTooBig = false;
 			
 			this.$emit('input', file[0]);
+
 			const reader = new FileReader();
 			reader.onload = e => this.$refs.imagePreview.src = e.target.result;
 			reader.readAsDataURL(file[0]);
@@ -90,9 +110,9 @@ export default {
 			this.imageName = this.value;
 			this.$refs.imagePreview.src = this.value;
 		}
-		if(this.value && this.value.type != null) {
+
+		if(this.value && this.value.type != null)
 			this.uploadFile(this.value);
-		}
 	},
 }
 </script>

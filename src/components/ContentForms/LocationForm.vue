@@ -16,7 +16,11 @@
 						</md-input-container>
 					</md-layout>
 
-					<image-step v-model="image"></image-step>
+					<image-step 
+						v-model="image"						
+						:imageSource="data.imageSource" 
+						v-on:sourceChange="changeImageSource"
+					></image-step>
  
 					<md-layout md-flex="100">
 						<h2>Address</h2>
@@ -104,6 +108,9 @@ export default {
 			this.placesAutocomplete.setVal('');
 			document.querySelector('.ap-icon-clear').style.display = 'none';
 			document.querySelector('.ap-icon-pin').style.display = '';
+		},
+		changeImageSource(value) {
+			this.data.imageSource = value;
 		}
 	},
 	mounted() {

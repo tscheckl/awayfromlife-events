@@ -16,7 +16,11 @@
 						</md-input-container>
 					</md-layout>
 
-					<image-step v-model="image"></image-step>
+					<image-step 
+						v-model="image"						
+						:imageSource="myData.imageSource" 
+						v-on:sourceChange="changeImageSource"
+					></image-step>
 
 					<md-layout class="genre-header" md-flex="100">
 						<h2>Genre</h2>
@@ -162,7 +166,10 @@ export default {
 			if(array.length == 0) {
 				array[0] = '';
 			}
-		},
+		},		
+		changeImageSource(value) {
+			this.myData.imageSource = value;
+		}
 	},
 	mounted() {
 		getBandOptions()

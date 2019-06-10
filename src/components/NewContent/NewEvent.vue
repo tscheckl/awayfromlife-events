@@ -150,7 +150,12 @@
 			</div>
 
 			<div slot="step-2">
-				<image-step ref="imageInput" v-model="eventImage"></image-step>
+				<image-step 
+					ref="imageInput" 
+					v-model="eventImage" 
+					:imageSource="currentObject.imageSource" 
+					v-on:sourceChange="changeImageSource"
+				></image-step>
 			</div>
 
 			<div slot="step-3">
@@ -333,6 +338,7 @@ export default {
 			newTour: {
 				name: '',
 				description: '',
+				imageSource: '',
 				bands: [''],
 				ticketLink: '',
 				tourStops: [{
@@ -342,7 +348,8 @@ export default {
 			},
 			blankEvent: {
 				name: '',
-				description: '',
+				description: '',				
+				imageSource: '',
 				location: '',
 				bands: [''],
 				date: '',
@@ -371,10 +378,9 @@ export default {
 	methods: {
 		addEvent() {
 			this.loading = true;
-			// return;
-			
 			//Only go on if all required fields are filled out
-			if(this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '') {
+			const allRequiredFieldsFilledOut = this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '';
+			if(allRequiredFieldsFilledOut) {
 				this.createdTour = false;
 
 				removeEmptyObjectFields(this.newEvent);
@@ -578,6 +584,9 @@ export default {
 			this.showStepper = false;
 			this.finishedCreation = false;
 			this.$refs.formStepper.changeStep(1);
+		},
+		changeImageSource(value) {
+			this.currentObject.imageSource = value;
 		}
 	},
 	mounted() {	

@@ -6,6 +6,7 @@
 			:id="band._id"
 			:loading="loading"
 			:image="band.image ?band.image[2] :null"
+			:imageSource="band.imageSource"
 			:submitStatus="submitStatus"
 			v-on:edit="openDialog('editBandDialog')">
 			<div slot="title">
@@ -307,13 +308,10 @@ export default {
 		}
 	},
 	created() {
-		console.log("tab in query: " , this.$route.query.tab);
 		if(this.$route.query.tab)
-			this.checkQuery();
-		
+			this.checkQuery();		
 	},
 	mounted() {
-		console.log("tab in query: " , this.$route.query.tab);
 		// document.getElementById('topbar').classList.add('single-page');
 
 		if(this.$store.getters.currentBand.name == ''  || this.$store.getters.currentBand.url != this.$route.params.url) {

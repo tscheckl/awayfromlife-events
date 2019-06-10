@@ -7,6 +7,7 @@
 			:loading="loading"
 			:submitStatus="submitStatus"
 			:image="festival.image ?festival.image[2] :null"
+			:imageSource="festival.imageSource"
 			v-on:edit="openDialog('editFestivalDialog')">
 
 			<div slot="title">

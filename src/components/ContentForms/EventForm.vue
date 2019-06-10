@@ -17,20 +17,6 @@
 					</md-layout>
 
 					<md-layout class="event-location" md-flex="50" md-flex-small="100">
-						<!-- <md-input-container>
-							<v-select class="form-v-select"
-							 		  :options="backendLocations"
-									  :on-change="onSelectLocation"
-									  v-model="event.location"
-									  placeholder="Select event location*">
-
-									  	<span slot="no-options">
-											Looks like the location you're looking for doesn't exist yet. 
-											<b v-on:click="$refs.newLocationDialog.open()">Want to add it now?</b>
-										</span>
-							</v-select>
-						</md-input-container> -->
-
 						<search-select :options="backendLocations"
 										v-on:change="onSelectLocation"
 										v-model="event.location"
@@ -47,7 +33,11 @@
 						</p>
 					</md-layout>
 
-					<image-step v-model="value"></image-step>
+					<image-step 
+						v-model="value"						
+						:imageSource="event.imageSource" 
+						v-on:sourceChange="changeImageSource"
+					></image-step>
 
 					<md-layout md-flex="100">
 						<h2>Lineup for this event</h2>
@@ -55,19 +45,6 @@
 
 					<md-layout md-flex="100">
 						<div class="single-form-field" v-for="(band, index) in localBands" :key="index">
-							<!-- <md-input-container>
-								<v-select class="form-v-select"
-										  :options="backendBands"
-										  :on-change="(selected) => onSelectBand(selected, index)"
-										  v-model="localBands[index]"
-										  placeholder="Select event's bands*">
-
-										  	<span slot="no-options">
-												Looks like the band you're looking for doesn't exist yet. 
-												<b v-on:click="$refs.newBandDialog.open()">Want to add it now?</b>
-											</span>
-								</v-select>
-							</md-input-container> -->
 							<search-select :options="backendBands"
 										  v-on:change="(selected) => onSelectBand(selected, index)"
 										  v-model="localBands[index]"
@@ -257,6 +234,9 @@ export default {
 
 			this.$refs.snackbar.open();
 		},
+		changeImageSource(value) {
+			this.event.imageSource = value;
+		}
 	},
 	mounted() {
 		let getUnverified = !this.edit;

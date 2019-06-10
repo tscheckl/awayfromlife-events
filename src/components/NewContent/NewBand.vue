@@ -70,7 +70,12 @@
 				</div>
 
 				<div slot="step-2">
-					<image-step ref="imageInput" v-model="bandImage"></image-step>
+					<image-step 
+						ref="imageInput" 
+						v-model="bandImage"
+						:imageSource="newBand.imageSource" 
+						v-on:sourceChange="changeImageSource"
+					></image-step>
 				</div>
 
 				<div slot="step-3">
@@ -288,7 +293,8 @@ export default {
 				website: '',
 				bandcampUrl: '',
 				soundcloudUrl: '',
-				facebookUrl: ''
+				facebookUrl: '',
+				imageSource: ''
 			},
 			similarBandFound: false,
 			similarBands: [],
@@ -394,6 +400,9 @@ export default {
 		restartForm() {
 			this.finishedCreation = false;
 			this.$refs.formStepper.changeStep(1);
+		},
+		changeImageSource(value) {
+			this.newBand.imageSource = value;
 		}
 	},
 	mounted() {

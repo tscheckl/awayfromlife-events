@@ -55,7 +55,10 @@
 
 		<div class="lightbox">
 			<div class="darken" v-on:click="showImage(false)"></div>
-			<img v-on:click="showImage(true)" :src="fullImageUrl" alt="">
+			<div class="image-container">
+				<img v-on:click="showImage(true)" :src="fullImageUrl" alt="">
+				<p v-if="imageSource" class="image-source">Image source: {{imageSource}}</p>
+			</div>
 			<button class="close-btn" v-on:click="showImage(false)"><md-icon>close</md-icon></button>
 		</div>
 		<md-snackbar md-position="bottom right" ref="snackbar">
@@ -98,6 +101,7 @@ export default {
 		submitStatus: String,
 		id: String,
 		image: String,
+		imageSource: String
 	},
 	computed: {
 		computedImageUrl() {

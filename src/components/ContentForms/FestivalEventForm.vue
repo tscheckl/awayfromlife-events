@@ -16,7 +16,7 @@
 						</md-input-container>
 					</md-layout>
 
-					<image-step v-model="image"></image-step>
+					<image-step v-model="image" :addImageSource="false"></image-step>
 
 					<md-layout md-flex="100">
 						<h2>When does the festival happen? </h2>

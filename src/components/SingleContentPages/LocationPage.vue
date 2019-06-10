@@ -6,6 +6,7 @@
 			:id="location._id"
 			:loading="loading"
 			:image="location.image ?location.image[2] :null"
+			:imageSource="location.imageSource"
 			:submitStatus="submitStatus"
 			v-on:edit="openDialog('editLocationDialog')">
 

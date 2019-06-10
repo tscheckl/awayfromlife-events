@@ -130,7 +130,12 @@
 			</div>
 
 			<div slot="step-2" v-if="createFestival">
-				<image-step ref="imageInput" v-model="festivalImage"></image-step>
+				<image-step 
+					ref="imageInput" 
+					v-model="festivalImage"
+					:imageSource="newFestival.imageSource" 
+					v-on:sourceChange="changeImageSource"
+				></image-step>
 			</div>
 
 			<div slot="step-3" v-if="createFestival">
@@ -176,7 +181,7 @@
 					</md-input-container>
 				</md-layout>
 
-				<image-step ref="festivalEventImageInput" v-model="festivalEventImage"></image-step>
+				<image-step ref="festivalEventImageInput" v-model="festivalEventImage" :addImageSource="false"></image-step>
 			</div>
 
 			<div :slot="createFestival ?'step-5' :'step-3'">
@@ -346,7 +351,8 @@ export default {
 				address: {},
 				ticketLink: '',
 				website: '',
-				facebookUrl: ''
+				facebookUrl: '',
+				imageSource: ''
 			},
 			newFestivalCity: '',
 			newFestivalEvent: {
@@ -584,6 +590,9 @@ export default {
 			this.showStepper = false;
 			this.newFestivalEvent.name = null;
 			this.existingFestival = null;
+		},		
+		changeImageSource(value) {
+			this.newFestival.imageSource = value;
 		}
 	},
 	mounted() {
