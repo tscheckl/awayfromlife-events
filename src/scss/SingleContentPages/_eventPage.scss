@@ -1,6 +1,7 @@
 @import "../themeColors.scss";
 #event_page {
 	.content {
+		height: 72vh;
 		// padding: 5px 50px !important;
 		.content-information {
 			width: 60% !important;
@@ -33,6 +34,7 @@
 		}
 
 		.image-container {
+			position: sticky !important;
 			width: 40% !important;
 			max-width: none !important;
 			right: 0px !important;
@@ -111,7 +113,7 @@
 			}
 
 			.image-container {
-				position: absolute;
+				position: absolute !important;
 				width: 100% !important;
 
 				.image, .image-loading-indicator {

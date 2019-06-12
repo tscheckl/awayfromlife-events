@@ -1,8 +1,7 @@
 @import "../themeColors";
 
 #sidenav {
-	position: -webkit-sticky;
-	position: sticky;
+	position: fixed;
 	top: 0;
 	height: 100vh;
 	z-index: 6;
@@ -48,8 +47,8 @@
 		padding: 10px 0px;
 		background-color: #232323;
 		z-index: 13;
-		overflow-y: auto;
 		overflow-x: hidden;
+		overflow-y: auto;
 		transition: width .3s ease-out, padding .2s ease-out;
 
 		.toggle-menu-btn {
@@ -101,17 +100,19 @@
 	}
 
 	.sub-items-menu-item {	
-		// display: flex;
-
 		&:hover {
 			.indicator {
 				color: $accentAccent3;
 			}
 		}
 
-			.menu-item {
-				position: relative !important;
-				margin-bottom: 0;
+		.menu-item {
+			position: relative !important;
+			margin-bottom: 0;
+
+			div {
+				padding: 0;
+			}
 
 			.indicator {
 				position: absolute;
@@ -121,9 +122,6 @@
 				font-size: 16px;
 				z-index: 13;
 			}
-			}
-	
-		.indicator {
 		}
 
 		.sub-items {

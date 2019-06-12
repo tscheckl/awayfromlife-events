@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<sidenav></sidenav>
-		<div style="width: 100%;">
+		<div class="body-content">
 			<div class="router-view-container">
 				<transition :name="$store.getters.animation">
 					<top-bar></top-bar>

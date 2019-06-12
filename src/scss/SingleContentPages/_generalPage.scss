@@ -45,10 +45,10 @@
 		width: 100%;
 		min-height: 550px;
 		// height: 80%;
-		height: 72vh;
+		// height: 72vh;
 		margin: 20px auto;
 		margin-top: 0;
-		margin-bottom: 0px;
+		margin-bottom: 30px;
 		padding: 0px 30px;
 		position: relative;
 		background-color: #fdfdfd;
@@ -492,13 +492,13 @@
 		}
 
 		.image-container {
-			position: sticky;
+			position: absolute;
 			height: 100%;
 			width: 22vw;
 			max-width: 25%;
 			top: 0px;
 			// left: 100%;
-			right: 0;
+			right: 5%;
 		}
 
 		.image, .image-color-block, .image-loading-indicator {
@@ -609,6 +609,14 @@
 			.md-icon {
 				font-size: 3.5em;
 			}
+		}
+	}
+}
+
+@media screen and (max-width: 1400px) {
+	#event_page, #band_page, #festival_page, #detail_page, #location_page, #not_found {
+		.content {
+			margin-bottom: 0;
 		}
 	}
 }

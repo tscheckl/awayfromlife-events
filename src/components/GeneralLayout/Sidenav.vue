@@ -104,7 +104,7 @@
 					v-on:click="expanded ?showSubMenu(showSubMenus['addcontent-sub-menu'], 'addcontent-sub-menu') :''" 
 					v-on:mouseover="!expanded ?showSubMenu(true, 'addcontent-sub-menu') :''" 
 					v-on:mouseleave="!expanded ?showSubMenu(false, 'addcontent-sub-menu') :''">
-					<router-link :to="!expanded ?'/events?page=1&itemsPerPage=20&sortBy=date&ascending=true' :''">
+					<router-link :to="!expanded ?'/new-event' :''">
 						<div class="menu-item add-content-menu-item">
 							<div>
 								<svg width="40px" height="40px" viewBox="0 0 636 636" enable-background="new 0 0 636 636" xml:space="preserve"><g><path d="m257.457031 56.25h-18.75v-18.75h18.75zm-31.25 0h-18.75v-18.75h18.75zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m426.207031 116.164062h-75.535156v-75.539062h-18.75v94.289062h94.285156zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m16.832031 18.75h320.582031l110.667969 110.667969v259.644531h18.75v-267.414062l-121.648437-121.648438h-347.101563v640h391.113281v-18.75h-372.363281zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m82.457031 149.730469h175v18.75h-175zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m119.957031 224.730469h262.5v18.75h-262.5zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m82.457031 268.480469h300v18.75h-300zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m82.457031 312.230469h262.5v18.75h-262.5zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m119.957031 355.980469h262.5v18.75h-262.5zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m82.457031 399.730469h300v18.75h-300zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m82.457031 443.480469h262.5v18.75h-262.5zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/><path d="m499.992188 484.203125v-69.515625h-85.171876v69.515625h-69.511718v85.167969h69.511718v69.515625h85.171876v-69.515625h69.515624v-85.167969zm50.765624 66.417969h-69.515624v69.515625h-47.671876v-69.515625h-69.511718v-47.667969h69.511718v-69.515625h47.671876v69.515625h69.515624zm0 0" data-original="#000000" class="active-path" data-old_color="#000000" fill="#FF5252"/></g> </svg>
@@ -273,6 +273,7 @@ export default {
 				else 
 					document.getElementsByClassName(menu)[0].classList.remove('show');
 			}
+			this.adjustSubMenuPositions();
 		},
 		isAuthenticated() {
 			Vue.http.get(backendUrl + '/api/users/auth')
@@ -304,11 +305,16 @@ export default {
 			let subMenuLists = document.getElementsByClassName('sub-items');
 			let subMenuContainers = document.getElementsByClassName('sub-items-menu-item');
 			for(let i = 0; i < subMenuLists.length; i++) {
-				const containerTop = subMenuContainers[i].getBoundingClientRect().top;
-				const containerHeight = subMenuContainers[i].getBoundingClientRect().bottom - subMenuContainers[i].getBoundingClientRect().top;
-				const newSubMenuTop = containerTop + containerHeight;
-				subMenuLists[i].style.top = newSubMenuTop + "px";
+				if(!this.expanded) {
+					const containerTop = subMenuContainers[i].getBoundingClientRect().top;
+					const containerHeight = subMenuContainers[i].getBoundingClientRect().bottom - subMenuContainers[i].getBoundingClientRect().top;
+					const newSubMenuTop = containerTop + containerHeight;
+					subMenuLists[i].style.top = newSubMenuTop + "px";
+					continue;
+				}
+				subMenuLists[i].style.top = "0";
 			}
+
 		}
 	},
 	mounted() {

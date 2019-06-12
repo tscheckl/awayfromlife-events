@@ -69,6 +69,11 @@ a {
 	background-color: $primaryLighten4;
 }
 
+.body-content {
+	width: calc(100% - 100px);
+	margin-left: 100px;
+}
+
 .router-view-container {
 	// width: calc(100% - 80px);
 	width: 100%;
