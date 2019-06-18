@@ -222,6 +222,7 @@
 import places from 'places.js';
 
 import {backendUrl} from '@/secrets.js';
+import {isUrl} from '@/helpers/validators.js';
 
 import BandForm from '@/components/ContentForms/BandForm';
 import ImageStep from '@/components/NewContent/ImageStep';
@@ -294,7 +295,10 @@ export default {
 				bandcampUrl: '',
 				soundcloudUrl: '',
 				facebookUrl: '',
-				imageSource: ''
+				imageSource: {
+					text: '',
+					url: ''
+				},
 			},
 			similarBandFound: false,
 			similarBands: [],
@@ -310,7 +314,8 @@ export default {
 			
 			var vm = this;
 			
-			if(this.newBand.name && this.newBand.genre[0] != '' && this.newBand.origin) {
+			const validImageSourceUrl = this.newBand.imageSource.url === '' || isUrl(this.newBand.imageSource.url);
+			if(this.newBand.name && this.newBand.genre[0] != '' && this.newBand.origin && validImageSourceUrl) {
 				for(let genre in this.newBand.genre) {
 					if(this.newBand.genre[genre] == '') 
 						this.newBand.genre.splice(genre, 1);
@@ -339,7 +344,7 @@ export default {
 					});
 			}
 			else {
-				this.submitStatus = 'All required input fields have to be filled out!';
+				this.submitStatus = 'All required input fields have to be filled out and be valid!';
 				this.$refs.snackbar.open();
 				this.loading = false;
 			}

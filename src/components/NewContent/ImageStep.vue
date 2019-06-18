@@ -16,10 +16,18 @@
 			<span><md-icon>error_outline</md-icon>	Maximum file size: 2MB</span>
 		</md-layout>
 
-		<md-layout md-flex="100" v-if="addImageSource">
+		<md-layout md-flex-small="100" md-flex="50" v-if="addImageSource">
+			<md-input-container :class="computedImageSourceUrl && !isUrl(computedImageSourceUrl) ?'md-input-invalid' :''">
+				<label>Source of the image (URL)</label>
+				<md-input type="url" v-model="computedImageSourceUrl"></md-input>
+				<span v-if="computedImageSourceUrl && !isUrl(computedImageSourceUrl)" class="md-error">Not a valid url!</span>
+			</md-input-container>
+		</md-layout>
+
+		<md-layout md-flex-small="100" md-flex="50" v-if="addImageSource">
 			<md-input-container>
-				<label>Image source</label>
-				<md-input v-model="computedImageSource"></md-input>
+				<label>Image source description</label>
+				<md-input v-model="computedImageSourceText"></md-input>
 			</md-input-container>
 		</md-layout>
 
@@ -37,11 +45,21 @@
 </template>
 
 <script>
+import { isUrl } from '@/helpers/validators.js';
+
 export default {
 	name: 'image-step',
 	props: {
 		value: undefined,
-		imageSource: '',
+		imageSource: {
+			type: Object,
+			default: () => {
+				return {
+					text: '',
+					url: ''
+				}
+			}
+		},
 		addImageSource: {
 			type: Boolean,
 			default: true
@@ -55,12 +73,26 @@ export default {
 		}
 	},
 	computed: {
-		computedImageSource: {
+		computedImageSourceText: {
 			get() {				
-				return this.imageSource; 
+				return this.imageSource.text; 
 			},
 			set(newValue) {
-				this.$emit('sourceChange', newValue);
+				this.$emit('sourceChange', {
+					text: newValue,
+					url: this.imageSource.url
+				});
+			}
+		},
+		computedImageSourceUrl: {
+			get() {				
+				return this.imageSource.url; 
+			},
+			set(newValue) {
+				this.$emit('sourceChange', {
+					text: this.imageSource.text,
+					url: newValue
+				});
 			}
 		}
 	},
@@ -103,6 +135,9 @@ export default {
 		},
 		isImage(file) {
 			return file != null && (file.type === "image/jpeg" || file.type === "image/png");
+		},
+		isUrl(url) {
+			return isUrl(url);
 		}
 	},
 	mounted() {

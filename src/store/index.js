@@ -14,8 +14,11 @@ export default new Vuex.Store({
 			name: '',
 			location: '',
 			bands: [''],
-			description: '',			
-			imageSource: '',
+			description: '',
+			imageSource: {
+				text: '',
+				url: ''
+			},
 			date: ''
 		},
 		currentLocation: {
@@ -24,7 +27,10 @@ export default new Vuex.Store({
 			website: '',
 			facebookUrl: '',
 			information: '',
-			imageSource: ''
+			imageSource: {
+				text: '',
+				url: ''
+			}
 		},
 		currentBand: {
 			name: '',
@@ -38,7 +44,10 @@ export default new Vuex.Store({
 			facebookUrl: '',
 			bandcampUrl: '',
 			soundcloudUrl: '',
-			imageSource: ''
+			imageSource: {
+				text: '',
+				url: ''
+			}
 		},
 		currentFestival: {
 			name: '',
@@ -50,7 +59,10 @@ export default new Vuex.Store({
 			ticketLink: '',
 			website: '',
 			facebookUrl: '',
-			imageSource: ''
+			imageSource: {
+				text: '',
+				url: ''
+			}
 		},
 		animation: 'slide-in',
 		previousRoute: ''

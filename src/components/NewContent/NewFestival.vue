@@ -309,6 +309,7 @@ import moment from 'moment';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import { getBandOptions } from '@/helpers/backend-getters.js';
+import { isUrl } from '@/helpers/validators.js';
 
 import Stepper from '@/components/Utilities/Stepper';
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
@@ -352,7 +353,10 @@ export default {
 				ticketLink: '',
 				website: '',
 				facebookUrl: '',
-				imageSource: ''
+				imageSource: {
+					text: '',
+					url: ''
+				},
 			},
 			newFestivalCity: '',
 			newFestivalEvent: {
@@ -417,7 +421,7 @@ export default {
 			}
 			else {
 				this.loading = false;
-				this.submitStatus = 'All required form fields need to be filled out!';	
+				this.submitStatus = 'All required form fields need to be filled out and be valid!';	
 				this.$refs.snackbar.open();	
 			}
 		},
@@ -459,7 +463,9 @@ export default {
 			}
 		},
 		allRequiredFieldsFilledOut() {
+			const validImageSourceUrl = this.newFestival.imageSource.url === '' || isUrl(this.newFestival.imageSource.url);
 			return this.newFestival.name 
+			&& validImageSourceUrl
 			&& this.newFestival.address.value 
 			&& this.newFestival.genre[0] != '' 
 			&& this.newFestivalEvent.bands[0] != '' 
@@ -561,7 +567,7 @@ export default {
 		updateContent(dialog) {
 			this.$refs[dialog].close();
 
-			this.submitStatus = `New Band successfully created! \nIt will be visible fkor everyone after it was verified by us.`;
+			this.submitStatus = `New Festival successfully created! \nIt will be visible fkor everyone after it was verified by us.`;
 			getBandOptions()
 				.then(data => this.backendBands = data)
 				.catch(err => console.log(err));

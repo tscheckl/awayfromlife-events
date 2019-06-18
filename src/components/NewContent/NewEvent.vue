@@ -285,6 +285,7 @@ import moment from 'moment';
 import {frontEndSecret, backendUrl} from '@/secrets.js';
 import { removeEmptyObjectFields } from '@/helpers/array-object-helpers.js';
 import { getBandOptions, getLocationOptions } from '@/helpers/backend-getters.js';
+import { isUrl } from '@/helpers/validators.js';
 
 import ConfirmDialog from '@/components/Utilities/ConfirmDialog';
 import Stepper from '@/components/Utilities/Stepper';
@@ -338,7 +339,10 @@ export default {
 			newTour: {
 				name: '',
 				description: '',
-				imageSource: '',
+				imageSource: {
+					text: '',
+					url: ''
+				},
 				bands: [''],
 				ticketLink: '',
 				tourStops: [{
@@ -348,8 +352,11 @@ export default {
 			},
 			blankEvent: {
 				name: '',
-				description: '',				
-				imageSource: '',
+				description: '',
+				imageSource: {
+					text: '',
+					url: ''
+				},
 				location: '',
 				bands: [''],
 				date: '',
@@ -378,8 +385,13 @@ export default {
 	methods: {
 		addEvent() {
 			this.loading = true;
+			const validImageSourceUrl = this.newEvent.imageSource.url === '' || isUrl(this.newEvent.imageSource.url);
 			//Only go on if all required fields are filled out
-			const allRequiredFieldsFilledOut = this.newEvent.name && this.newEvent.date && this.newEvent.location && this.newEvent.bands[0] != '';
+			const allRequiredFieldsFilledOut = this.newEvent.name 
+											&& this.newEvent.date 
+											&& this.newEvent.location 
+											&& this.newEvent.bands[0] != ''
+											&& validImageSourceUrl;
 			if(allRequiredFieldsFilledOut) {
 				this.createdTour = false;
 
@@ -418,6 +430,7 @@ export default {
 	  	addTour() {
 		  	this.loading = true;
 
+			const validImageSourceUrl = this.newTour.imageSource.url === '' || isUrl(this.newTour.imageSource.url);
 			if(this.newTour.name && this.newTour.tourStops[0].location && this.newTour.tourStops[0].date) {
 				this.createdTour = true;
 				removeEmptyObjectFields(this.newTour);
@@ -465,7 +478,7 @@ export default {
 					});
 			}
 			else { // else show error message
-				this.submitStatus = 'All required input fields have to be filled out!';
+				this.submitStatus = 'All required input fields have to be filled out and be valid!';
 				this.$refs.snackbar.open();
 				this.loading = false;
 				this.newEvent.date = '';

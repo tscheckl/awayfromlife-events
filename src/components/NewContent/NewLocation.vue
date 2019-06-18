@@ -109,6 +109,7 @@
 import places from 'places.js';
 
 import {backendUrl} from '@/secrets.js';
+import { isUrl } from '@/helpers/validators.js';
 
 import LocationForm from '@/components/ContentForms/LocationForm';
 import ImageStep from '@/components/NewContent/ImageStep';
@@ -172,7 +173,10 @@ export default {
 				information: '',
 				website: '',
 				facebookUrl: '',
-				imageSource: ''
+				imageSource: {
+					text: '',
+					url: ''
+				},
 			},
 			similarLocationFound: false,
 			similarLocations: [],
@@ -185,7 +189,8 @@ export default {
 			this.loading = true;
 			this.submitStatus = '';
 
-			if(this.newLocation.name && this.newLocation.address) {
+			const validImageSourceUrl = this.newLocation.imageSource.url === '' || isUrl(this.newLocation.imageSource.url);
+			if(this.newLocation.name && this.newLocation.address && validImageSourceUrl) {
 				
 				let formData = new FormData();
 				formData.append('image', this.locationImage, 'location-image.png');
@@ -206,7 +211,7 @@ export default {
 					});
 			}
 			else {
-				this.submitStatus = 'All required input fields have to be filled out!';
+				this.submitStatus = 'All required input fields have to be filled out and be valid!';
 				this.$refs.snackbar.open();
 				this.loading = false;
 			}

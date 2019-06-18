@@ -57,7 +57,11 @@
 			<div class="darken" v-on:click="showImage(false)"></div>
 			<div class="image-container">
 				<img v-on:click="showImage(true)" :src="fullImageUrl" alt="">
-				<p v-if="imageSource" class="image-source">Image source: {{imageSource}}</p>
+				<p v-if="imageSource.text != '' || imageSource.url != ''" class="image-source">
+					Image source: 
+					<a v-if="imageSource.url != ''" :href="imageSource.url">{{imageSource.text != '' ?imageSource.text :imageSource.url}}</a>
+					<p v-else>{{imageSource.text}}</p>
+				</p>
 			</div>
 			<button class="close-btn" v-on:click="showImage(false)"><md-icon>close</md-icon></button>
 		</div>
@@ -101,7 +105,7 @@ export default {
 		submitStatus: String,
 		id: String,
 		image: String,
-		imageSource: String
+		imageSource: Object
 	},
 	computed: {
 		computedImageUrl() {
