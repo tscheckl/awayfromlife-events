@@ -623,7 +623,7 @@
 
 @media screen and (max-width: 768px) {
 #event_page, #band_page, #festival_page, #detail_page, #location_page, #not_found {
-	font-size: 0.85em;
+	font-size: 0.9em;
 		#detail_page {
 			padding-bottom: 0;
 		}
@@ -739,13 +739,21 @@
 
 							h4 {
 								margin-top: 0;
-								font-size: 1.15em;
+								font-size: 1.1em;
 							}
+						}
+
+						.category-content {
+							margin-left: 0;
 						}
 					}
 
 					.address, .location {
 						padding-left: 0;
+
+						.category {
+							padding-left: 0;
+						}
 						.category-content {							
 							font-size: 1.3em;
 						}
@@ -789,8 +797,20 @@
 
 					.additional-information {
 						.category {
+							padding-left: 0 !important;
 							margin-left: -5px;
 							width: 100px;
+							line-height: 1.3em;
+
+							h4 {
+								margin-top: 5px;
+							}
+						}
+						
+						.category-content {
+							a {
+								margin-left: 5px;
+							}
 						}
 					}
 
@@ -798,19 +818,37 @@
 						display: block;
 	
 						.category {
-							
-						padding-left: 10px;
+							width: auto !important;
+							display: flex !important;
+							justify-content: start !important;
+							align-items: center !important;
+							padding-bottom: 3px;
+							padding-left: 0;
+							border-bottom: 1px solid $accentAccent2;
+
+							svg {
+								margin: 0 !important;
+								margin-left: 5px !important;
+							}
+
+							svg, h4 {
+								display: inline-block !important;
+							}
+
 							h4 {
-								margin-left: -8px;
+								font-size: 1.2em;
+								margin-left: 10px !important;
+							}
+
+							br {
+								display: none;
 							}
 						}
 	
 						.category-content {
-							margin-top: -5px;
-							margin-left: 0;
-
 							p {
 								line-height: 1.35em;
+								padding-bottom: 10px;
 							}
 						}
 					} 
@@ -850,9 +888,11 @@
 								h2 {
 									width: 100%;
 									margin: 0;
+									margin-top: -25px;
+									margin-bottom: 10px;
 									padding: 5px 0px;
 									font-family: "Montserrat";
-									font-size: 1.2em;
+									font-size: 1.5em;
 									overflow: hidden;
 									white-space: nowrap;
 									text-overflow: ellipsis;
@@ -860,7 +900,7 @@
 		
 								p {
 									margin: 0;
-									padding-bottom: 5px;
+									padding-bottom: 0px;
 								}
 							}
 						}

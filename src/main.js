@@ -25,7 +25,7 @@ Vue.use(AirbnbStyleDatepicker);
 Vue.use(Datetime);
 
 Vue.use(VueAnalytics, {
-	id: ['UA-124600417-2', 'UA-124410591-1'],
+	id: ['UA-124600417-1'],
 	router,
 	autoTracking: {
 		pageviewTemplate (route) {

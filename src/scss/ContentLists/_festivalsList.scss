@@ -2,7 +2,7 @@
 
 #festivals_list {
 	.festival-name {
-		width: 45%
+		width: 45%;
 	}
 
 	.festival-country, .festival-city {
@@ -18,6 +18,22 @@
 			span {
 				cursor: pointer;
 			}
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#festivals_list {
+		.festival-name {
+			width: 55%;
+		}
+
+		.festival-city {
+			width: 45%;
+		}
+
+		.festival-country {
+			display: none;
 		}
 	}
 }

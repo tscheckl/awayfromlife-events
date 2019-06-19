@@ -47,15 +47,36 @@
 
 @media screen and (max-width: 768px){
 	#events_list {
-		.event-date {
+		.location-name {
 			display: none;
 		}
 
-		.all-items {
+		.event-date {
+			// display: none;
+			width: 40%;
+			white-space: pre-wrap;
+			font-size: 0.9em;
+		}
 
-			.event-date {
-				display: none;
+		.item-title {
+			width: 50%;
+		}
+
+		.all-items {
+			.list-item-header {
+				.event-date {
+					white-space: nowrap !important;
+					font-size: 1em;
+				}
 			}
+		}
+
+		.learn-more-icon {
+			min-width: 0;
+			min-height: 0;
+			width: auto;
+			height: auto;
+			margin: 0;
 		}
 
 		.list-header {
