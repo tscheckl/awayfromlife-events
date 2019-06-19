@@ -59,7 +59,7 @@
 				<img v-on:click="showImage(true)" :src="fullImageUrl" alt="">
 				<p v-if="imageSource.text != '' || imageSource.url != ''" class="image-source">
 					Image source: 
-					<a v-if="imageSource.url != ''" :href="imageSource.url">{{imageSource.text != '' ?imageSource.text :imageSource.url}}</a>
+					<a v-if="imageSource.url != ''" :href="imageSource.url" target="_blank">{{imageSource.text != '' ?imageSource.text :imageSource.url}}</a>
 					<p v-else>{{imageSource.text}}</p>
 				</p>
 			</div>
