@@ -90,10 +90,27 @@
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100">
-						<div class="picker">
-							<md-icon>date_range</md-icon>
-							<datetime v-if="!edit || edit && event.date" v-model="event.date" placeholder="Select date*" type="date"></datetime>
-						</div>
+						<md-layout md-flex="100" v-if="createEvent">
+							<h2>Date of the event</h2>
+						</md-layout>
+
+						<md-layout md-flex="100">
+							<div class="datepicker-trigger">
+								<md-input-container>
+									<label>Date</label>
+									<md-input id="datepicker-trigger" v-model="event.date" required></md-input>
+								</md-input-container>
+
+								<AirbnbStyleDatepicker
+									:trigger-element-id="'datepicker-trigger'"
+									:offsetY="-300"
+									:mode="'single'"
+									:showActionButtons="false"
+									:date-one="event.date"
+									@date-one-selected="val => { event.date = val }"
+								/>
+							</div>
+						</md-layout>
 					</md-layout>
 				</md-layout>
 			</div>

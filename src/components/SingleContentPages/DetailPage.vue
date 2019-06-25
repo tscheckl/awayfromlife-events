@@ -6,19 +6,19 @@
 					<div class="edit-buttons">
 						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="$emit('edit')">
 							<md-icon>edit</md-icon>
-							<md-tooltip md-direction="bottom">edit band</md-tooltip>	
+							<md-tooltip md-direction="bottom">edit {{contentType}}</md-tooltip>	
 						</md-button>
 						
 						<md-button class="md-icon-button edit-button" v-if="isAuthenticated" v-on:click="$refs['confirmDeletionDialog'].open()">
 							<md-icon>delete</md-icon>
-							<md-tooltip md-direction="bottom">delete band</md-tooltip>
+							<md-tooltip md-direction="bottom">delete {{contentType}}</md-tooltip>
 						</md-button>
 						
 						<slot name="additonal-edit-buttons"></slot>
 
 						<md-button class="md-icon-button edit-button" v-on:click="$refs['reportDialog'].open()">
 							<md-icon>report</md-icon>
-							<md-tooltip md-direction="bottom">report event</md-tooltip>
+							<md-tooltip md-direction="bottom">report {{contentType}}</md-tooltip>
 						</md-button>
 					</div>
 				</div>

@@ -441,6 +441,7 @@ export default {
 					let singleTourStopEvent = {
 						name: this.newTour.name,
 						description: this.newTour.description,
+						imageSource: this.newTour.imageSource,
 						location: this.newTour.tourStops[tourstop].location,
 						bands: this.newTour.bands,
 						date: this.newTour.tourStops[tourstop].date,

@@ -180,7 +180,7 @@ export default {
 			},
 			filterByCity: false,
 			currentPage: 1,
-			availablePages: 50,
+			availablePages: 1,
 			itemsPerPage: '20',
 			loading: false
 		}
