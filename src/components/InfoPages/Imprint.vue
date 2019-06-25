@@ -19,7 +19,7 @@
 				<section>
 					<h3>Kontakt</h3>
 					<p>Telefon: +49 (0) 174 676 13 84</p>
-					<p>E-Mail: info@awayfromlife.com</p>
+					<p>E-Mail: streets@awayfromlife.com</p>
 				</section>
 
 				<section>

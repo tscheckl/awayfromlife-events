@@ -90,15 +90,15 @@
 					</md-layout>
 
 					<md-layout md-flex="50" md-flex-small="100">
-						<md-layout md-flex="100" v-if="createEvent">
+						<md-layout md-flex="100">
 							<h2>Date of the event</h2>
 						</md-layout>
 
 						<md-layout md-flex="100">
-							<div class="datepicker-trigger">
+							<div class="datepicker-trigger" v-if="!edit || edit && eventDate">
 								<md-input-container>
 									<label>Date</label>
-									<md-input id="datepicker-trigger" v-model="event.date" required></md-input>
+									<md-input id="datepicker-trigger" v-model="eventDate" required></md-input>
 								</md-input-container>
 
 								<AirbnbStyleDatepicker
@@ -106,8 +106,8 @@
 									:offsetY="-300"
 									:mode="'single'"
 									:showActionButtons="false"
-									:date-one="event.date"
-									@date-one-selected="val => { event.date = val }"
+									:date-one="eventDate"
+									@date-one-selected="selectDate"
 								/>
 							</div>
 						</md-layout>
@@ -178,7 +178,8 @@ export default {
 			backendLocations: [],
 			backendBands: [],
 			localBands: [],
-			createdContent: ''
+			createdContent: '',
+			eventDate: '',
 		}
 	},
 	watch: {
@@ -253,11 +254,15 @@ export default {
 		},
 		changeImageSource(value) {
 			this.event.imageSource = value;
+		},
+		selectDate(val) {
+			this.eventDate = val;
+			this.event.date = val;
 		}
 	},
 	mounted() {
 		let getUnverified = !this.edit;
-
+		
 		getLocationOptions(getUnverified)
 			.then(data => this.backendLocations = data)
 			.catch(err => console.log(err));
@@ -267,7 +272,8 @@ export default {
 				.catch(err => console.log(err));
 
 		this.localBands = this.event.bands;
-	}
+		this.eventDate = JSON.parse(JSON.stringify(this.event.date));
+	},
 }
 </script>
 

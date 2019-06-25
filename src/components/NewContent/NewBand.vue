@@ -323,7 +323,8 @@ export default {
 						this.newBand.genre[genre] = this.newBand.genre[genre].name;
 				}
 				var formData = new FormData();
-				formData.append('image', this.bandImage, 'band-image.png');
+				if(this.bandImage)
+					formData.append('image', this.bandImage, 'band-image.png');
 				formData.append('data', JSON.stringify(this.newBand));
 				//Check if an location is currently edited or a new one is created and update the request routes + parameters accordingly.
 				let requestType = this.edit?'put':'post'

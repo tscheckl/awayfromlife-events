@@ -193,7 +193,8 @@ export default {
 			if(this.newLocation.name && this.newLocation.address && validImageSourceUrl) {
 				
 				let formData = new FormData();
-				formData.append('image', this.locationImage, 'location-image.png');
+				if(this.locationImage)
+					formData.append('image', this.locationImage, 'location-image.png');
 				formData.append('data', JSON.stringify(this.newLocation));
 
 				this.$http.post(backendUrl + this.apiRoute, formData)

@@ -271,7 +271,7 @@ export default {
 			// document.getElementsByClassName('image')[0].style.backgroundImage = `url(${imageUrl}/${this.event.image[2]})`;
 		}
 			
-	}
+	},
 }
 </script>
 

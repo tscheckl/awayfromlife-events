@@ -398,7 +398,8 @@ export default {
 				removeEmptyObjectFields(this.newEvent);
 				
 				let formData = new FormData();
-				formData.append('image', this.eventImage, 'event-image.png');
+				if(this.eventImage)
+					formData.append('image', this.eventImage, 'event-image.png');
 				formData.append('data', JSON.stringify(this.newEvent));
 
 				if(this.apiRoute == '/api/events' && (this.newEvent.location.isValidated == false || this.allBandsUnverified()))

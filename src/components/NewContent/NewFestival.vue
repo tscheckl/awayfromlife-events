@@ -398,8 +398,10 @@ export default {
 				}
 
 				let formData = new FormData();
-				formData.append('festivalImage', this.festivalImage, 'festival-image.png');
-				formData.append('eventImage', this.festivalEventImage, 'festival-event-image.png');
+				if(this.festivalImage)
+					formData.append('festivalImage', this.festivalImage, 'festival-image.png');
+				if(this.festivalEventImage)
+					formData.append('eventImage', this.festivalEventImage, 'festival-event-image.png');
 				formData.append('data', JSON.stringify(requestBody));
 				
 				let apiRoute = this.authorized ?'festivals' :'unvalidated-festivals';
@@ -437,7 +439,8 @@ export default {
 				}
 
 				let formData = new FormData();
-				formData.append('image', this.festivalEventImage, 'festival-image.png');
+				if(this.festivalEventImage)
+					formData.append('image', this.festivalEventImage, 'festival-image.png');
 				formData.append('data', JSON.stringify(this.newFestivalEvent));
 
 				let apiRoute = this.authorized ?'festival-events' :'unvalidated-festival-events';
