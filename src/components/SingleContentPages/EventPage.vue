@@ -3,6 +3,7 @@
 		<detail-page
 			ref="eventWrapperPage"
 			contentType="event"
+			:isArchivedEvent="backendEndpoint == 'archived-events'"
 			:id="event._id"
 			:image="event.image ? event.image[2] : null"
 			:imageSource="event.imageSource"

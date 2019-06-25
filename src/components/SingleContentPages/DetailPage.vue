@@ -102,6 +102,10 @@ export default {
 			default: false
 		},
 		contentType: String,
+		isArchivedEvent: {
+			type: Boolean,
+			default: false
+		},
 		submitStatus: String,
 		id: String,
 		image: String,
@@ -113,11 +117,6 @@ export default {
 				return imageUrl + '/' + this.image;
 			
 			return null;
-		}
-	},
-	watch: {
-		computedImageUrl() {
-			// document.getElementsByClassName('image')[0].style.backgroundImage = `url(${this.computedImageUrl})`;
 		}
 	},
 	data() {
@@ -135,7 +134,9 @@ export default {
 		deletePage() {
 			this.$refs.confirmDeletionDialog.close();
 
-			this.$http.delete(`${backendUrl}/api/${this.contentType}s/${this.id}`)
+			const endPoint = (this.isArchivedEvent ? 'archived-event' : this.contentType) + 's';
+
+			this.$http.delete(`${backendUrl}/api/${endPoint}/${this.id}`)
 				.then(response => {
 					this.$router.push(`/${this.contentType}s`);
 				})
@@ -145,7 +146,6 @@ export default {
 				})
 		},
 		updateImageUrl(data) {
-			console.log("FISCH", data);
 			this.fullImageUrl = `${imageUrl}/${data.image[2]}`;
 		},
 		escapeUrl(url) {
