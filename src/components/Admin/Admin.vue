@@ -182,9 +182,6 @@ export default {
 			//Data that will be sent in the body of the verification request
 			let requestBody = this.verifyData;
 
-			console.log('image:', this.verifyImage);
-			// return;
-
 			//Special adjustments for festivals.
 			if(this.currentCategory == 'unverified Festivals') {
 				//request ID needs to be put together from the festival ID and the festival-event ID
@@ -255,7 +252,6 @@ export default {
 
 				this.previousImage = imageUrl + '/' + this.verifyData.event.image[this.verifyData.event.image.length-1];
 				this.verifyImage = imageUrl + '/' + this.verifyData.event.image[this.verifyData.event.image.length-1];
-				console.log('image given to form: ', this.verifyImage);
 				this.previousFestivalImage = imageUrl + '/' + this.verifyData.festival.image[this.verifyData.festival.image.length-1];
 				this.festivalImage = imageUrl + '/' + this.verifyData.festival.image[this.verifyData.festival.image.length-1];
 				
@@ -336,12 +332,12 @@ export default {
 				});
 		},
 		confirmCancellation(keepData) {
-			if(keepData)
-				this.verifyData.canceled = 2;
-			else 
-				this.verifyData.canceled = 0;
+			this.verifyData.canceled = keepData ?2 :0;
 
-			this.$http.put(backendUrl + `/api/events/${this.verifyData._id}`, this.verifyData)
+			let formData = new FormData();
+			formData.append('data', JSON.stringify(this.verifyData));
+
+			this.$http.put(backendUrl + `/api/events/${this.verifyData._id}`, formData)
 				.then(response => {
 					this.showNextItem();
 				})
