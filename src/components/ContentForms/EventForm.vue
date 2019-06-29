@@ -185,6 +185,7 @@ export default {
 	watch: {
 		event() {
 			this.localBands = this.event.bands;
+			this.eventDate = this.event.date;
 		},
 		value() {
 			this.$emit('input', this.value);
