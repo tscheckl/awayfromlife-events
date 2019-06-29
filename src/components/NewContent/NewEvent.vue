@@ -459,7 +459,8 @@ export default {
 					this.apiRoute = '/api/unvalidated-events';
 
 				let formData = new FormData();
-				formData.append('image', this.eventImage, 'event-image.png');
+				if (this.eventImage)
+					formData.append('image', this.eventImage, 'event-image.png');
 				formData.append('data', JSON.stringify({list: fullEvents}));
 
 				this.$http.post(backendUrl + this.apiRoute + '/multiple', formData)
