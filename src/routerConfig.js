@@ -20,6 +20,8 @@ import Imprint from '@/components/InfoPages/Imprint';
 import Privacy from '@/components/InfoPages/Privacy';
 import NotFound from '@/components/NotFound';
 
+import BandsListNew from '@/components/ContentLists/BandsList.1';
+
 export default new Router({
 	mode: 'history',
 	routes: [
@@ -199,6 +201,10 @@ export default new Router({
 			meta: {
 				title: 'Privacy'
 			}
+		},
+		{
+			path: '/new-list',
+			component: BandsListNew
 		},
 		{
 			path: '/*',

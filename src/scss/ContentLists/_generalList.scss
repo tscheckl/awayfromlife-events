@@ -1,6 +1,6 @@
 @import "../themeColors.scss";
 
-#events_list, #locations_list, #bands_list, #festivals_list {
+#general_list, #events_list, #locations_list, #bands_list, #festivals_list {
 	width: 100%;
 	margin: 0;
 	padding-bottom: 35px;
@@ -481,7 +481,7 @@
 }
 
 @media screen and (max-width: 768px){
-	#events_list, #locations_list, #bands_list, #festivals_list {
+	#general_list, #events_list, #locations_list, #bands_list, #festivals_list {
 		padding-bottom: 30px;
 
 		.color-block {
