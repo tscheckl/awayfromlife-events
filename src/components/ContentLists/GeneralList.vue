@@ -35,11 +35,11 @@
 					<p 
 						v-for="(columnAttribute, index) in displayedColumns" 
 						:key="index" 
-						:class="`${contentType}-${columnAttribute.displayName}`"
+						:class="`${trimmedContentType}-${columnAttribute.displayName.toLowerCase()}`"
 						v-on:click="sortBy(columnAttribute.attributes[0])">
 						<span>
 							{{columnAttribute.displayName}}
-							<md-icon v-if="columnAttribute.currentlySorted">{{!sortAscending? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+							<md-icon v-if="currentlySortedBy(columnAttribute.attributes[0])">{{!sortAscending? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
 						</span>
 					</p>
 					<md-icon class="hidden-icon"></md-icon>
@@ -49,7 +49,7 @@
 					<router-link :to="`/${trimmedContentType}/${element.url}`" class="list-item">
 						<p 
 							v-for="(columnAttribute, index) in displayedColumns" :key="index"
-							:class="`${contentType}-${columnAttribute.displayName}`">
+							:class="`${trimmedContentType}-${columnAttribute.displayName.toLowerCase()}`">
 							<span v-if="columnAttribute.isArray">
 								<span 
 								v-for="(item, index) in element[columnAttribute.attributes[0]]" :key="index" 
@@ -70,6 +70,7 @@
 
 			<list-footer 
 				class="list-footer"
+				:availablePages="availablePages"
 				v-on:pageChange="changeCurrentPage"
 				v-on:itemsPerPageChange="changeItemsPerPage">
 			</list-footer>
@@ -97,16 +98,18 @@ export default {
 		displayedColumns: {
 			type: Array,
 			default: []
-		},
-		filterableAttributes: {
-			type: Array,
-			default: () => {
-				return [];
-			}
-		},
+		},		
 		data: {
 			type: Array,
 			default: []
+		},
+		availablePages: {
+			type: Number,
+			default: 1
+		},
+		loading: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
@@ -121,27 +124,17 @@ export default {
 	computed: {
 		trimmedContentType() {
 			return this.contentType.substring(0, this.contentType.length - 1);
+		},
+		sortAscending() {
+			let a = this.$route.query.ascending == 'true';
+			console.log('aaaa', a);
+			return a;
 		}
 	},
 	methods: {
 		toggleFilters() {
 			document.getElementsByClassName('show-filters-button')[0].classList.toggle('opened');
 			document.getElementsByClassName('filters')[0].classList.toggle('show-filters');
-		},
-		buildUrl() {
-			// let query = {
-			// 	page: this.currentPage, 
-			// 	itemsPerPage: this.itemsPerPage, 
-			// 	sortBy: this.currentlySorted, 
-			// 	ascending: this.sortingAsc[this.currentlySorted],
-			// 	startWith: this.appliedFilters.startWith,
-			// 	genre: this.appliedFilters.genre,
-			// 	label: this.appliedFilters.label,
-			// 	city: this.filterByCity ?this.appliedFilters.city :undefined,
-			// 	country: !this.filterByCity ?this.appliedFilters.country :undefined
-			// };
-			// if(query != this.$route.query)
-			// 	this.$router.push({query: query});
 		},
 		changeCurrentPage(page) {
 			this.currentPage = page;
@@ -150,21 +143,26 @@ export default {
 		changeItemsPerPage(value) {
 			let newQuery = {...this.$route.query, itemsPerPage: value};
 			this.$router.push({query: newQuery});
-		}
-	},
-	created() {
-		console.log('data', this.data);
-		if(this.$router.currentRoute.query.page) {
-			this.currentPage = this.$router.currentRoute.query.page;
+		},
+		sortBy(attribute) {
+			let newQuery;
+			if(this.$route.query.sortBy == attribute) {
+				let newAscending = (!(this.$route.query.ascending == 'true')).toString();
+				newQuery = {...this.$route.query, ascending: newAscending};
+			}
+			else 
+				newQuery = {...this.$route.query, sortBy: attribute, ascending: 'true'};
+			
+			this.$router.push({query: newQuery});
+		},
+		currentlySortedBy(attribute) {
+			return this.$route.query.sortBy == attribute;
 		}
 
-		if(this.$route.query.sortBy && this.$route.query.ascending) {
-			this.currentlySorted = this.$route.query.sortBy;
-			this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
-		}
-		else {
-			this.sortingAsc.name = true;
-		}
+	},
+	created() {
+		if(this.$router.currentRoute.query.page)
+			this.currentPage = this.$router.currentRoute.query.page;
 	}
 }
 </script>

@@ -31,13 +31,16 @@ export default {
 	},
 	data() {
 		return {
-			currentPage: 0,
+			currentPage: 1,
 			itemsPerPage: 20,
 		}
 	},
 	watch: {
 		itemsPerPage() {
 			this.$emit('itemsPerPageChange', this.itemsPerPage);
+		},
+		$route() {
+			this.itemsPerPage = this.$route.query.itemsPerPage;
 		}
 	},
 	methods: {
@@ -68,8 +71,14 @@ export default {
 		changeCurrentPage(page) {
 			this.currentPage = page;
 			this.$emit('pageChange', page);
+			let newQuery = {...this.$route.query, page: this.currentPage};
+			this.$router.push({query: newQuery});
 		},
-	}
+	},
+	mounted() {
+		if(this.$route.query.itemsPerPage)
+			this.itemsPerPage = this.$route.query.itemsPerPage;
+	},
 }
 </script>
 

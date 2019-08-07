@@ -21,6 +21,9 @@ import Privacy from '@/components/InfoPages/Privacy';
 import NotFound from '@/components/NotFound';
 
 import BandsListNew from '@/components/ContentLists/BandsList.1';
+import LocationsListNew from '@/components/ContentLists/LocationsList.1';
+import EventListNew from '@/components/ContentLists/EventsList.1';
+import FestivalListNew from '@/components/ContentLists/FestivalsList.1';
 
 export default new Router({
 	mode: 'history',
@@ -204,7 +207,7 @@ export default new Router({
 		},
 		{
 			path: '/new-list',
-			component: BandsListNew
+			component: FestivalListNew
 		},
 		{
 			path: '/*',

@@ -1,36 +1,18 @@
 <template>
-	<div id="bands_list">
+	<div id="locations_list">
 		<general-list 
-			title="All Bands"
-			contentType="bands"
-			:data="bands"
+			title="All Locations"
+			contentType="locations"
+			:data="locations"
 			:displayedColumns="displayedColumns"
 			:availablePages="availablePages"
 			:loading="loading"
 			>
 			<div slot="filters">
 				<starting-letter-filter 
-					contentType="bands"
+					contentType="locations"
 					:availableLetters="filterCriteria.startWith">
 				</starting-letter-filter>
-
-				<md-input-container class="genre-select">
-					<span class="input-label" v-if="appliedFilters.genre && appliedFilters.genre != ''">Genre</span>
-					<v-select class="form-v-select"
-								:options="filterCriteria.genres"
-								v-model="appliedFilters.genre"
-								placeholder="Genre">
-					</v-select>
-				</md-input-container>
-
-				<md-input-container class="label-select">
-					<span class="input-label" v-if="appliedFilters.label && appliedFilters.label != ''">Label</span>
-					<v-select class="form-v-select"
-								:options="filterCriteria.labels"
-								v-model="appliedFilters.label"
-								placeholder="Label">
-					</v-select>
-				</md-input-container>
 
 				<div class="switch-select">
 					<md-button-toggle md-single class="md-accent">
@@ -75,14 +57,14 @@ import GeneralList from './GeneralList';
 import StartingLetterFilter from './StartingLetterFilter';
 
 export default {
-	name: 'bands-list-new',
+	name: 'locations-list-new',
 	components: {
 		GeneralList,
 		StartingLetterFilter
 	},
 	data() {
 		return {
-			bands: [],
+			locations: [],
 			displayedColumns: [
 				{
 					displayName: 'Name',
@@ -90,40 +72,28 @@ export default {
 					isArray: false,
 				},
 				{
-					displayName: 'Genre',
-					attributes: ['genre'],
+					displayName: 'Address',
+					attributes: ['street'],
 					isArray: true,
 				},
 				{
-					displayName: 'Origin',
-					attributes: ['formattedOrigin'],
+					displayName: 'City',
+					attributes: ['city'],
 					isArray: false,
 				},
 			],
 			appliedFilters: {
 				startWith: undefined,
 				city: undefined,
-				country: undefined,
-				genre: undefined,
-				label: undefined
+				country: undefined
 			},
-			filterByCity: false,
 			filterCriteria: {},
-			availablePages: 1,
 			loading: false
 		}
 	},
 	watch: {
 		$route(to, from) {
-			this.getBandsPage();
-		},
-		computedGenre(value) {
-			let newQuery = {...this.$route.query, genre: value};
-			this.$router.push({query: newQuery});
-		},
-		computedLabel(value) {
-			let newQuery = {...this.$route.query, label: value};
-			this.$router.push({query: newQuery});
+			this.getCurrentPage();
 		},
 		computedCity(value) {
 			let newQuery = {...this.$route.query, city: value};
@@ -135,12 +105,6 @@ export default {
 		},
 	},
 	computed: {
-		computedGenre() {
-			return this.appliedFilters.genre;
-		},
-		computedLabel() {
-			return this.appliedFilters.label;
-		},
 		computedCity() {
 			return this.appliedFilters.city;
 		},
@@ -149,32 +113,31 @@ export default {
 		},
 	},
 	methods: {
-		getBandsPage() {
+		getCurrentPage() {
 			this.loading = true;
 			// this.checkUrlParams();
 			let sortingDirection = this.$route.query.ascending ? 1 : -1;
 			//Catch problem if the starting letter is # and convert it so the backend can parse it.
 			let startingLetter = this.appliedFilters.startWith == '#' ?'%23' :this.appliedFilters.startWith;
 			const query = this.$route.query;
-			this.$http.get(backendUrl + '/api/bands/page?page=' + query.page + 
+			this.$http.get(backendUrl + '/api/locations/page?page=' + query.page + 
 										'&perPage=' + query.itemsPerPage + 
 										'&sortBy=' + query.sortBy + 
 										'&order=' + (query.ascending == 'true' ?1 :-1) + 
 										'&startWith=' + query.startWith + 
-										(query.genre ?('&genre=' + query.genre) :'') + 
-										(query.label ?('&label=' + query.label) :'') + 
 										(query.city ?('&city=' + query.city) :'') +
 										(query.country ?('&country=' + query.country) :''))
 			.then(response => {
 				//Check if backend sent data, i.e. not sending an error message.
 				if(response.body.data)
-					this.bands = response.body.data;
+					this.locations = response.body.data;
 				//If an error message is sent, set the events to be empty which will show a warning message in the list.
 				else
-					this.bands = [];
+					this.locations = [];
 
-				this.bands.forEach(band => {
-					band.formattedOrigin = `${band.origin.city}, ${band.origin.country}`;
+				this.locations.forEach(location => {
+					location.city = location.address.city;
+					location.street = location.address.street;
 				});
 
 				this.availablePages = response.body.pages;
@@ -193,29 +156,17 @@ export default {
 	},
 	created() {
 		//Get all the filter information from the backend.
-		this.$http.get(backendUrl + '/api/bands/filters')
+		this.$http.get(backendUrl + '/api/locations/filters')
 			.then(response => { 
 				this.filterCriteria = response.body.data;
 			})
 			.catch(err => console.log(err));
 
-		// if(this.$router.currentRoute.query.page) {
-		// 	this.currentPage = this.$router.currentRoute.query.page;
-		// }
-
-		// if(this.$route.query.sortBy && this.$route.query.ascending) {
-		// 	this.currentlySorted = this.$route.query.sortBy;
-		// 	this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
-		// }
-		// else {
-		// 	this.sortingAsc.name = true;
-		// }
-
-		this.getBandsPage();
+		this.getCurrentPage();
 	}
 }
 </script>
 
 <style lang="scss">
-	@import "./src/scss/ContentLists/_bandsList.scss";
+	@import "./src/scss/ContentLists/_locationsList.scss";
 </style>

@@ -9,19 +9,24 @@
 
 	.band-name {
 		width: 45%;
+		span {
+			font-weight: 600;
+		}
 	}
 
-	.band-genres, .band-origin {
-		width: 20%;
+	.band-genre, .band-origin {
+		width: 30%;
 	}
 
 	.band-genre {
-		&:after {
-			content: ", ";
-		}
-
-		&:last-of-type:after {
-			content: "";
+		.bands-genre {
+			&:after {
+				content: ", ";
+			}
+	
+			&:last-of-type:after {
+				content: "";
+			}
 		}
 	}
 

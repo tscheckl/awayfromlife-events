@@ -1,38 +1,66 @@
 <template>
-	<div id="bands_list">
+	<div id="events_list">
 		<general-list 
-			title="All Bands"
-			contentType="bands"
-			:data="bands"
+			title="All Events"
+			contentType="events"
+			:data="events"
 			:displayedColumns="displayedColumns"
 			:availablePages="availablePages"
 			:loading="loading"
 			>
 			<div slot="filters">
 				<starting-letter-filter 
-					contentType="bands"
+					contentType="events"
 					:availableLetters="filterCriteria.startWith">
 				</starting-letter-filter>
 
-				<md-input-container class="genre-select">
-					<span class="input-label" v-if="appliedFilters.genre && appliedFilters.genre != ''">Genre</span>
-					<v-select class="form-v-select"
-								:options="filterCriteria.genres"
-								v-model="appliedFilters.genre"
-								placeholder="Genre">
-					</v-select>
-				</md-input-container>
-
-				<md-input-container class="label-select">
-					<span class="input-label" v-if="appliedFilters.label && appliedFilters.label != ''">Label</span>
-					<v-select class="form-v-select"
-								:options="filterCriteria.labels"
-								v-model="appliedFilters.label"
-								placeholder="Label">
-					</v-select>
-				</md-input-container>
-
 				<div class="switch-select">
+					<md-input-container class="genre-select">
+						<span class="input-label" v-if="appliedFilters.genre && appliedFilters.genre != ''">Genre</span>
+						<v-select class="form-v-select"
+									:options="filterCriteria.genres"
+									v-model="appliedFilters.genre"
+									placeholder="Genre">
+						</v-select>
+					</md-input-container>
+
+					<md-input-container class="date-select">	
+						<div class="datepicker-trigger first-date">
+							<label class="input-label" v-if="appliedFilters.firstDate != ''" for="last-date-trigger">From</label>
+							<input id="first-date-trigger" placeholder="From" type="text" v-model="appliedFilters.firstDate">
+
+							<AirbnbStyleDatepicker
+								:trigger-element-id="'first-date-trigger'"
+								:minDate="appliedFilters.firstDate" 
+								:endDate="appliedFilters.lastDate && (appliedFilters.lastDate < filterCriteria.lastDate) 
+									? appliedFilters.lastDate
+									: filterCriteria.lastDate" 
+								:mode="'single'"
+								:showActionButtons="false"
+								:date-one="appliedFilters.firstDate"
+								@date-one-selected="(val) =>  appliedFilters.firstDate = val"
+							/>
+						</div>
+					</md-input-container>
+					<md-input-container class="date-select">
+						<div class="datepicker-trigger last-date">
+							<label class="input-label" v-if="appliedFilters.lastDate != ''" for="last-date-trigger">To</label>
+							<input id="last-date-trigger" placeholder="To" type="text" v-model="appliedFilters.lastDate">
+
+							<AirbnbStyleDatepicker
+								:trigger-element-id="'last-date-trigger'"
+								:minDate="appliedFilters.firstDate > filterCriteria.firstDate 
+								  	? appliedFilters.firstDate 
+									: filterCriteria.firstDate" 
+								:endDate="filterCriteria.lastDate"
+								:mode="'single'"
+								:showActionButtons="false"
+								:date-one="appliedFilters.lastDate"
+								@date-one-selected="(val) =>  appliedFilters.lastDate = val"
+							/>
+						</div>
+					</md-input-container>
+
 					<md-button-toggle md-single class="md-accent">
 						<md-button :class="'md-button ' + (filterByCity ?'md-toggle' :'')" v-on:click="filterByCity = true">
 							City
@@ -75,54 +103,57 @@ import GeneralList from './GeneralList';
 import StartingLetterFilter from './StartingLetterFilter';
 
 export default {
-	name: 'bands-list-new',
+	name: 'events-list-new',
 	components: {
 		GeneralList,
 		StartingLetterFilter
 	},
 	data() {
 		return {
-			bands: [],
+			events: [],
 			displayedColumns: [
 				{
-					displayName: 'Name',
-					attributes: ['name'],
+					displayName: 'When?',
+					attributes: ['formattedDate'],
 					isArray: false,
 				},
 				{
-					displayName: 'Genre',
-					attributes: ['genre'],
+					displayName: 'What?',
+					attributes: ['name'],
 					isArray: true,
 				},
 				{
-					displayName: 'Origin',
-					attributes: ['formattedOrigin'],
+					displayName: 'Where?',
+					attributes: ['formattedLocation'],
 					isArray: false,
 				},
 			],
 			appliedFilters: {
 				startWith: undefined,
-				city: undefined,
-				country: undefined,
 				genre: undefined,
-				label: undefined
+				firstDate: undefined,
+				lastDate: undefined,
+				city: undefined,
+				country: undefined
 			},
-			filterByCity: false,
 			filterCriteria: {},
-			availablePages: 1,
 			loading: false
 		}
 	},
 	watch: {
 		$route(to, from) {
-			this.getBandsPage();
+			this.getCurrentPage();
+		},
+		computedFirstDate(value) {
+			let newQuery = {...this.$route.query, firstDate: value};
+			this.$router.push({query: newQuery});
+		},
+		computedLastDate(value) {
+			let newQuery = {...this.$route.query, lastDate: value};
+			this.$router.push({query: newQuery});
 		},
 		computedGenre(value) {
 			let newQuery = {...this.$route.query, genre: value};
-			this.$router.push({query: newQuery});
-		},
-		computedLabel(value) {
-			let newQuery = {...this.$route.query, label: value};
 			this.$router.push({query: newQuery});
 		},
 		computedCity(value) {
@@ -138,8 +169,11 @@ export default {
 		computedGenre() {
 			return this.appliedFilters.genre;
 		},
-		computedLabel() {
-			return this.appliedFilters.label;
+		computedGenre() {
+			return this.appliedFilters.firstDate;
+		},
+		computedGenre() {
+			return this.appliedFilters.lastDate;
 		},
 		computedCity() {
 			return this.appliedFilters.city;
@@ -149,32 +183,32 @@ export default {
 		},
 	},
 	methods: {
-		getBandsPage() {
+		getCurrentPage() {
 			this.loading = true;
 			// this.checkUrlParams();
 			let sortingDirection = this.$route.query.ascending ? 1 : -1;
 			//Catch problem if the starting letter is # and convert it so the backend can parse it.
 			let startingLetter = this.appliedFilters.startWith == '#' ?'%23' :this.appliedFilters.startWith;
 			const query = this.$route.query;
-			this.$http.get(backendUrl + '/api/bands/page?page=' + query.page + 
+			this.$http.get(backendUrl + '/api/events/page?page=' + query.page + 
 										'&perPage=' + query.itemsPerPage + 
 										'&sortBy=' + query.sortBy + 
 										'&order=' + (query.ascending == 'true' ?1 :-1) + 
 										'&startWith=' + query.startWith + 
 										(query.genre ?('&genre=' + query.genre) :'') + 
-										(query.label ?('&label=' + query.label) :'') + 
 										(query.city ?('&city=' + query.city) :'') +
 										(query.country ?('&country=' + query.country) :''))
 			.then(response => {
 				//Check if backend sent data, i.e. not sending an error message.
 				if(response.body.data)
-					this.bands = response.body.data;
+					this.events = response.body.data;
 				//If an error message is sent, set the events to be empty which will show a warning message in the list.
 				else
-					this.bands = [];
+					this.events = [];
 
-				this.bands.forEach(band => {
-					band.formattedOrigin = `${band.origin.city}, ${band.origin.country}`;
+				this.events.forEach(event => {
+					event.formattedDate = moment(event.date).format('LL');
+					event.formattedLocation = event.location.name + ', ' + event.location.address.city;
 				});
 
 				this.availablePages = response.body.pages;
@@ -193,29 +227,17 @@ export default {
 	},
 	created() {
 		//Get all the filter information from the backend.
-		this.$http.get(backendUrl + '/api/bands/filters')
+		this.$http.get(backendUrl + '/api/events/filters')
 			.then(response => { 
 				this.filterCriteria = response.body.data;
 			})
 			.catch(err => console.log(err));
 
-		// if(this.$router.currentRoute.query.page) {
-		// 	this.currentPage = this.$router.currentRoute.query.page;
-		// }
-
-		// if(this.$route.query.sortBy && this.$route.query.ascending) {
-		// 	this.currentlySorted = this.$route.query.sortBy;
-		// 	this.sortingAsc[this.$route.query.sortBy] = (this.$route.query.ascending == 'true');
-		// }
-		// else {
-		// 	this.sortingAsc.name = true;
-		// }
-
-		this.getBandsPage();
+		this.getCurrentPage();
 	}
 }
 </script>
 
 <style lang="scss">
-	@import "./src/scss/ContentLists/_bandsList.scss";
+	@import "./src/scss/ContentLists/_eventsList.scss";
 </style>
