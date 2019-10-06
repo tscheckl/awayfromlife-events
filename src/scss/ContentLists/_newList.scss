@@ -1,0 +1,165 @@
+@import "../themeColors";
+
+#new_list {
+	width: 100%;
+	margin: 0 auto;
+	overflow: hidden;
+	max-width: 1200px;
+	
+	.color-block {
+		position: absolute;
+		width: 110%;
+		height: 500px;
+		top: -20px;
+		left: -5%;
+		background-color: $accentAccent2;
+		transform: rotate(-4deg);
+	}
+	
+	.list-header {
+		color: $primaryLighten5;
+		// display: flex;
+		margin-top: 30px;
+
+
+		h1 {
+			margin: 0;
+			margin-top: 60px;
+			margin-bottom: 50px;
+			font-size: 60px;
+			position: relative;
+		}
+
+		.create-new {
+			position: absolute;
+			right: 0;
+			top: 120px;
+			display: flex;
+			padding: 30px 30px;
+			background-color: #232323;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			font-weight: 600;
+			font-family: "Montserrat";
+			clip-path: polygon(
+				0 0, /* left top */
+				100% 0, /* right top */ 
+				100% 100%, /* right bottom */
+				4% 100% /* left bottom */
+			);
+			// &:before {
+			// 	background-color: $accentAccent2;
+			// 	height: 120px;
+			// 	top: 0;
+			// 	left: -12px;
+			// 	position: absolute;
+			// 	content: "";
+			// 	width: 20px;
+			// 	transform: skew(6deg);
+			// }
+
+			.left-container {
+				align-self: center;
+				margin: 0 10px;
+				h3, p {
+					margin: 0;
+				}
+
+				h3 {
+					font-size: 26px;
+					margin-bottom: 5px;
+				}
+
+				p {
+					font-size: 12px;
+				}
+			}
+
+			.right-container {
+				color: $accentAccent2;
+				align-self: center;
+
+				.md-icon {
+					margin: 0 10px;
+					margin-top: -10px;
+					font-size: 32px;
+				}
+			}
+		}
+
+		.filters {
+			position: relative;
+
+			h3, h4 {
+				margin: 0;
+			}
+			h3 {
+				margin-bottom: 15px;
+				font-size: 22px;
+			}
+
+			h4 {
+				font-size: 18px; 
+			}
+
+			.starting-letter-filter {
+				h4 {
+					margin-bottom: 15px;
+				}
+
+				#starting_letter_filter {
+					div, ul, li {
+						display: inline;
+					}
+	
+					ul {
+						margin-left: 0;
+						padding-left: 0;
+	
+						li {
+							font-size: 20px;
+							font-weight: 600;
+							color: #232323;
+							padding-right: 10px;
+						}
+					}
+				}
+			}
+
+			.additional-filters {
+				display: flex;
+				margin-top: 30px;
+
+				.date-filter {
+					.datepickers {
+						display: flex;
+
+						.datepicker-trigger {
+							position: relative;
+							margin-top: 5px;
+
+							input {
+								width: 160px;
+								padding: 8px;
+								margin-right: 20px;
+								background-color: $primaryLighten5;
+								font-weight: 300;
+								font-family: Montserrat;
+								border: none;
+								border-radius: 3px;
+								box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+							}
+
+							.md-icon {
+								position: absolute;
+								color: #232323;
+								right: 19px;
+								top: 4px;
+								font-size: 20px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

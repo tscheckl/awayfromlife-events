@@ -1,6 +1,5 @@
 <template>
 	<div id="starting_letter_filter">
-		<h3>{{capitalize(contentType)}} from A to Z: </h3>
 		<ul class="starting-letter-filter">
 			<li v-for="i in 26" :key="i" :class="buildLetterCssClasses((i+9).toString(36).toUpperCase())">
 				<span v-on:click="availableLetters.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''">
