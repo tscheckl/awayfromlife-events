@@ -36,7 +36,8 @@
 				margin: 0;
 				padding: 10px;
 				padding-left: 35px;
-				font-family: "OpenSans";
+				font-family: Montserrat;
+				font-weight: 300;
 				color: #232323;
 				background-color: $primaryLighten5;
 				border: none;
@@ -53,7 +54,7 @@
 				margin: 0;
 				padding: 0 20px;
 				background-color: #232323;
-				font-family: "OpenSans";
+				font-family: Montserrat;
 				color: $primaryLighten4;
 				border: none;
 				cursor: pointer;
@@ -84,6 +85,10 @@
 						background-color: $primaryLighten3;
 					}
 
+					p {
+						font-weight: 300;
+					}
+
 					.result-information {
 						flex: 1;
 
@@ -91,7 +96,7 @@
 							margin: 0;
 						}
 
-						p {
+						p {							
 							margin-top: 5px;
 							margin-bottom: 0;
 						}
@@ -120,7 +125,6 @@
 			.no-results {
 				p {
 					padding: 0 10px;
-					font-family: "OpenSansBold";
 				}
 			}
 

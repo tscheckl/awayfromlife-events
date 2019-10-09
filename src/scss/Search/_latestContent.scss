@@ -10,15 +10,7 @@
 		font-size: 1.65em;
 		color: white;
 		display: inline-block;
-		font-weight: 700;
-
-		&:after {
-			content: "";
-			display: block;
-			height: 3px;
-			width: 105%;
-			background-color: $accentAccent2;
-		}
+		font-weight: 600;
 	}
 
 	.content {
@@ -50,7 +42,7 @@
 					font-size: 1.05em;
 					padding: 5px 12px;
 					text-transform: capitalize;
-					font-weight: 500;
+					font-weight: 400;
 					right: 0;
 					border-bottom-left-radius: 3px;
 				}
@@ -101,7 +93,7 @@
 
 					.bold-detail {
 						font-size: 1.05em;
-						font-weight: 500;
+						font-weight: 600;
 					}
 	
 					.bands, .genres {

@@ -38,29 +38,6 @@
 		}
 	}
 
-	.picker {
-		box-sizing: border-box;
-		display: inline;
-		padding: 3px 5px;
-		font-size: 1em;
-		line-height: 16px;
-		border-radius: 4px;
-
-		
-
-		input {
-			max-width: 100% !important;
-			border: none;
-			font-family: 'OpenSans';
-			font-size: 1em;
-			color: rgba(0, 0, 0, 0.54);
-			margin-left: 10px;
-			background-color: transparent;
-			cursor: pointer;
-			border-bottom: 1px solid $primaryLighten2;
-		}
-	}
-
 	.not-verifiable {
 		display: block;
 		color: $accentAccent2;

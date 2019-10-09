@@ -6,17 +6,6 @@
 	src: url("/static/fonts/icomoon.woff") format("woff");
 }
 
-@font-face {
-	font-family: "OpenSans";
-	src: url("/static/fonts/OpenSans.woff2") format("woff2");
-	font-weight: normal;
-}
-
-@font-face {
-	font-family: "OpenSansBold";
-	src: url("/static/fonts/OpenSans-Bold.woff2") format("woff2");
-	font-weight: bold;
-}
 body {
 	font-family: "Montserrat", sans-serif;
 	// overflow-x: hidden;
@@ -32,6 +21,7 @@ h1 {
 
 h2, h3, h4, h5 {
 	font-family: "Montserrat", sans-serif;
+	font-weight: 600;
 	flex-wrap: 700;
 }
 
@@ -49,7 +39,7 @@ body, html {
 
 @-moz-document url-prefix() {
 	body {
-	  font-weight: lighter !important;
+	  font-weight: 300 !important;
 	}
   }
 
@@ -199,7 +189,7 @@ a {
 
 	.vdatetime-popup__actions__button {
 		color: $accentDarken2;
-		font-weight: 500;
+		font-weight: 600;
 	}
 }
 
