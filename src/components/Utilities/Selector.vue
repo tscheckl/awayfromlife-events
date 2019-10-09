@@ -1,7 +1,10 @@
 <template>
 	<div id="selector">
-		<label for="selector-input">{{selectLabel}}</label>
-		<div id="selector-input" v-on:click="showList = !showList"><span>{{currentlySelected[label] ?currentlySelected[label] :currentlySelected }}</span></div>
+		<label v-if="selectLabel" for="selector-input">{{selectLabel}}</label>
+		<div id="selector-input" v-on:click="showList = !showList">
+			<span>{{currentlySelected[label] ?currentlySelected[label] :currentlySelected }}</span>
+			<md-icon>keyboard_arrow_down</md-icon>
+		</div>
 
 		<ul class="options" v-if="showList">
 			<li :class="item == currentlySelected ?'active' :''" v-on:click="selectItem(emitIndex ?(index+1) :item)" v-for="(item, index) in options" :key="index">{{item[label] ?item[label] :item}}</li>
@@ -24,8 +27,7 @@ export default {
 			default: false
 		},
 		selectLabel: {
-			type: String,
-			default: 'Select'
+			type: String
 		},
 	},
 	watch: {

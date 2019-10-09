@@ -89,7 +89,11 @@
 			</div>
 
 			<div class="sorting">
-
+				<h4>Sort by: </h4>
+				<selector
+					v-model="currentSorting"
+					:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
+				</selector>
 			</div>
 
 		</div>
@@ -114,11 +118,14 @@
 <script>
 import StartingLetterFilter from './StartingLetterFilter';
 import SearchSelect from '@/components/Utilities/SearchSelect';
+import Selector from '@/components/Utilities/Selector';
 
 export default {
 	name: 'new-list',
 	components: {
-		StartingLetterFilter
+		StartingLetterFilter,
+		SearchSelect,
+		Selector
 	},
 data() {
 		return {
@@ -129,6 +136,7 @@ data() {
 				name: false,
 				location: false
 			},
+			currentSorting: 'Date ascending',
 			currentlySorted: 'date',
 			filterCriteria: {
 				startWith: [],
