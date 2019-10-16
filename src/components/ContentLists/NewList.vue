@@ -95,17 +95,29 @@
 					:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
 				</selector>
 			</div>
-
 		</div>
 		
 		<div class="list-elements">
-
+			<div class="list-element" v-for="(event, index) in events" :key="index">
+				<div class="image-container">
+					<div class="image" :style="'background-image:url(' + getFullImageRoute(event) + ')'"></div>
+					<div class="color-seperator"></div>
+				</div>
+				<div class="element-info">
+					<h4 class="event-date">{{event.formattedDate}}</h4>
+					<h3 class="event-name">{{event.name}}</h3>
+					<p class="event-location">{{event.location.name}}, {{event.location.address.city}}, {{event.location.address.country}}</p>
+					<p class="event-bands">
+						<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
+					</p>
+				</div>
+			</div>
 		</div>
 
 			<div class="load-more">
-				<p>x of x loaded</p>
+				<p>50 of 574 loaded</p>
 				<md-button>Show more</md-button>
-				<p>or <router-link>narrow down the results</router-link></p>
+				<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
 			</div>
 
 			<div class="not-found-message">
@@ -116,6 +128,10 @@
 </template>
 
 <script>
+import {backendUrl} from '@/secrets.js';
+
+import moment from 'moment';
+
 import StartingLetterFilter from './StartingLetterFilter';
 import SearchSelect from '@/components/Utilities/SearchSelect';
 import Selector from '@/components/Utilities/Selector';
@@ -162,6 +178,51 @@ data() {
 			resetForm: false,
 			loading: false
 		}
+	},
+	methods: {
+		getEvents() {
+			this.$http.get(backendUrl + '/api/events/page?page=1' + 
+							'&perPage=50' + 
+							'&sortBy=date' + 
+							'&order=1' + 
+							'&includeFestivals=true')
+			.then(response => {
+				//Check if backend sent data, i.e. not sending an error message.
+				console.log(response);
+				if(response.body.data) {
+					this.events = response.body.data;
+				}
+				//If an error message is sent, set the events to be empty which will show a warning message in the list.
+				else {
+					this.events = [];
+				}
+				this.availablePages = response.body.pages;
+				this.currentPage = response.body.current;
+				
+
+				for(let event of this.events) {
+					//Add formatted date Attribute to each event for displaying the date in the list.
+					event.formattedDate = moment(event.date).format('LL');
+				}
+				this.loading = false;
+
+				//Fade filters out on mobile
+				document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
+				document.getElementsByClassName('filters')[0].classList.remove('show-filters');
+			})
+			.catch(err => {
+				this.loading = false;
+			});
+		},
+		getFullImageRoute(event) {
+			return backendUrl + '/' + event.image[1];
+		},
+		scrollToTop() {
+			window.scrollTo({top: 0, behavior: 'smooth'});
+		}
+	},
+	mounted() {
+		this.getEvents();
 	},
 }
 </script>

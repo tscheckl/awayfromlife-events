@@ -1,16 +1,26 @@
 @import "../themeColors";
+@import "../angled-edges";
 
 #app-footer {
 	position: relative;
 	left: 0;
 	bottom: 0;
 	width: 100%;
+	padding-top: 50px;
+	margin-top: -50px;
 	background: #151515;
 	color: $primaryLighten5;
 	font-family: "Montserrat";
 	text-align: center;
 	line-height: 30px;
 	z-index: 5;
+	// @include angled-edge("outside top", "upper left", #151515, 50);
+	clip-path: polygon(
+		0 50%, /* left top */
+		100% 0, /* right top */ 
+		100% 100%, /* right bottom */
+		0 100% /* left bottom */
+	);
 
 	a {
 		margin: 0 10px;
