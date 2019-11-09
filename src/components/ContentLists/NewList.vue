@@ -6,7 +6,7 @@
 
 			<h1>Events</h1>
 
-			<div class="create-new">
+			<router-link to="new-event" class="create-new">
 				<div class="left-container">
 					<h3>Create a new Event!</h3>
 					<p>and contribute to AWAY FROM LIFE Streets</p>
@@ -14,7 +14,7 @@
 				<div class="right-container">
 					<md-icon>arrow_forward</md-icon>
 				</div>
-			</div>
+			</router-link>
 
 			<div class="filters">
 				<h3>Filter by: </h3>
@@ -96,9 +96,13 @@
 				</selector>
 			</div>
 		</div>
+
+		<div v-if="previousLoadable" class="load-more load-less">
+			<md-button v-on:click="getPreviousEvents">Show previous</md-button>
+		</div>
 		
 		<div class="list-elements">
-			<div class="list-element" v-for="(event, index) in events" :key="index">
+			<router-link :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`" class="list-element" v-for="(event, index) in events" :key="index">
 				<div class="image-container">
 					<div class="image" :style="'background-image:url(' + getFullImageRoute(event) + ')'"></div>
 					<div class="color-seperator"></div>
@@ -111,19 +115,21 @@
 						<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
 					</p>
 				</div>
+			</router-link>
+		</div>
+
+		<div class="load-more">
+			<p>Showing {{events.length}} of {{totalItemsCount}} available events</p>
+			<div v-if="events.length < totalItemsCount">
+				<md-button v-on:click="currentPage++">Show more</md-button>
+				<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
 			</div>
 		</div>
 
-			<div class="load-more">
-				<p>50 of 574 loaded</p>
-				<md-button>Show more</md-button>
-				<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
-			</div>
-
-			<div class="not-found-message">
-				<p>Didn't find what you were looking for?</p>
-				<p>If you feel like something is missing, you can contribute to this platform and <router-link to="">create a new !</router-link></p>
-			</div>
+		<div class="not-found-message">
+			<p>Didn't find what you were looking for?</p>
+			<p>If you feel like something is missing, you can contribute to this platform and <router-link to="">create a new !</router-link></p>
+		</div>
 	</div>
 </template>
 
@@ -143,10 +149,13 @@ export default {
 		SearchSelect,
 		Selector
 	},
-data() {
+	data() {
 		return {
 			events: [],
 			locations: [],
+			totalItemsCount: 0,
+			previousLoadable: false,
+			previousPageLoadedTo: 0,
 			sortingAsc: {
 				date: false,
 				name: false,
@@ -171,7 +180,7 @@ data() {
 				genre: undefined
 			},
 			filterByCity: false,
-			currentPage: 1,
+			currentPage: Number,
 			availablePages: 1,
 			itemsPerPage: '20',
 			displayEvent: {},
@@ -179,31 +188,65 @@ data() {
 			loading: false
 		}
 	},
+	watch: {
+		currentPage(newVal, oldVal) {
+			this.getNextEvents(oldVal, newVal);
+			this.$router.replace({query: { page: this.currentPage}});
+
+			if(this.currentPage == 1)
+				this.previousLoadable = false;
+		}
+	},
 	methods: {
-		getEvents() {
-			this.$http.get(backendUrl + '/api/events/page?page=1' + 
-							'&perPage=50' + 
-							'&sortBy=date' + 
-							'&order=1' + 
-							'&includeFestivals=true')
+		getNextEvents() {
+			this.$http.get(`${backendUrl}/api/events/page?page=${this.currentPage}&perPage=50&sortBy=${this.currentlySorted}&order=1&includeFestivals=true`)
 			.then(response => {
 				//Check if backend sent data, i.e. not sending an error message.
-				console.log(response);
+				let newEvents = [];
 				if(response.body.data) {
-					this.events = response.body.data;
-				}
-				//If an error message is sent, set the events to be empty which will show a warning message in the list.
-				else {
-					this.events = [];
+					newEvents = response.body.data;
 				}
 				this.availablePages = response.body.pages;
-				this.currentPage = response.body.current;
+				// this.currentPage = response.body.current;
 				
 
-				for(let event of this.events) {
+				for(let event of newEvents) {
 					//Add formatted date Attribute to each event for displaying the date in the list.
 					event.formattedDate = moment(event.date).format('LL');
 				}
+
+				this.events = this.events.concat(newEvents);
+
+				this.totalItemsCount = response.body.totalCount;
+				this.loading = false;
+
+				//Fade filters out on mobile
+				document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
+				document.getElementsByClassName('filters')[0].classList.remove('show-filters');
+			})
+			.catch(err => {
+				this.loading = false;
+			});
+		},
+		getPreviousEvents() {
+			this.previousPageLoadedTo--;
+			if(this.previousPageLoadedTo == 1)
+				this.previousLoadable = false;
+
+			this.$http.get(`${backendUrl}/api/events/page?page=${this.previousPageLoadedTo}&perPage=50&sortBy=${this.currentlySorted}&order=1&includeFestivals=true`)
+			.then(response => {
+
+				//Check if backend sent data, i.e. not sending an error message.
+				let newEvents = [];
+				if(response.body.data) {
+					newEvents = response.body.data;
+				}
+				for(let event of newEvents) {
+					//Add formatted date Attribute to each event for displaying the date in the list.
+					event.formattedDate = moment(event.date).format('LL');
+				}
+
+				this.events = newEvents.concat(this.events);				
 				this.loading = false;
 
 				//Fade filters out on mobile
@@ -222,7 +265,11 @@ data() {
 		}
 	},
 	mounted() {
-		this.getEvents();
+		this.currentPage = this.$route.query.page || 1;
+		if(this.currentPage != 1 && this.events.length == 0) {			
+			this.previousLoadable = true; 
+			this.previousPageLoadedTo = this.currentPage;
+		}
 	},
 }
 </script>
