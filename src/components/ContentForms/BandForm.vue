@@ -262,5 +262,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "src/scss/contentForms/_bandForm.scss";
+	@import "src/scss/ContentForms/_bandForm.scss";
 </style>
