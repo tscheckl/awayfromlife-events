@@ -20,15 +20,18 @@
 				<h3>Filter by: </h3>
 				<div class="starting-letter-filter">
 					<h4>Starting letter</h4>
-					<starting-letter-filter></starting-letter-filter>
+					<starting-letter-filter 
+						:available-letters="filterCriteria.startWith"
+						v-on:letter-selected="(letter) => onSelectStartingLetter(letter)">
+					</starting-letter-filter>
 				</div>
 
 				<div class="additional-filters">
 					<div class="genre-filter">
 						<h4>Genre</h4>
 						<search-select label="genre"
-									v-on:change="(selected) => onSelectGenre(selected, index)"
-									:options="[]"
+									v-on:change="(selected) => onSelectGenre(selected)"
+									:options="filterCriteria.genres"
 									v-model="appliedFilters.genre"
 									placeholder="Select Genre">
 							<span slot="no-options">Sorry, no matching options..</span>
@@ -52,7 +55,7 @@
 									:mode="'single'"
 									:showActionButtons="false"
 									:date-one="appliedFilters.firstDate"
-									@date-one-selected="(val) =>  appliedFilters.firstDate = val"
+									@date-one-selected="(val) =>  onFirstDateSelected(val)"
 								/>
 							</div>
 							<div class="datepicker-trigger last-date">
@@ -69,7 +72,7 @@
 									:mode="'single'"
 									:showActionButtons="false"
 									:date-one="appliedFilters.lastDate"
-									@date-one-selected="(val) =>  appliedFilters.lastDate = val"
+									@date-one-selected="(val) =>  onLastDateSelected(val)"
 								/>
 							</div>
 						</div>
@@ -78,8 +81,8 @@
 					<div class="city-filter">
 						<h4>City</h4>
 						<search-select label="city"
-									v-on:change="(selected) => onSelectGenre(selected, index)"
-									:options="[]"
+									v-on:change="(selected) => onSelectCity(selected)"
+									:options="filterCriteria.cities"
 									v-model="appliedFilters.city"
 									placeholder="Select City">
 							<span slot="no-options">Sorry, no matching options..</span>
@@ -191,11 +194,11 @@ export default {
 	watch: {
 		currentPage(newVal, oldVal) {
 			this.getNextEvents(oldVal, newVal);
-			this.$router.replace({query: { page: this.currentPage}});
+			this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
 
 			if(this.currentPage == 1)
 				this.previousLoadable = false;
-		}
+		}		
 	},
 	methods: {
 		getNextEvents() {
@@ -262,6 +265,23 @@ export default {
 		},
 		scrollToTop() {
 			window.scrollTo({top: 0, behavior: 'smooth'});
+		},
+		onSelectCity(selectedCity) {
+			this.$router.replace({query: {...this.$route.query, city: selectedCity}});
+		},
+		onSelectGenre(selectedGenre) {
+			this.$router.replace({query: {...this.$route.query, genre: selectedGenre}});
+		},
+		onSelectStartingLetter(selectedLetter) {
+			this.$router.replace({query: {...this.$route.query, startWith: selectedLetter}});
+		},
+		onFirstDateSelected(selectedDate) {
+			this.appliedFilters.firstDate = selectedDate;
+			this.$router.replace({query: {...this.$route.query, firstDate: selectedDate}});
+		},
+		onLastDateSelected(selectedDate) {
+			this.appliedFilters.lastDate = selectedDate;
+			this.$router.replace({query: {...this.$route.query, lastDate: selectedDate}});
 		}
 	},
 	mounted() {
@@ -270,6 +290,18 @@ export default {
 			this.previousLoadable = true; 
 			this.previousPageLoadedTo = this.currentPage;
 		}
+		
+		//Check if you're currently on the archive page or not and change the backend-endpoint for the request accordingly. 
+		let endpoint = this.archive ?'archived-events' :'events';
+		this.$http.get(backendUrl + '/api/' + endpoint + '/filters?includeFestivals=true')
+			.then(response => { 
+				this.filterCriteria = response.body.data;
+				console.log(response.body.data);
+				console.log(this.filterCriteria);
+				// this.appliedFilters.firstDate = response.body.data.firstDate;
+				// this.appliedFilters.lastDate = response.body.data.lastDate;
+			})
+			.catch(err => console.log(err));
 	},
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
 	<div id="search_select" v-on:keyup.esc="showOptions = false">
-		<input type="text" v-model="filterValue"  v-on:focus="showOptions = true" v-on:blur="blockBlur ?'' :closeOptions()" :placeholder="placeholder">
+		<input type="text" autocomplete="off" v-model="filterValue"  v-on:focus="showOptions = true" v-on:blur="blockBlur ?'' :closeOptions()" :placeholder="placeholder">
 		<div class="select-buttons">
 			<button class="clear-button" v-on:click="clearValue" v-if="filterValue != ''">
 				<md-icon>close</md-icon>
@@ -53,7 +53,10 @@ export default {
 	computed: {
 		filteredOptions() {
 			return this.options.filter(option => {
-				return option[this.computedLabel].toLowerCase().indexOf(this.filterValue.toLowerCase()) != -1;
+				if(option[this.computedLabel])
+					return option[this.computedLabel].toLowerCase().indexOf(this.filterValue.toLowerCase()) != -1;
+				else
+					return option.toLowerCase().indexOf(this.filterValue.toLowerCase()) != -1;
 			});
 		},
 		computedLabel() {
@@ -62,7 +65,7 @@ export default {
 	},
 	methods: {
 		selectOption(option) {
-			this.filterValue = option[this.computedLabel].trim();
+			this.filterValue = option[this.computedLabel] ? option[computedLabel].trim() : option.trim();
 			this.closeOptions();
 			this.$emit('input', option);
 			this.$emit('change', option);

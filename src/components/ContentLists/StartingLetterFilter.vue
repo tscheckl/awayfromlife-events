@@ -1,15 +1,15 @@
 <template>
 	<div id="starting_letter_filter">
 		<ul class="starting-letter-filter">
-			<li v-for="i in 26" :key="i" :class="buildLetterCssClasses((i+9).toString(36).toUpperCase())">
-				<span v-on:click="availableLetters.indexOf((i+9).toString(36).toUpperCase()) != -1 ?filterByStartingLetter((i+9).toString(36).toUpperCase()) :''">
-					{{(i+9).toString(36).toUpperCase()}}
+			<li v-for="i in 26" :key="i" :class="getLetterStateCssClass(getLetter(i))">
+				<span v-on:click="letterAvailable(getLetter(i)) ?filterByStartingLetter(getLetter(i)) :''">
+					{{getLetter(i)}}
 				</span>
 				<div v-on:click="clearStartLetter">
-					<md-icon v-if="routeStartWithFilter == (i+9).toString(36).toUpperCase()">clear</md-icon>
+					<md-icon v-if="routeStartWithFilter == getLetter(i)">clear</md-icon>
 				</div>
 			</li>
-			<li :class="buildLetterCssClasses('#')">
+			<li :class="getLetterStateCssClass('#')">
 				<span v-on:click="routeStartWithFilter.indexOf('#') != -1 ?filterByStartingLetter('#') :''">
 					#
 				</span>
@@ -40,28 +40,31 @@ export default {
 		}
 	},
 	methods: {
-		buildLetterCssClasses(letter) {
+		getLetter(index) {
+			return (index+9).toString(36).toUpperCase();
+		},
+		letterAvailable(letter) {
+			console.log(letter + ' available', this.availableLetters.indexOf(letter) != -1);
+			return this.availableLetters.indexOf(letter) != -1;
+		},
+		getLetterStateCssClass(letter) {
 			return 'start-letter-' + letter 
-					+ (this.availableLetters.indexOf(letter) != -1 ?' available' :' ') //Check if there are events starting with that letter and add respective class.
+					+ (this.letterAvailable(letter) ?' available' :' ') //Check if there are events starting with that letter and add respective class.
 					+ (this.routeStartWithFilter == letter ?' active-start-letter' :''); //Check if the letter is currently selected and add respective class.
 		},
-		capitalize(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1); 
-		},
 		filterByStartingLetter(letter) {
+			console.log('hallo');
+			
 			if(this.routeStartWithFilter)
 				document.getElementsByClassName('start-letter-' + this.routeStartWithFilter)[0].classList.remove('active-start-letter');
 
-			// this.routeStartWithFilter = letter;
-			let newQuery = {...this.$route.query, startWith: letter};
-			this.$router.push({query: newQuery});
 			document.getElementsByClassName('start-letter-' + letter)[0].classList.add('active-start-letter');
+			this.$emit('letter-selected', letter);
 		},
 		//Function for clearing one or all filters.
 		clearStartLetter() {
 			document.getElementsByClassName('start-letter-' + this.routeStartWithFilter)[0].classList.remove('active-start-letter');
-			let newQuery = {...this.$route.query, startWith: ''};
-			this.$router.push({query: newQuery});
+			this.$emit('letter-selected', '');
 		},
 	},
 }
