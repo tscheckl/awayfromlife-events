@@ -1,20 +1,23 @@
 <template>
 	<div id="starting_letter_filter">
 		<ul class="starting-letter-filter">
-			<li v-for="i in 26" :key="i" :class="getLetterStateCssClass(getLetter(i))">
-				<span v-on:click="letterAvailable(getLetter(i)) ?filterByStartingLetter(getLetter(i)) :''">
+			<li v-for="i in 26" 
+				:key="i" 
+				:class="getLetterStateCssClass(getLetter(i))" 
+				v-on:click="letterAvailable(getLetter(i)) ?filterByStartingLetter(getLetter(i)) :''">
+				<span>
 					{{getLetter(i)}}
 				</span>
-				<div v-on:click="clearStartLetter">
-					<md-icon v-if="routeStartWithFilter == getLetter(i)">clear</md-icon>
+				<div :style="hideIfInactive(getLetter(i))">
+					<md-icon>clear</md-icon>
 				</div>
 			</li>
-			<li :class="getLetterStateCssClass('#')">
-				<span v-on:click="routeStartWithFilter.indexOf('#') != -1 ?filterByStartingLetter('#') :''">
+			<li :class="getLetterStateCssClass('#')" v-on:click="letterAvailable('#') ?filterByStartingLetter('#') :''">
+				<span>
 					#
 				</span>
-				<div v-on:click="clearStartLetter">
-					<md-icon v-if="routeStartWithFilter == '#'">clear</md-icon>
+				<div :style="hideIfInactive('#')">
+					<md-icon >clear</md-icon>
 				</div>
 			</li>
 		</ul>
@@ -44,7 +47,6 @@ export default {
 			return (index+9).toString(36).toUpperCase();
 		},
 		letterAvailable(letter) {
-			console.log(letter + ' available', this.availableLetters.indexOf(letter) != -1);
 			return this.availableLetters.indexOf(letter) != -1;
 		},
 		getLetterStateCssClass(letter) {
@@ -53,7 +55,10 @@ export default {
 					+ (this.routeStartWithFilter == letter ?' active-start-letter' :''); //Check if the letter is currently selected and add respective class.
 		},
 		filterByStartingLetter(letter) {
-			console.log('hallo');
+			if(this.routeStartWithFilter == letter) {
+				this.clearStartLetter();
+				return;
+			}
 			
 			if(this.routeStartWithFilter)
 				document.getElementsByClassName('start-letter-' + this.routeStartWithFilter)[0].classList.remove('active-start-letter');
@@ -66,7 +71,10 @@ export default {
 			document.getElementsByClassName('start-letter-' + this.routeStartWithFilter)[0].classList.remove('active-start-letter');
 			this.$emit('letter-selected', '');
 		},
-	},
+		hideIfInactive(letter) {
+			return this.routeStartWithFilter == letter ? 'opacity:1;' :'opacity:0;'
+		}
+	}
 }
 </script>
 

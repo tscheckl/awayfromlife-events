@@ -42,6 +42,9 @@
 						<h4>Date</h4>
 						<div class="datepickers">
 							<div class="datepicker-trigger first-date">
+								<span v-if="appliedFilters.firstDate != ''" v-on:click="onFirstDateSelected('')">
+									<md-icon class="clear-selection">close</md-icon>
+								</span>
 								<label class="input-label" for="first-date-trigger">From</label>
 								<input id="first-date-trigger" placeholder="first date" type="text" v-model="appliedFilters.firstDate">
 								<md-icon>date_range</md-icon>
@@ -61,6 +64,9 @@
 							<div class="datepicker-trigger last-date">
 								<label class="input-label" for="last-date-trigger">To</label>
 								<input id="last-date-trigger" placeholder="last date" type="text" v-model="appliedFilters.lastDate">
+								<span v-if="appliedFilters.lastDate != ''" v-on:click="onLastDateSelected('')">
+									<md-icon class="clear-selection">close</md-icon>
+								</span>
 								<md-icon>date_range</md-icon>
 
 								<AirbnbStyleDatepicker
@@ -191,11 +197,6 @@ export default {
 			loading: false
 		}
 	},
-	watch: {
-		$route(to, from) {
-			this.getCurrentPage();
-		}	
-	},
 	methods: {
 		async getEventsPage(page) {
 			let response = {};
@@ -208,13 +209,13 @@ export default {
 				+ '&perPage=50'
 				+ '&sortBy=' + this.currentlySorted
 				+ '&order=1'
-				+ (query.startWith ? '&startWith=' + query.startWith : '')
+				+ (query.startWith ? '&startWith=' + encodeURIComponent(query.startWith) : '')
 				+ (query.genre ?('&genre=' + query.genre) :'')
 				+ (query.city ?('&city=' + query.city) :'')
 				+ (query.firstDate ?('&startDate=' + query.firstDate) :'')
 				+ (query.lastDate ?('&endDate=' + query.lastDate) :'')
 				+ '&includeFestivals=true';
-			console.log('request route', requestRoute);
+			console.log(requestRoute);
 			try {
 				response = await this.$http.get(requestRoute);
 			}
@@ -286,6 +287,7 @@ export default {
 			await this.applyNewFilters();
 		},
 		async onFirstDateSelected(selectedDate) {
+			console.log('fisch');
 			this.appliedFilters.firstDate = selectedDate;
 			this.$router.replace({query: {...this.$route.query, firstDate: selectedDate}});
 			await this.applyNewFilters();
