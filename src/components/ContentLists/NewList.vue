@@ -48,7 +48,7 @@
 
 								<AirbnbStyleDatepicker
 									:trigger-element-id="'first-date-trigger'"
-									:minDate="appliedFilters.firstDate" 
+									:minDate="filterCriteria.firstDate" 
 									:endDate="appliedFilters.lastDate && (appliedFilters.lastDate < filterCriteria.lastDate) 
 										? appliedFilters.lastDate
 										: filterCriteria.lastDate" 
@@ -124,7 +124,7 @@
 		<div class="load-more">
 			<p>Showing {{events.length}} of {{totalItemsCount}} available events</p>
 			<div v-if="events.length < totalItemsCount">
-				<md-button v-on:click="currentPage++">Show more</md-button>
+				<md-button v-on:click="getNextEvents">Show more</md-button>
 				<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
 			</div>
 		</div>
@@ -192,73 +192,80 @@ export default {
 		}
 	},
 	watch: {
-		currentPage(newVal, oldVal) {
-			this.getNextEvents(oldVal, newVal);
-			this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
-
-			if(this.currentPage == 1)
-				this.previousLoadable = false;
-		}		
+		$route(to, from) {
+			this.getCurrentPage();
+		}	
 	},
 	methods: {
-		getNextEvents() {
-			this.$http.get(`${backendUrl}/api/events/page?page=${this.currentPage}&perPage=50&sortBy=${this.currentlySorted}&order=1&includeFestivals=true`)
-			.then(response => {
-				//Check if backend sent data, i.e. not sending an error message.
-				let newEvents = [];
-				if(response.body.data) {
-					newEvents = response.body.data;
-				}
-				this.availablePages = response.body.pages;
-				// this.currentPage = response.body.current;
-				
+		async getEventsPage(page) {
+			let response = {};
+			this.loading = true;
 
-				for(let event of newEvents) {
-					//Add formatted date Attribute to each event for displaying the date in the list.
-					event.formattedDate = moment(event.date).format('LL');
-				}
-
-				this.events = this.events.concat(newEvents);
-
-				this.totalItemsCount = response.body.totalCount;
+			const query = this.$route.query;
+			let requestRoute = 
+				backendUrl + '/api/events/page'
+				+ '?page=' + page
+				+ '&perPage=50'
+				+ '&sortBy=' + this.currentlySorted
+				+ '&order=1'
+				+ (query.startWith ? '&startWith=' + query.startWith : '')
+				+ (query.genre ?('&genre=' + query.genre) :'')
+				+ (query.city ?('&city=' + query.city) :'')
+				+ (query.firstDate ?('&startDate=' + query.firstDate) :'')
+				+ (query.lastDate ?('&endDate=' + query.lastDate) :'')
+				+ '&includeFestivals=true';
+			console.log('request route', requestRoute);
+			try {
+				response = await this.$http.get(requestRoute);
+			}
+			catch(err) {
 				this.loading = false;
+				return [];
+			}
+			let newEvents = [];
+			if(response.body.data) {
+				newEvents = response.body.data;
+			}
+			this.availablePages = response.body.pages;
+			this.totalItemsCount = response.body.totalCount;			
 
-				//Fade filters out on mobile
-				document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
-				document.getElementsByClassName('filters')[0].classList.remove('show-filters');
-			})
-			.catch(err => {
-				this.loading = false;
-			});
+			for(let event of newEvents) {
+				//Add formatted date Attribute to each event for displaying the date in the list.
+				event.formattedDate = moment(event.date).format('LL');
+			}
+
+			this.loading = false;
+			//Fade filters out on mobile
+			// document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
+			// document.getElementsByClassName('filters')[0].classList.remove('show-filters');
+			
+			return newEvents;
 		},
-		getPreviousEvents() {
+		async getNextEvents() {
+			this.currentPage++;
+
+			this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
+			
+			if(this.currentPage == 1)
+				this.previousLoadable = false;
+				
+			let nextEvents = await this.getEventsPage(this.currentPage);
+			this.events = this.events.concat(nextEvents);
+		},
+		async getPreviousEvents() {
 			this.previousPageLoadedTo--;
 			if(this.previousPageLoadedTo == 1)
 				this.previousLoadable = false;
 
-			this.$http.get(`${backendUrl}/api/events/page?page=${this.previousPageLoadedTo}&perPage=50&sortBy=${this.currentlySorted}&order=1&includeFestivals=true`)
-			.then(response => {
+			let previousEvents = await this.getEventsPage(this.previousPageLoadedTo);
 
-				//Check if backend sent data, i.e. not sending an error message.
-				let newEvents = [];
-				if(response.body.data) {
-					newEvents = response.body.data;
-				}
-				for(let event of newEvents) {
-					//Add formatted date Attribute to each event for displaying the date in the list.
-					event.formattedDate = moment(event.date).format('LL');
-				}
-
-				this.events = newEvents.concat(this.events);				
-				this.loading = false;
-
-				//Fade filters out on mobile
-				document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
-				document.getElementsByClassName('filters')[0].classList.remove('show-filters');
-			})
-			.catch(err => {
-				this.loading = false;
-			});
+			this.events = previousEvents.concat(this.events);				
+		},
+		async applyNewFilters() {
+			this.currentPage = 1;
+			this.previousLoadable = false;
+			this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
+			this.events = await this.getEventsPage(this.currentPage);
 		},
 		getFullImageRoute(event) {
 			return backendUrl + '/' + event.image[1];
@@ -266,27 +273,33 @@ export default {
 		scrollToTop() {
 			window.scrollTo({top: 0, behavior: 'smooth'});
 		},
-		onSelectCity(selectedCity) {
+		async onSelectCity(selectedCity) {
 			this.$router.replace({query: {...this.$route.query, city: selectedCity}});
+			await this.applyNewFilters();
 		},
-		onSelectGenre(selectedGenre) {
+		async onSelectGenre(selectedGenre) {
 			this.$router.replace({query: {...this.$route.query, genre: selectedGenre}});
+			await this.applyNewFilters();
 		},
-		onSelectStartingLetter(selectedLetter) {
+		async onSelectStartingLetter(selectedLetter) {
 			this.$router.replace({query: {...this.$route.query, startWith: selectedLetter}});
+			await this.applyNewFilters();
 		},
-		onFirstDateSelected(selectedDate) {
+		async onFirstDateSelected(selectedDate) {
 			this.appliedFilters.firstDate = selectedDate;
 			this.$router.replace({query: {...this.$route.query, firstDate: selectedDate}});
+			await this.applyNewFilters();
 		},
-		onLastDateSelected(selectedDate) {
+		async onLastDateSelected(selectedDate) {
 			this.appliedFilters.lastDate = selectedDate;
 			this.$router.replace({query: {...this.$route.query, lastDate: selectedDate}});
+			await this.applyNewFilters();
 		}
 	},
-	mounted() {
+	async mounted() {
 		this.currentPage = this.$route.query.page || 1;
-		if(this.currentPage != 1 && this.events.length == 0) {			
+		this.events = await this.getEventsPage(this.currentPage);
+		if(this.currentPage != 1) {			
 			this.previousLoadable = true; 
 			this.previousPageLoadedTo = this.currentPage;
 		}
@@ -296,12 +309,20 @@ export default {
 		this.$http.get(backendUrl + '/api/' + endpoint + '/filters?includeFestivals=true')
 			.then(response => { 
 				this.filterCriteria = response.body.data;
-				console.log(response.body.data);
-				console.log(this.filterCriteria);
-				// this.appliedFilters.firstDate = response.body.data.firstDate;
-				// this.appliedFilters.lastDate = response.body.data.lastDate;
 			})
 			.catch(err => console.log(err));
+
+		const query = this.$route.query;
+		if(query.startWith)
+			this.appliedFilters.startWith = query.startWith;
+		if(query.firstDate)
+			this.appliedFilters.firstDate = query.firstDate;
+		if(query.lastDate)
+			this.appliedFilters.lastDate = query.lastDate;
+		if(query.genre)
+			this.appliedFilters.genre = query.genre;
+		if(query.city)
+			this.appliedFilters.city = query.city;
 	},
 }
 </script>
