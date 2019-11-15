@@ -31,7 +31,10 @@ export default {
 	name: 'search-select',
 	props: {
 		value: [Object, String],
-		options: Array,
+		options: {
+			type: Array,
+			default: () => []
+		},
 		placeholder: String,
 		label: {
 			type: String,
@@ -47,7 +50,12 @@ export default {
 	},
 	watch: {
 		value() {
-			this.filterValue = this.value[this.computedLabel] ?this.value[this.computedLabel] :this.value;
+			try {
+				this.filterValue = this.value[this.computedLabel];
+			}
+			catch(exc) {
+				this.filterValue = '';
+			}
 		}
 	},
 	computed: {
@@ -55,25 +63,33 @@ export default {
 			return this.options.filter(option => {
 				if(option[this.computedLabel])
 					return option[this.computedLabel].toLowerCase().indexOf(this.filterValue.toLowerCase()) != -1;
-				else
-					return option.toLowerCase().indexOf(this.filterValue.toLowerCase()) != -1;
+				else {
+					try {
+						return option.toLowerCase().indexOf(this.filterValue.toLowerCase()) != -1;
+					}
+					catch(exc) {
+						return option;
+					}
+				}
+					
 			});
+			
 		},
-		computedLabel() {
+		computedLabel() {			
 			return this.label ?this.label :'label';
 		},
 	},
 	methods: {
 		selectOption(option) {
-			this.filterValue = option[this.computedLabel] ? option[computedLabel].trim() : option.trim();
+			this.filterValue = option[this.computedLabel].trim();
 			this.closeOptions();
 			this.$emit('input', option);
 			this.$emit('change', option);
 		},
 		clearValue() {
 			this.filterValue='';
-			this.$emit('input', null);
-			this.$emit('change', null);
+			this.$emit('input', {label: ''});
+			this.$emit('change', {label: ''});
 		},
 		closeOptions() {
 			this.showOptions = false;
@@ -82,7 +98,7 @@ export default {
 	},
 	mounted() {
 		if(this.value)
-			this.filterValue = this.value[this.computedLabel] ?this.value[this.computedLabel] :this.value;
+			this.filterValue = this.value[this.computedLabel];
 	},
 }
 </script>

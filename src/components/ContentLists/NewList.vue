@@ -3,7 +3,6 @@
 		<div class="color-block"></div>
 		
 		<div class="list-header">
-
 			<h1>Events</h1>
 
 			<router-link to="new-event" class="create-new">
@@ -29,11 +28,11 @@
 				<div class="additional-filters">
 					<div class="genre-filter">
 						<h4>Genre</h4>
-						<search-select label="genre"
-									v-on:change="(selected) => onSelectGenre(selected)"
-									:options="filterCriteria.genres"
-									v-model="appliedFilters.genre"
-									placeholder="Select Genre">
+						<search-select
+								v-on:change="(selectedGenre) => onSelectGenre(selectedGenre)"
+								:options="filterCriteria.genres"
+								v-model="appliedFilters.genre"
+								placeholder="Select Genre">
 							<span slot="no-options">Sorry, no matching options..</span>
 						</search-select>
 					</div>
@@ -86,11 +85,11 @@
 
 					<div class="city-filter">
 						<h4>City</h4>
-						<search-select label="city"
-									v-on:change="(selected) => onSelectCity(selected)"
-									:options="filterCriteria.cities"
-									v-model="appliedFilters.city"
-									placeholder="Select City">
+						<search-select 
+								v-on:change="(selectedCity) => onSelectCity(selectedCity)"
+								:options="filterCriteria.cities"
+								v-model="appliedFilters.city"
+								placeholder="Select City">
 							<span slot="no-options">Sorry, no matching options..</span>
 						</search-select>
 					</div>
@@ -105,33 +104,50 @@
 				</selector>
 			</div>
 		</div>
-
-		<div v-if="previousLoadable" class="load-more load-less">
-			<md-button v-on:click="getPreviousEvents">Show previous</md-button>
-		</div>
 		
-		<div class="list-elements">
-			<router-link :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`" class="list-element" v-for="(event, index) in events" :key="index">
-				<div class="image-container">
-					<div class="image" :style="'background-image:url(' + getFullImageRoute(event) + ')'"></div>
-					<div class="color-seperator"></div>
+		<div class="initial-loading-message" v-if="mounting">
+			<div class="dummy-elements list-elements">
+				<div class="dummy-element list-element" v-for="(item, index) in 10" :key="index">
+					<div class="dummy-image"></div>
+					<div class="dummy-information">
+						<div class="dummy-title"></div>
+						<div class="dummy-description"></div>
+						<div class="dummy-additional"></div>
+					</div>
 				</div>
-				<div class="element-info">
-					<h4 class="event-date">{{event.formattedDate}}</h4>
-					<h3 class="event-name">{{event.name}}</h3>
-					<p class="event-location">{{event.location.name}}, {{event.location.address.city}}, {{event.location.address.country}}</p>
-					<p class="event-bands">
-						<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
-					</p>
-				</div>
-			</router-link>
+			</div>
+			<md-spinner md-indeterminate></md-spinner>
 		</div>
+		<div class="list-body" v-if="!mounting">
+			<div v-if="previousLoadable || loadingPrevious" class="load-more load-less">
+				<md-button  v-if="!loadingPrevious" v-on:click="getPreviousEvents">Show previous</md-button>
+				<md-spinner v-else md-indeterminate></md-spinner>
+			</div>
+			
+			<div class="list-elements">
+				<router-link v-for="(event, index) in events" :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`" class="list-element" :key="index">
+					<div class="image-container">
+						<div class="image" :style="'background-image:url(' + getFullImageRoute(event) + ')'"></div>
+						<div class="color-seperator"></div>
+					</div>
+					<div class="element-info">
+						<h4 class="event-date">{{event.formattedDate}}</h4>
+						<h3 class="event-name">{{event.name}}</h3>
+						<p class="event-location">{{event.location.name}}, {{event.location.address.city}}, {{event.location.address.country}}</p>
+						<p class="event-bands">
+							<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
+						</p>
+					</div>
+				</router-link>
+			</div>
 
-		<div class="load-more">
-			<p>Showing {{events.length}} of {{totalItemsCount}} available events</p>
-			<div v-if="events.length < totalItemsCount">
-				<md-button v-on:click="getNextEvents">Show more</md-button>
-				<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
+			<div class="load-more">
+				<p>Showing {{events.length}} of {{totalItemsCount}} available events</p>
+				<div v-if="events.length < totalItemsCount && !loadingNext">
+					<md-button v-on:click="getNextEvents">Show more</md-button>
+					<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
+				</div>				
+				<md-spinner v-if="loadingNext" md-indeterminate></md-spinner>
 			</div>
 		</div>
 
@@ -188,19 +204,18 @@ export default {
 				lastDate: '',
 				genre: undefined
 			},
-			filterByCity: false,
 			currentPage: Number,
 			availablePages: 1,
 			itemsPerPage: '20',
-			displayEvent: {},
-			resetForm: false,
-			loading: false
+			loadingNext: false,
+			loadingPrevious: false,
+			mounting: false
 		}
 	},
 	methods: {
 		async getEventsPage(page) {
 			let response = {};
-			this.loading = true;
+			// this.loading = true;
 
 			const query = this.$route.query;
 			let requestRoute = 
@@ -215,12 +230,11 @@ export default {
 				+ (query.firstDate ?('&startDate=' + query.firstDate) :'')
 				+ (query.lastDate ?('&endDate=' + query.lastDate) :'')
 				+ '&includeFestivals=true';
-			console.log(requestRoute);
+
 			try {
 				response = await this.$http.get(requestRoute);
 			}
 			catch(err) {
-				this.loading = false;
 				return [];
 			}
 			let newEvents = [];
@@ -235,7 +249,7 @@ export default {
 				event.formattedDate = moment(event.date).format('LL');
 			}
 
-			this.loading = false;
+			// this.loading = false;
 			//Fade filters out on mobile
 			// document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
 			// document.getElementsByClassName('filters')[0].classList.remove('show-filters');
@@ -244,6 +258,7 @@ export default {
 		},
 		async getNextEvents() {
 			this.currentPage++;
+			this.loadingNext = true;
 
 			this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
 			
@@ -252,8 +267,11 @@ export default {
 				
 			let nextEvents = await this.getEventsPage(this.currentPage);
 			this.events = this.events.concat(nextEvents);
+			this.loadingNext = false;
 		},
 		async getPreviousEvents() {
+			this.loadingPrevious = true;
+
 			this.previousPageLoadedTo--;
 			if(this.previousPageLoadedTo == 1)
 				this.previousLoadable = false;
@@ -261,11 +279,15 @@ export default {
 			let previousEvents = await this.getEventsPage(this.previousPageLoadedTo);
 
 			this.events = previousEvents.concat(this.events);				
+			
+			this.loadingPrevious = false;
 		},
 		async applyNewFilters() {
-			this.currentPage = 1;
-			this.previousLoadable = false;
-			this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
+			if(!this.mounting) {
+				this.currentPage = 1;
+				this.previousLoadable = false;
+				this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
+			}
 			this.events = await this.getEventsPage(this.currentPage);
 		},
 		getFullImageRoute(event) {
@@ -275,11 +297,11 @@ export default {
 			window.scrollTo({top: 0, behavior: 'smooth'});
 		},
 		async onSelectCity(selectedCity) {
-			this.$router.replace({query: {...this.$route.query, city: selectedCity}});
+			this.$router.replace({query: {...this.$route.query, city: selectedCity.label}});
 			await this.applyNewFilters();
 		},
 		async onSelectGenre(selectedGenre) {
-			this.$router.replace({query: {...this.$route.query, genre: selectedGenre}});
+			this.$router.replace({query: {...this.$route.query, genre: selectedGenre.label}});
 			await this.applyNewFilters();
 		},
 		async onSelectStartingLetter(selectedLetter) {
@@ -299,18 +321,26 @@ export default {
 		}
 	},
 	async mounted() {
-		this.currentPage = this.$route.query.page || 1;
-		this.events = await this.getEventsPage(this.currentPage);
-		if(this.currentPage != 1) {			
-			this.previousLoadable = true; 
-			this.previousPageLoadedTo = this.currentPage;
-		}
+		this.mounting = true;
+
+		const pageFromRoute = this.$route.query.page || 1;
+		
 		
 		//Check if you're currently on the archive page or not and change the backend-endpoint for the request accordingly. 
 		let endpoint = this.archive ?'archived-events' :'events';
 		this.$http.get(backendUrl + '/api/' + endpoint + '/filters?includeFestivals=true')
-			.then(response => { 
+			.then(response => { 				
 				this.filterCriteria = response.body.data;
+				let newGenres = this.filterCriteria.genres.map(genre => {
+					return {label: genre};
+				});
+				this.filterCriteria.genres = newGenres;
+
+				let newCities = this.filterCriteria.cities.map(city => {
+					return {label: city};
+				});
+				this.filterCriteria.cities = newCities;
+				console.log(this.filterCriteria);
 			})
 			.catch(err => console.log(err));
 
@@ -322,9 +352,17 @@ export default {
 		if(query.lastDate)
 			this.appliedFilters.lastDate = query.lastDate;
 		if(query.genre)
-			this.appliedFilters.genre = query.genre;
+			this.appliedFilters.genre = {label: query.genre};
 		if(query.city)
-			this.appliedFilters.city = query.city;
+			this.appliedFilters.city = {label: query.city};
+
+		this.currentPage = pageFromRoute;
+		this.events = await this.getEventsPage(this.currentPage);
+		if(this.currentPage != 1) {			
+			this.previousLoadable = true; 
+			this.previousPageLoadedTo = this.currentPage;
+		}
+		this.mounting = false;
 	},
 }
 </script>
