@@ -19,7 +19,9 @@
 				<h3>Filter by: </h3>
 				<div class="starting-letter-filter">
 					<h4>Starting letter</h4>
+					<div class="starting-letter-filter-dummy dummy-element" v-if="mounting"></div>
 					<starting-letter-filter 
+						v-else
 						:available-letters="filterCriteria.startWith"
 						v-on:letter-selected="(letter) => onSelectStartingLetter(letter)">
 					</starting-letter-filter>
@@ -28,7 +30,9 @@
 				<div class="additional-filters">
 					<div class="genre-filter">
 						<h4>Genre</h4>
+						<div class="filter-dummy dummy-element" v-if="mounting"></div>
 						<search-select
+						 		v-else
 								v-on:change="(selectedGenre) => onSelectGenre(selectedGenre)"
 								:options="filterCriteria.genres"
 								v-model="appliedFilters.genre"
@@ -40,7 +44,8 @@
 					<div class="date-filter">
 						<h4>Date</h4>
 						<div class="datepickers">
-							<div class="datepicker-trigger first-date">
+							<div class="filter-dummy dummy-element first-date"  v-if="mounting"></div>
+							<div class="datepicker-trigger first-date" v-else>
 								<span v-if="appliedFilters.firstDate != ''" v-on:click="onFirstDateSelected('')">
 									<md-icon class="clear-selection">close</md-icon>
 								</span>
@@ -60,7 +65,8 @@
 									@date-one-selected="(val) =>  onFirstDateSelected(val)"
 								/>
 							</div>
-							<div class="datepicker-trigger last-date">
+							<div class="filter-dummy dummy-element last-date" v-if="mounting"></div>
+							<div class="datepicker-trigger last-date" v-else>
 								<label class="input-label" for="last-date-trigger">To</label>
 								<input id="last-date-trigger" placeholder="last date" type="text" v-model="appliedFilters.lastDate">
 								<span v-if="appliedFilters.lastDate != ''" v-on:click="onLastDateSelected('')">
@@ -85,7 +91,9 @@
 
 					<div class="city-filter">
 						<h4>City</h4>
+						<div class="filter-dummy dummy-element" v-if="mounting"></div>
 						<search-select 
+								v-else
 								v-on:change="(selectedCity) => onSelectCity(selectedCity)"
 								:options="filterCriteria.cities"
 								v-model="appliedFilters.city"
@@ -94,18 +102,28 @@
 						</search-select>
 					</div>
 				</div>
-			</div>
 
+				<button class="md-button md-raised mobile-apply-button" v-on:click="closeMobileMenus">Apply</button>
+			</div>
+			
 			<div class="sorting">
 				<h4>Sort by: </h4>
+				<div class="filter-dummy dummy-element" v-if="mounting"></div>
 				<selector
+					v-else
 					v-model="currentSorting"
 					:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
 				</selector>
 			</div>
+
+			<div class="mobile-menu-buttons">
+				<button class="md-button md-raised mobile-filter-button" v-on:click="openMobileFiltersMenu">Filter <md-icon>keyboard_arrow_down</md-icon></button>
+				<button class="md-button md-raised mobile-sorting-button">Sort by <md-icon>keyboard_arrow_down</md-icon></button>
+			</div>
 		</div>
+
 		
-		<div class="initial-loading-message" v-if="mounting">
+		<div class="initial-loading-message" v-if="mounting || completelyReloading">
 			<div class="dummy-elements list-elements">
 				<div class="dummy-element list-element" v-for="(item, index) in 10" :key="index">
 					<div class="dummy-image"></div>
@@ -118,7 +136,7 @@
 			</div>
 			<md-spinner md-indeterminate></md-spinner>
 		</div>
-		<div class="list-body" v-if="!mounting">
+		<div class="list-body" v-if="!mounting && !completelyReloading">
 			<div v-if="previousLoadable || loadingPrevious" class="load-more load-less">
 				<md-button  v-if="!loadingPrevious" v-on:click="getPreviousEvents">Show previous</md-button>
 				<md-spinner v-else md-indeterminate></md-spinner>
@@ -209,6 +227,7 @@ export default {
 			itemsPerPage: '20',
 			loadingNext: false,
 			loadingPrevious: false,
+			completelyReloading: false,
 			mounting: false
 		}
 	},
@@ -283,12 +302,14 @@ export default {
 			this.loadingPrevious = false;
 		},
 		async applyNewFilters() {
+			this.completelyReloading = true;
 			if(!this.mounting) {
 				this.currentPage = 1;
 				this.previousLoadable = false;
 				this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
 			}
 			this.events = await this.getEventsPage(this.currentPage);
+			this.completelyReloading = false;
 		},
 		getFullImageRoute(event) {
 			return backendUrl + '/' + event.image[1];
@@ -318,6 +339,12 @@ export default {
 			this.appliedFilters.lastDate = selectedDate;
 			this.$router.replace({query: {...this.$route.query, lastDate: selectedDate}});
 			await this.applyNewFilters();
+		},
+		openMobileFiltersMenu() {
+			document.getElementsByClassName('filters')[0].classList.add('opened');
+		},
+		closeMobileMenus() {
+			document.getElementsByClassName('filters')[0].classList.remove('opened');
 		}
 	},
 	async mounted() {
