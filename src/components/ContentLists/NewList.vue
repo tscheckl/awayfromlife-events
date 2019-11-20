@@ -103,7 +103,7 @@
 					</div>
 				</div>
 
-				<button class="md-button md-raised mobile-apply-button" v-on:click="closeMobileMenus">Apply</button>
+				<button class="md-button md-raised mobile-apply-button" v-on:click="applyMobileFilters">Apply</button>
 			</div>
 			
 			<div class="sorting">
@@ -228,7 +228,8 @@ export default {
 			loadingNext: false,
 			loadingPrevious: false,
 			completelyReloading: false,
-			mounting: false
+			mounting: false,
+			isMobile: false
 		}
 	},
 	methods: {
@@ -319,32 +320,37 @@ export default {
 		},
 		async onSelectCity(selectedCity) {
 			this.$router.replace({query: {...this.$route.query, city: selectedCity.label}});
-			await this.applyNewFilters();
+			if(!this.isMobile)
+				await this.applyNewFilters();
 		},
 		async onSelectGenre(selectedGenre) {
 			this.$router.replace({query: {...this.$route.query, genre: selectedGenre.label}});
-			await this.applyNewFilters();
+			if(!this.isMobile)
+				await this.applyNewFilters();
 		},
 		async onSelectStartingLetter(selectedLetter) {
 			this.$router.replace({query: {...this.$route.query, startWith: selectedLetter}});
-			await this.applyNewFilters();
+			if(!this.isMobile)
+				await this.applyNewFilters();
 		},
 		async onFirstDateSelected(selectedDate) {
-			console.log('fisch');
 			this.appliedFilters.firstDate = selectedDate;
 			this.$router.replace({query: {...this.$route.query, firstDate: selectedDate}});
-			await this.applyNewFilters();
+			if(!this.isMobile)
+				await this.applyNewFilters();
 		},
 		async onLastDateSelected(selectedDate) {
 			this.appliedFilters.lastDate = selectedDate;
 			this.$router.replace({query: {...this.$route.query, lastDate: selectedDate}});
-			await this.applyNewFilters();
+			if(!this.isMobile)
+				await this.applyNewFilters();
 		},
 		openMobileFiltersMenu() {
 			document.getElementsByClassName('filters')[0].classList.add('opened');
 		},
-		closeMobileMenus() {
+		async applyMobileFilters() {
 			document.getElementsByClassName('filters')[0].classList.remove('opened');
+			await this.applyNewFilters();
 		}
 	},
 	async mounted() {
@@ -389,6 +395,11 @@ export default {
 			this.previousLoadable = true; 
 			this.previousPageLoadedTo = this.currentPage;
 		}
+
+		console.log(window.innerWidth);
+		if(window.innerWidth <= 768)
+			this.isMobile = true;
+
 		this.mounting = false;
 	},
 }
