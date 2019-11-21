@@ -19,7 +19,7 @@
 				<h3>Filter by: </h3>
 				<div class="starting-letter-filter">
 					<h4>Starting letter</h4>
-					<div class="starting-letter-filter-dummy dummy-element" v-if="mounting"></div>
+					<loading-skeleton-element v-if="mounting" width="800px" height="25px"></loading-skeleton-element>
 					<starting-letter-filter 
 						v-else
 						:available-letters="filterCriteria.startWith"
@@ -30,7 +30,7 @@
 				<div class="additional-filters">
 					<div class="genre-filter">
 						<h4>Genre</h4>
-						<div class="filter-dummy dummy-element" v-if="mounting"></div>
+						<loading-skeleton-element v-if="mounting" width="160px" height="30px"></loading-skeleton-element>
 						<search-select
 						 		v-else
 								v-on:change="(selectedGenre) => onSelectGenre(selectedGenre)"
@@ -44,7 +44,7 @@
 					<div class="date-filter">
 						<h4>Date</h4>
 						<div class="datepickers">
-							<div class="filter-dummy dummy-element first-date"  v-if="mounting"></div>
+							<loading-skeleton-element v-if="mounting" class="first-date" width="160px" height="30px"></loading-skeleton-element>
 							<div class="datepicker-trigger first-date" v-else>
 								<span v-if="appliedFilters.firstDate != ''" v-on:click="onFirstDateSelected('')">
 									<md-icon class="clear-selection">close</md-icon>
@@ -65,7 +65,7 @@
 									@date-one-selected="(val) =>  onFirstDateSelected(val)"
 								/>
 							</div>
-							<div class="filter-dummy dummy-element last-date" v-if="mounting"></div>
+							<loading-skeleton-element v-if="mounting" class="last-date" width="160px" height="30px"></loading-skeleton-element>
 							<div class="datepicker-trigger last-date" v-else>
 								<label class="input-label" for="last-date-trigger">To</label>
 								<input id="last-date-trigger" placeholder="last date" type="text" v-model="appliedFilters.lastDate">
@@ -91,6 +91,7 @@
 
 					<div class="city-filter">
 						<h4>City</h4>
+						<loading-skeleton-element v-if="mounting" width="160px" height="30px"></loading-skeleton-element>
 						<div class="filter-dummy dummy-element" v-if="mounting"></div>
 						<search-select 
 								v-else
@@ -125,14 +126,14 @@
 		
 		<div class="initial-loading-message" v-if="mounting || completelyReloading">
 			<div class="dummy-elements list-elements">
-				<div class="dummy-element list-element" v-for="(item, index) in 10" :key="index">
-					<div class="dummy-image"></div>
-					<div class="dummy-information">
-						<div class="dummy-title"></div>
-						<div class="dummy-description"></div>
-						<div class="dummy-additional"></div>
-					</div>
-				</div>
+				<loading-skeleton-element  v-for="(item, index) in 10" :key="index" class="dummy-element list-element" height="120px">
+					<loading-skeleton-element class="dummy-image" height="100%" width="140px"></loading-skeleton-element>
+					<loading-skeleton-element class="dummy-information">
+						<loading-skeleton-element class="dummy-title" width="60%" height="25px"></loading-skeleton-element>
+						<loading-skeleton-element class="dummy-description" height="15px"></loading-skeleton-element>
+						<loading-skeleton-element class="dummy-additional" height="15px"></loading-skeleton-element>
+					</loading-skeleton-element>
+				</loading-skeleton-element>
 			</div>
 			<md-spinner md-indeterminate></md-spinner>
 		</div>
@@ -184,13 +185,15 @@ import moment from 'moment';
 import StartingLetterFilter from './StartingLetterFilter';
 import SearchSelect from '@/components/Utilities/SearchSelect';
 import Selector from '@/components/Utilities/Selector';
+import LoadingSkeletonElement from '@/components/Utilities/LoadingSkeletonElement';
 
 export default {
 	name: 'new-list',
 	components: {
 		StartingLetterFilter,
 		SearchSelect,
-		Selector
+		Selector,
+		LoadingSkeletonElement
 	},
 	data() {
 		return {

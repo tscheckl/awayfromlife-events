@@ -38,14 +38,7 @@
 		&:first-of-type {	
 			margin-right: 20px;
 		}
-	}
-
-	.dummy-element {
-		border-radius: 3px;
-		animation: fade 1.5s infinite;
-		background-color: #333;
-		opacity: 0.7;
-	}
+	}	
 	
 	.list-header {
 		color: $primaryLighten5;
@@ -109,9 +102,7 @@
 			}
 		}		
 
-		.filter-dummy {
-			width: 160px;
-			height: 30px;
+		.loading-skeleton-element {
 			margin-right: 20px;
 		}
 
@@ -132,10 +123,8 @@
 					margin-bottom: 15px;
 				}
 
-				.starting-letter-filter-dummy {
-					width: 800px;
+				.loading-skeleton-element {
 					max-width: 100%;
-					height: 25px;	
 				}
 
 				#starting_letter_filter {
@@ -340,19 +329,11 @@
 					flex: 1;
 					padding: 20px;
 					animation: fade 1.5s infinite;
+					background-color: transparent;
+
 					.dummy-title, .dummy-description, .dummy-additional {
 						background-color: $primaryLighten1;
-						border-radius: 3px;
 						margin-bottom: 15px;
-					}
-					.dummy-title {
-						height: 25px;
-						width: 60%;
-					}
-	
-					.dummy-description, .dummy-additional {
-						height: 15px;
-						width: 100%;
 					}
 				}				
 			}
@@ -367,15 +348,12 @@
 	}
 
 	.list-elements {
-		// display: flex;
-		// flex-wrap: wrap;
 		position: relative;
 		width: 100%;
 		clear: both;
-		// justify-content: space-around;
 
 		.list-element {
-			width: 45%;
+			width: 45% !important;
 			float: left;
 			// width: 500px;
 			margin: 20px 2.5%;
@@ -532,20 +510,6 @@
 			font-weight: 600;
 			font-size: 14px;
 		}
-	}
-}
-
-@keyframes fade {
-	0% {
-		opacity: .4;
-	}
-	
-	50% {
-		opacity: .8;
-	}
-	
-	100% {
-	  	opacity: .4;
 	}
 }
 
@@ -729,7 +693,7 @@
 
 		.list-elements {
 			.list-element {
-				width: 100%;
+				width: 100% !important;
 				margin: 10px 0;
 
 				&:first-of-type {
