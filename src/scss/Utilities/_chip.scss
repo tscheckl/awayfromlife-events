@@ -1,0 +1,31 @@
+#chip {
+	position: relative;
+	display: inline-block;
+	padding: 5px 10px;
+	margin: 0 5px;
+	margin-bottom: 20px;
+	border: 2px solid #232323;
+	color: #232323;
+	border-radius: 2px;
+	transform: skew(-10deg);
+	white-space: nowrap;
+
+	div {
+		font-size: 14px;
+		font-weight: 300;
+		transform: skew(10deg);
+
+		.md-icon {
+			width: 14px;
+			height: 14px;
+			min-width: 0;
+			min-height: 0;
+			margin-top: -2px;
+			font-size: 20px;
+		}
+
+		.bold {
+			font-weight: 600;
+		}
+	}
+}
