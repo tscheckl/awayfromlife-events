@@ -552,22 +552,81 @@
 				}
 			}	
 
-			.mobile-menu-buttons {
-				width: 100%;
-				display: flex;
-				justify-content: space-between;
-				margin-bottom: 30px;
-				.mobile-sorting-button, .mobile-filter-button {
-					display: block;
-					width: 45%;
-					background-color: #232323;
-					color: $primaryLighten5;
-
-					.md-icon {
-						color: $accentAccent2;
+			.mobile-list-header {
+				.mobile-menu-buttons {
+					width: 100%;
+					display: flex;
+					justify-content: space-between;
+					margin-bottom: 30px;
+					.mobile-sorting-button, .mobile-filter-button {
+						display: block;
+						width: 45%;
+						background-color: #232323;
+						color: $primaryLighten5;
+	
+						.md-icon {
+							color: $accentAccent2;
+						}
+					}			
+					
+					.mobile-sorting-button {
+						margin: 6px 8px;
+						border-radius: 2px;
+						box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+	
+						#selector-input {
+							background-color: transparent !important;
+							box-shadow: none;
+							width: 100%;
+							height: 100%;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							margin: 0;
+							padding: 0 16px;
+							
+							span {
+								font-family: Montserrat;
+								font-weight: 500;
+								font-size: 14px;
+								text-transform: uppercase;
+								color: $primaryLighten5;
+								margin-top: 3px;
+							}
+	
+							.md-icon {
+								margin: 0;
+								margin-top: 5px;
+								margin-left: 5px;
+								position: relative;
+							}
+						}
+	
+						.options {
+							width: 100% !important;
+							min-width: 0;
+							margin-top: 35px;
+							margin-bottom: 0;
+	
+							li {
+								color: #232323;							
+							}
+							.active {
+								background-color: $accentAccent2;
+								color: $primaryLighten5;
+							}
+						}
 					}
-				}				
+				}
+
+				.applied-filter-chips {
+					display: flex;
+					overflow: auto;
+					
+				}
 			}
+
+			
 
 			.opened {				
 				visibility: visible !important;

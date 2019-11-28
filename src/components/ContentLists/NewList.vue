@@ -23,7 +23,7 @@
 					<starting-letter-filter 
 						v-else
 						:available-letters="filterCriteria.startWith"
-						v-on:letter-selected="(letter) => onSelectStartingLetter(letter)">
+						v-on:letter-selected="(letter) => appliedFilters.startWith = letter">
 					</starting-letter-filter>
 				</div>
 
@@ -33,7 +33,6 @@
 						<loading-skeleton-element v-if="mounting" width="160px" height="30px"></loading-skeleton-element>
 						<search-select
 						 		v-else
-								v-on:change="(selectedGenre) => onSelectGenre(selectedGenre)"
 								:options="filterCriteria.genres"
 								v-model="appliedFilters.genre"
 								placeholder="Select Genre">
@@ -46,7 +45,7 @@
 						<div class="datepickers">
 							<loading-skeleton-element v-if="mounting" class="first-date" width="160px" height="30px"></loading-skeleton-element>
 							<div class="datepicker-trigger first-date" v-else>
-								<span v-if="appliedFilters.firstDate != ''" v-on:click="onFirstDateSelected('')">
+								<span v-if="appliedFilters.firstDate != ''" v-on:click="appliedFilters.firstDate = undefined">
 									<md-icon class="clear-selection">close</md-icon>
 								</span>
 								<label class="input-label" for="first-date-trigger">From</label>
@@ -61,15 +60,15 @@
 										: filterCriteria.lastDate" 
 									:mode="'single'"
 									:showActionButtons="false"
-									:date-one="appliedFilters.firstDate"
-									@date-one-selected="(val) =>  onFirstDateSelected(val)"
+									:date-one="appliedFilters.firstDate"									
+									@date-one-selected="(val) => appliedFilters.firstDate = val"
 								/>
 							</div>
 							<loading-skeleton-element v-if="mounting" class="last-date" width="160px" height="30px"></loading-skeleton-element>
 							<div class="datepicker-trigger last-date" v-else>
 								<label class="input-label" for="last-date-trigger">To</label>
 								<input id="last-date-trigger" placeholder="last date" type="text" v-model="appliedFilters.lastDate">
-								<span v-if="appliedFilters.lastDate != ''" v-on:click="onLastDateSelected('')">
+								<span v-if="appliedFilters.lastDate != ''" v-on:click="appliedFilters.lastDate = undefined">
 									<md-icon class="clear-selection">close</md-icon>
 								</span>
 								<md-icon>date_range</md-icon>
@@ -83,7 +82,7 @@
 									:mode="'single'"
 									:showActionButtons="false"
 									:date-one="appliedFilters.lastDate"
-									@date-one-selected="(val) =>  onLastDateSelected(val)"
+									@date-one-selected="(val) =>  appliedFilters.lastDate = val"
 								/>
 							</div>
 						</div>
@@ -95,7 +94,6 @@
 						<div class="filter-dummy dummy-element" v-if="mounting"></div>
 						<search-select 
 								v-else
-								v-on:change="(selectedCity) => onSelectCity(selectedCity)"
 								:options="filterCriteria.cities"
 								v-model="appliedFilters.city"
 								placeholder="Select City">
@@ -117,9 +115,24 @@
 				</selector>
 			</div>
 
-			<div class="mobile-menu-buttons">
-				<button class="md-button md-raised mobile-filter-button" v-on:click="openMobileFiltersMenu">Filter <md-icon>keyboard_arrow_down</md-icon></button>
-				<button class="md-button md-raised mobile-sorting-button">Sort by <md-icon>keyboard_arrow_down</md-icon></button>
+			<div class="mobile-list-header">
+				<div class="mobile-menu-buttons">
+					<button class="md-button md-raised mobile-filter-button" v-on:click="openMobileFiltersMenu">Filter <md-icon>keyboard_arrow_down</md-icon></button>
+					<selector
+						class="mobile-sorting-button"
+						fixedLabel
+						selectLabel="Sort by"
+						v-model="currentSorting"
+						:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
+					</selector>
+				</div>
+
+				<div class="applied-filter-chips">
+					<chip v-for="(appliedFilter, key) in actuallyAppliedFilters" :key="key" v-on:remove="clearFilter(key)">
+						{{prettierFilterLabel(key).key}}:
+						<span class="bold">{{prettierFilterLabel(key).value}}</span>
+					</chip>
+				</div>
 			</div>
 		</div>
 
@@ -186,6 +199,7 @@ import StartingLetterFilter from './StartingLetterFilter';
 import SearchSelect from '@/components/Utilities/SearchSelect';
 import Selector from '@/components/Utilities/Selector';
 import LoadingSkeletonElement from '@/components/Utilities/LoadingSkeletonElement';
+import Chip from '@/components/Utilities/Chip';
 
 export default {
 	name: 'new-list',
@@ -193,7 +207,8 @@ export default {
 		StartingLetterFilter,
 		SearchSelect,
 		Selector,
-		LoadingSkeletonElement
+		LoadingSkeletonElement,
+		Chip
 	},
 	data() {
 		return {
@@ -221,8 +236,8 @@ export default {
 				startWith: undefined,
 				city: undefined,
 				country: undefined,
-				firstDate: '',
-				lastDate: '',
+				firstDate: undefined,
+				lastDate: undefined,
 				genre: undefined
 			},
 			currentPage: Number,
@@ -235,23 +250,40 @@ export default {
 			isMobile: false
 		}
 	},
+	computed: {
+		actuallyAppliedFilters() {
+			let actuallyAppliedFilters = {};
+			for(let key in this.appliedFilters) {
+				if(this.appliedFilters[key])
+					actuallyAppliedFilters[key] = this.appliedFilters[key];
+			}
+			return actuallyAppliedFilters;
+		}
+	},
+	watch: {
+		appliedFilters: {
+			handler: function() {
+				this.buildUrl();
+			},
+			deep: true
+		}
+	},
 	methods: {
 		async getEventsPage(page) {
 			let response = {};
-			// this.loading = true;
 
-			const query = this.$route.query;
+			const appliedFilters = this.appliedFilters;
 			let requestRoute = 
 				backendUrl + '/api/events/page'
 				+ '?page=' + page
 				+ '&perPage=50'
 				+ '&sortBy=' + this.currentlySorted
 				+ '&order=1'
-				+ (query.startWith ? '&startWith=' + encodeURIComponent(query.startWith) : '')
-				+ (query.genre ?('&genre=' + query.genre) :'')
-				+ (query.city ?('&city=' + query.city) :'')
-				+ (query.firstDate ?('&startDate=' + query.firstDate) :'')
-				+ (query.lastDate ?('&endDate=' + query.lastDate) :'')
+				+ (appliedFilters.startWith ? '&startWith=' + encodeURIComponent(appliedFilters.startWith) : '')
+				+ (appliedFilters.genre ?('&genre=' + appliedFilters.genre) :'')
+				+ (appliedFilters.city ?('&city=' + appliedFilters.city) :'')
+				+ (appliedFilters.firstDate ?('&startDate=' + appliedFilters.firstDate) :'')
+				+ (appliedFilters.lastDate ?('&endDate=' + appliedFilters.lastDate) :'')
 				+ '&includeFestivals=true';
 
 			try {
@@ -321,40 +353,63 @@ export default {
 		scrollToTop() {
 			window.scrollTo({top: 0, behavior: 'smooth'});
 		},
-		async onSelectCity(selectedCity) {
-			this.$router.replace({query: {...this.$route.query, city: selectedCity.label}});
-			if(!this.isMobile)
-				await this.applyNewFilters();
-		},
-		async onSelectGenre(selectedGenre) {
-			this.$router.replace({query: {...this.$route.query, genre: selectedGenre.label}});
-			if(!this.isMobile)
-				await this.applyNewFilters();
-		},
-		async onSelectStartingLetter(selectedLetter) {
-			this.$router.replace({query: {...this.$route.query, startWith: selectedLetter}});
-			if(!this.isMobile)
-				await this.applyNewFilters();
-		},
-		async onFirstDateSelected(selectedDate) {
-			this.appliedFilters.firstDate = selectedDate;
-			this.$router.replace({query: {...this.$route.query, firstDate: selectedDate}});
-			if(!this.isMobile)
-				await this.applyNewFilters();
-		},
-		async onLastDateSelected(selectedDate) {
-			this.appliedFilters.lastDate = selectedDate;
-			this.$router.replace({query: {...this.$route.query, lastDate: selectedDate}});
-			if(!this.isMobile)
-				await this.applyNewFilters();
-		},
 		openMobileFiltersMenu() {
 			document.getElementsByClassName('filters')[0].classList.add('opened');
 		},
 		async applyMobileFilters() {
 			document.getElementsByClassName('filters')[0].classList.remove('opened');
 			await this.applyNewFilters();
-		}
+		},
+		prettierFilterLabel(key) {
+			let prettierKey = key;
+			switch(key) {
+				case 'startWith':
+					prettierKey = 'starting letter';
+					break;
+				case 'firstDate':
+					prettierKey = 'first date';
+					break;
+				case 'lastDate': 
+					prettierKey = 'last date';
+			}
+
+			let prettierValue = this.actuallyAppliedFilters[key];
+			if(this.actuallyAppliedFilters[key].label)
+				prettierValue = this.actuallyAppliedFilters[key].label;
+
+			return {
+				key: prettierKey,
+				value: prettierValue
+			};
+		},
+		async clearFilter(key) {
+			this.appliedFilters[key] = undefined;
+			
+			
+			await this.applyNewFilters();
+		},
+		async buildUrl() {
+			let query = {};
+
+			if(this.currentPage)
+				query.page = this.currentPage;
+			if(this.appliedFilters.startWith)
+				query.startWith = this.appliedFilters.startWith;
+			if(this.appliedFilters.genre)
+				query.genre = this.appliedFilters.genre
+			if(this.appliedFilters.firstDate)
+				query.firstDate = this.appliedFilters.firstDate
+			if(this.appliedFilters.lastDate)
+				query.lastDate = this.appliedFilters.lastDate
+			if(this.appliedFilters.city)
+				query.city = this.appliedFilters.city
+
+			if(query != this.$route.query)
+				this.$router.push({query: query});
+
+			if(!this.isMobile)
+				await this.applyNewFilters();
+		},
 	},
 	async mounted() {
 		this.mounting = true;
@@ -398,8 +453,7 @@ export default {
 			this.previousLoadable = true; 
 			this.previousPageLoadedTo = this.currentPage;
 		}
-
-		console.log(window.innerWidth);
+		
 		if(window.innerWidth <= 768)
 			this.isMobile = true;
 

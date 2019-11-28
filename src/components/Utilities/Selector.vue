@@ -1,8 +1,8 @@
 <template>
 	<div id="selector">
-		<label v-if="selectLabel" for="selector-input">{{selectLabel}}</label>
+		<label v-if="selectLabel && !fixedLabel" for="selector-input">{{selectLabel}}</label>
 		<div id="selector-input" v-on:click="showList = !showList">
-			<span>{{currentlySelected[label] ?currentlySelected[label] :currentlySelected }}</span>
+			<span>{{placeholderString}}</span>
 			<md-icon>keyboard_arrow_down</md-icon>
 		</div>
 
@@ -27,8 +27,13 @@ export default {
 			default: false
 		},
 		selectLabel: {
-			type: String
+			type: String,
+			default: ''
 		},
+		fixedLabel: {
+			type: Boolean,
+			default: false
+		}
 	},
 	watch: {
 		options() {
@@ -36,6 +41,14 @@ export default {
 		},
 		value() {
 			this.updateSelection();
+		}
+	},
+	computed: {
+		placeholderString() {
+			if(this.fixedLabel)
+				return this.selectLabel;
+			
+			return this.currentlySelected[this.label] ?this.currentlySelected[this.label] :this.currentlySelected;
 		}
 	},
 	data() {
