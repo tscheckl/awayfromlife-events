@@ -110,7 +110,7 @@
 				<div class="filter-dummy dummy-element" v-if="mounting"></div>
 				<selector
 					v-else
-					v-model="currentSorting"
+					v-model="currentlySortedPretty"
 					:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
 				</selector>
 			</div>
@@ -122,7 +122,7 @@
 						class="mobile-sorting-button"
 						fixedLabel
 						selectLabel="Sort by"
-						v-model="currentSorting"
+						v-model="currentlySortedPretty"
 						:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
 					</selector>
 				</div>
@@ -217,13 +217,9 @@ export default {
 			totalItemsCount: 0,
 			previousLoadable: false,
 			previousPageLoadedTo: 0,
-			sortingAsc: {
-				date: false,
-				name: false,
-				location: false
-			},
-			currentSorting: 'Date ascending',
+			currentlySortedPretty: 'Date ascending',
 			currentlySorted: 'date',
+			sortingDirection: 1,
 			filterCriteria: {
 				startWith: [],
 				cities: undefined,
@@ -266,6 +262,39 @@ export default {
 				this.buildUrl();
 			},
 			deep: true
+		},
+		currentlySortedPretty() {
+			// 'Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending'
+			if(this.currentlySortedPretty == 'Date ascending') {
+				this.currentlySorted = 'date';
+				this.sortingDirection = 1;
+				this.buildUrl();
+				return;
+			}
+			if(this.currentlySortedPretty == 'Date descending') {
+				this.currentlySorted = 'date';
+				this.sortingDirection = -1;
+				this.buildUrl();
+				return;
+			}
+			if(this.currentlySortedPretty == 'Latest') {
+				this.currentlySorted = 'lastModified';
+				this.sortingDirection = -1;
+				this.buildUrl();
+				return;
+			}
+			if(this.currentlySortedPretty == 'Name ascending') {
+				this.currentlySorted = 'name';
+				this.sortingDirection = 1;
+				this.buildUrl();
+				return;
+			}
+			if(this.currentlySortedPretty == 'Name descending') {
+				this.currentlySorted = 'name';
+				this.sortingDirection = -1;
+				this.buildUrl();
+				return;
+			}
 		}
 	},
 	methods: {
@@ -278,7 +307,7 @@ export default {
 				+ '?page=' + page
 				+ '&perPage=50'
 				+ '&sortBy=' + this.currentlySorted
-				+ '&order=1'
+				+ '&order=' + this.sortingDirection
 				+ (appliedFilters.startWith ? '&startWith=' + encodeURIComponent(appliedFilters.startWith) : '')
 				+ (appliedFilters.genre ?('&genre=' + appliedFilters.genre) :'')
 				+ (appliedFilters.city ?('&city=' + appliedFilters.city) :'')
@@ -403,6 +432,10 @@ export default {
 				query.lastDate = this.appliedFilters.lastDate
 			if(this.appliedFilters.city)
 				query.city = this.appliedFilters.city
+			if(!(this.currentlySorted == 'date' && this.sortingDirection == 1)) {
+				query.sortBy = this.currentlySorted;
+				query.sortingDirection = this.sortingDirection;
+			}
 
 			if(query != this.$route.query)
 				this.$router.push({query: query});
@@ -410,6 +443,25 @@ export default {
 			if(!this.isMobile)
 				await this.applyNewFilters();
 		},
+		mapQuerySortingToPrettyString() {
+			if(this.currentlySorted == 'latest') {
+				this.currentlySortedPretty = 'Latest';
+				return;
+			}
+			
+			let prettyString = '';
+			if(this.currentlySorted == 'date')
+				prettyString += 'Date ';
+			if(this.currentlySorted == 'name')
+				prettyString += 'Name ';
+
+			if(this.sortingDirection == 1)
+				prettyString += 'ascending';
+			else
+				prettyString += 'descending';
+
+			this.currentlySortedPretty = prettyString;
+		}
 	},
 	async mounted() {
 		this.mounting = true;
@@ -446,6 +498,12 @@ export default {
 			this.appliedFilters.genre = {label: query.genre};
 		if(query.city)
 			this.appliedFilters.city = {label: query.city};
+		if(query.sortBy)
+			this.currentlySorted = query.sortBy;
+		if(query.sortingDirection)
+			this.sortingDirection = query.sortingDirection;
+		
+		this.mapQuerySortingToPrettyString();
 
 		this.currentPage = pageFromRoute;
 		this.events = await this.getEventsPage(this.currentPage);
