@@ -352,6 +352,15 @@
 		width: 100%;
 		clear: both;
 
+		.no-events {
+			margin-top: 150px;
+			h3 {	
+				font-size: 32px;			
+				font-weight: 900;
+				text-align: center;
+			}
+		}
+
 		.list-element {
 			width: 45% !important;
 			float: left;
@@ -480,6 +489,7 @@
 	}
 
 	.load-more {
+		position: relative;
 		margin-top: 30px;
 		text-align: center;
 		clear: both;
@@ -656,6 +666,17 @@
 					line-height: 32px;
 				}
 
+				.close-filters-btn {
+					position: absolute;
+					top: 15px;
+					right: 0;
+					
+					.md-icon {
+						color: #232323;
+						font-size: 40px;
+					}
+				}
+
 				.starting-letter-filter, .additional-filters {
 					// max-height: 0;
 					// margin: 0;
@@ -751,6 +772,10 @@
 		}
 
 		.list-elements {
+			.no-events {
+				margin-top: 20px;
+			}
+
 			.list-element {
 				width: 100% !important;
 				margin: 10px 0;

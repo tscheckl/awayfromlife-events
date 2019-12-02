@@ -16,6 +16,7 @@
 			</router-link>
 
 			<div class="filters">
+				<button v-if="isMobile"  class="md-button close-filters-btn" v-on:click="closeMobileFiltersMenu"><md-icon>close</md-icon></button>
 				<h3>Filter by: </h3>
 				<div class="starting-letter-filter">
 					<h4>Starting letter</h4>
@@ -110,8 +111,9 @@
 				<div class="filter-dummy dummy-element" v-if="mounting"></div>
 				<selector
 					v-else
-					v-model="currentlySortedPretty"
-					:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
+					v-model="currentlySorted"
+					label="pretty"
+					:options="sortingOptions">
 				</selector>
 			</div>
 
@@ -122,12 +124,13 @@
 						class="mobile-sorting-button"
 						fixedLabel
 						selectLabel="Sort by"
-						v-model="currentlySortedPretty"
-						:options="['Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending']">
+						label="pretty"
+						v-model="currentlySorted"
+						:options="sortingOptions">
 					</selector>
 				</div>
 
-				<div class="applied-filter-chips">
+				<div class="applied-filter-chips" v-if="isMobile">
 					<chip v-for="(appliedFilter, key) in actuallyAppliedFilters" :key="key" v-on:remove="clearFilter(key)">
 						{{prettierFilterLabel(key).key}}:
 						<span class="bold">{{prettierFilterLabel(key).value}}</span>
@@ -171,6 +174,11 @@
 						</p>
 					</div>
 				</router-link>
+
+				<div v-if="events.length == 0" class="no-events">
+					<h3>:(</h3>
+					<h3>No events found...</h3>
+				</div>
 			</div>
 
 			<div class="load-more">
@@ -217,9 +225,38 @@ export default {
 			totalItemsCount: 0,
 			previousLoadable: false,
 			previousPageLoadedTo: 0,
-			currentlySortedPretty: 'Date ascending',
-			currentlySorted: 'date',
-			sortingDirection: 1,
+			sortingOptions: [
+				{
+					name: 'date',
+					direction: 1,
+					pretty: 'Date ascending'
+				},
+				{
+					name: 'date',
+					direction: -1,
+					pretty: 'Date descending'
+				},
+				{
+					name: 'lastModified',
+					direction: -1,
+					pretty: 'Latest'
+				},
+				{
+					name: 'name',
+					direction: 1,
+					pretty: 'Name ascending'
+				},
+				{
+					name: 'date',
+					direction: -1,
+					pretty: 'Name descending'
+				}
+			],
+			currentlySorted: {
+				name: 'date',
+				direction: 1,
+				pretty: 'Date ascending'
+			},
 			filterCriteria: {
 				startWith: [],
 				cities: undefined,
@@ -254,6 +291,9 @@ export default {
 					actuallyAppliedFilters[key] = this.appliedFilters[key];
 			}
 			return actuallyAppliedFilters;
+		},
+		prettySortingOptions() {
+			return this.sortingOptions.map(sortingOption => sortingOption.pretty);
 		}
 	},
 	watch: {
@@ -263,39 +303,12 @@ export default {
 			},
 			deep: true
 		},
-		currentlySortedPretty() {
-			// 'Date ascending','Date descending', 'Latest', 'Name ascending', 'Name descending'
-			if(this.currentlySortedPretty == 'Date ascending') {
-				this.currentlySorted = 'date';
-				this.sortingDirection = 1;
+		currentlySorted: {
+			handler: function() {
 				this.buildUrl();
-				return;
-			}
-			if(this.currentlySortedPretty == 'Date descending') {
-				this.currentlySorted = 'date';
-				this.sortingDirection = -1;
-				this.buildUrl();
-				return;
-			}
-			if(this.currentlySortedPretty == 'Latest') {
-				this.currentlySorted = 'lastModified';
-				this.sortingDirection = -1;
-				this.buildUrl();
-				return;
-			}
-			if(this.currentlySortedPretty == 'Name ascending') {
-				this.currentlySorted = 'name';
-				this.sortingDirection = 1;
-				this.buildUrl();
-				return;
-			}
-			if(this.currentlySortedPretty == 'Name descending') {
-				this.currentlySorted = 'name';
-				this.sortingDirection = -1;
-				this.buildUrl();
-				return;
-			}
-		}
+			},
+			deep: true
+		},
 	},
 	methods: {
 		async getEventsPage(page) {
@@ -306,8 +319,8 @@ export default {
 				backendUrl + '/api/events/page'
 				+ '?page=' + page
 				+ '&perPage=50'
-				+ '&sortBy=' + this.currentlySorted
-				+ '&order=' + this.sortingDirection
+				+ '&sortBy=' + this.currentlySorted.name
+				+ '&order=' + this.currentlySorted.direction
 				+ (appliedFilters.startWith ? '&startWith=' + encodeURIComponent(appliedFilters.startWith) : '')
 				+ (appliedFilters.genre ?('&genre=' + appliedFilters.genre) :'')
 				+ (appliedFilters.city ?('&city=' + appliedFilters.city) :'')
@@ -385,8 +398,11 @@ export default {
 		openMobileFiltersMenu() {
 			document.getElementsByClassName('filters')[0].classList.add('opened');
 		},
-		async applyMobileFilters() {
+		closeMobileFiltersMenu() {			
 			document.getElementsByClassName('filters')[0].classList.remove('opened');
+		},
+		async applyMobileFilters() {
+			this.closeMobileFiltersMenu();
 			await this.applyNewFilters();
 		},
 		prettierFilterLabel(key) {
@@ -425,16 +441,16 @@ export default {
 			if(this.appliedFilters.startWith)
 				query.startWith = this.appliedFilters.startWith;
 			if(this.appliedFilters.genre)
-				query.genre = this.appliedFilters.genre
+				query.genre = this.appliedFilters.genre.label
 			if(this.appliedFilters.firstDate)
 				query.firstDate = this.appliedFilters.firstDate
 			if(this.appliedFilters.lastDate)
 				query.lastDate = this.appliedFilters.lastDate
 			if(this.appliedFilters.city)
-				query.city = this.appliedFilters.city
-			if(!(this.currentlySorted == 'date' && this.sortingDirection == 1)) {
-				query.sortBy = this.currentlySorted;
-				query.sortingDirection = this.sortingDirection;
+				query.city = this.appliedFilters.city.label
+			if(!(this.currentlySorted.name == 'date' && this.currentlySorted.direction == 1)) {
+				query.sortBy = this.currentlySorted.name;
+				query.sortingDirection = this.currentlySorted.direction;
 			}
 
 			if(query != this.$route.query)
@@ -443,24 +459,8 @@ export default {
 			if(!this.isMobile)
 				await this.applyNewFilters();
 		},
-		mapQuerySortingToPrettyString() {
-			if(this.currentlySorted == 'latest') {
-				this.currentlySortedPretty = 'Latest';
-				return;
-			}
-			
-			let prettyString = '';
-			if(this.currentlySorted == 'date')
-				prettyString += 'Date ';
-			if(this.currentlySorted == 'name')
-				prettyString += 'Name ';
-
-			if(this.sortingDirection == 1)
-				prettyString += 'ascending';
-			else
-				prettyString += 'descending';
-
-			this.currentlySortedPretty = prettyString;
+		applyQuerySorting(sortBy, direction) {
+			this.currentlySorted = this.sortingOptions.find(sortingOption => sortingOption.name == sortBy && sortingOption.direction == parseInt(direction));
 		}
 	},
 	async mounted() {
@@ -498,12 +498,8 @@ export default {
 			this.appliedFilters.genre = {label: query.genre};
 		if(query.city)
 			this.appliedFilters.city = {label: query.city};
-		if(query.sortBy)
-			this.currentlySorted = query.sortBy;
-		if(query.sortingDirection)
-			this.sortingDirection = query.sortingDirection;
-		
-		this.mapQuerySortingToPrettyString();
+		if(query.sortBy && query.sortingDirection)
+			this.applyQuerySorting(query.sortBy, query.sortingDirection);
 
 		this.currentPage = pageFromRoute;
 		this.events = await this.getEventsPage(this.currentPage);

@@ -88,8 +88,8 @@ export default {
 		},
 		clearValue() {
 			this.filterValue='';
-			this.$emit('input', {label: ''});
-			this.$emit('change', {label: ''});
+			this.$emit('input', undefined);
+			this.$emit('change', undefined);
 		},
 		closeOptions() {
 			this.showOptions = false;
