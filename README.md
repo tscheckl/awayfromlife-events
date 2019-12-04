@@ -1,6 +1,6 @@
-# event-map
+# AWAY FROM LIFE Streets frontend
 
-> Interactive event map for Away From Life
+> This repository contains the entire frontend part for [AWAY FROM LIFE Streets](https://streets.awayfromlife.com)
 
 ## Build Setup
 
