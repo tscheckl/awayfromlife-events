@@ -361,7 +361,7 @@
 			}
 		}
 
-		.list-element {
+		.list-element a, .dummy-list-element {
 			width: 45% !important;
 			float: left;
 			// width: 500px;
@@ -373,16 +373,10 @@
 			color: #232323;
 			background-color: $primaryLighten5;
 			border-radius: 3px;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);	
+		}
 
-			// &:nth-of-type(odd) {
-			// 	margin-left: 0px;
-			// }
-
-			// &:nth-of-type(even) {
-			// 	margin-right: 0px;
-			// }
-			
+		.list-element {
 
 			.image-container {
 				width: 130px;
@@ -391,10 +385,13 @@
 				margin-right: 10px;
 
 				.image {
-					width: 140px;
+					width: 135px;
+					max-width: 135px;
 					height: 100%;
-					background-position: center;
-					background-size: cover;
+					object-position: center;
+					object-fit: cover;
+						// background-position: center;
+						// background-size: cover;
 					position: relative;
 					clip-path: polygon(
 						0 0, /* left top */

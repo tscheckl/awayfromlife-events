@@ -92,7 +92,6 @@
 					<div class="city-filter">
 						<h4>City</h4>
 						<loading-skeleton-element v-if="mounting" width="160px" height="30px"></loading-skeleton-element>
-						<div class="filter-dummy dummy-element" v-if="mounting"></div>
 						<search-select 
 								v-else
 								:options="filterCriteria.cities"
@@ -108,7 +107,7 @@
 			
 			<div class="sorting">
 				<h4>Sort by: </h4>
-				<div class="filter-dummy dummy-element" v-if="mounting"></div>
+				<loading-skeleton-element v-if="mounting" width="160px" height="30px"></loading-skeleton-element>
 				<selector
 					v-else
 					v-model="currentlySorted"
@@ -142,7 +141,7 @@
 		
 		<div class="initial-loading-message" v-if="mounting || completelyReloading">
 			<div class="dummy-elements list-elements">
-				<loading-skeleton-element  v-for="(item, index) in 10" :key="index" class="dummy-element list-element" height="120px">
+				<loading-skeleton-element  v-for="(item, index) in 10" :key="index" class="dummy-element dummy-list-element" height="120px">
 					<loading-skeleton-element class="dummy-image" height="100%" width="140px"></loading-skeleton-element>
 					<loading-skeleton-element class="dummy-information">
 						<loading-skeleton-element class="dummy-title" width="60%" height="25px"></loading-skeleton-element>
@@ -160,20 +159,22 @@
 			</div>
 			
 			<div class="list-elements">
-				<router-link v-for="(event, index) in events" :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`" class="list-element" :key="index">
-					<div class="image-container">
-						<div class="image" :style="'background-image:url(' + getFullImageRoute(event) + ')'"></div>
-						<div class="color-seperator"></div>
-					</div>
-					<div class="element-info">
-						<h4 class="event-date">{{event.formattedDate}}</h4>
-						<h3 class="event-name">{{event.name}}</h3>
-						<p class="event-location">{{event.location.name}}, {{event.location.address.city}}, {{event.location.address.country}}</p>
-						<p class="event-bands">
-							<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
-						</p>
-					</div>
-				</router-link>
+				<div class="list-element" v-for="(event, index) in events" :key="index" v-on:click="setCurrentEvent(event)">
+					<router-link  :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`">
+						<div class="image-container">
+							<img :src="getFullImageRoute(event)" @error="getPlaceholderImage" class="image" :alt="'preview image for ' + event.name">
+							<div class="color-seperator"></div>
+						</div>
+						<div class="element-info">
+							<h4 class="event-date">{{event.formattedDate}}</h4>
+							<h3 class="event-name">{{event.name}}</h3>
+							<p class="event-location">{{event.location.name}}, {{event.location.address.city}}, {{event.location.address.country}}</p>
+							<p class="event-bands">
+								<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
+							</p>
+						</div>
+					</router-link>
+				</div>
 
 				<div v-if="events.length == 0" class="no-events">
 					<h3>:(</h3>
@@ -311,6 +312,9 @@ export default {
 		},
 	},
 	methods: {
+		setCurrentEvent(event) {			
+			this.$store.commit('setCurrentEvent', event);
+		},
 		async getEventsPage(page) {
 			let response = {};
 
@@ -345,11 +349,6 @@ export default {
 				//Add formatted date Attribute to each event for displaying the date in the list.
 				event.formattedDate = moment(event.date).format('LL');
 			}
-
-			// this.loading = false;
-			//Fade filters out on mobile
-			// document.getElementsByClassName('show-filters-button')[0].classList.remove('opened');
-			// document.getElementsByClassName('filters')[0].classList.remove('show-filters');
 			
 			return newEvents;
 		},
@@ -391,6 +390,12 @@ export default {
 		},
 		getFullImageRoute(event) {
 			return backendUrl + '/' + event.image[1];
+
+		},
+		getPlaceholderImage(e) {
+			console.log('Hallo hallo hallo');
+			
+			e.target.src = backendUrl + '/images/placeholders/1_M.jpg';
 		},
 		scrollToTop() {
 			window.scrollTo({top: 0, behavior: 'smooth'});
