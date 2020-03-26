@@ -1,24 +1,21 @@
 <template>
-	<div id="new_list">
-		<div class="page-content">
-			<div class="color-block"></div>
-		
-			<div class="list-header">
-				<h1>Events</h1>
-
-				<router-link to="new-event" class="create-new">
-					<div class="left-container">
-						<h3>Create a new Event!</h3>
-						<p>And contribute to AWAY FROM LIFE Streets</p>
-					</div>
-					<div class="right-container">
-						<md-icon>arrow_forward</md-icon>
-					</div>
-				</router-link>
-
-				<div class="filters">
-					<button v-if="isMobile"  class="md-button close-filters-btn" v-on:click="closeMobileFiltersMenu"><md-icon>close</md-icon></button>
-					<h3>Filter by: </h3>
+	<div id="event_list">
+		<list
+			contentType="Event"
+			:data="events"
+			:totalItemsCount="totalItemsCount"
+			:completelyReloading="completelyReloading"
+			:loadingNext="loadingNext"
+			:loadingPrevious="loadingPrevious"
+			:previousLoadable="previousLoadable"
+			:dataMounting="mounting"
+			:sortingOptions="sortingOptions"
+			:currentlySorted="currentlySorted"
+			:prettierKey="prettierKey"
+			v-on:loadMore="getNextEvents"
+			v-on:sortingChanged="newSorting => currentlySorted = newSorting"
+		>
+			<div slot="filters">
 					<div class="starting-letter-filter">
 						<h4>Starting letter</h4>
 						<loading-skeleton-element v-if="mounting" width="800px" height="25px"></loading-skeleton-element>
@@ -101,103 +98,26 @@
 								<span slot="no-options">Sorry, no matching options..</span>
 							</search-select>
 						</div>
-					</div>
-
-					<button class="md-button md-raised mobile-apply-button" v-on:click="applyMobileFilters">Apply</button>
-				</div>
-				
-				<div class="sorting">
-					<h4>Sort by: </h4>
-					<loading-skeleton-element v-if="mounting" width="160px" height="30px"></loading-skeleton-element>
-					<selector
-						v-else
-						v-model="currentlySorted"
-						label="pretty"
-						:options="sortingOptions">
-					</selector>
+					</div>					
 				</div>
 
-				<div class="mobile-list-header">
-					<div class="mobile-menu-buttons">
-						<button class="md-raised mobile-filter-button" v-on:click="openMobileFiltersMenu">Filter <md-icon>keyboard_arrow_down</md-icon></button>
-						<selector
-							class="mobile-sorting-button"
-							fixedLabel
-							selectLabel="Sort by"
-							label="pretty"
-							v-model="currentlySorted"
-							:options="sortingOptions">
-						</selector>
+			<div slot="list-elements" class="list-element" v-for="(event, index) in events" :key="index" v-on:click="setCurrentEvent(event)">
+				<router-link  :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`">
+					<div class="image-container">
+						<img :src="getFullImageRoute(event)" @error="getPlaceholderImage" class="image" :alt="'preview image for ' + event.name">
+						<div class="color-seperator"></div>
 					</div>
-
-					<div class="applied-filter-chips" v-if="isMobile">
-						<chip v-for="(appliedFilter, key) in actuallyAppliedFilters" :key="key" v-on:remove="clearFilter(key)">
-							{{prettierFilterLabel(key).key}}:
-							<span class="bold">{{prettierFilterLabel(key).value}}</span>
-						</chip>
+					<div class="element-info">
+						<h4 class="event-date">{{event.formattedDate}}</h4>
+						<h3 class="event-name">{{event.name}}</h3>
+						<p class="event-location">{{event.location.name}}, {{event.location.address.city}}, {{event.location.address.country}}</p>
+						<p class="event-bands">
+							<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
+						</p>
 					</div>
-				</div>
+				</router-link>
 			</div>
-
-			
-			<div class="initial-loading-message" v-if="mounting || completelyReloading">
-				<div class="dummy-elements list-elements">
-					<loading-skeleton-element  v-for="(item, index) in 10" :key="index" class="dummy-element dummy-list-element" height="120px">
-						<loading-skeleton-element class="dummy-image" height="100%" width="140px"></loading-skeleton-element>
-						<loading-skeleton-element class="dummy-information">
-							<loading-skeleton-element class="dummy-title" width="60%" height="25px"></loading-skeleton-element>
-							<loading-skeleton-element class="dummy-description" height="15px"></loading-skeleton-element>
-							<loading-skeleton-element class="dummy-additional" height="15px"></loading-skeleton-element>
-						</loading-skeleton-element>
-					</loading-skeleton-element>
-				</div>
-				<md-spinner md-indeterminate></md-spinner>
-			</div>
-			<div class="list-body" v-if="!mounting && !completelyReloading">
-				<div v-if="previousLoadable || loadingPrevious" class="load-more load-less">
-					<md-button  v-if="!loadingPrevious" v-on:click="getPreviousEvents">Show previous</md-button>
-					<md-spinner v-else md-indeterminate></md-spinner>
-				</div>
-				
-				<div class="list-elements">
-					<div class="list-element" v-for="(event, index) in events" :key="index" v-on:click="setCurrentEvent(event)">
-						<router-link  :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`">
-							<div class="image-container">
-								<img :src="getFullImageRoute(event)" @error="getPlaceholderImage" class="image" :alt="'preview image for ' + event.name">
-								<div class="color-seperator"></div>
-							</div>
-							<div class="element-info">
-								<h4 class="event-date">{{event.formattedDate}}</h4>
-								<h3 class="event-name">{{event.name}}</h3>
-								<p class="event-location">{{event.location.name}}, {{event.location.address.city}}, {{event.location.address.country}}</p>
-								<p class="event-bands">
-									<span v-for="(band, index) in event.bands" :key="index">{{band.name}}</span>
-								</p>
-							</div>
-						</router-link>
-					</div>
-
-					<div v-if="events.length == 0" class="no-events">
-						<h3>:(</h3>
-						<h3>No events found...</h3>
-					</div>
-				</div>
-
-				<div class="load-more">
-					<p>Showing {{events.length}} of {{totalItemsCount}} available events</p>
-					<div v-if="events.length < totalItemsCount && !loadingNext">
-						<md-button v-on:click="getNextEvents">Show more</md-button>
-						<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
-					</div>				
-					<md-spinner v-if="loadingNext" md-indeterminate></md-spinner>
-				</div>
-			</div>
-
-			<div class="not-found-message">
-				<p>Didn't find what you were looking for?</p>
-				<p>If you feel like something is missing, you can contribute to this platform and <router-link to="">create a new !</router-link></p>
-			</div>
-		</div>
+		</list>
 	</div>
 </template>
 
@@ -206,20 +126,20 @@ import {backendUrl} from '@/secrets.js';
 
 import moment from 'moment';
 
-import StartingLetterFilter from './StartingLetterFilter';
-import SearchSelect from '@/components/Utilities/SearchSelect';
+import List from '@/components/ContentLists/List';
+import StartingLetterFilter from '@/components/ContentLists/StartingLetterFilter';
 import Selector from '@/components/Utilities/Selector';
 import LoadingSkeletonElement from '@/components/Utilities/LoadingSkeletonElement';
-import Chip from '@/components/Utilities/Chip';
+import SearchSelect from '@/components/Utilities/SearchSelect';
 
 export default {
 	name: 'new-list',
 	components: {
+		List,
 		StartingLetterFilter,
-		SearchSelect,
 		Selector,
 		LoadingSkeletonElement,
-		Chip
+		SearchSelect
 	},
 	data() {
 		return {
@@ -402,21 +322,13 @@ export default {
 			
 			e.target.src = backendUrl + '/images/placeholders/1_M.jpg';
 		},
-		scrollToTop() {
-			window.scrollTo({top: 0, behavior: 'smooth'});
-		},
-		openMobileFiltersMenu() {
-			document.getElementsByClassName('filters')[0].classList.add('opened');
-		},
-		closeMobileFiltersMenu() {			
-			document.getElementsByClassName('filters')[0].classList.remove('opened');
-		},
 		async applyMobileFilters() {
 			this.closeMobileFiltersMenu();
 			await this.applyNewFilters();
 		},
-		prettierFilterLabel(key) {
+		prettierKey(key) {
 			let prettierKey = key;
+			
 			switch(key) {
 				case 'startWith':
 					prettierKey = 'starting letter';
@@ -428,14 +340,7 @@ export default {
 					prettierKey = 'last date';
 			}
 
-			let prettierValue = this.actuallyAppliedFilters[key];
-			if(this.actuallyAppliedFilters[key].label)
-				prettierValue = this.actuallyAppliedFilters[key].label;
-
-			return {
-				key: prettierKey,
-				value: prettierValue
-			};
+			return prettierKey;
 		},
 		async clearFilter(key) {
 			this.appliedFilters[key] = undefined;

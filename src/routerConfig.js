@@ -25,6 +25,7 @@ import LocationsListNew from '@/components/ContentLists/LocationsList.1';
 import EventListNew from '@/components/ContentLists/EventsList.1';
 import FestivalListNew from '@/components/ContentLists/FestivalsList.1';
 import NewList from '@/components/ContentLists/NewList';
+import NewEventsList from '@/components/ContentLists/NewEventsList';
 
 export default new Router({
 	mode: 'history',
@@ -209,6 +210,10 @@ export default new Router({
 		{
 			path: '/new-list',
 			component: NewList
+		},
+		{
+			path: '/new-event-list',
+			component: NewEventsList
 		},
 		{
 			path: '/*',

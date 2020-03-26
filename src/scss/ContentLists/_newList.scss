@@ -42,7 +42,6 @@
 	
 	.list-header {
 		color: $primaryLighten5;
-		// display: flex;
 		margin-top: 30px;
 
 
@@ -65,7 +64,6 @@
 			font-family: "Montserrat";
 			color: $primaryLighten5;
 			background-color: #232323;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
 			clip-path: polygon(
 				0 0, /* left top */
 				100% 0, /* right top */ 
@@ -187,6 +185,10 @@
 				flex-wrap: wrap;
 				margin-top: 30px;
 
+				.date-filter, .genre-filter, .city-filter {
+					margin-bottom: 10px;
+				}
+
 				.date-filter {					
 					.datepickers {
 						display: flex;
@@ -244,10 +246,6 @@
 							ul {
 								li {
 									color: #232323;
-
-									&:hover {
-										// background-color: $accentAccent2;
-									}
 								}
 							}
 						}
@@ -351,8 +349,12 @@
 		position: relative;
 		width: 100%;
 		clear: both;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
 
 		.no-events {
+			flex: 1;
 			margin-top: 150px;
 			h3 {	
 				font-size: 32px;			
@@ -362,12 +364,7 @@
 		}
 
 		.list-element a, .dummy-list-element {
-			width: 45% !important;
-			float: left;
-			// width: 500px;
-			margin: 20px 2.5%;
 			position: relative;
-			// flex: 1;
 			display: flex;
 			overflow: hidden;
 			color: #232323;
@@ -377,6 +374,8 @@
 		}
 
 		.list-element {
+			width: 47% !important;
+			margin: 20px 0;
 
 			.image-container {
 				width: 130px;
@@ -387,7 +386,7 @@
 				.image {
 					width: 135px;
 					max-width: 135px;
-					height: 100%;
+					height: 120px;
 					object-position: center;
 					object-fit: cover;
 						// background-position: center;
@@ -524,6 +523,10 @@
 	#new_list {
 		padding: 0 15px;
 
+		.color-block {
+			height: 380px;
+		}
+
 		.list-header {
 			h1 {
 				margin: 20px 0;
@@ -537,7 +540,7 @@
 				top: 0;
 				max-width: 300px;
 				margin: 0 auto;
-				margin-bottom: 30px;
+				margin-bottom: 15px;
 				padding: 20px;
 				justify-content: center;
 				transform: skew(-8deg);
@@ -564,22 +567,31 @@
 					width: 100%;
 					display: flex;
 					justify-content: space-between;
-					margin-bottom: 30px;
+					margin-bottom: 15px;
 					.mobile-sorting-button, .mobile-filter-button {
 						display: block;
-						width: 45%;
-						background-color: #232323;
+						// width: 45%;
 						color: $primaryLighten5;
 	
 						.md-icon {
-							color: $accentAccent2;
+							color: $primaryLighten5;
+							margin-top: -5px;
 						}
-					}			
+					}
+					
+					.mobile-filter-button {
+						position: relative;
+						padding: 0 16px;
+						font-size: 18px;
+						background-color: transparent;
+						border: none;
+						font-family: Montserrat;
+						font-weight: 500;
+					}
 					
 					.mobile-sorting-button {
 						margin: 6px 8px;
 						border-radius: 2px;
-						box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
 	
 						#selector-input {
 							background-color: transparent !important;
@@ -590,33 +602,35 @@
 							justify-content: center;
 							align-items: center;
 							margin: 0;
-							padding: 0 16px;
+							padding: 0 16px;	
 							
 							span {
 								font-family: Montserrat;
-								font-weight: 500;
-								font-size: 14px;
-								text-transform: uppercase;
+								font-weight: 500;		
+								font-size: 18px;
 								color: $primaryLighten5;
 								margin-top: 3px;
 							}
 	
 							.md-icon {
 								margin: 0;
-								margin-top: 5px;
+								margin-top: 2px;
 								margin-left: 5px;
 								position: relative;
+								background-color: transparent;
 							}
 						}
 	
 						.options {
-							width: 100% !important;
+							// width: 100% !important;
 							min-width: 0;
 							margin-top: 35px;
 							margin-bottom: 0;
+							right: 0;
 	
 							li {
-								color: #232323;							
+								color: #232323;
+								font-size: 14px;					
 							}
 							.active {
 								background-color: $accentAccent2;
@@ -629,7 +643,8 @@
 				.applied-filter-chips {
 					display: flex;
 					overflow: auto;
-					
+					margin-top: -10px;
+					margin-bottom: 10px;
 				}
 			}
 
@@ -773,9 +788,10 @@
 				margin-top: 20px;
 			}
 
-			.list-element {
+			.list-element, .dummy-list-element {
 				width: 100% !important;
 				margin: 10px 0;
+				float: none !important;
 
 				&:first-of-type {
 					margin-top: -10px;
