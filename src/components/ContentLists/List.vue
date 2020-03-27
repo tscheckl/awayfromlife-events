@@ -1,5 +1,5 @@
 <template>
-	<div id="new_list">
+	<div id="list">
 		<div class="page-content">
 			<div class="color-block"></div>
 		
@@ -74,7 +74,7 @@
 			</div>
 			<div class="list-body" v-if="!dataMounting && !completelyReloading">
 				<div v-if="previousLoadable || loadingPrevious" class="load-more load-less">
-					<md-button  v-if="!loadingPrevious" v-on:click="getPreviousElements">Show previous</md-button>
+					<md-button  v-if="!loadingPrevious" v-on:click="handleLoadPrevious">Show previous</md-button>
 					<md-spinner v-else md-indeterminate></md-spinner>
 				</div>
 				
@@ -90,7 +90,7 @@
 				<div class="load-more">
 					<p>Showing {{data.length}} of {{totalItemsCount}} available {{contentType}}</p>
 					<div v-if="data.length < totalItemsCount && !loadingNext">
-						<md-button v-on:click="$emit('loadMore')">Show more</md-button>
+						<md-button v-on:click="handleLoadMore">Show more</md-button>
 						<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
 					</div>				
 					<md-spinner v-if="loadingNext" md-indeterminate></md-spinner>
@@ -117,7 +117,7 @@ import LoadingSkeletonElement from '@/components/Utilities/LoadingSkeletonElemen
 import Chip from '@/components/Utilities/Chip';
 
 export default {
-	name: 'new-list',
+	name: 'list',
 	components: {
 		StartingLetterFilter,
 		SearchSelect,
@@ -129,21 +129,22 @@ export default {
 		contentType: String,
 		data: Array,
 		page: Number,
+		totalItemsCount: Number,
 		sortingOptions: Array,
 		currentlySorted: Object,
 		completelyReloading: Boolean,
 		dataMounting: Boolean,
-		totalItemsCount: Number,
-		loadingNext: Boolean,
-		loadingPrevious: Boolean,
-		previousLoadable: Boolean,
+		loading: Boolean,
 		appliedFilters: Array,
 		prettierKey: Function
 	},
 	data() {
 		return {
-			previousPageLoadedTo: 0,
-			isMobile: false
+			isMobile: false,
+			loadingNext: false,
+			loadingPrevious: false,
+			previousPageLoadedTo: undefined,
+			previousLoadable: false
 		}
 	},
 	computed: {
@@ -165,6 +166,25 @@ export default {
 				this.buildUrl();
 			},
 			deep: true
+		},
+		loading() {
+
+			if(!this.loading) {
+				this.loadingNext = false;
+				this.loadingPrevious = false;
+
+				if(this.page == 1)
+					this.previousLoadable = false;
+			}
+		},
+		page() {
+			if(this.previousPageLoadedTo) 
+				return;
+
+			if(this.page != 1) {			
+				this.previousLoadable = true; 
+				this.previousPageLoadedTo = this.page;
+			}
 		}
 	},
 	methods: {
@@ -196,6 +216,18 @@ export default {
 		},
 		applyQuerySorting(sortBy, direction) {
 			this.currentlySorted = this.sortingOptions.find(sortingOption => sortingOption.name == sortBy && sortingOption.direction == parseInt(direction));
+		},
+		handleLoadPrevious() {
+			this.previousPageLoadedTo--;
+			if(this.previousPageLoadedTo == 1)
+				this.previousLoadable = false;
+				
+			this.$emit('loadPrevious', this.previousPageLoadedTo);
+			this.loadingPrevious = true;
+		},
+		handleLoadMore() {
+			this.$emit('loadMore');
+			this.loadingNext = true;
 		}
 	},
 	async mounted() {
@@ -206,5 +238,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "./src/scss/ContentLists/_newList.scss";
+	@import "./src/scss/ContentLists/_list.scss";
 </style>

@@ -4,18 +4,20 @@
 			contentType="Event"
 			:data="events"
 			:totalItemsCount="totalItemsCount"
+			:page="currentPage"
 			:completelyReloading="completelyReloading"
-			:loadingNext="loadingNext"
-			:loadingPrevious="loadingPrevious"
-			:previousLoadable="previousLoadable"
+			:loading="loading"
 			:dataMounting="mounting"
 			:sortingOptions="sortingOptions"
 			:currentlySorted="currentlySorted"
 			:prettierKey="prettierKey"
 			v-on:loadMore="getNextEvents"
+			v-on:loadPrevious="previousPage => getPreviousEvents(previousPage)"
 			v-on:sortingChanged="newSorting => currentlySorted = newSorting"
+			v-on:applyMobileFilters="applyNewFilters"
+			v-on:filterCleared="key => clearFilter(key)"
 		>
-			<div slot="filters">
+			<div class="filters" slot="filters">
 					<div class="starting-letter-filter">
 						<h4>Starting letter</h4>
 						<loading-skeleton-element v-if="mounting" width="800px" height="25px"></loading-skeleton-element>
@@ -146,7 +148,6 @@ export default {
 			events: [],
 			locations: [],
 			totalItemsCount: 0,
-			previousLoadable: false,
 			previousPageLoadedTo: 0,
 			sortingOptions: [
 				{
@@ -196,11 +197,10 @@ export default {
 				lastDate: undefined,
 				genre: undefined
 			},
-			currentPage: Number,
+			currentPage: 0,
 			availablePages: 1,
 			itemsPerPage: '20',
-			loadingNext: false,
-			loadingPrevious: false,
+			loading: false,
 			completelyReloading: false,
 			mounting: false,
 			isMobile: false
@@ -241,6 +241,8 @@ export default {
 			this.$store.commit('setCurrentEvent', event);
 		},
 		async getEventsPage(page) {
+			this.loading = true;
+
 			let response = {};
 
 			const appliedFilters = this.appliedFilters;
@@ -251,22 +253,25 @@ export default {
 				+ '&sortBy=' + this.currentlySorted.name
 				+ '&order=' + this.currentlySorted.direction
 				+ (appliedFilters.startWith ? '&startWith=' + encodeURIComponent(appliedFilters.startWith) : '')
-				+ (appliedFilters.genre ?('&genre=' + appliedFilters.genre) :'')
+				+ (appliedFilters.genre ?('&genre=' + appliedFilters.genre.label) :'')
 				+ (appliedFilters.city ?('&city=' + appliedFilters.city) :'')
 				+ (appliedFilters.firstDate ?('&startDate=' + appliedFilters.firstDate) :'')
 				+ (appliedFilters.lastDate ?('&endDate=' + appliedFilters.lastDate) :'')
 				+ '&includeFestivals=true';
 
+			console.log(appliedFilters.genre);
 			try {
 				response = await this.$http.get(requestRoute);
 			}
 			catch(err) {
 				return [];
 			}
+
 			let newEvents = [];
 			if(response.body.data) {
 				newEvents = response.body.data;
 			}
+			
 			this.availablePages = response.body.pages;
 			this.totalItemsCount = response.body.totalCount;			
 
@@ -275,41 +280,33 @@ export default {
 				event.formattedDate = moment(event.date).format('LL');
 			}
 			
+			this.loading = false;
+
 			return newEvents;
 		},
 		async getNextEvents() {
 			this.currentPage++;
-			this.loadingNext = true;
 
 			this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
-			
-			if(this.currentPage == 1)
-				this.previousLoadable = false;
 				
 			let nextEvents = await this.getEventsPage(this.currentPage);
 			this.events = this.events.concat(nextEvents);
-			this.loadingNext = false;
 		},
-		async getPreviousEvents() {
-			this.loadingPrevious = true;
+		async getPreviousEvents(previousPage) {
+			let previousEvents = await this.getEventsPage(previousPage);
 
-			this.previousPageLoadedTo--;
-			if(this.previousPageLoadedTo == 1)
-				this.previousLoadable = false;
-
-			let previousEvents = await this.getEventsPage(this.previousPageLoadedTo);
-
-			this.events = previousEvents.concat(this.events);				
-			
-			this.loadingPrevious = false;
+			this.events = previousEvents.concat(this.events);			
 		},
 		async applyNewFilters() {
 			this.completelyReloading = true;
+
 			if(!this.mounting) {
+				console.log('not this again');
 				this.currentPage = 1;
 				this.previousLoadable = false;
 				this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
 			}
+
 			this.events = await this.getEventsPage(this.currentPage);
 			this.completelyReloading = false;
 		},
@@ -318,8 +315,6 @@ export default {
 
 		},
 		getPlaceholderImage(e) {
-			console.log('Hallo hallo hallo');
-			
 			e.target.src = backendUrl + '/images/placeholders/1_M.jpg';
 		},
 		async applyMobileFilters() {
@@ -352,7 +347,7 @@ export default {
 			let query = {};
 
 			if(this.currentPage)
-				query.page = this.currentPage;
+				query.page = String(this.currentPage);
 			if(this.appliedFilters.startWith)
 				query.startWith = this.appliedFilters.startWith;
 			if(this.appliedFilters.genre)
@@ -367,12 +362,16 @@ export default {
 				query.sortBy = this.currentlySorted.name;
 				query.sortingDirection = this.currentlySorted.direction;
 			}
-
-			if(query != this.$route.query)
+			if(JSON.stringify(query) != JSON.stringify(this.$route.query)) {
+				console.log('new query', query);
+				console.log('route query', this.$route.query);
+				console.log('im the one to blame');
 				this.$router.push({query: query});
+				
+				if(!this.isMobile)
+					await this.applyNewFilters();
+			}
 
-			if(!this.isMobile)
-				await this.applyNewFilters();
 		},
 		applyQuerySorting(sortBy, direction) {
 			this.currentlySorted = this.sortingOptions.find(sortingOption => sortingOption.name == sortBy && sortingOption.direction == parseInt(direction));
@@ -381,7 +380,7 @@ export default {
 	async mounted() {
 		this.mounting = true;
 
-		const pageFromRoute = this.$route.query.page || 1;
+		const pageFromRoute = parseInt(this.$route.query.page) || 1;
 		
 		
 		//Check if you're currently on the archive page or not and change the backend-endpoint for the request accordingly. 
@@ -398,7 +397,6 @@ export default {
 					return {label: city};
 				});
 				this.filterCriteria.cities = newCities;
-				console.log(this.filterCriteria);
 			})
 			.catch(err => console.log(err));
 
@@ -417,11 +415,7 @@ export default {
 			this.applyQuerySorting(query.sortBy, query.sortingDirection);
 
 		this.currentPage = pageFromRoute;
-		this.events = await this.getEventsPage(this.currentPage);
-		if(this.currentPage != 1) {			
-			this.previousLoadable = true; 
-			this.previousPageLoadedTo = this.currentPage;
-		}
+		this.events = await this.getEventsPage(this.currentPage);		
 		
 		if(window.innerWidth <= 768)
 			this.isMobile = true;
@@ -432,5 +426,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "./src/scss/ContentLists/_newList.scss";
+	@import "./src/scss/ContentLists/_newEventsList.scss";
 </style>

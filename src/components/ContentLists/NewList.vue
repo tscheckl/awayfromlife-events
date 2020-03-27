@@ -527,5 +527,5 @@ export default {
 </script>
 
 <style lang="scss">
-	@import "./src/scss/ContentLists/_newList.scss";
+	@import "./src/scss/ContentLists/_list.scss";
 </style>
