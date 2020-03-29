@@ -1,10 +1,10 @@
 <template>
-	<div id="topbar" :class="useDarkBar() ?'single-page': ''" v-if="showTopbar()">
+	<div id="topbar" :class="topbarClasses" v-if="showTopbar()">
 		<md-toolbar>
-			<router-link class="logo-link" to="/"><img :src="'/static/' + logoLink" alt="Away From Life Streets Logo"></router-link>
+			<router-link class="logo-link" to="/"><img src="/static/Logo.png" alt="Away From Life Streets Logo"></router-link>
 			<follow-buttons></follow-buttons>
 
-			<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)" v-if="useDarkBar()">
+			<md-button class="md-icon-button back-button" v-on:click="$router.go(-1)" v-if="isLowerLevelPage()">
 				<md-icon>keyboard_backspace</md-icon>
 				<md-tooltip md-direction="bottom">Go Back</md-tooltip>	
 			</md-button>
@@ -57,18 +57,27 @@ export default {
 			timeOut: undefined,
 			loading: false,
 			searched: false,
-			logoLink: 'Logo.png'
+		}
+	},
+	computed: {		
+		topbarClasses() {
+			let classString = '';
+
+			if(this.isLowerLevelPage()) {				
+				classString += ' single-page';
+			}
+
+			if(this.isListPage()) {				
+				classString += ' list-page';
+			}
+
+			return classString
 		}
 	},
 	watch: {
 		$route() {
 			this.hideResults();
 			this.query = '';
-			
-			if(this.useDarkBar())
-				this.logoLink = 'Logo-Red.png';
-			else 
-				this.logoLink = 'Logo.png'
 		}
 	},
 	methods: {
@@ -87,21 +96,27 @@ export default {
 				.catch(err => console.log(err));			
 			}, setTimer ?700 :0);
 		},
-		useDarkBar() {
+		isLowerLevelPage() {
 			const singlePages = ['event', 'location', 'band', 'festival'];
 			const infoPages = ['faq', 'imprint', 'privacy']
 			
 			const isSinglePage = singlePages.reduce((acc, curr) => {
-				let lowercasePath = this.$route.path.slice().toLowerCase();
+				let lowercasePath = this.$route.path.slice().toLowerCase();				
 				return (lowercasePath.indexOf(`/${curr}/`) != -1 || lowercasePath.indexOf(`/new-${curr}`) != -1) || acc;
 			}, false);
 
-			const isInfoPage = infoPages.reduce((acc, curr) => {
-				let lowercasePath = this.$route.path.slice().toLowerCase();
-				return (lowercasePath.indexOf(`/${curr}`) != -1) || acc;
-			}, false);
+			return isSinglePage;
+		},
+		isListPage() {
+			const listPages = ['events', 'locations', 'bands', 'festivals'];
 
-			return isSinglePage || isInfoPage;
+			const isListPage = listPages.reduce((acc, curr) => {
+				let lowercasePath = this.$route.path.slice().toLowerCase();
+						
+				return (this.$route.path == ('/' + curr)) || acc;
+			}, false);
+			
+			return isListPage;
 		},
 		showTopbar() {
 			return this.$route.path != '/search' 
