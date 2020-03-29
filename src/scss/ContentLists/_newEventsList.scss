@@ -22,6 +22,7 @@
 
 		.loading-skeleton-element {
 			margin-right: 20px;
+			background-color: #aaa;
 		}
 
 		h3, h4 {
@@ -43,9 +44,6 @@
 			}
 
 			#starting_letter_filter {
-				div, ul, li {
-					// display: inline;
-				}
 
 				ul {
 					display: flex;
@@ -60,7 +58,8 @@
 						font-weight: 600;
 						padding: 5px 4px;							
 						margin: 0;
-						color: $primaryLighten1;
+						color: $primaryLighten5;
+						opacity: 0.4;
 						text-align: center;
 
 						&:first-of-type {
@@ -69,7 +68,7 @@
 					}
 					
 					.available {
-						color: #232323;
+						opacity: 1;
 						cursor: pointer;
 
 						&:hover {
@@ -120,7 +119,7 @@
 
 						.md-icon {
 							position: absolute;
-							color: #232323;
+							color: $accentAccent2;
 							right: 19px;
 							top: 4px;
 							font-size: 20px;
@@ -143,7 +142,7 @@
 					margin-top: 5px;
 					width: 200px;
 					.select-indicator {
-						background-color: #232323;
+						background-color: $accentAccent2;
 						border-top-right-radius: 3px;
 						border-bottom-right-radius: 3px;
 						height: 32px;
