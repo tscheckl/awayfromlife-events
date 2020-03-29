@@ -13,8 +13,7 @@
 	h1 {
 		margin: 30px 40px;
 		font-size: 2.3em;
-		color: #212121;
-		text-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);
+		color: $primaryLighten5;
 		z-index: 2;
 		position: relative;
 	}
@@ -22,7 +21,7 @@
 	.color-block {
 		position: absolute;
 		width: 100%;
-		background-color: $accentAccent2;
+		background-color: #232323;
 		height: 250px;
 		top: 0;
 		left: 0;

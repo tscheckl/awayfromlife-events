@@ -10,6 +10,7 @@
 			:dataMounting="mounting"
 			:sortingOptions="sortingOptions"
 			:currentlySorted="currentlySorted"
+			:appliedFilters="appliedFilters"
 			:prettierKey="prettierKey"
 			v-on:loadMore="getNextEvents"
 			v-on:loadPrevious="previousPage => getPreviousEvents(previousPage)"
@@ -17,7 +18,7 @@
 			v-on:applyMobileFilters="applyNewFilters"
 			v-on:filterCleared="key => clearFilter(key)"
 		>
-			<div class="filters" slot="filters">
+			<div class="passed-in-filters" slot="filters">
 					<div class="starting-letter-filter">
 						<h4>Starting letter</h4>
 						<loading-skeleton-element v-if="mounting" width="800px" height="25px"></loading-skeleton-element>

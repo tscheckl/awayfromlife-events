@@ -50,7 +50,7 @@
 					</div>
 
 					<div class="applied-filter-chips" v-if="isMobile">
-						<chip v-for="(appliedFilter, key) in appliedFilters" :key="key" v-on:remove="$emit('filterCleared', key)">
+						<chip v-for="(appliedFilter, key) in trimmedAppliedFilters" :key="key" v-on:remove="$emit('filterCleared', key)">
 							{{prettierFilterLabel(key).key}}:
 							<span class="bold">{{prettierFilterLabel(key).value}}</span>
 						</chip>
@@ -88,7 +88,7 @@
 				</div>
 
 				<div class="load-more">
-					<p>Showing {{data.length}} of {{totalItemsCount}} available {{contentType}}</p>
+					<p>Showing {{data.length}} of {{totalItemsCount}} available {{contentType}}s</p>
 					<div v-if="data.length < totalItemsCount && !loadingNext">
 						<md-button v-on:click="handleLoadMore">Show more</md-button>
 						<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
@@ -135,7 +135,7 @@ export default {
 		completelyReloading: Boolean,
 		dataMounting: Boolean,
 		loading: Boolean,
-		appliedFilters: Array,
+		appliedFilters: Object,
 		prettierKey: Function
 	},
 	data() {
@@ -158,15 +158,19 @@ export default {
 		},
 		prettySortingOptions() {
 			return this.sortingOptions.map(sortingOption => sortingOption.pretty);
+		},
+		trimmedAppliedFilters() {
+			let trimmedAppliedFilters = {};
+
+			for(let key in this.appliedFilters) {
+				if(this.appliedFilters[key])
+					trimmedAppliedFilters[key] = this.appliedFilters[key];
+			}
+
+			return trimmedAppliedFilters
 		}
 	},
 	watch: {
-		appliedFilters: {
-			handler: function() {
-				this.buildUrl();
-			},
-			deep: true
-		},
 		loading() {
 
 			if(!this.loading) {
@@ -205,9 +209,10 @@ export default {
 			let prettierKey = this.prettierKey(key);
 			
 
-			let prettierValue = this.actuallyAppliedFilters[key];
-			if(this.actuallyAppliedFilters[key].label)
-				prettierValue = this.actuallyAppliedFilters[key].label;
+			let prettierValue = this.trimmedAppliedFilters[key];
+			
+			if(this.trimmedAppliedFilters[key].label)
+				prettierValue = this.trimmedAppliedFilters[key].label;
 
 			return {
 				key: prettierKey,
