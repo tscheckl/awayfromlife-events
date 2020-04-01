@@ -1,6 +1,6 @@
 <template>
 	<div id="search_select" v-on:keyup.esc="showOptions = false">
-		<input type="text" autocomplete="off" v-model="filterValue"  v-on:focus="showOptions = true" v-on:blur="blockBlur ?'' :closeOptions()" :placeholder="placeholder">
+		<input type="text" autocomplete="aaa" v-model="filterValue"  v-on:focus="showOptions = true" v-on:blur="blockBlur ?'' :closeOptions()" :placeholder="placeholder">
 		<div class="select-buttons">
 			<button class="clear-button" v-on:click="clearValue" v-if="filterValue != ''">
 				<md-icon>close</md-icon>
