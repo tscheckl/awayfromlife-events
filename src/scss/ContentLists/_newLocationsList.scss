@@ -232,7 +232,7 @@
 }
 
 @media screen and (max-width: 768px) {
-	#event_list {
+	#location_list {
 		.filters {
 			.starting-letter-filter {
 				h4 {
@@ -290,16 +290,12 @@
 			}
 			
 			.element-info {
-				h4, .event-location {
+				.location-city, .location-country {
 					font-size: 14px;
 					margin-bottom: 0px;
 				}
 				h3 {
 					font-size: 20px;
-				}
-
-				.event-bands {
-					font-size: 12px;
 				}
 			}
 		}
