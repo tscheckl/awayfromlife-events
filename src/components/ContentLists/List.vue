@@ -129,7 +129,10 @@ export default {
 		contentType: String,
 		data: Array,
 		page: Number,
-		totalItemsCount: Number,
+		totalItemsCount: {
+			type: Number,
+			default: 0
+		},
 		sortingOptions: Array,
 		currentlySorted: Object,
 		completelyReloading: Boolean,
