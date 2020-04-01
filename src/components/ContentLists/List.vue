@@ -6,7 +6,7 @@
 			<div class="list-header">
 				<h1>{{contentType}}s</h1>
 
-				<router-link to="new-event" class="create-new">
+				<router-link :to="`new-${contentType}`" class="create-new">
 					<div class="left-container">
 						<h3>Create a new {{contentType}}!</h3>
 						<p>And contribute to AWAY FROM LIFE Streets</p>
@@ -99,7 +99,7 @@
 
 			<div class="not-found-message">
 				<p>Didn't find what you were looking for?</p>
-				<p>If you feel like something is missing, you can contribute to this platform and <router-link to="">create a new {{contentType}}!</router-link></p>
+				<p>If you feel like something is missing, you can contribute to this platform and <router-link :to="`new-${contentType}`">create a new {{contentType}}!</router-link></p>
 			</div>
 		</div>
 	</div>
