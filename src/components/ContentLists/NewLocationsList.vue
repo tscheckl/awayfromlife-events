@@ -243,7 +243,12 @@ export default {
 			await this.applyNewFilters();
 		},
 		prettierKey(key) {
-			return key;
+            let prettierKey = key;
+            
+            if(key == 'startWith')
+                prettierKey = 'starting letter';
+
+			return prettierKey;
 		},
 		async clearFilter(key) {
 			this.appliedFilters[key] = undefined;
