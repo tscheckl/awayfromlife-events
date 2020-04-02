@@ -89,7 +89,7 @@
 
 				<div class="load-more">
 					<p>Showing {{data.length}} of {{totalItemsCount}} available {{contentType}}s</p>
-					<div v-if="data.length < totalItemsCount && !loadingNext">
+					<div v-if="data.length < totalItemsCount && page < maximumPageNumber && !loadingNext">
 						<md-button v-on:click="handleLoadMore">Show more</md-button>
 						<p>or <a pre href="" v-on:click.prevent="scrollToTop">narrow down the results</a></p>
 					</div>				
@@ -171,11 +171,13 @@ export default {
 			}
 
 			return trimmedAppliedFilters
+		},
+		maximumPageNumber() {
+			return Math.ceil(this.totalItemsCount/50);
 		}
 	},
 	watch: {
 		loading() {
-
 			if(!this.loading) {
 				this.loadingNext = false;
 				this.loadingPrevious = false;
@@ -184,11 +186,8 @@ export default {
 					this.previousLoadable = false;
 			}
 		},
-		page() {
-			if(this.previousPageLoadedTo) 
-				return;
-
-			if(this.page != 1) {			
+		page(newVal, oldVal) {
+			if(oldVal == 0 && newVal != 1) {
 				this.previousLoadable = true; 
 				this.previousPageLoadedTo = this.page;
 			}
