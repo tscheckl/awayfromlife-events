@@ -48,7 +48,7 @@
 							<search-select
 									v-else
 									:options="filterCriteria.labels"
-									v-model="appliedFilters.labels"
+									v-model="appliedFilters.label"
 									placeholder="Select Record Label">
 								<span slot="no-options">Sorry, no matching options..</span>
 							</search-select>
@@ -136,8 +136,8 @@ export default {
                 },
                 {
                     name: 'genre',
-                    direction: -1,
-                    pretty: 'Genre descending'
+                    direction: 1,
+                    pretty: 'Genre ascending'
                 }
 			],
 			currentlySorted: {
