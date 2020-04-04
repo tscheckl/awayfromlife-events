@@ -255,7 +255,7 @@ export default {
 				+ '&order=' + this.currentlySorted.direction
 				+ (appliedFilters.startWith ? '&startWith=' + encodeURIComponent(appliedFilters.startWith) : '')
 				+ (appliedFilters.genre ?('&genre=' + appliedFilters.genre.label) :'')
-				+ (appliedFilters.city ?('&city=' + appliedFilters.city) :'')
+				+ (appliedFilters.city ?('&city=' + appliedFilters.city.label) :'')
 				+ (appliedFilters.firstDate ?('&startDate=' + appliedFilters.firstDate) :'')
 				+ (appliedFilters.lastDate ?('&endDate=' + appliedFilters.lastDate) :'')
 				+ '&includeFestivals=true';
