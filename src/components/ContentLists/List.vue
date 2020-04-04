@@ -38,7 +38,7 @@
 
 				<div class="mobile-list-header">
 					<div class="mobile-menu-buttons">
-						<button class="md-raised mobile-filter-button" v-on:click="openMobileFiltersMenu">Filter <md-icon>keyboard_arrow_down</md-icon></button>
+						<button class="md-raised mobile-filter-button" v-on:click="openMobileFiltersMenu"><md-icon>filter_list</md-icon> Filter <md-icon>keyboard_arrow_down</md-icon></button>
 						<selector
 							class="mobile-sorting-button"
 							fixedLabel
