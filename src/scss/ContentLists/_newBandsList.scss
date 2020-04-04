@@ -248,8 +248,9 @@
 				font-weight: 600;
 			}		
 			
-			.location-country {
+			.band-label {
 				font-weight: 400;
+				font-family: Montserrat;
 			}
 		} 
 	}
@@ -314,9 +315,11 @@
 			}
 			
 			.element-info {
-				.location-city, .location-country {
+				.band-genres {
+					font-size: 12px;
+				}
+				.band-origin, .band-label {
 					font-size: 14px;
-					margin-bottom: 0px;
 				}
 				h3 {
 					font-size: 20px;
