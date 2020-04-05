@@ -1,17 +1,17 @@
 <template>
 	<div id="events_archive">
-		<events-list :archive="true"></events-list>
+		<new-events-list :archive="true"></new-events-list>
 	</div>
 </template>
 
 <script>
-import EventsList from './EventsList';
+import NewEventsList from './NewEventsList';
 
 export default {
 	name: 'events-archive',
 	components: {
-		EventsList
-	}
+		NewEventsList
+	},
 }
 </script>
 

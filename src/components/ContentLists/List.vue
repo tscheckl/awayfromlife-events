@@ -4,7 +4,7 @@
 			<div class="color-block"></div>
 		
 			<div class="list-header">
-				<h1>{{contentType}}s</h1>
+				<h1 id="content-type-header">{{specialHeader? specialHeader: `${contentType}s`}}</h1>
 
 				<router-link :to="`new-${contentType}`" class="create-new">
 					<div class="left-container">
@@ -127,6 +127,7 @@ export default {
 	},
 	props: {
 		contentType: String,
+		specialHeader: String,
 		data: Array,
 		page: Number,
 		totalItemsCount: {
