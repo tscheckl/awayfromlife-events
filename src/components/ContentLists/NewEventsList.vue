@@ -2,6 +2,7 @@
 	<div id="event_list">
 		<list
 			contentType="Event"
+			:specialHeader="archive ? 'Events Archive': undefined"
 			:data="events"
 			:totalItemsCount="totalItemsCount"
 			:page="currentPage"
@@ -136,13 +137,19 @@ import LoadingSkeletonElement from '@/components/Utilities/LoadingSkeletonElemen
 import SearchSelect from '@/components/Utilities/SearchSelect';
 
 export default {
-	name: 'new-list',
+	name: 'events-list',
 	components: {
 		List,
 		StartingLetterFilter,
 		Selector,
 		LoadingSkeletonElement,
 		SearchSelect
+	},
+	props: {
+		archive: {
+			type: Boolean,
+			default: false
+		}
 	},
 	data() {
 		return {
@@ -235,7 +242,7 @@ export default {
 					await this.applyNewFilters();
 			},
 			deep: true
-		},
+		}
 	},
 	methods: {
 		setCurrentEvent(event) {			
@@ -247,8 +254,9 @@ export default {
 			let response = {};
 
 			const appliedFilters = this.appliedFilters;
+			let endpoint = this.archive ?'archived-events' :'events';
 			let requestRoute = 
-				backendUrl + '/api/events/page'
+				backendUrl + '/api/' + endpoint+ '/page'
 				+ '?page=' + page
 				+ '&perPage=50'
 				+ '&sortBy=' + this.currentlySorted.name
@@ -259,8 +267,6 @@ export default {
 				+ (appliedFilters.firstDate ?('&startDate=' + appliedFilters.firstDate) :'')
 				+ (appliedFilters.lastDate ?('&endDate=' + appliedFilters.lastDate) :'')
 				+ '&includeFestivals=true';
-
-			console.log(appliedFilters.genre);
 			try {
 				response = await this.$http.get(requestRoute);
 			}
@@ -272,10 +278,10 @@ export default {
 			if(response.body.data) {
 				newEvents = response.body.data;
 			}
-			
+			console.log(response);
 			this.availablePages = response.body.pages;
 			this.totalItemsCount = response.body.totalCount;			
-
+			console.log(this.totalItemsCount);
 			for(let event of newEvents) {
 				//Add formatted date Attribute to each event for displaying the date in the list.
 				event.formattedDate = moment(event.date).format('LL');
@@ -302,7 +308,6 @@ export default {
 			this.completelyReloading = true;
 
 			if(!this.mounting) {
-				console.log('not this again');
 				this.currentPage = 1;
 				this.previousLoadable = false;
 				this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
@@ -364,9 +369,6 @@ export default {
 				query.sortingDirection = this.currentlySorted.direction;
 			}
 			if(JSON.stringify(query) != JSON.stringify(this.$route.query)) {
-				console.log('new query', query);
-				console.log('route query', this.$route.query);
-				console.log('im the one to blame');
 				this.$router.push({query: query});
 				
 				if(!this.isMobile)
@@ -422,7 +424,7 @@ export default {
 			this.isMobile = true;
 
 		this.mounting = false;
-	},
+	}
 }
 </script>
 
