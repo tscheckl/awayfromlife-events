@@ -108,7 +108,7 @@ export default {
 			return isSinglePage;
 		},
 		isListPage() {
-			const listPages = ['events', 'locations', 'bands', 'festivals'];
+			const listPages = ['events', 'archived-events', 'locations', 'bands', 'festivals'];
 
 			const isListPage = listPages.reduce((acc, curr) => {
 				let lowercasePath = this.$route.path.slice().toLowerCase();
