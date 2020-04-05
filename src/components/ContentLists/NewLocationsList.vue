@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import {backendUrl} from '@/secrets.js';
+import {backendUrl, imageUrl} from '@/secrets.js';
 
 import moment from 'moment';
 
@@ -233,10 +233,10 @@ export default {
 			this.completelyReloading = false;
 		},
 		getFullImageRoute(location) {
-			return backendUrl + '/' + location.image[1];
+			return imageUrl + '/' + location.image[1];
 		},
 		getPlaceholderImage(e) {
-			e.target.src = backendUrl + '/images/placeholders/1_M.jpg';
+			e.target.src = imageUrl + '/images/placeholders/1_M.jpg';
 		},
 		async applyMobileFilters() {
 			this.closeMobileFiltersMenu();
