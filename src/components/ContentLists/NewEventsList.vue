@@ -105,10 +105,10 @@
 					</div>					
 				</div>
 
-			<div slot="list-elements" class="list-element" v-for="(event, index) in events" :key="index" v-on:click="setCurrentEvent(event)">
+			<div slot="list-elements" class="list-element" v-for="(event, index) in events" :key="index" v-on:click="helpers.setCurrentStoreElement('Event', event)">
 				<router-link  :to="`/${event.isFestival ?'festival' :'event'}/${event.url}`">
 					<div class="image-container">
-						<img :src="getFullImageRoute(event)" @error="getPlaceholderImage" class="image" :alt="'preview image for ' + event.name">
+						<img :src="helpers.getFullImageRoute(event)" @error="helpers.getPlaceholderImage" class="image" :alt="'preview image for ' + event.name">
 						<div class="color-seperator"></div>
 					</div>
 					<div class="element-info">
@@ -127,6 +127,7 @@
 
 <script>
 import {backendUrl, imageUrl} from '@/secrets.js';
+import * as helpers from '@/helpers/list-helpers.js';
 
 import moment from 'moment';
 
@@ -211,7 +212,8 @@ export default {
 			loading: false,
 			completelyReloading: false,
 			mounting: false,
-			isMobile: false
+			isMobile: false,
+			helpers: helpers
 		}
 	},
 	computed: {
@@ -245,9 +247,6 @@ export default {
 		}
 	},
 	methods: {
-		setCurrentEvent(event) {			
-			this.$store.commit('setCurrentEvent', event);
-		},
 		async getEventsPage(page) {
 			this.loading = true;
 
@@ -316,17 +315,6 @@ export default {
 			this.events = await this.getEventsPage(this.currentPage);
 			this.completelyReloading = false;
 		},
-		getFullImageRoute(event) {
-			return imageUrl + '/' + event.image[1];
-
-		},
-		getPlaceholderImage(e) {
-			e.target.src = imageUrl + '/images/placeholders/1_M.jpg';
-		},
-		async applyMobileFilters() {
-			this.closeMobileFiltersMenu();
-			await this.applyNewFilters();
-		},
 		prettierKey(key) {
 			let prettierKey = key;
 			
@@ -375,9 +363,6 @@ export default {
 					await this.applyNewFilters();
 			}
 
-		},
-		applyQuerySorting(sortBy, direction) {
-			this.currentlySorted = this.sortingOptions.find(sortingOption => sortingOption.name == sortBy && sortingOption.direction == parseInt(direction));
 		}
 	},
 	async mounted() {
@@ -415,7 +400,7 @@ export default {
 		if(query.city)
 			this.appliedFilters.city = {label: query.city};
 		if(query.sortBy && query.sortingDirection)
-			this.applyQuerySorting(query.sortBy, query.sortingDirection);
+			this.currentlySorted = helpers.applyQuerySorting(this.sortingOptions, query.sortBy, query.sortingDirection);
 
 		this.currentPage = pageFromRoute;
 		this.events = await this.getEventsPage(this.currentPage);		

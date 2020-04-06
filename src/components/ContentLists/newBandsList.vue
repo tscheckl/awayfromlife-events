@@ -68,10 +68,10 @@
 					</div>					
 				</div>
 
-			<div slot="list-elements" class="list-element" v-for="(band, index) in bands" :key="index" v-on:click="setCurrentBand(band)">
+			<div slot="list-elements" class="list-element" v-for="(band, index) in bands" :key="index" v-on:click="helpers.setCurrentStoreElement('Band', band)">
 				<router-link  :to="`band/${band.url}`">
 					<div class="image-container">
-						<img :src="getFullImageRoute(band)" @error="getPlaceholderImage" class="image" :alt="'preview image for ' + band.name">
+						<img :src="helpers.getFullImageRoute(band)" @error="helpers.getPlaceholderImage" class="image" :alt="'preview image for ' + band.name">
 						<div class="color-seperator"></div>
 					</div>
 					<div class="element-info">
@@ -90,6 +90,7 @@
 
 <script>
 import {backendUrl, imageUrl} from '@/secrets.js';
+import * as helpers from '@/helpers/list-helpers.js';
 
 import moment from 'moment';
 
@@ -163,7 +164,8 @@ export default {
 			loading: false,
 			completelyReloading: false,
 			mounting: false,
-			isMobile: false
+			isMobile: false,
+			helpers: helpers
 		}
 	},
 	computed: {
@@ -197,9 +199,6 @@ export default {
 		},
 	},
 	methods: {
-		setCurrentBand(band) {			
-			this.$store.commit('setCurrentBand', band);
-		},
 		async getBandsPage(page) {
 			this.loading = true;
 
@@ -260,16 +259,6 @@ export default {
 			this.bands = await this.getBandsPage(this.currentPage);
 			this.completelyReloading = false;
 		},
-		getFullImageRoute(band) {
-			return imageUrl + '/' + band.image[1];
-		},
-		getPlaceholderImage(e) {
-			e.target.src = imageUrl + '/images/placeholders/1_M.jpg';
-		},
-		async applyMobileFilters() {
-			this.closeMobileFiltersMenu();
-			await this.applyNewFilters();
-		},
 		prettierKey(key) {
 			let prettierKey = key;
 			
@@ -315,9 +304,6 @@ export default {
 					await this.applyNewFilters();
 			}
 
-		},
-		applyQuerySorting(sortBy, direction) {
-			this.currentlySorted = this.sortingOptions.find(sortingOption => sortingOption.name == sortBy && sortingOption.direction == parseInt(direction));
 		}
 	},
 	async mounted() {
@@ -357,7 +343,7 @@ export default {
         if(query.country)
             this.appliedFilters.country = {label: query.country};
 		if(query.sortBy && query.sortingDirection)
-			this.applyQuerySorting(query.sortBy, query.sortingDirection);
+			this.currentlySorted = helpers.applyQuerySorting(this.sortingOptions, query.sortBy, query.sortingDirection);
 
 		this.currentPage = pageFromRoute;
 		this.bands = await this.getBandsPage(this.currentPage);		

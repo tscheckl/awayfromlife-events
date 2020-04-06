@@ -56,10 +56,10 @@
 					</div>					
 				</div>
 
-			<div slot="list-elements" class="list-element" v-for="(location, index) in locations" :key="index" v-on:click="setCurrentLocation(location)">
+			<div slot="list-elements" class="list-element" v-for="(location, index) in locations" :key="index" v-on:click="helpers.setCurrentStoreElement('Location', location)">
 				<router-link  :to="`location/${location.url}`">
 					<div class="image-container">
-						<img :src="getFullImageRoute(location)" @error="getPlaceholderImage" class="image" :alt="'preview image for ' + location.name">
+						<img :src="helpers.getFullImageRoute(location)" @error="helpers.getPlaceholderImage" class="image" :alt="'preview image for ' + location.name">
 						<div class="color-seperator"></div>
 					</div>
 					<div class="element-info">
@@ -75,6 +75,7 @@
 
 <script>
 import {backendUrl, imageUrl} from '@/secrets.js';
+import * as helpers from '@/helpers/list-helpers.js';
 
 import moment from 'moment';
 
@@ -136,7 +137,8 @@ export default {
 			loading: false,
 			completelyReloading: false,
 			mounting: false,
-			isMobile: false
+			isMobile: false,
+			helpers: helpers
 		}
 	},
 	computed: {
@@ -170,9 +172,6 @@ export default {
 		},
 	},
 	methods: {
-		setCurrentLocation(location) {			
-			this.$store.commit('setCurrentLocation', location);
-		},
 		async getLocationsPage(page) {
 			this.loading = true;
 
@@ -232,16 +231,6 @@ export default {
 			this.locations = await this.getLocationsPage(this.currentPage);
 			this.completelyReloading = false;
 		},
-		getFullImageRoute(location) {
-			return imageUrl + '/' + location.image[1];
-		},
-		getPlaceholderImage(e) {
-			e.target.src = imageUrl + '/images/placeholders/1_M.jpg';
-		},
-		async applyMobileFilters() {
-			this.closeMobileFiltersMenu();
-			await this.applyNewFilters();
-		},
 		prettierKey(key) {
             let prettierKey = key;
             
@@ -289,9 +278,6 @@ export default {
 					await this.applyNewFilters();
 			}
 
-		},
-		applyQuerySorting(sortBy, direction) {
-			this.currentlySorted = this.sortingOptions.find(sortingOption => sortingOption.name == sortBy && sortingOption.direction == parseInt(direction));
 		}
 	},
 	async mounted() {
@@ -325,7 +311,7 @@ export default {
         if(query.country)
             this.appliedFilters.country = {label: query.country};
 		if(query.sortBy && query.sortingDirection)
-			this.applyQuerySorting(query.sortBy, query.sortingDirection);
+			this.currentlySorted = helpers.applyQuerySorting(this.sortingOptions, query.sortBy, query.sortingDirection);
 
 		this.currentPage = pageFromRoute;
 		this.locations = await this.getLocationsPage(this.currentPage);		

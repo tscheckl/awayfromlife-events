@@ -104,10 +104,10 @@
 					</div>				
 				</div>
 
-			<div slot="list-elements" class="list-element" v-for="(festival, index) in festivals" :key="index" v-on:click="setCurrentFestival(festival)">
+			<div slot="list-elements" class="list-element" v-for="(festival, index) in festivals" :key="index" v-on:click="helpers.setCurrentStoreElement('Festival', festival)">
 				<router-link  :to="`festival/${festival.url}`">
 					<div class="image-container">
-						<img :src="getFullImageRoute(festival)" @error="getPlaceholderImage" class="image" :alt="'preview image for ' + festival.name">
+						<img :src="helpers.getFullImageRoute(festival)" @error="helpers.getPlaceholderImage" class="image" :alt="'preview image for ' + festival.name">
 						<div class="color-seperator"></div>
 					</div>
 					<div class="element-info">
@@ -126,6 +126,7 @@
 
 <script>
 import {backendUrl, imageUrl} from '@/secrets.js';
+import * as helpers from '@/helpers/list-helpers.js';
 
 import moment from 'moment';
 
@@ -165,16 +166,6 @@ export default {
 					direction: -1,
 					pretty: 'Name descending'
                 },
-                {
-                    name: 'genre',
-                    direction: 1,
-                    pretty: 'Genre ascending'
-                },
-                {
-                    name: 'genre',
-                    direction: 1,
-                    pretty: 'Genre ascending'
-				},
 				{
                     name: 'city',
                     direction: 1,
@@ -213,7 +204,8 @@ export default {
 			loading: false,
 			completelyReloading: false,
 			mounting: false,
-			isMobile: false
+			isMobile: false,
+			helpers: helpers
 		}
 	},
 	computed: {
@@ -247,9 +239,6 @@ export default {
 		},
 	},
 	methods: {
-		setCurrentFestival(festival) {			
-			this.$store.commit('setCurrentFestival', festival);
-		},
 		async getFestivalsPage(page) {
 			this.loading = true;
 
@@ -304,22 +293,11 @@ export default {
 
 			if(!this.mounting) {
 				this.currentPage = 1;
-				this.previousLoadable = false;
 				this.$router.replace({query: {...this.$route.query, page: this.currentPage}});
 			}
 
 			this.festivals = await this.getFestivalsPage(this.currentPage);
 			this.completelyReloading = false;
-		},
-		getFullImageRoute(festival) {
-			return imageUrl + '/' + festival.image[1];
-		},
-		getPlaceholderImage(e) {
-			e.target.src = imageUrl + '/images/placeholders/1_M.jpg';
-		},
-		async applyMobileFilters() {
-			this.closeMobileFiltersMenu();
-			await this.applyNewFilters();
 		},
 		prettierKey(key) {
 			let prettierKey = key;
@@ -370,9 +348,6 @@ export default {
 					await this.applyNewFilters();
 			}
 
-		},
-		applyQuerySorting(sortBy, direction) {
-			this.currentlySorted = this.sortingOptions.find(sortingOption => sortingOption.name == sortBy && sortingOption.direction == parseInt(direction));
 		}
 	},
 	async mounted() {
@@ -412,7 +387,7 @@ export default {
         if(query.city)
             this.appliedFilters.city = {label: query.city};
 		if(query.sortBy && query.sortingDirection)
-			this.applyQuerySorting(query.sortBy, query.sortingDirection);
+			this.currentlySorted = helpers.applyQuerySorting(this.sortingOptions, query.sortBy, query.sortingDirection);
 
 		this.currentPage = pageFromRoute;
 		this.festivals = await this.getFestivalsPage(this.currentPage);		
