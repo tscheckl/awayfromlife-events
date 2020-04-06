@@ -22,7 +22,9 @@
 					<h3>Filter by: </h3>
 					<slot name="filters"></slot>				
 
-					<button class="md-button md-raised mobile-apply-button" v-on:click="applyMobileFilters">Apply</button>
+					<div class="mobile-apply-button-wrapper">
+						<button class="md-button md-raised mobile-apply-button" v-on:click="applyMobileFilters">Apply</button>
+					</div>
 				</div>
 				
 				<div class="sorting">
