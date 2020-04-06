@@ -1,4 +1,5 @@
 @import "../themeColors";
+@import "./listCommonStyles";
 
 #festival_list {
 	input, #selector-input {
@@ -105,39 +106,6 @@
 				margin-right: 35px;
 			}
 
-			.genre-filter, .city-filter {
-				margin-bottom: 10px;
-
-				#search_select {
-					margin-top: 5px;
-					width: 200px;
-					.select-indicator {
-						background-color: $accentAccent2;
-						border-top-right-radius: 3px;
-						border-bottom-right-radius: 3px;
-						height: 32px;
-						width: 30px;
-						text-align: center;
-						padding-left: 3px;
-						cursor: pointer;
-					}
-
-					.no-options {
-						color: #232323;
-						padding: 5px;
-					}
-
-					.select-overlay {
-						position: absolute;
-						ul {
-							li {
-								color: #232323;
-							}
-						}
-					}
-				}
-			}
-
 			.date-filter {					
 				.datepickers {
 					display: flex;
@@ -213,88 +181,8 @@
 		}			
 	}
 
-	.list-element a {
-		position: relative;
-		display: flex;
-		overflow: hidden;
-		color: #232323;
-		background-color: $primaryLighten5;
-		border-radius: 3px;
-		box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.24);	
-	}
-
 	.list-element {
-		width: 47%;
-		margin: 20px 0;
-
-		.image-container {
-			width: 130px;
-			display: flex;
-			margin-left: -10px;
-			margin-right: 10px;
-
-			.image {
-				width: 135px;
-				max-width: 135px;
-				height: 120px;
-				object-position: center;
-				object-fit: cover;
-					// background-position: center;
-					// background-size: cover;
-				position: relative;
-				clip-path: polygon(
-					0 0, /* left top */
-					100% 0, /* right top */ 
-					84% 100%, /* right bottom */
-					0% 100% /* left bottom */
-				);
-			}
-
-			.color-seperator {
-				width: 7px;
-				height: 100%;
-				background-color: $accentAccent2;
-				transform: skew(-10deg);
-				margin-left: -12px;
-			}
-
-			@supports (-ms-ime-align:auto) { 
-				.color-seperator {
-					transform: skew(0deg);
-					margin-left: 0;
-				}
-			}
-		}
-
 		.element-info {
-			padding: 10px;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			align-self: center;
-
-			h3, h4, p {
-				margin: 0;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-
-			h3 {
-				margin-bottom: 5px;
-				font-weight: 900;
-				font-size: 22px;
-				line-height: 26px;
-			}
-
-			h4 {
-				margin-bottom: 3px;
-				font-size: 14px;
-				line-height: 20px;
-				color: $accentAccent2;
-				font-weight: 600;
-			}
-
 			.festival-genres {
 				span {
 					&:after {
@@ -329,43 +217,7 @@
 @media screen and (max-width: 768px) {
 	#festival_list {
 		.filters {
-			.starting-letter-filter {
-				h4 {
-					margin-bottom: 5px;
-				}
-
-				#starting_letter_filter { 
-					ul {
-						margin-top: 0;
-						li{
-							margin: 0;
-							padding-bottom: 10px;
-							padding-right: 15px;
-							padding-left: 0;
-
-							div {
-								display: none;
-							}
-						}
-
-						.active-start-letter {
-							margin-right: 10px;
-							margin-left: -5px;
-							div {
-								display: block;
-							}
-						}
-					}
-						
-				}
-			}
-
 			.additional-filters {
-				.genre-filter, .date-filter, .city-filter {
-					width: 100%;
-					margin-bottom: 20px;
-				}
-
 				.datepickers {
 					flex-wrap: wrap;
 					.datepicker-trigger {
@@ -390,22 +242,7 @@
 			}
 		}
 		
-		.list-element{
-			width: 100% !important;
-			margin: 10px 0;
-			float: none !important;
-
-			&:first-of-type {
-				margin-top: -10px;
-			}
-
-			.image-container {
-				margin-right: 5px;
-				.image {
-					width: 120px;
-				}
-			}
-			
+		.list-element{			
 			.element-info {
 				.festival-genres {
 					font-size: 12px;
@@ -413,10 +250,6 @@
 
 				.festival-city, .festival-country {
 					font-size: 14px;
-				}
-
-				h3 {
-					font-size: 20px;
 				}
 			}
 		}
