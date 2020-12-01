@@ -20,12 +20,11 @@ import Imprint from '@/components/InfoPages/Imprint';
 import Privacy from '@/components/InfoPages/Privacy';
 import NotFound from '@/components/NotFound';
 
-import BandsListNew from '@/components/ContentLists/BandsList.1';
-import LocationsListNew from '@/components/ContentLists/LocationsList.1';
-import EventListNew from '@/components/ContentLists/EventsList.1';
-import FestivalListNew from '@/components/ContentLists/FestivalsList.1';
 import NewList from '@/components/ContentLists/NewList';
 import NewEventsList from '@/components/ContentLists/NewEventsList';
+import NewFestivalsList from '@/components/ContentLists/NewFestivalsList';
+import NewBandsList from '@/components/ContentLists/NewBandsList';
+import NewLocationsList from '@/components/ContentLists/NewLocationsList';
 
 export default new Router({
 	mode: 'history',
@@ -46,7 +45,7 @@ export default new Router({
 		},
 		{
 			path: '/events',
-			component: EventsList,
+			component: NewEventsList,
 			meta: {
 				title: 'Events'
 			}
@@ -68,7 +67,7 @@ export default new Router({
 		},
 		{
 			path: '/festivals',
-			component: FestivalsList,
+			component: NewFestivalsList,
 			meta: {
 				title: 'Festivals'
 			}
@@ -83,7 +82,7 @@ export default new Router({
 		},
 		{
 			path: '/locations',
-			component: LocationsList,
+			component: NewLocationsList,
 			meta: {
 				title: 'Locations'
 			}
@@ -98,7 +97,7 @@ export default new Router({
 		},
 		{
 			path: '/bands',
-			component: BandsList,
+			component: NewBandsList,
 			meta: {
 				title: 'Bands'
 			}
@@ -210,10 +209,6 @@ export default new Router({
 		{
 			path: '/new-list',
 			component: NewList
-		},
-		{
-			path: '/new-event-list',
-			component: NewEventsList
 		},
 		{
 			path: '/*',
