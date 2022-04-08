@@ -14,7 +14,7 @@
     "hamburgers": "^0.9.3",
     "jsonwebtoken": "^8.1.0",
     "luxon": "^0.3.1",
-    "moment": "^2.18.1",
+    "moment": "^2.29.2",
     "places.js": "^1.4.18",
     "v-calendar": "^0.9.7",
     "vue": "^2.4.2",
